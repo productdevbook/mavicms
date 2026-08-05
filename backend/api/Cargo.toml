@@ -1,0 +1,38 @@
+[package]
+name = "mavicms-api"
+version = "0.1.0"
+edition.workspace = true
+publish = false
+
+[[bin]]
+name = "mavicms-api"
+path = "src/main.rs"
+
+[dependencies]
+migration = { path = "../migration" }
+
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+sea-orm.workspace = true
+
+argon2 = { version = "0.5", features = ["password-hash"] }
+password-hash = { version = "0.5", features = ["getrandom"] }
+aes-gcm = { version = "0.11", features = ["getrandom"] }
+base64 = "0.23"
+percent-encoding = "2"
+rust-s3 = { version = "0.37", default-features = false, features = ["tokio-rustls-tls"] }
+axum = { version = "0.8", features = ["multipart"] }
+tower = "0.5"
+tower-http = { version = "0.7", features = ["cors", "trace", "timeout", "fs", "set-header"] }
+tower-cookies = "0.11"
+dotenvy = "0.15"
+
+utoipa = { version = "5", features = ["axum_extras", "uuid", "chrono"] }
+utoipa-axum = "0.2"
+utoipa-scalar = { version = "0.3", features = ["axum"] }

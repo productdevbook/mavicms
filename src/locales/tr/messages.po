@@ -1,0 +1,1629 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-08-05 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: tr\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. placeholder {0}: pendingDelete?.filename
+#. placeholder {0}: pendingDelete?.name
+#. placeholder {0}: pendingDelete?.title
+#: src/routes/dashboard.categories.tsx:136
+#: src/routes/dashboard.index.tsx:192
+#: src/routes/dashboard.media.tsx:140
+msgid "\"{0}\" will be permanently deleted. This cannot be undone."
+msgstr "\"{0}\" kalıcı olarak silinecek. Bu işlem geri alınamaz."
+
+#. placeholder {0}: pendingDelete?.name
+#: src/routes/dashboard.tags.tsx:297
+msgid "\"{0}\" will be removed from every post that uses it."
+msgstr "\"{0}\" onu kullanan bütün yazılardan kaldırılacak."
+
+#. placeholder {0}: stats.selected
+#: src/components/editor/status-bar.tsx:55
+msgid "{0, plural, one {# character selected} other {# characters selected}}"
+msgstr "{0, plural, one {# karakter seçili} other {# karakter seçili}}"
+
+#. placeholder {0}: stats.characters
+#: src/components/editor/status-bar.tsx:47
+msgid "{0, plural, one {# character} other {# characters}}"
+msgstr "{0, plural, one {# karakter} other {# karakter}}"
+
+#. placeholder {0}: stats.headings
+#: src/components/editor/status-bar.tsx:66
+msgid "{0, plural, one {# heading} other {# headings}}"
+msgstr "{0, plural, one {# başlık} other {# başlık}}"
+
+#. placeholder {0}: files.length
+#: src/components/editor/dialogs.tsx:55
+#~ msgid "{0, plural, one {# image added} other {# images added}}"
+#~ msgstr "{0, plural, one {# görsel eklendi} other {# görsel eklendi}}"
+
+#. placeholder {0}: stats.words
+#: src/components/editor/status-bar.tsx:44
+msgid "{0, plural, one {word} other {words}}"
+msgstr "{0, plural, one {kelime} other {kelime}}"
+
+#. placeholder {0}: preview.engine
+#. placeholder {1}: preview.host ?? "—"
+#. placeholder {2}: preview.database ?? "—"
+#. placeholder {3}: preview.username ?? "—"
+#: src/components/setup/setup-wizard.tsx:433
+msgid "{0} · {1} · {2} · {3}"
+msgstr "{0} · {1} · {2} · {3}"
+
+#. placeholder {0}: result.site_title
+#. placeholder {1}: result.admin_username
+#: src/components/setup/setup-wizard.tsx:838
+msgid "{0} is ready. You're signed in as <0>{1}</0>."
+msgstr "{0} hazır! <0>{1}</0> olarak oturum açtınız."
+
+#. placeholder {0}: hover.rows
+#. placeholder {1}: hover.cols
+#: src/components/editor/dialogs.tsx:350
+msgid "{0} rows × {1} columns"
+msgstr "{0} satır × {1} sütun"
+
+#: src/components/editor/status-bar.tsx:63
+msgid "{minutes, plural, one {# min read} other {# min read}}"
+msgstr "{minutes, plural, one {# dk okuma} other {# dk okuma}}"
+
+#: src/components/editor/dialogs.tsx:66
+msgid "{uploaded, plural, one {# image added} other {# images added}}"
+msgstr "{uploaded, plural, one {# görsel eklendi} other {# görsel eklendi}}"
+
+#: src/components/editor/dialogs.tsx:483
+msgid "# Heading\n"
+"\n"
+"Paste your Markdown here…"
+msgstr "# Başlık\n"
+"\n"
+"Markdown metnini buraya yapıştır…"
+
+#: src/components/editor/find-replace.tsx:101
+msgid "0 results"
+msgstr "0 sonuç"
+
+#: src/components/setup/setup-wizard.tsx:691
+msgid "3-32 characters: letters, numbers, _ or -"
+msgstr "3-32 karakter: harf, rakam, _ veya -"
+
+#: src/routes/dashboard.plugins_.s3.tsx:167
+msgid "Access key ID"
+msgstr "Erişim anahtarı (Access key ID)"
+
+#: src/routes/dashboard.languages.tsx:148
+msgid "Active"
+msgstr "Etkin"
+
+#: src/components/editor/dialogs.tsx:200
+#: src/routes/dashboard.tags.tsx:174
+msgid "Add"
+msgstr "Ekle"
+
+#: src/components/editor/extensions/slash-command.tsx:128
+msgid "Add a blockquote"
+msgstr "Alıntı bloğu ekle"
+
+#: src/components/editor/extensions/slash-command.tsx:155
+msgid "Add a horizontal rule"
+msgstr "Yatay çizgi ekle"
+
+#: src/components/editor/dialogs.tsx:296
+msgid "Add a hyperlink to the selected text."
+msgstr "Seçili metne köprü ekle."
+
+#: src/components/editor/post-settings.tsx:212
+msgid "Add a tag and press Enter"
+msgstr "Etiket ekle ve Enter'a bas"
+
+#: src/components/editor/extensions/slash-command.tsx:189
+msgid "Add an image from a link"
+msgstr "Bağlantıdan görsel ekle"
+
+#: src/components/editor/post-settings.tsx:198
+#: src/routes/dashboard.categories.tsx:93
+msgid "Add category"
+msgstr "Kategori ekle"
+
+#: src/components/editor/bubble-menus.tsx:429
+msgid "Add column after"
+msgstr "Sağa sütun ekle"
+
+#: src/components/editor/bubble-menus.tsx:426
+msgid "Add column before"
+msgstr "Sola sütun ekle"
+
+#: src/components/editor/dialogs.tsx:380
+msgid "Add header row"
+msgstr "Başlık satırı ekle"
+
+#: src/components/editor/extensions/slash-command.tsx:211
+msgid "Add hyperlinked text"
+msgstr "Köprü metni ekle"
+
+#: src/components/editor/dialogs.tsx:133
+msgid "Add image"
+msgstr "Görsel ekle"
+
+#: src/routes/dashboard.languages.tsx:118
+msgid "Add language"
+msgstr "Dil ekle"
+
+#: src/components/editor/bubble-menus.tsx:457
+msgid "Add row after"
+msgstr "Alta satır ekle"
+
+#: src/components/editor/bubble-menus.tsx:454
+msgid "Add row before"
+msgstr "Üste satır ekle"
+
+#: src/components/editor/dialogs.tsx:348
+msgid "Add table"
+msgstr "Tablo ekle"
+
+#: src/components/editor/dialogs.tsx:300
+msgid "Address"
+msgstr "Adres"
+
+#: src/components/editor/bubble-menus.tsx:362
+#: src/components/editor/extensions/slash-command.tsx:277
+#: src/components/editor/toolbar.tsx:473
+msgid "Align center"
+msgstr "Ortala"
+
+#: src/components/editor/bubble-menus.tsx:355
+#: src/components/editor/extensions/slash-command.tsx:268
+#: src/components/editor/toolbar.tsx:465
+msgid "Align left"
+msgstr "Sola hizala"
+
+#: src/components/editor/extensions/slash-command.tsx:269
+msgid "Align paragraph to the left"
+msgstr "Paragrafı sola hizala"
+
+#: src/components/editor/extensions/slash-command.tsx:287
+msgid "Align paragraph to the right"
+msgstr "Paragrafı sağa hizala"
+
+#: src/components/editor/bubble-menus.tsx:368
+#: src/components/editor/extensions/slash-command.tsx:286
+#: src/components/editor/toolbar.tsx:481
+msgid "Align right"
+msgstr "Sağa hizala"
+
+#: src/components/editor/extensions/slash-command.tsx:270
+#: src/components/editor/extensions/slash-command.tsx:279
+#: src/components/editor/extensions/slash-command.tsx:288
+msgid "Alignment"
+msgstr "Hizalama"
+
+#: src/components/editor/bubble-menus.tsx:375
+#: src/components/editor/bubble-menus.tsx:378
+#: src/components/editor/dialogs.tsx:188
+msgid "Alt text"
+msgstr "Alternatif metin"
+
+#: src/components/editor/post-settings.tsx:41
+#~ msgid "Announcement"
+#~ msgstr "Duyuru"
+
+#: src/components/editor/bubble-menus.tsx:259
+#: src/components/editor/dialogs.tsx:326
+msgid "Apply"
+msgstr "Uygula"
+
+#: src/components/setup/setup-wizard.tsx:545
+#: src/components/setup/setup-wizard.tsx:615
+#: src/components/setup/setup-wizard.tsx:800
+msgid "Back"
+msgstr "Geri"
+
+#: src/components/editor/mavi-editor.tsx:479
+msgid "Back to editing"
+msgstr "Düzenlemeye dön"
+
+#: src/components/editor/extensions/slash-command.tsx:57
+#: src/components/editor/extensions/slash-command.tsx:66
+#: src/components/editor/extensions/slash-command.tsx:75
+#: src/components/editor/extensions/slash-command.tsx:84
+#: src/components/editor/extensions/slash-command.tsx:93
+msgid "Basic"
+msgstr "Temel"
+
+#: src/components/editor/block-handle.tsx:160
+msgid "Block"
+msgstr "Blok"
+
+#: src/components/editor/block-handle.tsx:150
+msgid "Block menu"
+msgstr "Blok menüsü"
+
+#: src/components/editor/dialogs.tsx:517
+#: src/components/editor/extensions/slash-command.tsx:129
+#: src/components/editor/extensions/slash-command.tsx:138
+#: src/components/editor/extensions/slash-command.tsx:147
+#: src/components/editor/extensions/slash-command.tsx:156
+msgid "Blocks"
+msgstr "Bloklar"
+
+#: src/components/editor/bubble-menus.tsx:119
+#: src/components/editor/dialogs.tsx:507
+#: src/components/editor/toolbar.tsx:291
+msgid "Bold"
+msgstr "Kalın"
+
+#: src/routes/dashboard.plugins_.s3.tsx:161
+msgid "Bucket"
+msgstr "Bucket"
+
+#: src/routes/dashboard.plugins.tsx:42
+msgid "Built-in integrations you can switch on and configure."
+msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
+
+#: src/components/editor/dialogs.tsx:521
+#: src/components/editor/extensions/slash-command.tsx:100
+#: src/components/editor/toolbar.tsx:502
+msgid "Bullet list"
+msgstr "Madde listesi"
+
+#: src/components/editor/dialogs.tsx:198
+#: src/components/editor/dialogs.tsx:238
+#: src/components/editor/dialogs.tsx:324
+#: src/routes/dashboard.categories.tsx:140
+#: src/routes/dashboard.index.tsx:196
+#: src/routes/dashboard.languages.tsx:194
+#: src/routes/dashboard.media.tsx:144
+#: src/routes/dashboard.tags.tsx:301
+msgid "Cancel"
+msgstr "Vazgeç"
+
+#: src/components/editor/post-settings.tsx:371
+msgid "Canonical URL"
+msgstr "Canonical URL"
+
+#: src/components/editor/find-replace.tsx:149
+msgid "Case sensitive"
+msgstr "Büyük/küçük harf duyarlı"
+
+#: src/components/dashboard/dashboard-shell.tsx:28
+#: src/routes/dashboard.categories.tsx:78
+msgid "Categories"
+msgstr "Kategoriler"
+
+#: src/components/editor/post-settings.tsx:163
+msgid "Category"
+msgstr "Kategori"
+
+#: src/components/editor/extensions/slash-command.tsx:278
+msgid "Center the paragraph"
+msgstr "Paragrafı ortala"
+
+#: src/components/editor/extensions/slash-command.tsx:119
+msgid "Checkbox to-do list"
+msgstr "Onay kutulu yapılacaklar"
+
+#: src/components/editor/dialogs.tsx:513
+#: src/components/editor/toolbar.tsx:452
+msgid "Clear formatting"
+msgstr "Biçimi temizle"
+
+#: src/components/editor/find-replace.tsx:75
+msgid "Close"
+msgstr "Kapat"
+
+#: src/components/editor/bubble-menus.tsx:150
+msgid "Code"
+msgstr "Kod"
+
+#: src/routes/dashboard.languages.tsx:108
+msgid "Code (en, de, pt-BR)"
+msgstr "Kod (tr, en, de)"
+
+#: src/components/editor/dialogs.tsx:525
+#: src/components/editor/extensions/slash-command.tsx:136
+#: src/components/editor/toolbar.tsx:98
+#: src/components/editor/toolbar.tsx:555
+msgid "Code block"
+msgstr "Kod bloğu"
+
+#: src/components/editor/extensions/slash-command.tsx:145
+#: src/components/editor/toolbar.tsx:563
+msgid "Collapsible section"
+msgstr "Açılır bölüm"
+
+#: src/components/editor/bubble-menus.tsx:422
+msgid "Column"
+msgstr "Sütun"
+
+#: src/components/editor/dialogs.tsx:535
+msgid "Command menu"
+msgstr "Komut menüsü"
+
+#: src/components/editor/post-settings.tsx:332
+msgid "Comments"
+msgstr "Yorumlar"
+
+#: src/routes/dashboard.plugins.tsx:80
+msgid "Configure"
+msgstr "Yapılandır"
+
+#: src/components/setup/setup-wizard.tsx:791
+msgid "Confirm use of a weak password"
+msgstr "Zayıf parola kullanımını onayla"
+
+#: src/components/setup/setup-wizard.tsx:379
+msgid "Connect your database"
+msgstr "Veritabanınızı bağlayın"
+
+#: src/components/setup/setup-wizard.tsx:362
+msgid "Connected. Restarting the server…"
+msgstr "Bağlandı. Sunucu yeniden başlatılıyor…"
+
+#: src/components/setup/setup-wizard.tsx:415
+#: src/components/setup/setup-wizard.tsx:422
+msgid "Connection URL"
+msgstr "Bağlantı URL'si"
+
+#: src/routes/dashboard.languages.tsx:190
+msgid "Content already written in this language blocks removal — you'll be told how much there is."
+msgstr "Bu dilde yazılmış içerik varsa silme engellenir — ne kadar olduğu size bildirilir."
+
+#: src/components/setup/setup-wizard.tsx:232
+#: src/components/setup/setup-wizard.tsx:618
+msgid "Continue"
+msgstr "Devam et"
+
+#: src/components/setup/setup-wizard.tsx:845
+msgid "Continue to the dashboard"
+msgstr "Panele devam et"
+
+#: src/components/setup/setup-wizard.tsx:845
+#~ msgid "Continue to the editor"
+#~ msgstr "Editöre git"
+
+#: src/components/editor/bubble-menus.tsx:317
+#: src/components/editor/dialogs.tsx:462
+msgid "Copy"
+msgstr "Kopyala"
+
+#: src/components/editor/code-block-view.tsx:52
+msgid "Copy code"
+msgstr "Kodu kopyala"
+
+#: src/components/editor/block-handle.tsx:182
+msgid "Copy text"
+msgstr "Metni kopyala"
+
+#: src/components/editor/dialogs.tsx:436
+msgid "Copy your post in different formats, download it, or import Markdown."
+msgstr "Yazını farklı biçimlerde kopyala, indir veya Markdown yükle."
+
+#: src/routes/dashboard.languages.tsx:61
+msgid "Could not add language"
+msgstr "Dil eklenemedi"
+
+#: src/routes/dashboard.tags.tsx:91
+msgid "Could not add tag"
+msgstr "Etiket eklenemedi"
+
+#: src/components/editor/post-settings.tsx:84
+#: src/routes/dashboard.categories.tsx:55
+msgid "Could not create category"
+msgstr "Kategori oluşturulamadı"
+
+#: src/routes/dashboard.categories.tsx:69
+msgid "Could not delete category"
+msgstr "Kategori silinemedi"
+
+#: src/routes/dashboard.media.tsx:66
+msgid "Could not delete media"
+msgstr "Medya silinemedi"
+
+#: src/routes/dashboard.index.tsx:77
+msgid "Could not delete post"
+msgstr "Yazı silinemedi"
+
+#: src/routes/dashboard.tags.tsx:130
+msgid "Could not delete tag"
+msgstr "Etiket silinemedi"
+
+#: src/routes/dashboard.tags.tsx:104
+msgid "Could not link tags"
+msgstr "Etiketler bağlanamadı"
+
+#: src/components/editor/mavi-editor.tsx:225
+msgid "Could not load post"
+msgstr "Yazı yüklenemedi"
+
+#: src/components/setup/setup-wizard.tsx:103
+#: src/components/setup/setup-wizard.tsx:348
+#: src/routes/login.tsx:44
+msgid "Could not reach the server. Please try again."
+msgstr "Sunucuya ulaşılamadı. Lütfen tekrar deneyin."
+
+#: src/routes/dashboard.languages.tsx:83
+msgid "Could not remove language"
+msgstr "Dil silinemedi"
+
+#: src/components/editor/mavi-editor.tsx:271
+msgid "Could not save post"
+msgstr "Yazı kaydedilemedi"
+
+#: src/routes/dashboard.plugins_.s3.tsx:90
+msgid "Could not save settings"
+msgstr "Ayarlar kaydedilemedi"
+
+#: src/components/editor/post-settings.tsx:100
+msgid "Could not save tag"
+msgstr "Etiket kaydedilemedi"
+
+#: src/routes/dashboard.tags.tsx:115
+msgid "Could not unlink tag"
+msgstr "Etiket bağlantısı kaldırılamadı"
+
+#: src/routes/dashboard.languages.tsx:73
+msgid "Could not update language"
+msgstr "Dil güncellenemedi"
+
+#. placeholder {0}: file.name
+#: src/components/editor/dialogs.tsx:60
+#: src/components/editor/extensions/index.ts:135
+#: src/components/editor/extensions/index.ts:154
+#: src/routes/dashboard.media.tsx:51
+msgid "Could not upload {0}"
+msgstr "{0} yüklenemedi"
+
+#: src/components/editor/post-settings.tsx:303
+msgid "Could not upload cover image"
+msgstr "Kapak görseli yüklenemedi"
+
+#: src/components/editor/post-settings.tsx:270
+msgid "Cover image"
+msgstr "Kapak görseli"
+
+#: src/components/editor/post-settings.tsx:313
+msgid "Cover preview"
+msgstr "Kapak önizlemesi"
+
+#: src/components/editor/mavi-editor.tsx:452
+msgid "Create"
+msgstr "Oluştur"
+
+#: src/components/editor/extensions/slash-command.tsx:110
+msgid "Create an ordered list"
+msgstr "Sıralı liste oluştur"
+
+#: src/components/editor/extensions/slash-command.tsx:101
+msgid "Create an unordered list"
+msgstr "Sırasız liste oluştur"
+
+#: src/components/setup/setup-wizard.tsx:671
+msgid "Create your administrator account"
+msgstr "Yönetici hesabınızı oluşturun"
+
+#: src/routes/dashboard.plugins_.s3.tsx:218
+msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
+msgstr "Kimlik bilgileri saklanmadan önce şifrelenir ve hiçbir zaman tarayıcıya geri gönderilmez."
+
+#: src/components/editor/toolbar.tsx:378
+msgid "Custom"
+msgstr "Özel"
+
+#: src/components/mode-toggle.tsx:43
+msgid "Dark"
+msgstr "Koyu"
+
+#: src/components/editor/mavi-editor.tsx:395
+msgid "Dashboard"
+msgstr "Panel"
+
+#: src/components/setup/setup-wizard.tsx:469
+msgid "Database file path"
+msgstr "Veritabanı dosya yolu"
+
+#: src/components/setup/setup-wizard.tsx:509
+msgid "Database name"
+msgstr "Veritabanı adı"
+
+#: src/components/setup/setup-wizard.tsx:444
+msgid "Database type"
+msgstr "Veritabanı türü"
+
+#: src/components/editor/toolbar.tsx:526
+msgid "Decrease indent"
+msgstr "Girintiyi azalt"
+
+#: src/components/editor/toolbar.tsx:273
+#: src/components/editor/toolbar.tsx:627
+#: src/routes/dashboard.languages.tsx:138
+msgid "Default"
+msgstr "Varsayılan"
+
+#: src/components/editor/block-handle.tsx:186
+#: src/components/editor/bubble-menus.tsx:395
+#: src/routes/dashboard.categories.tsx:118
+#: src/routes/dashboard.categories.tsx:142
+#: src/routes/dashboard.index.tsx:174
+#: src/routes/dashboard.index.tsx:198
+#: src/routes/dashboard.languages.tsx:171
+#: src/routes/dashboard.media.tsx:121
+#: src/routes/dashboard.media.tsx:146
+#: src/routes/dashboard.tags.tsx:234
+#: src/routes/dashboard.tags.tsx:303
+msgid "Delete"
+msgstr "Sil"
+
+#: src/components/editor/bubble-menus.tsx:439
+msgid "Delete column"
+msgstr "Sütunu sil"
+
+#: src/components/editor/bubble-menus.tsx:467
+msgid "Delete row"
+msgstr "Satırı sil"
+
+#: src/components/editor/bubble-menus.tsx:487
+msgid "Delete table"
+msgstr "Tabloyu sil"
+
+#: src/routes/dashboard.categories.tsx:134
+msgid "Delete this category?"
+msgstr "Bu kategori silinsin mi?"
+
+#: src/routes/dashboard.media.tsx:138
+msgid "Delete this media?"
+msgstr "Bu medya silinsin mi?"
+
+#: src/routes/dashboard.index.tsx:190
+msgid "Delete this post?"
+msgstr "Bu yazı silinsin mi?"
+
+#: src/routes/dashboard.tags.tsx:295
+msgid "Delete this tag?"
+msgstr "Bu etiket silinsin mi?"
+
+#: src/components/editor/post-settings.tsx:388
+msgid "Description text shown in search results."
+msgstr "Arama sonuçlarında görünecek açıklama metni."
+
+#: src/components/editor/post-settings.tsx:40
+#~ msgid "Design"
+#~ msgstr "Tasarım"
+
+#: src/routes/dashboard.plugins.tsx:67
+msgid "Disabled"
+msgstr "Devre dışı"
+
+#: src/components/editor/extensions/slash-command.tsx:154
+#: src/components/editor/toolbar.tsx:574
+msgid "Divider"
+msgstr "Ayraç"
+
+#: src/components/editor/dialogs.tsx:473
+msgid "Download"
+msgstr "İndir"
+
+#: src/components/editor/types.ts:26
+msgid "Draft"
+msgstr "Taslak"
+
+#: src/components/editor/mavi-editor.tsx:267
+msgid "Draft saved"
+msgstr "Taslak kaydedildi"
+
+#: src/components/editor/block-handle.tsx:179
+msgid "Duplicate"
+msgstr "Çoğalt"
+
+#: src/routes/dashboard.tags.tsx:144
+msgid "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
+msgstr "Her dilin kendi etiketleri vardır. Bir yazının etiketinin başka dildeki karşılığına işaret etmesi için bunları bağlayın."
+
+#: src/components/editor/bubble-menus.tsx:323
+#: src/components/editor/mavi-editor.tsx:452
+#: src/routes/dashboard.index.tsx:164
+msgid "Edit"
+msgstr "Düzenle"
+
+#: src/components/editor/dialogs.tsx:529
+msgid "Editing"
+msgstr "Düzenleme"
+
+#: src/components/setup/setup-wizard.tsx:698
+msgid "Email"
+msgstr "E-posta"
+
+#: src/components/editor/dialogs.tsx:240
+msgid "Embed"
+msgstr "Göm"
+
+#: src/components/editor/extensions/slash-command.tsx:200
+msgid "Embed a video"
+msgstr "Video gömme ekle"
+
+#: src/components/editor/dialogs.tsx:537
+msgid "Emoji"
+msgstr "Emoji"
+
+#: src/routes/dashboard.plugins.tsx:65
+msgid "Enabled"
+msgstr "Etkin"
+
+#: src/routes/dashboard.plugins_.s3.tsx:146
+msgid "Endpoint"
+msgstr "Endpoint"
+
+#: src/components/editor/post-settings.tsx:39
+#~ msgid "Engineering"
+#~ msgstr "Mühendislik"
+
+#: src/components/setup/setup-wizard.tsx:709
+msgid "Enter a valid email address"
+msgstr "Geçerli bir e-posta adresi girin"
+
+#: src/components/setup/setup-wizard.tsx:403
+msgid "Enter details"
+msgstr "Bilgileri gir"
+
+#: src/components/editor/post-settings.tsx:248
+msgid "Excerpt"
+msgstr "Özet"
+
+#: src/components/editor/post-settings.tsx:325
+msgid "Featured"
+msgstr "Öne çıkar"
+
+#: src/components/editor/dialogs.tsx:534
+#: src/components/editor/find-replace.tsx:73
+#: src/components/editor/toolbar.tsx:642
+msgid "Find and replace"
+msgstr "Bul ve değiştir"
+
+#: src/components/editor/find-replace.tsx:84
+msgid "Find…"
+msgstr "Ara…"
+
+#: src/components/editor/dialogs.tsx:543
+#: src/components/editor/mavi-editor.tsx:471
+msgid "Focus mode"
+msgstr "Odak modu"
+
+#: src/components/editor/extensions/slash-command.tsx:146
+msgid "Foldable details block"
+msgstr "Katlanabilir detay bloğu"
+
+#: src/components/editor/toolbar.tsx:235
+msgid "Font"
+msgstr "Yazı tipi"
+
+#: src/components/editor/extensions/slash-command.tsx:243
+#: src/components/editor/extensions/slash-command.tsx:252
+#: src/components/editor/extensions/slash-command.tsx:261
+msgid "Format"
+msgstr "Biçim"
+
+#: src/components/editor/dialogs.tsx:505
+msgid "Formatting"
+msgstr "Biçimlendirme"
+
+#: src/components/editor/bubble-menus.tsx:387
+msgid "Full width"
+msgstr "Tam genişlik"
+
+#: src/components/editor/dialogs.tsx:544
+#: src/components/editor/mavi-editor.tsx:486
+msgid "Fullscreen"
+msgstr "Tam ekran"
+
+#: src/components/editor/post-settings.tsx:266
+msgid "Generate from post"
+msgstr "Yazıdan üret"
+
+#: src/components/editor/post-settings.tsx:155
+msgid "Generate from title"
+msgstr "Başlıktan üret"
+
+#: src/components/setup/setup-wizard.tsx:749
+msgid "Generate password"
+msgstr "Parola üret"
+
+#: src/components/editor/mavi-editor.tsx:241
+msgid "Give your post a title first"
+msgstr "Önce yazıya bir başlık verin"
+
+#: src/components/editor/post-settings.tsx:42
+#~ msgid "Guide"
+#~ msgstr "Rehber"
+
+#: src/components/editor/bubble-menus.tsx:432
+msgid "Header column"
+msgstr "Başlık sütunu"
+
+#: src/components/editor/bubble-menus.tsx:460
+msgid "Header row"
+msgstr "Başlık satırı"
+
+#. placeholder {0}: node.attrs.level
+#: src/components/editor/extensions/index.ts:176
+msgid "Heading {0}"
+msgstr "Başlık {0}"
+
+#: src/components/editor/extensions/slash-command.tsx:64
+#: src/components/editor/toolbar.tsx:91
+msgid "Heading 1"
+msgstr "Başlık 1"
+
+#: src/components/editor/dialogs.tsx:519
+msgid "Heading 1–6"
+msgstr "Başlık 1–6"
+
+#: src/components/editor/extensions/slash-command.tsx:73
+#: src/components/editor/toolbar.tsx:92
+msgid "Heading 2"
+msgstr "Başlık 2"
+
+#: src/components/editor/extensions/slash-command.tsx:82
+#: src/components/editor/toolbar.tsx:93
+msgid "Heading 3"
+msgstr "Başlık 3"
+
+#: src/components/editor/extensions/slash-command.tsx:91
+#: src/components/editor/toolbar.tsx:94
+msgid "Heading 4"
+msgstr "Başlık 4"
+
+#: src/components/editor/toolbar.tsx:95
+msgid "Heading 5"
+msgstr "Başlık 5"
+
+#: src/components/editor/toolbar.tsx:96
+msgid "Heading 6"
+msgstr "Başlık 6"
+
+#: src/components/editor/toc-panel.tsx:28
+msgid "Headings you add will show up here."
+msgstr "Başlık ekledikçe içindekiler burada oluşur."
+
+#: src/components/setup/setup-wizard.tsx:735
+msgid "Hide password"
+msgstr "Parolayı gizle"
+
+#: src/components/editor/bubble-menus.tsx:165
+#: src/components/editor/extensions/slash-command.tsx:250
+#: src/components/editor/toolbar.tsx:407
+msgid "Highlight"
+msgstr "Vurgu"
+
+#: src/components/editor/toolbar.tsx:397
+msgid "Highlight color"
+msgstr "Vurgu rengi"
+
+#: src/components/editor/extensions/slash-command.tsx:251
+msgid "Highlight text with color"
+msgstr "Metni renkli vurgula"
+
+#: src/components/editor/post-settings.tsx:326
+msgid "Highlighted on the home page"
+msgstr "Ana sayfada vitrine alınır"
+
+#: src/components/setup/setup-wizard.tsx:484
+msgid "Host"
+msgstr "Sunucu adresi"
+
+#: src/components/editor/toolbar.tsx:592
+msgid "Image"
+msgstr "Görsel"
+
+#: src/components/editor/extensions/slash-command.tsx:188
+msgid "Image (URL)"
+msgstr "Görsel (URL)"
+
+#: src/components/editor/dialogs.tsx:178
+msgid "Image address"
+msgstr "Görsel adresi"
+
+#: src/components/editor/dialogs.tsx:446
+msgid "Import"
+msgstr "İçe aktar"
+
+#: src/components/editor/dialogs.tsx:434
+#: src/components/editor/mavi-editor.tsx:494
+msgid "Import / export"
+msgstr "İçe / dışa aktar"
+
+#: src/components/editor/types.ts:27
+msgid "In review"
+msgstr "İncelemede"
+
+#: src/components/editor/toolbar.tsx:534
+msgid "Increase indent"
+msgstr "Girintiyi artır"
+
+#: src/components/editor/dialogs.tsx:511
+#: src/components/editor/extensions/slash-command.tsx:241
+#: src/components/editor/toolbar.tsx:323
+msgid "Inline code"
+msgstr "Satır içi kod"
+
+#: src/components/editor/extensions/slash-command.tsx:165
+#: src/components/editor/extensions/slash-command.tsx:179
+#: src/components/editor/extensions/slash-command.tsx:190
+#: src/components/editor/extensions/slash-command.tsx:201
+#: src/components/editor/extensions/slash-command.tsx:212
+#: src/components/editor/extensions/slash-command.tsx:223
+msgid "Insert"
+msgstr "Ekle"
+
+#: src/components/editor/extensions/slash-command.tsx:164
+msgid "Insert a 3×3 table"
+msgstr "3x3 tablo ekle"
+
+#: src/components/editor/extensions/slash-command.tsx:222
+msgid "Insert the current date as text"
+msgstr "Tarihi metne yaz"
+
+#: src/components/setup/setup-wizard.tsx:803
+msgid "Install Mavi CMS"
+msgstr "Mavi CMS'i kur"
+
+#: src/components/setup/setup-wizard.tsx:815
+msgid "Installing Mavi CMS…"
+msgstr "Mavi CMS kuruluyor…"
+
+#: src/components/editor/bubble-menus.tsx:127
+#: src/components/editor/dialogs.tsx:508
+#: src/components/editor/toolbar.tsx:299
+msgid "Italic"
+msgstr "İtalik"
+
+#: src/components/setup/setup-wizard.tsx:609
+msgid "Just another Mavi CMS site"
+msgstr "Sadece bir başka Mavi CMS sitesi"
+
+#: src/components/editor/toolbar.tsx:489
+msgid "Justify"
+msgstr "İki yana yasla"
+
+#: src/components/editor/extensions/index.ts:187
+msgid "Keep going, type “/” to add a block…"
+msgstr "Devam et, “/” ile blok ekle…"
+
+#: src/components/editor/dialogs.tsx:565
+msgid "Keyboard shortcuts"
+msgstr "Klavye kısayolları"
+
+#: src/components/locale-toggle.tsx:23
+#: src/routes/dashboard.index.tsx:87
+msgid "Language"
+msgstr "Dil"
+
+#: src/components/dashboard/dashboard-shell.tsx:30
+#: src/routes/dashboard.languages.tsx:92
+msgid "Languages"
+msgstr "Diller"
+
+#: src/components/editor/extensions/slash-command.tsx:65
+msgid "Large section heading"
+msgstr "Büyük bölüm başlığı"
+
+#: src/routes/dashboard.plugins_.s3.tsx:147
+msgid "Leave empty for AWS S3"
+msgstr "AWS S3 için boş bırakın"
+
+#: src/components/mode-toggle.tsx:37
+msgid "Light"
+msgstr "Açık"
+
+#: src/components/editor/toolbar.tsx:620
+msgid "Line height"
+msgstr "Satır aralığı"
+
+#: src/components/editor/bubble-menus.tsx:236
+#: src/components/editor/dialogs.tsx:295
+#: src/components/editor/dialogs.tsx:512
+#: src/components/editor/extensions/slash-command.tsx:210
+#: src/components/editor/toolbar.tsx:585
+msgid "Link"
+msgstr "Bağlantı"
+
+#: src/components/editor/bubble-menus.tsx:325
+msgid "Link address"
+msgstr "Bağlantı adresi"
+
+#: src/components/editor/dialogs.tsx:315
+msgid "Link text"
+msgstr "Bağlantı metni"
+
+#: src/routes/dashboard.tags.tsx:276
+msgid "Link translation"
+msgstr "Çeviriyi bağla"
+
+#: src/components/editor/extensions/slash-command.tsx:102
+#: src/components/editor/extensions/slash-command.tsx:111
+#: src/components/editor/extensions/slash-command.tsx:120
+msgid "Lists"
+msgstr "Listeler"
+
+#: src/components/editor/dialogs.tsx:150
+msgid "Loading…"
+msgstr "Yükleniyor…"
+
+#: src/routes/dashboard.languages.tsx:166
+msgid "Make default"
+msgstr "Varsayılan yap"
+
+#: src/components/editor/extensions/slash-command.tsx:242
+msgid "Mark selection as code"
+msgstr "Seçimi kod olarak işaretle"
+
+#: src/components/editor/dialogs.tsx:426
+msgid "Markdown imported"
+msgstr "Markdown içeri aktarıldı"
+
+#: src/components/setup/setup-wizard.tsx:382
+msgid "Mavi CMS needs a database to store your site."
+msgstr "Mavi CMS, sitenizi saklamak için bir veritabanına ihtiyaç duyar."
+
+#: src/components/dashboard/dashboard-shell.tsx:27
+msgid "Media"
+msgstr "Medya"
+
+#: src/components/editor/dialogs.tsx:144
+#: src/routes/dashboard.media.tsx:75
+msgid "Media library"
+msgstr "Medya kütüphanesi"
+
+#: src/components/setup/setup-wizard.tsx:642
+msgid "Medium"
+msgstr "Orta"
+
+#: src/components/editor/extensions/slash-command.tsx:74
+msgid "Medium section heading"
+msgstr "Orta bölüm başlığı"
+
+#: src/components/editor/dialogs.tsx:536
+msgid "Mention someone"
+msgstr "Kişi etiketle"
+
+#: src/components/editor/bubble-menus.tsx:475
+msgid "Merge cells"
+msgstr "Hücreleri birleştir"
+
+#: src/components/setup/setup-wizard.tsx:597
+msgid "My Mavi CMS Site"
+msgstr "Mavi CMS Sitem"
+
+#: src/routes/dashboard.languages.tsx:114
+msgid "Name (optional)"
+msgstr "Ad (isteğe bağlı)"
+
+#: src/components/editor/post-settings.tsx:185
+#: src/routes/dashboard.categories.tsx:90
+msgid "New category"
+msgstr "Yeni kategori"
+
+#: src/components/dashboard/dashboard-shell.tsx:69
+#: src/routes/dashboard.index.tsx:126
+msgid "New post"
+msgstr "Yeni yazı"
+
+#: src/routes/dashboard.tags.tsx:153
+msgid "New tag"
+msgstr "Yeni etiket"
+
+#: src/components/editor/find-replace.tsx:112
+msgid "Next"
+msgstr "Sonraki"
+
+#: src/routes/dashboard.categories.tsx:103
+msgid "No categories yet"
+msgstr "Henüz kategori yok"
+
+#: src/components/editor/extensions/suggestions.tsx:189
+msgid "No emoji found"
+msgstr "Emoji bulunamadı"
+
+#: src/components/editor/dialogs.tsx:154
+#: src/routes/dashboard.media.tsx:96
+msgid "No media uploaded yet"
+msgstr "Henüz medya yüklenmedi"
+
+#: src/components/editor/extensions/suggestions.tsx:139
+msgid "No people found"
+msgstr "Kişi bulunamadı"
+
+#: src/routes/dashboard.index.tsx:120
+msgid "No posts yet"
+msgstr "Henüz yazı yok"
+
+#: src/components/editor/extensions/slash-command.tsx:362
+msgid "No results found"
+msgstr "Sonuç bulunamadı"
+
+#: src/routes/dashboard.tags.tsx:184
+msgid "No tags yet"
+msgstr "Henüz etiket yok"
+
+#: src/routes/dashboard.plugins.tsx:68
+msgid "Not configured"
+msgstr "Yapılandırılmadı"
+
+#: src/components/editor/dialogs.tsx:522
+#: src/components/editor/extensions/slash-command.tsx:109
+#: src/components/editor/toolbar.tsx:510
+msgid "Numbered list"
+msgstr "Numaralı liste"
+
+#: src/components/editor/bubble-menus.tsx:282
+msgid "Open"
+msgstr "Aç"
+
+#: src/components/editor/dialogs.tsx:320
+msgid "Open in new tab"
+msgstr "Yeni sekmede aç"
+
+#: src/routes/dashboard.plugins_.s3.tsx:194
+msgid "Optional folder inside the bucket"
+msgstr "Bucket içinde isteğe bağlı klasör"
+
+#: src/components/editor/dialogs.tsx:520
+#: src/components/editor/extensions/slash-command.tsx:55
+#: src/components/editor/toolbar.tsx:90
+msgid "Paragraph"
+msgstr "Paragraf"
+
+#: src/components/setup/setup-wizard.tsx:529
+#: src/components/setup/setup-wizard.tsx:716
+#: src/routes/login.tsx:98
+msgid "Password"
+msgstr "Parola"
+
+#: src/components/editor/dialogs.tsx:110
+#~ msgid "Paste an image address or drag and drop one."
+#~ msgstr "Görsel adresini yapıştır ya da sürükleyip bırak."
+
+#: src/components/editor/dialogs.tsx:135
+msgid "Paste an image address, drag and drop one, or pick from your media library."
+msgstr "Bir görsel adresi yapıştırın, sürükleyip bırakın veya medya kütüphanenizden seçin."
+
+#: src/components/editor/dialogs.tsx:227
+msgid "Paste the video link."
+msgstr "Video bağlantısını yapıştır."
+
+#: src/routes/dashboard.plugins_.s3.tsx:193
+msgid "Path prefix"
+msgstr "Yol öneki"
+
+#: src/components/editor/post-settings.tsx:141
+msgid "Permalink"
+msgstr "Kalıcı bağlantı"
+
+#: src/routes/dashboard.tags.tsx:250
+msgid "Pick a tag"
+msgstr "Bir etiket seçin"
+
+#: src/components/editor/extensions/slash-command.tsx:178
+msgid "Pick an image from your computer"
+msgstr "Bilgisayarından görsel seç"
+
+#: src/components/editor/code-block-view.tsx:41
+msgid "plain text"
+msgstr "düz metin"
+
+#: src/components/editor/extensions/slash-command.tsx:56
+msgid "Plain text block"
+msgstr "Düz metin bloğu"
+
+#: src/components/dashboard/dashboard-shell.tsx:31
+#: src/routes/dashboard.plugins_.s3.tsx:113
+#: src/routes/dashboard.plugins.tsx:40
+msgid "Plugins"
+msgstr "Eklentiler"
+
+#: src/components/setup/setup-wizard.tsx:496
+msgid "Port"
+msgstr "Port"
+
+#: src/components/editor/post-settings.tsx:382
+msgid "post"
+msgstr "yazı"
+
+#: src/routes/dashboard.index.tsx:75
+msgid "Post deleted"
+msgstr "Yazı silindi"
+
+#: src/components/editor/mavi-editor.tsx:538
+msgid "Post published"
+msgstr "Yazı yayınlandı"
+
+#: src/components/editor/mavi-editor.tsx:609
+msgid "Post settings"
+msgstr "Yazı ayarları"
+
+#: src/components/editor/mavi-editor.tsx:594
+#: src/components/editor/post-settings.tsx:385
+msgid "Post title"
+msgstr "Yazı başlığı"
+
+#: src/components/editor/post-settings.tsx:143
+#: src/components/editor/post-settings.tsx:150
+msgid "post-url"
+msgstr "yazi-adresi"
+
+#: src/components/dashboard/dashboard-shell.tsx:26
+msgid "Posts"
+msgstr "Yazılar"
+
+#: src/components/editor/mavi-editor.tsx:479
+msgid "Preview"
+msgstr "Önizleme"
+
+#: src/components/editor/find-replace.tsx:104
+msgid "Previous"
+msgstr "Önceki"
+
+#: src/components/editor/post-settings.tsx:38
+#~ msgid "Product"
+#~ msgstr "Ürün"
+
+#: src/routes/dashboard.plugins_.s3.tsx:185
+msgid "Public base URL"
+msgstr "Genel URL tabanı"
+
+#: src/components/editor/mavi-editor.tsx:543
+msgid "Publish"
+msgstr "Yayınla"
+
+#: src/components/editor/post-settings.tsx:131
+msgid "Publish date"
+msgstr "Yayın tarihi"
+
+#: src/components/editor/types.ts:29
+msgid "Published"
+msgstr "Yayında"
+
+#: src/components/editor/dialogs.tsx:524
+#: src/components/editor/extensions/slash-command.tsx:127
+#: src/components/editor/toolbar.tsx:97
+#: src/components/editor/toolbar.tsx:547
+msgid "Quote"
+msgstr "Alıntı"
+
+#: src/components/editor/extensions/slash-command.tsx:260
+msgid "Raise text above the line"
+msgstr "Metni üst simge yap"
+
+#: src/components/editor/post-settings.tsx:333
+msgid "Readers can leave comments"
+msgstr "Okurlar yorum yazabilir"
+
+#: src/components/editor/dialogs.tsx:532
+#: src/components/editor/toolbar.tsx:177
+msgid "Redo"
+msgstr "İleri al"
+
+#: src/routes/dashboard.plugins_.s3.tsx:154
+msgid "Region"
+msgstr "Bölge"
+
+#: src/components/editor/find-replace.tsx:163
+msgid "Regular expression"
+msgstr "Düzenli ifade"
+
+#: src/components/editor/bubble-menus.tsx:193
+#: src/components/editor/bubble-menus.tsx:274
+#: src/routes/dashboard.languages.tsx:196
+msgid "Remove"
+msgstr "Kaldır"
+
+#: src/components/editor/post-settings.tsx:234
+msgid "Remove {tag} tag"
+msgstr "{tag} etiketini kaldır"
+
+#: src/components/editor/toolbar.tsx:432
+msgid "Remove highlight"
+msgstr "Vurguyu kaldır"
+
+#: src/components/editor/bubble-menus.tsx:334
+msgid "Remove link"
+msgstr "Bağlantıyı kaldır"
+
+#: src/routes/dashboard.languages.tsx:188
+msgid "Remove this language?"
+msgstr "Bu dil silinsin mi?"
+
+#: src/components/editor/find-replace.tsx:129
+msgid "Replace"
+msgstr "Değiştir"
+
+#: src/components/editor/find-replace.tsx:139
+msgid "Replace all"
+msgstr "Tümünü değiştir"
+
+#: src/components/editor/dialogs.tsx:488
+msgid "Replace content"
+msgstr "İçeriği değiştir"
+
+#: src/components/editor/find-replace.tsx:124
+msgid "Replace…"
+msgstr "Değiştir…"
+
+#: src/routes/dashboard.plugins_.s3.tsx:74
+msgid "Request failed"
+msgstr "İstek başarısız oldu"
+
+#: src/components/editor/bubble-menus.tsx:450
+msgid "Row"
+msgstr "Satır"
+
+#: src/routes/dashboard.plugins_.s3.tsx:117
+#: src/routes/dashboard.plugins.tsx:26
+msgid "S3 compatible storage"
+msgstr "S3 uyumlu depolama"
+
+#: src/components/editor/mavi-editor.tsx:532
+#: src/routes/dashboard.plugins_.s3.tsx:238
+msgid "Save"
+msgstr "Kaydet"
+
+#: src/components/editor/status-bar.tsx:113
+msgid "Saved"
+msgstr "Kaydedildi"
+
+#. placeholder {0}: savedAt.toLocaleTimeString(i18n.locale, { hour: "2-digit", minute: "2-digit", })
+#: src/components/editor/status-bar.tsx:105
+msgid "Saved at {0}"
+msgstr "{0} itibarıyla kaydedildi"
+
+#: src/components/editor/status-bar.tsx:98
+msgid "Saving…"
+msgstr "Kaydediliyor…"
+
+#: src/components/editor/types.ts:28
+msgid "Scheduled"
+msgstr "Zamanlanmış"
+
+#: src/components/editor/post-settings.tsx:341
+msgid "Search engine"
+msgstr "Arama motoru"
+
+#: src/routes/dashboard.plugins_.s3.tsx:173
+msgid "Secret access key"
+msgstr "Gizli anahtar (Secret access key)"
+
+#: src/components/editor/extensions/index.ts:167
+msgid "section"
+msgstr "bölüm"
+
+#: src/components/editor/extensions/index.ts:179
+msgid "Section title"
+msgstr "Bölüm başlığı"
+
+#: src/components/editor/post-settings.tsx:117
+msgid "Select"
+msgstr "Seç"
+
+#: src/components/editor/dialogs.tsx:533
+msgid "Select all"
+msgstr "Tümünü seç"
+
+#: src/components/setup/setup-wizard.tsx:207
+msgid "Select your language"
+msgstr "Dilinizi seçin"
+
+#: src/components/editor/post-settings.tsx:356
+msgid "SEO description"
+msgstr "SEO açıklaması"
+
+#: src/components/editor/post-settings.tsx:344
+msgid "SEO title"
+msgstr "SEO başlığı"
+
+#: src/components/editor/mavi-editor.tsx:507
+msgid "Settings panel"
+msgstr "Ayarlar paneli"
+
+#: src/routes/dashboard.plugins_.s3.tsx:87
+msgid "Settings saved"
+msgstr "Ayarlar kaydedildi"
+
+#: src/components/setup/setup-wizard.tsx:865
+msgid "Setup failed"
+msgstr "Kurulum başarısız oldu"
+
+#: src/components/editor/dialogs.tsx:193
+msgid "Short description of the image"
+msgstr "Görseli tanımlayan kısa metin"
+
+#: src/components/editor/post-settings.tsx:254
+msgid "Short description shown on listing pages"
+msgstr "Liste sayfalarında görünecek kısa açıklama"
+
+#: src/components/editor/dialogs.tsx:545
+#: src/components/editor/mavi-editor.tsx:500
+msgid "Shortcuts"
+msgstr "Kısayollar"
+
+#: src/components/setup/setup-wizard.tsx:735
+msgid "Show password"
+msgstr "Parolayı göster"
+
+#: src/routes/login.tsx:71
+#: src/routes/login.tsx:112
+msgid "Sign in"
+msgstr "Giriş yap"
+
+#: src/routes/login.tsx:74
+msgid "Sign in to manage your site."
+msgstr "Sitenizi yönetmek için giriş yapın."
+
+#: src/components/dashboard/dashboard-shell.tsx:76
+#: src/components/editor/mavi-editor.tsx:516
+msgid "Sign out"
+msgstr "Çıkış yap"
+
+#: src/components/setup/setup-wizard.tsx:590
+msgid "Site title"
+msgstr "Site başlığı"
+
+#: src/components/editor/extensions/slash-command.tsx:83
+msgid "Small section heading"
+msgstr "Küçük bölüm başlığı"
+
+#: src/components/editor/bubble-menus.tsx:481
+msgid "Split cell"
+msgstr "Hücreyi böl"
+
+#: src/components/editor/extensions/index.ts:185
+msgid "Start writing, or type “/” for commands…"
+msgstr "Yazmaya başla veya komutlar için “/” yaz…"
+
+#: src/components/editor/post-settings.tsx:109
+msgid "Status"
+msgstr "Durum"
+
+#: src/routes/dashboard.plugins.tsx:27
+msgid "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
+msgstr "Yüklenen medyayı yerel disk yerine bir S3 bucket'ında saklar (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces)."
+
+#: src/routes/dashboard.plugins_.s3.tsx:177
+msgid "Stored — leave empty to keep it unchanged"
+msgstr "Kayıtlı — değiştirmemek için boş bırakın"
+
+#: src/components/editor/bubble-menus.tsx:143
+#: src/components/editor/dialogs.tsx:510
+#: src/components/editor/toolbar.tsx:315
+msgid "Strikethrough"
+msgstr "Üstü çizili"
+
+#: src/components/setup/setup-wizard.tsx:643
+msgid "Strong"
+msgstr "Güçlü"
+
+#: src/components/editor/extensions/slash-command.tsx:92
+msgid "Sub-heading"
+msgstr "Alt başlık"
+
+#: src/components/editor/toolbar.tsx:438
+msgid "Subscript"
+msgstr "Alt simge"
+
+#: src/components/setup/setup-wizard.tsx:835
+msgid "Success!"
+msgstr "Başarılı!"
+
+#: src/components/editor/extensions/slash-command.tsx:259
+#: src/components/editor/toolbar.tsx:445
+msgid "Superscript"
+msgstr "Üst simge"
+
+#: src/components/editor/extensions/slash-command.tsx:137
+msgid "Syntax-highlighted code"
+msgstr "Sözdizimi vurgulu kod"
+
+#: src/components/mode-toggle.tsx:49
+msgid "System"
+msgstr "Sistem"
+
+#: src/components/editor/extensions/slash-command.tsx:163
+#: src/components/editor/toolbar.tsx:599
+msgid "Table"
+msgstr "Tablo"
+
+#: src/components/editor/mavi-editor.tsx:464
+#: src/components/editor/mavi-editor.tsx:559
+msgid "Table of contents"
+msgstr "İçindekiler"
+
+#: src/components/setup/setup-wizard.tsx:603
+msgid "Tagline"
+msgstr "Slogan"
+
+#: src/components/dashboard/dashboard-shell.tsx:29
+#: src/components/editor/post-settings.tsx:206
+#: src/routes/dashboard.tags.tsx:142
+msgid "Tags"
+msgstr "Etiketler"
+
+#: src/routes/dashboard.tags.tsx:101
+msgid "Tags linked"
+msgstr "Etiketler bağlandı"
+
+#: src/components/editor/dialogs.tsx:523
+#: src/components/editor/extensions/slash-command.tsx:118
+#: src/components/editor/toolbar.tsx:518
+msgid "Task list"
+msgstr "Görev listesi"
+
+#: src/components/setup/setup-wizard.tsx:581
+msgid "Tell us about your site"
+msgstr "Siteniz hakkında bilgi verin"
+
+#: src/components/setup/setup-wizard.tsx:548
+msgid "Test & continue"
+msgstr "Test et ve devam et"
+
+#: src/routes/dashboard.plugins_.s3.tsx:234
+msgid "Test connection"
+msgstr "Bağlantıyı test et"
+
+#: src/components/setup/setup-wizard.tsx:360
+msgid "Testing connection…"
+msgstr "Bağlantı test ediliyor…"
+
+#: src/components/editor/dialogs.tsx:310
+#: src/components/editor/dialogs.tsx:419
+msgid "Text"
+msgstr "Metin"
+
+#: src/components/editor/toolbar.tsx:339
+#: src/components/editor/toolbar.tsx:352
+msgid "Text color"
+msgstr "Metin rengi"
+
+#: src/components/editor/post-settings.tsx:364
+msgid "Text shown in search results"
+msgstr "Arama sonuçlarında görünecek metin"
+
+#: src/routes/dashboard.languages.tsx:94
+msgid "The languages your content can be written in. This is separate from the language of this admin panel."
+msgstr "İçeriğinizin yazılabileceği diller. Bu, yönetim panelinin dilinden bağımsızdır."
+
+#: src/components/editor/dialogs.tsx:567
+msgid "The most common shortcuts in the editor."
+msgstr "Editörde en sık kullanılan kısayollar."
+
+#: src/components/setup/setup-wizard.tsx:322
+msgid "The server is taking longer than expected to restart. Reload this page in a moment."
+msgstr "Sunucunun yeniden başlaması beklenenden uzun sürüyor. Bir süre sonra bu sayfayı yenileyin."
+
+#: src/components/mode-toggle.tsx:24
+msgid "Theme"
+msgstr "Tema"
+
+#: src/components/editor/extensions/slash-command.tsx:221
+msgid "Today's date"
+msgstr "Bugünün tarihi"
+
+#: src/components/editor/mavi-editor.tsx:422
+msgid "Translations"
+msgstr "Çeviriler"
+
+#: src/components/setup/setup-wizard.tsx:870
+msgid "Try again"
+msgstr "Tekrar dene"
+
+#: src/components/editor/block-handle.tsx:163
+msgid "Turn into"
+msgstr "Şuna dönüştür"
+
+#: src/routes/dashboard.index.tsx:145
+msgid "Uncategorized"
+msgstr "Kategorisiz"
+
+#: src/components/editor/bubble-menus.tsx:135
+#: src/components/editor/dialogs.tsx:509
+#: src/components/editor/toolbar.tsx:307
+msgid "Underline"
+msgstr "Altı çizili"
+
+#: src/components/editor/dialogs.tsx:531
+#: src/components/editor/toolbar.tsx:169
+msgid "Undo"
+msgstr "Geri al"
+
+#: src/routes/dashboard.tags.tsx:224
+msgid "Unlink"
+msgstr "Bağlantıyı kaldır"
+
+#: src/components/editor/status-bar.tsx:119
+msgid "Unsaved changes"
+msgstr "Değişiklik bekleniyor"
+
+#: src/components/editor/toc-panel.tsx:53
+msgid "Untitled"
+msgstr "Başlıksız"
+
+#: src/components/editor/mavi-editor.tsx:404
+#: src/components/editor/mavi-editor.tsx:592
+#: src/routes/dashboard.index.tsx:142
+msgid "Untitled post"
+msgstr "Başlıksız yazı"
+
+#: src/routes/dashboard.media.tsx:78
+msgid "Upload"
+msgstr "Yükle"
+
+#: src/components/editor/post-settings.tsx:282
+msgid "Upload cover image"
+msgstr "Kapak görseli yükle"
+
+#: src/components/editor/extensions/slash-command.tsx:177
+msgid "Upload image"
+msgstr "Görsel yükle"
+
+#: src/components/editor/dialogs.tsx:141
+msgid "URL"
+msgstr "URL"
+
+#: src/routes/dashboard.plugins_.s3.tsx:132
+msgid "Use S3 for new uploads"
+msgstr "Yeni yüklemelerde S3 kullan"
+
+#: src/components/setup/setup-wizard.tsx:519
+#: src/components/setup/setup-wizard.tsx:680
+#: src/routes/login.tsx:86
+msgid "Username"
+msgstr "Kullanıcı adı"
+
+#: src/components/editor/dialogs.tsx:541
+msgid "View"
+msgstr "Görünüm"
+
+#: src/components/setup/setup-wizard.tsx:641
+msgid "Weak"
+msgstr "Zayıf"
+
+#: src/routes/dashboard.plugins_.s3.tsx:134
+msgid "When off, uploads are stored on the server's disk."
+msgstr "Kapalıyken yüklemeler sunucunun diskinde saklanır."
+
+#: src/routes/dashboard.plugins_.s3.tsx:186
+msgid "Where readers load the images from (bucket public URL or CDN)"
+msgstr "Okuyucuların görselleri yüklediği adres (bucket genel URL'si veya CDN)"
+
+#: src/components/editor/find-replace.tsx:156
+msgid "Whole word"
+msgstr "Tam kelime"
+
+#: src/routes/dashboard.plugins_.s3.tsx:119
+msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
+msgstr "AWS S3, Cloudflare R2, MinIO ve DigitalOcean Spaces ile çalışır. Mevcut yerel dosyalar yerinde kalır; yalnızca yeni yüklemeler bucket'a gider."
+
+#: src/components/setup/setup-wizard.tsx:584
+msgid "You can change this later in your post settings."
+msgstr "Bunu daha sonra yazı ayarlarından değiştirebilirsiniz."
+
+#: src/components/setup/setup-wizard.tsx:210
+msgid "You can change this later."
+msgstr "Bunu daha sonra değiştirebilirsiniz."
+
+#: src/components/setup/setup-wizard.tsx:674
+msgid "You'll use this to sign in and manage your site."
+msgstr "Bunu siteye giriş yapmak ve yönetmek için kullanacaksınız."
+
+#: src/components/editor/toolbar.tsx:595
+msgid "YouTube"
+msgstr "YouTube"
+
+#: src/components/editor/dialogs.tsx:226
+msgid "YouTube video"
+msgstr "YouTube videosu"

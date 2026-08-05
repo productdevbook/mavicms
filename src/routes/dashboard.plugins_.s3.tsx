@@ -1,0 +1,276 @@
+/* eslint-disable react-refresh/only-export-components -- file-based route convention */
+import * as React from "react"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { Trans, useLingui } from "@lingui/react/macro"
+import { ArrowLeft, CheckCircle2, Loader2, XCircle } from "lucide-react"
+import { toast } from "sonner"
+
+import {
+  ApiError,
+  getS3Settings,
+  saveS3Settings,
+  testS3Settings,
+  type ConnectionTest,
+  type S3SettingsPayload,
+} from "@/lib/api"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+
+export const Route = createFileRoute("/dashboard/plugins_/s3")({
+  component: S3SettingsRoute,
+})
+
+const EMPTY: S3SettingsPayload = {
+  enabled: false,
+  endpoint: "",
+  region: "",
+  bucket: "",
+  access_key_id: "",
+  secret_access_key: "",
+  public_base_url: "",
+  path_prefix: "",
+}
+
+function S3SettingsRoute() {
+  const { t } = useLingui()
+  const navigate = useNavigate()
+  const [form, setForm] = React.useState<S3SettingsPayload>(EMPTY)
+  const [hasStoredSecret, setHasStoredSecret] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
+  const [busy, setBusy] = React.useState<"save" | "test" | null>(null)
+  const [testResult, setTestResult] = React.useState<ConnectionTest | null>(null)
+
+  React.useEffect(() => {
+    getS3Settings()
+      .then((settings) => {
+        setForm({ ...settings, secret_access_key: "" })
+        setHasStoredSecret(settings.has_secret_access_key)
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  const patch = (fields: Partial<S3SettingsPayload>) =>
+    setForm((current) => ({ ...current, ...fields }))
+
+  // An empty secret field means "keep the stored one", so it must not be sent.
+  const payload = (): S3SettingsPayload => ({
+    ...form,
+    secret_access_key: form.secret_access_key?.trim()
+      ? form.secret_access_key
+      : undefined,
+  })
+
+  const runTest = async () => {
+    setBusy("test")
+    setTestResult(null)
+    try {
+      setTestResult(await testS3Settings(payload()))
+    } catch (error) {
+      setTestResult({
+        ok: false,
+        message: error instanceof ApiError ? error.message : t`Request failed`,
+      })
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  const save = async () => {
+    setBusy("save")
+    try {
+      const saved = await saveS3Settings(payload())
+      setForm({ ...saved, secret_access_key: "" })
+      setHasStoredSecret(saved.has_secret_access_key)
+      toast.success(t`Settings saved`)
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError ? error.message : t`Could not save settings`
+      )
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-16">
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="mb-4 -ml-2"
+        onClick={() => navigate({ to: "/dashboard/plugins" })}
+      >
+        <ArrowLeft /> {t`Plugins`}
+      </Button>
+
+      <div className="mb-6">
+        <h1 className="text-lg font-semibold">{t`S3 compatible storage`}</h1>
+        <p className="text-sm text-muted-foreground">
+          {t`Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket.`}
+        </p>
+      </div>
+
+      <form
+        onSubmit={(event) => {
+          event.preventDefault()
+          void save()
+        }}
+        className="flex max-w-xl flex-col gap-4"
+      >
+        <div className="flex items-start justify-between gap-3 rounded-xl border border-border p-3">
+          <div className="flex flex-col">
+            <Label htmlFor="s3-enabled">{t`Use S3 for new uploads`}</Label>
+            <span className="text-xs text-muted-foreground">
+              {t`When off, uploads are stored on the server's disk.`}
+            </span>
+          </div>
+          <Switch
+            id="s3-enabled"
+            checked={form.enabled}
+            onCheckedChange={(value) => patch({ enabled: value })}
+          />
+        </div>
+
+        <Field
+          id="s3-endpoint"
+          label={t`Endpoint`}
+          hint={t`Leave empty for AWS S3`}
+          value={form.endpoint}
+          placeholder="https://<account>.r2.cloudflarestorage.com"
+          onChange={(value) => patch({ endpoint: value })}
+        />
+        <Field
+          id="s3-region"
+          label={t`Region`}
+          value={form.region}
+          placeholder="auto"
+          onChange={(value) => patch({ region: value })}
+        />
+        <Field
+          id="s3-bucket"
+          label={t`Bucket`}
+          value={form.bucket}
+          onChange={(value) => patch({ bucket: value })}
+        />
+        <Field
+          id="s3-access-key"
+          label={t`Access key ID`}
+          value={form.access_key_id}
+          onChange={(value) => patch({ access_key_id: value })}
+        />
+        <Field
+          id="s3-secret"
+          label={t`Secret access key`}
+          type="password"
+          hint={
+            hasStoredSecret
+              ? t`Stored — leave empty to keep it unchanged`
+              : undefined
+          }
+          value={form.secret_access_key ?? ""}
+          onChange={(value) => patch({ secret_access_key: value })}
+        />
+        <Field
+          id="s3-public-url"
+          label={t`Public base URL`}
+          hint={t`Where readers load the images from (bucket public URL or CDN)`}
+          value={form.public_base_url}
+          placeholder="https://cdn.example.com"
+          onChange={(value) => patch({ public_base_url: value })}
+        />
+        <Field
+          id="s3-prefix"
+          label={t`Path prefix`}
+          hint={t`Optional folder inside the bucket`}
+          value={form.path_prefix}
+          placeholder="media"
+          onChange={(value) => patch({ path_prefix: value })}
+        />
+
+        {testResult && (
+          <p
+            className={
+              testResult.ok
+                ? "flex items-start gap-2 rounded-md bg-emerald-500/10 px-3 py-2 text-xs text-emerald-600 dark:text-emerald-400"
+                : "flex items-start gap-2 rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive"
+            }
+          >
+            {testResult.ok ? (
+              <CheckCircle2 className="mt-px size-3.5 shrink-0" />
+            ) : (
+              <XCircle className="mt-px size-3.5 shrink-0" />
+            )}
+            {testResult.message}
+          </p>
+        )}
+
+        <p className="text-xs text-muted-foreground">
+          <Trans>
+            Credentials are encrypted before they are stored and are never sent
+            back to the browser.
+          </Trans>
+        </p>
+
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={busy !== null}
+            onClick={() => void runTest()}
+          >
+            {busy === "test" ? (
+              <Loader2 className="animate-spin" />
+            ) : null}
+            {t`Test connection`}
+          </Button>
+          <Button type="submit" disabled={busy !== null}>
+            {busy === "save" ? <Loader2 className="animate-spin" /> : null}
+            {t`Save`}
+          </Button>
+        </div>
+      </form>
+    </>
+  )
+}
+
+function Field({
+  id,
+  label,
+  hint,
+  value,
+  placeholder,
+  type,
+  onChange,
+}: {
+  id: string
+  label: string
+  hint?: string
+  value: string
+  placeholder?: string
+  type?: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <Input
+        id={id}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
+    </div>
+  )
+}

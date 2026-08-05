@@ -1,0 +1,1633 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-08-05 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. placeholder {0}: pendingDelete?.filename
+#. placeholder {0}: pendingDelete?.name
+#. placeholder {0}: pendingDelete?.title
+#: src/routes/dashboard.categories.tsx:136
+#: src/routes/dashboard.index.tsx:192
+#: src/routes/dashboard.media.tsx:140
+msgid "\"{0}\" will be permanently deleted. This cannot be undone."
+msgstr "\"{0}\" will be permanently deleted. This cannot be undone."
+
+#. placeholder {0}: pendingDelete?.name
+#: src/routes/dashboard.tags.tsx:297
+msgid "\"{0}\" will be removed from every post that uses it."
+msgstr "\"{0}\" will be removed from every post that uses it."
+
+#. placeholder {0}: stats.selected
+#: src/components/editor/status-bar.tsx:55
+msgid "{0, plural, one {# character selected} other {# characters selected}}"
+msgstr "{0, plural, one {# character selected} other {# characters selected}}"
+
+#. placeholder {0}: stats.characters
+#: src/components/editor/status-bar.tsx:47
+msgid "{0, plural, one {# character} other {# characters}}"
+msgstr "{0, plural, one {# character} other {# characters}}"
+
+#. placeholder {0}: stats.headings
+#: src/components/editor/status-bar.tsx:66
+msgid "{0, plural, one {# heading} other {# headings}}"
+msgstr "{0, plural, one {# heading} other {# headings}}"
+
+#. placeholder {0}: files.length
+#: src/components/editor/dialogs.tsx:55
+#~ msgid "{0, plural, one {# image added} other {# images added}}"
+#~ msgstr "{0, plural, one {# image added} other {# images added}}"
+
+#. placeholder {0}: stats.words
+#: src/components/editor/status-bar.tsx:44
+msgid "{0, plural, one {word} other {words}}"
+msgstr "{0, plural, one {word} other {words}}"
+
+#. placeholder {0}: preview.engine
+#. placeholder {1}: preview.host ?? "—"
+#. placeholder {2}: preview.database ?? "—"
+#. placeholder {3}: preview.username ?? "—"
+#: src/components/setup/setup-wizard.tsx:433
+msgid "{0} · {1} · {2} · {3}"
+msgstr "{0} · {1} · {2} · {3}"
+
+#. placeholder {0}: result.site_title
+#. placeholder {1}: result.admin_username
+#: src/components/setup/setup-wizard.tsx:838
+msgid "{0} is ready. You're signed in as <0>{1}</0>."
+msgstr "{0} is ready. You're signed in as <0>{1}</0>."
+
+#. placeholder {0}: hover.rows
+#. placeholder {1}: hover.cols
+#: src/components/editor/dialogs.tsx:350
+msgid "{0} rows × {1} columns"
+msgstr "{0} rows × {1} columns"
+
+#: src/components/editor/status-bar.tsx:63
+msgid "{minutes, plural, one {# min read} other {# min read}}"
+msgstr "{minutes, plural, one {# min read} other {# min read}}"
+
+#: src/components/editor/dialogs.tsx:66
+msgid "{uploaded, plural, one {# image added} other {# images added}}"
+msgstr "{uploaded, plural, one {# image added} other {# images added}}"
+
+#: src/components/editor/dialogs.tsx:483
+msgid "# Heading\n"
+"\n"
+"Paste your Markdown here…"
+msgstr "# Heading\n"
+"\n"
+"Paste your Markdown here…"
+
+#: src/components/editor/find-replace.tsx:101
+msgid "0 results"
+msgstr "0 results"
+
+#: src/components/setup/setup-wizard.tsx:691
+msgid "3-32 characters: letters, numbers, _ or -"
+msgstr "3-32 characters: letters, numbers, _ or -"
+
+#: src/routes/dashboard.plugins_.s3.tsx:167
+msgid "Access key ID"
+msgstr "Access key ID"
+
+#: src/routes/dashboard.languages.tsx:148
+msgid "Active"
+msgstr "Active"
+
+#: src/components/editor/dialogs.tsx:200
+#: src/routes/dashboard.tags.tsx:174
+msgid "Add"
+msgstr "Add"
+
+#: src/components/editor/extensions/slash-command.tsx:128
+msgid "Add a blockquote"
+msgstr "Add a blockquote"
+
+#: src/components/editor/extensions/slash-command.tsx:155
+msgid "Add a horizontal rule"
+msgstr "Add a horizontal rule"
+
+#: src/components/editor/dialogs.tsx:296
+msgid "Add a hyperlink to the selected text."
+msgstr "Add a hyperlink to the selected text."
+
+#: src/components/editor/post-settings.tsx:212
+msgid "Add a tag and press Enter"
+msgstr "Add a tag and press Enter"
+
+#: src/components/editor/extensions/slash-command.tsx:189
+msgid "Add an image from a link"
+msgstr "Add an image from a link"
+
+#: src/components/editor/post-settings.tsx:198
+#: src/routes/dashboard.categories.tsx:93
+msgid "Add category"
+msgstr "Add category"
+
+#: src/components/editor/bubble-menus.tsx:429
+msgid "Add column after"
+msgstr "Add column after"
+
+#: src/components/editor/bubble-menus.tsx:426
+msgid "Add column before"
+msgstr "Add column before"
+
+#: src/components/editor/dialogs.tsx:380
+msgid "Add header row"
+msgstr "Add header row"
+
+#: src/components/editor/extensions/slash-command.tsx:211
+msgid "Add hyperlinked text"
+msgstr "Add hyperlinked text"
+
+#: src/components/editor/dialogs.tsx:133
+msgid "Add image"
+msgstr "Add image"
+
+#: src/routes/dashboard.languages.tsx:118
+msgid "Add language"
+msgstr "Add language"
+
+#: src/components/editor/bubble-menus.tsx:457
+msgid "Add row after"
+msgstr "Add row after"
+
+#: src/components/editor/bubble-menus.tsx:454
+msgid "Add row before"
+msgstr "Add row before"
+
+#: src/components/editor/dialogs.tsx:348
+msgid "Add table"
+msgstr "Add table"
+
+#: src/components/editor/dialogs.tsx:300
+msgid "Address"
+msgstr "Address"
+
+#: src/components/editor/bubble-menus.tsx:362
+#: src/components/editor/extensions/slash-command.tsx:277
+#: src/components/editor/toolbar.tsx:473
+msgid "Align center"
+msgstr "Align center"
+
+#: src/components/editor/bubble-menus.tsx:355
+#: src/components/editor/extensions/slash-command.tsx:268
+#: src/components/editor/toolbar.tsx:465
+msgid "Align left"
+msgstr "Align left"
+
+#: src/components/editor/extensions/slash-command.tsx:269
+msgid "Align paragraph to the left"
+msgstr "Align paragraph to the left"
+
+#: src/components/editor/extensions/slash-command.tsx:287
+msgid "Align paragraph to the right"
+msgstr "Align paragraph to the right"
+
+#: src/components/editor/bubble-menus.tsx:368
+#: src/components/editor/extensions/slash-command.tsx:286
+#: src/components/editor/toolbar.tsx:481
+msgid "Align right"
+msgstr "Align right"
+
+#: src/components/editor/extensions/slash-command.tsx:270
+#: src/components/editor/extensions/slash-command.tsx:279
+#: src/components/editor/extensions/slash-command.tsx:288
+msgid "Alignment"
+msgstr "Alignment"
+
+#: src/components/editor/bubble-menus.tsx:375
+#: src/components/editor/bubble-menus.tsx:378
+#: src/components/editor/dialogs.tsx:188
+msgid "Alt text"
+msgstr "Alt text"
+
+#: src/components/editor/post-settings.tsx:41
+#~ msgid "Announcement"
+#~ msgstr "Announcement"
+
+#: src/components/editor/bubble-menus.tsx:259
+#: src/components/editor/dialogs.tsx:326
+msgid "Apply"
+msgstr "Apply"
+
+#: src/components/setup/setup-wizard.tsx:545
+#: src/components/setup/setup-wizard.tsx:615
+#: src/components/setup/setup-wizard.tsx:800
+msgid "Back"
+msgstr "Back"
+
+#: src/components/editor/mavi-editor.tsx:479
+msgid "Back to editing"
+msgstr "Back to editing"
+
+#: src/components/editor/extensions/slash-command.tsx:57
+#: src/components/editor/extensions/slash-command.tsx:66
+#: src/components/editor/extensions/slash-command.tsx:75
+#: src/components/editor/extensions/slash-command.tsx:84
+#: src/components/editor/extensions/slash-command.tsx:93
+msgid "Basic"
+msgstr "Basic"
+
+#: src/components/editor/block-handle.tsx:160
+msgid "Block"
+msgstr "Block"
+
+#: src/components/editor/block-handle.tsx:150
+msgid "Block menu"
+msgstr "Block menu"
+
+#: src/components/editor/dialogs.tsx:517
+#: src/components/editor/extensions/slash-command.tsx:129
+#: src/components/editor/extensions/slash-command.tsx:138
+#: src/components/editor/extensions/slash-command.tsx:147
+#: src/components/editor/extensions/slash-command.tsx:156
+msgid "Blocks"
+msgstr "Blocks"
+
+#: src/components/editor/bubble-menus.tsx:119
+#: src/components/editor/dialogs.tsx:507
+#: src/components/editor/toolbar.tsx:291
+msgid "Bold"
+msgstr "Bold"
+
+#: src/routes/dashboard.plugins_.s3.tsx:161
+msgid "Bucket"
+msgstr "Bucket"
+
+#: src/routes/dashboard.plugins.tsx:42
+msgid "Built-in integrations you can switch on and configure."
+msgstr "Built-in integrations you can switch on and configure."
+
+#: src/components/editor/dialogs.tsx:521
+#: src/components/editor/extensions/slash-command.tsx:100
+#: src/components/editor/toolbar.tsx:502
+msgid "Bullet list"
+msgstr "Bullet list"
+
+#: src/components/editor/dialogs.tsx:198
+#: src/components/editor/dialogs.tsx:238
+#: src/components/editor/dialogs.tsx:324
+#: src/routes/dashboard.categories.tsx:140
+#: src/routes/dashboard.index.tsx:196
+#: src/routes/dashboard.languages.tsx:194
+#: src/routes/dashboard.media.tsx:144
+#: src/routes/dashboard.tags.tsx:301
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/components/editor/post-settings.tsx:371
+msgid "Canonical URL"
+msgstr "Canonical URL"
+
+#: src/components/editor/find-replace.tsx:149
+msgid "Case sensitive"
+msgstr "Case sensitive"
+
+#: src/components/dashboard/dashboard-shell.tsx:28
+#: src/routes/dashboard.categories.tsx:78
+msgid "Categories"
+msgstr "Categories"
+
+#: src/components/editor/post-settings.tsx:163
+msgid "Category"
+msgstr "Category"
+
+#: src/components/editor/extensions/slash-command.tsx:278
+msgid "Center the paragraph"
+msgstr "Center the paragraph"
+
+#: src/components/editor/extensions/slash-command.tsx:119
+msgid "Checkbox to-do list"
+msgstr "Checkbox to-do list"
+
+#: src/components/editor/dialogs.tsx:513
+#: src/components/editor/toolbar.tsx:452
+msgid "Clear formatting"
+msgstr "Clear formatting"
+
+#: src/components/editor/find-replace.tsx:75
+msgid "Close"
+msgstr "Close"
+
+#: src/components/editor/bubble-menus.tsx:150
+msgid "Code"
+msgstr "Code"
+
+#: src/routes/dashboard.languages.tsx:108
+msgid "Code (en, de, pt-BR)"
+msgstr "Code (en, de, pt-BR)"
+
+#: src/components/editor/dialogs.tsx:525
+#: src/components/editor/extensions/slash-command.tsx:136
+#: src/components/editor/toolbar.tsx:98
+#: src/components/editor/toolbar.tsx:555
+msgid "Code block"
+msgstr "Code block"
+
+#: src/components/editor/extensions/slash-command.tsx:145
+#: src/components/editor/toolbar.tsx:563
+msgid "Collapsible section"
+msgstr "Collapsible section"
+
+#: src/components/editor/bubble-menus.tsx:422
+msgid "Column"
+msgstr "Column"
+
+#: src/components/editor/dialogs.tsx:535
+msgid "Command menu"
+msgstr "Command menu"
+
+#: src/components/editor/post-settings.tsx:332
+msgid "Comments"
+msgstr "Comments"
+
+#: src/routes/dashboard.plugins.tsx:80
+msgid "Configure"
+msgstr "Configure"
+
+#: src/components/setup/setup-wizard.tsx:791
+msgid "Confirm use of a weak password"
+msgstr "Confirm use of a weak password"
+
+#: src/components/setup/setup-wizard.tsx:379
+msgid "Connect your database"
+msgstr "Connect your database"
+
+#: src/components/setup/setup-wizard.tsx:362
+msgid "Connected. Restarting the server…"
+msgstr "Connected. Restarting the server…"
+
+#: src/components/setup/setup-wizard.tsx:415
+#: src/components/setup/setup-wizard.tsx:422
+msgid "Connection URL"
+msgstr "Connection URL"
+
+#: src/routes/dashboard.languages.tsx:190
+msgid "Content already written in this language blocks removal — you'll be told how much there is."
+msgstr "Content already written in this language blocks removal — you'll be told how much there is."
+
+#: src/components/setup/setup-wizard.tsx:232
+#: src/components/setup/setup-wizard.tsx:618
+msgid "Continue"
+msgstr "Continue"
+
+#: src/components/setup/setup-wizard.tsx:845
+msgid "Continue to the dashboard"
+msgstr "Continue to the dashboard"
+
+#: src/components/setup/setup-wizard.tsx:845
+#~ msgid "Continue to the editor"
+#~ msgstr "Continue to the editor"
+
+#: src/components/editor/bubble-menus.tsx:317
+#: src/components/editor/dialogs.tsx:462
+msgid "Copy"
+msgstr "Copy"
+
+#: src/components/editor/code-block-view.tsx:52
+msgid "Copy code"
+msgstr "Copy code"
+
+#: src/components/editor/block-handle.tsx:182
+msgid "Copy text"
+msgstr "Copy text"
+
+#: src/components/editor/dialogs.tsx:436
+msgid "Copy your post in different formats, download it, or import Markdown."
+msgstr "Copy your post in different formats, download it, or import Markdown."
+
+#: src/routes/dashboard.languages.tsx:61
+msgid "Could not add language"
+msgstr "Could not add language"
+
+#: src/routes/dashboard.tags.tsx:91
+msgid "Could not add tag"
+msgstr "Could not add tag"
+
+#: src/components/editor/post-settings.tsx:84
+#: src/routes/dashboard.categories.tsx:55
+msgid "Could not create category"
+msgstr "Could not create category"
+
+#: src/routes/dashboard.categories.tsx:69
+msgid "Could not delete category"
+msgstr "Could not delete category"
+
+#: src/routes/dashboard.media.tsx:66
+msgid "Could not delete media"
+msgstr "Could not delete media"
+
+#: src/routes/dashboard.index.tsx:77
+msgid "Could not delete post"
+msgstr "Could not delete post"
+
+#: src/routes/dashboard.tags.tsx:130
+msgid "Could not delete tag"
+msgstr "Could not delete tag"
+
+#: src/routes/dashboard.tags.tsx:104
+msgid "Could not link tags"
+msgstr "Could not link tags"
+
+#: src/components/editor/mavi-editor.tsx:225
+msgid "Could not load post"
+msgstr "Could not load post"
+
+#: src/components/setup/setup-wizard.tsx:103
+#: src/components/setup/setup-wizard.tsx:348
+#: src/routes/login.tsx:44
+msgid "Could not reach the server. Please try again."
+msgstr "Could not reach the server. Please try again."
+
+#: src/routes/dashboard.languages.tsx:83
+msgid "Could not remove language"
+msgstr "Could not remove language"
+
+#: src/components/editor/mavi-editor.tsx:271
+msgid "Could not save post"
+msgstr "Could not save post"
+
+#: src/routes/dashboard.plugins_.s3.tsx:90
+msgid "Could not save settings"
+msgstr "Could not save settings"
+
+#: src/components/editor/post-settings.tsx:100
+msgid "Could not save tag"
+msgstr "Could not save tag"
+
+#: src/routes/dashboard.tags.tsx:115
+msgid "Could not unlink tag"
+msgstr "Could not unlink tag"
+
+#: src/routes/dashboard.languages.tsx:73
+msgid "Could not update language"
+msgstr "Could not update language"
+
+#. placeholder {0}: file.name
+#: src/components/editor/dialogs.tsx:60
+#: src/components/editor/extensions/index.ts:135
+#: src/components/editor/extensions/index.ts:154
+#: src/routes/dashboard.media.tsx:51
+msgid "Could not upload {0}"
+msgstr "Could not upload {0}"
+
+#: src/components/editor/post-settings.tsx:303
+msgid "Could not upload cover image"
+msgstr "Could not upload cover image"
+
+#: src/components/editor/post-settings.tsx:270
+msgid "Cover image"
+msgstr "Cover image"
+
+#: src/components/editor/post-settings.tsx:313
+msgid "Cover preview"
+msgstr "Cover preview"
+
+#: src/components/editor/mavi-editor.tsx:452
+msgid "Create"
+msgstr "Create"
+
+#: src/components/editor/extensions/slash-command.tsx:110
+msgid "Create an ordered list"
+msgstr "Create an ordered list"
+
+#: src/components/editor/extensions/slash-command.tsx:101
+msgid "Create an unordered list"
+msgstr "Create an unordered list"
+
+#: src/components/setup/setup-wizard.tsx:671
+msgid "Create your administrator account"
+msgstr "Create your administrator account"
+
+#: src/routes/dashboard.plugins_.s3.tsx:218
+msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
+msgstr "Credentials are encrypted before they are stored and are never sent back to the browser."
+
+#: src/components/editor/toolbar.tsx:378
+msgid "Custom"
+msgstr "Custom"
+
+#: src/components/mode-toggle.tsx:43
+msgid "Dark"
+msgstr "Dark"
+
+#: src/components/editor/mavi-editor.tsx:395
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: src/components/setup/setup-wizard.tsx:469
+msgid "Database file path"
+msgstr "Database file path"
+
+#: src/components/setup/setup-wizard.tsx:509
+msgid "Database name"
+msgstr "Database name"
+
+#: src/components/setup/setup-wizard.tsx:444
+msgid "Database type"
+msgstr "Database type"
+
+#: src/components/editor/toolbar.tsx:526
+msgid "Decrease indent"
+msgstr "Decrease indent"
+
+#: src/components/editor/toolbar.tsx:273
+#: src/components/editor/toolbar.tsx:627
+#: src/routes/dashboard.languages.tsx:138
+msgid "Default"
+msgstr "Default"
+
+#: src/components/editor/block-handle.tsx:186
+#: src/components/editor/bubble-menus.tsx:395
+#: src/routes/dashboard.categories.tsx:118
+#: src/routes/dashboard.categories.tsx:142
+#: src/routes/dashboard.index.tsx:174
+#: src/routes/dashboard.index.tsx:198
+#: src/routes/dashboard.languages.tsx:171
+#: src/routes/dashboard.media.tsx:121
+#: src/routes/dashboard.media.tsx:146
+#: src/routes/dashboard.tags.tsx:234
+#: src/routes/dashboard.tags.tsx:303
+msgid "Delete"
+msgstr "Delete"
+
+#: src/components/editor/bubble-menus.tsx:439
+msgid "Delete column"
+msgstr "Delete column"
+
+#: src/components/editor/bubble-menus.tsx:467
+msgid "Delete row"
+msgstr "Delete row"
+
+#: src/components/editor/bubble-menus.tsx:487
+msgid "Delete table"
+msgstr "Delete table"
+
+#: src/routes/dashboard.categories.tsx:134
+msgid "Delete this category?"
+msgstr "Delete this category?"
+
+#: src/routes/dashboard.media.tsx:138
+msgid "Delete this media?"
+msgstr "Delete this media?"
+
+#: src/routes/dashboard.index.tsx:190
+msgid "Delete this post?"
+msgstr "Delete this post?"
+
+#: src/routes/dashboard.tags.tsx:295
+msgid "Delete this tag?"
+msgstr "Delete this tag?"
+
+#: src/components/editor/post-settings.tsx:388
+msgid "Description text shown in search results."
+msgstr "Description text shown in search results."
+
+#: src/components/editor/post-settings.tsx:40
+#~ msgid "Design"
+#~ msgstr "Design"
+
+#: src/components/locale-toggle.tsx:23
+#~ msgid "Dil"
+#~ msgstr "Dil"
+
+#: src/routes/dashboard.plugins.tsx:67
+msgid "Disabled"
+msgstr "Disabled"
+
+#: src/components/editor/extensions/slash-command.tsx:154
+#: src/components/editor/toolbar.tsx:574
+msgid "Divider"
+msgstr "Divider"
+
+#: src/components/editor/dialogs.tsx:473
+msgid "Download"
+msgstr "Download"
+
+#: src/components/editor/types.ts:26
+msgid "Draft"
+msgstr "Draft"
+
+#: src/components/editor/mavi-editor.tsx:267
+msgid "Draft saved"
+msgstr "Draft saved"
+
+#: src/components/editor/block-handle.tsx:179
+msgid "Duplicate"
+msgstr "Duplicate"
+
+#: src/routes/dashboard.tags.tsx:144
+msgid "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
+msgstr "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
+
+#: src/components/editor/bubble-menus.tsx:323
+#: src/components/editor/mavi-editor.tsx:452
+#: src/routes/dashboard.index.tsx:164
+msgid "Edit"
+msgstr "Edit"
+
+#: src/components/editor/dialogs.tsx:529
+msgid "Editing"
+msgstr "Editing"
+
+#: src/components/setup/setup-wizard.tsx:698
+msgid "Email"
+msgstr "Email"
+
+#: src/components/editor/dialogs.tsx:240
+msgid "Embed"
+msgstr "Embed"
+
+#: src/components/editor/extensions/slash-command.tsx:200
+msgid "Embed a video"
+msgstr "Embed a video"
+
+#: src/components/editor/dialogs.tsx:537
+msgid "Emoji"
+msgstr "Emoji"
+
+#: src/routes/dashboard.plugins.tsx:65
+msgid "Enabled"
+msgstr "Enabled"
+
+#: src/routes/dashboard.plugins_.s3.tsx:146
+msgid "Endpoint"
+msgstr "Endpoint"
+
+#: src/components/editor/post-settings.tsx:39
+#~ msgid "Engineering"
+#~ msgstr "Engineering"
+
+#: src/components/setup/setup-wizard.tsx:709
+msgid "Enter a valid email address"
+msgstr "Enter a valid email address"
+
+#: src/components/setup/setup-wizard.tsx:403
+msgid "Enter details"
+msgstr "Enter details"
+
+#: src/components/editor/post-settings.tsx:248
+msgid "Excerpt"
+msgstr "Excerpt"
+
+#: src/components/editor/post-settings.tsx:325
+msgid "Featured"
+msgstr "Featured"
+
+#: src/components/editor/dialogs.tsx:534
+#: src/components/editor/find-replace.tsx:73
+#: src/components/editor/toolbar.tsx:642
+msgid "Find and replace"
+msgstr "Find and replace"
+
+#: src/components/editor/find-replace.tsx:84
+msgid "Find…"
+msgstr "Find…"
+
+#: src/components/editor/dialogs.tsx:543
+#: src/components/editor/mavi-editor.tsx:471
+msgid "Focus mode"
+msgstr "Focus mode"
+
+#: src/components/editor/extensions/slash-command.tsx:146
+msgid "Foldable details block"
+msgstr "Foldable details block"
+
+#: src/components/editor/toolbar.tsx:235
+msgid "Font"
+msgstr "Font"
+
+#: src/components/editor/extensions/slash-command.tsx:243
+#: src/components/editor/extensions/slash-command.tsx:252
+#: src/components/editor/extensions/slash-command.tsx:261
+msgid "Format"
+msgstr "Format"
+
+#: src/components/editor/dialogs.tsx:505
+msgid "Formatting"
+msgstr "Formatting"
+
+#: src/components/editor/bubble-menus.tsx:387
+msgid "Full width"
+msgstr "Full width"
+
+#: src/components/editor/dialogs.tsx:544
+#: src/components/editor/mavi-editor.tsx:486
+msgid "Fullscreen"
+msgstr "Fullscreen"
+
+#: src/components/editor/post-settings.tsx:266
+msgid "Generate from post"
+msgstr "Generate from post"
+
+#: src/components/editor/post-settings.tsx:155
+msgid "Generate from title"
+msgstr "Generate from title"
+
+#: src/components/setup/setup-wizard.tsx:749
+msgid "Generate password"
+msgstr "Generate password"
+
+#: src/components/editor/mavi-editor.tsx:241
+msgid "Give your post a title first"
+msgstr "Give your post a title first"
+
+#: src/components/editor/post-settings.tsx:42
+#~ msgid "Guide"
+#~ msgstr "Guide"
+
+#: src/components/editor/bubble-menus.tsx:432
+msgid "Header column"
+msgstr "Header column"
+
+#: src/components/editor/bubble-menus.tsx:460
+msgid "Header row"
+msgstr "Header row"
+
+#. placeholder {0}: node.attrs.level
+#: src/components/editor/extensions/index.ts:176
+msgid "Heading {0}"
+msgstr "Heading {0}"
+
+#: src/components/editor/extensions/slash-command.tsx:64
+#: src/components/editor/toolbar.tsx:91
+msgid "Heading 1"
+msgstr "Heading 1"
+
+#: src/components/editor/dialogs.tsx:519
+msgid "Heading 1–6"
+msgstr "Heading 1–6"
+
+#: src/components/editor/extensions/slash-command.tsx:73
+#: src/components/editor/toolbar.tsx:92
+msgid "Heading 2"
+msgstr "Heading 2"
+
+#: src/components/editor/extensions/slash-command.tsx:82
+#: src/components/editor/toolbar.tsx:93
+msgid "Heading 3"
+msgstr "Heading 3"
+
+#: src/components/editor/extensions/slash-command.tsx:91
+#: src/components/editor/toolbar.tsx:94
+msgid "Heading 4"
+msgstr "Heading 4"
+
+#: src/components/editor/toolbar.tsx:95
+msgid "Heading 5"
+msgstr "Heading 5"
+
+#: src/components/editor/toolbar.tsx:96
+msgid "Heading 6"
+msgstr "Heading 6"
+
+#: src/components/editor/toc-panel.tsx:28
+msgid "Headings you add will show up here."
+msgstr "Headings you add will show up here."
+
+#: src/components/setup/setup-wizard.tsx:735
+msgid "Hide password"
+msgstr "Hide password"
+
+#: src/components/editor/bubble-menus.tsx:165
+#: src/components/editor/extensions/slash-command.tsx:250
+#: src/components/editor/toolbar.tsx:407
+msgid "Highlight"
+msgstr "Highlight"
+
+#: src/components/editor/toolbar.tsx:397
+msgid "Highlight color"
+msgstr "Highlight color"
+
+#: src/components/editor/extensions/slash-command.tsx:251
+msgid "Highlight text with color"
+msgstr "Highlight text with color"
+
+#: src/components/editor/post-settings.tsx:326
+msgid "Highlighted on the home page"
+msgstr "Highlighted on the home page"
+
+#: src/components/setup/setup-wizard.tsx:484
+msgid "Host"
+msgstr "Host"
+
+#: src/components/editor/toolbar.tsx:592
+msgid "Image"
+msgstr "Image"
+
+#: src/components/editor/extensions/slash-command.tsx:188
+msgid "Image (URL)"
+msgstr "Image (URL)"
+
+#: src/components/editor/dialogs.tsx:178
+msgid "Image address"
+msgstr "Image address"
+
+#: src/components/editor/dialogs.tsx:446
+msgid "Import"
+msgstr "Import"
+
+#: src/components/editor/dialogs.tsx:434
+#: src/components/editor/mavi-editor.tsx:494
+msgid "Import / export"
+msgstr "Import / export"
+
+#: src/components/editor/types.ts:27
+msgid "In review"
+msgstr "In review"
+
+#: src/components/editor/toolbar.tsx:534
+msgid "Increase indent"
+msgstr "Increase indent"
+
+#: src/components/editor/dialogs.tsx:511
+#: src/components/editor/extensions/slash-command.tsx:241
+#: src/components/editor/toolbar.tsx:323
+msgid "Inline code"
+msgstr "Inline code"
+
+#: src/components/editor/extensions/slash-command.tsx:165
+#: src/components/editor/extensions/slash-command.tsx:179
+#: src/components/editor/extensions/slash-command.tsx:190
+#: src/components/editor/extensions/slash-command.tsx:201
+#: src/components/editor/extensions/slash-command.tsx:212
+#: src/components/editor/extensions/slash-command.tsx:223
+msgid "Insert"
+msgstr "Insert"
+
+#: src/components/editor/extensions/slash-command.tsx:164
+msgid "Insert a 3×3 table"
+msgstr "Insert a 3×3 table"
+
+#: src/components/editor/extensions/slash-command.tsx:222
+msgid "Insert the current date as text"
+msgstr "Insert the current date as text"
+
+#: src/components/setup/setup-wizard.tsx:803
+msgid "Install Mavi CMS"
+msgstr "Install Mavi CMS"
+
+#: src/components/setup/setup-wizard.tsx:815
+msgid "Installing Mavi CMS…"
+msgstr "Installing Mavi CMS…"
+
+#: src/components/editor/bubble-menus.tsx:127
+#: src/components/editor/dialogs.tsx:508
+#: src/components/editor/toolbar.tsx:299
+msgid "Italic"
+msgstr "Italic"
+
+#: src/components/setup/setup-wizard.tsx:609
+msgid "Just another Mavi CMS site"
+msgstr "Just another Mavi CMS site"
+
+#: src/components/editor/toolbar.tsx:489
+msgid "Justify"
+msgstr "Justify"
+
+#: src/components/editor/extensions/index.ts:187
+msgid "Keep going, type “/” to add a block…"
+msgstr "Keep going, type “/” to add a block…"
+
+#: src/components/editor/dialogs.tsx:565
+msgid "Keyboard shortcuts"
+msgstr "Keyboard shortcuts"
+
+#: src/components/locale-toggle.tsx:23
+#: src/routes/dashboard.index.tsx:87
+msgid "Language"
+msgstr "Language"
+
+#: src/components/dashboard/dashboard-shell.tsx:30
+#: src/routes/dashboard.languages.tsx:92
+msgid "Languages"
+msgstr "Languages"
+
+#: src/components/editor/extensions/slash-command.tsx:65
+msgid "Large section heading"
+msgstr "Large section heading"
+
+#: src/routes/dashboard.plugins_.s3.tsx:147
+msgid "Leave empty for AWS S3"
+msgstr "Leave empty for AWS S3"
+
+#: src/components/mode-toggle.tsx:37
+msgid "Light"
+msgstr "Light"
+
+#: src/components/editor/toolbar.tsx:620
+msgid "Line height"
+msgstr "Line height"
+
+#: src/components/editor/bubble-menus.tsx:236
+#: src/components/editor/dialogs.tsx:295
+#: src/components/editor/dialogs.tsx:512
+#: src/components/editor/extensions/slash-command.tsx:210
+#: src/components/editor/toolbar.tsx:585
+msgid "Link"
+msgstr "Link"
+
+#: src/components/editor/bubble-menus.tsx:325
+msgid "Link address"
+msgstr "Link address"
+
+#: src/components/editor/dialogs.tsx:315
+msgid "Link text"
+msgstr "Link text"
+
+#: src/routes/dashboard.tags.tsx:276
+msgid "Link translation"
+msgstr "Link translation"
+
+#: src/components/editor/extensions/slash-command.tsx:102
+#: src/components/editor/extensions/slash-command.tsx:111
+#: src/components/editor/extensions/slash-command.tsx:120
+msgid "Lists"
+msgstr "Lists"
+
+#: src/components/editor/dialogs.tsx:150
+msgid "Loading…"
+msgstr "Loading…"
+
+#: src/routes/dashboard.languages.tsx:166
+msgid "Make default"
+msgstr "Make default"
+
+#: src/components/editor/extensions/slash-command.tsx:242
+msgid "Mark selection as code"
+msgstr "Mark selection as code"
+
+#: src/components/editor/dialogs.tsx:426
+msgid "Markdown imported"
+msgstr "Markdown imported"
+
+#: src/components/setup/setup-wizard.tsx:382
+msgid "Mavi CMS needs a database to store your site."
+msgstr "Mavi CMS needs a database to store your site."
+
+#: src/components/dashboard/dashboard-shell.tsx:27
+msgid "Media"
+msgstr "Media"
+
+#: src/components/editor/dialogs.tsx:144
+#: src/routes/dashboard.media.tsx:75
+msgid "Media library"
+msgstr "Media library"
+
+#: src/components/setup/setup-wizard.tsx:642
+msgid "Medium"
+msgstr "Medium"
+
+#: src/components/editor/extensions/slash-command.tsx:74
+msgid "Medium section heading"
+msgstr "Medium section heading"
+
+#: src/components/editor/dialogs.tsx:536
+msgid "Mention someone"
+msgstr "Mention someone"
+
+#: src/components/editor/bubble-menus.tsx:475
+msgid "Merge cells"
+msgstr "Merge cells"
+
+#: src/components/setup/setup-wizard.tsx:597
+msgid "My Mavi CMS Site"
+msgstr "My Mavi CMS Site"
+
+#: src/routes/dashboard.languages.tsx:114
+msgid "Name (optional)"
+msgstr "Name (optional)"
+
+#: src/components/editor/post-settings.tsx:185
+#: src/routes/dashboard.categories.tsx:90
+msgid "New category"
+msgstr "New category"
+
+#: src/components/dashboard/dashboard-shell.tsx:69
+#: src/routes/dashboard.index.tsx:126
+msgid "New post"
+msgstr "New post"
+
+#: src/routes/dashboard.tags.tsx:153
+msgid "New tag"
+msgstr "New tag"
+
+#: src/components/editor/find-replace.tsx:112
+msgid "Next"
+msgstr "Next"
+
+#: src/routes/dashboard.categories.tsx:103
+msgid "No categories yet"
+msgstr "No categories yet"
+
+#: src/components/editor/extensions/suggestions.tsx:189
+msgid "No emoji found"
+msgstr "No emoji found"
+
+#: src/components/editor/dialogs.tsx:154
+#: src/routes/dashboard.media.tsx:96
+msgid "No media uploaded yet"
+msgstr "No media uploaded yet"
+
+#: src/components/editor/extensions/suggestions.tsx:139
+msgid "No people found"
+msgstr "No people found"
+
+#: src/routes/dashboard.index.tsx:120
+msgid "No posts yet"
+msgstr "No posts yet"
+
+#: src/components/editor/extensions/slash-command.tsx:362
+msgid "No results found"
+msgstr "No results found"
+
+#: src/routes/dashboard.tags.tsx:184
+msgid "No tags yet"
+msgstr "No tags yet"
+
+#: src/routes/dashboard.plugins.tsx:68
+msgid "Not configured"
+msgstr "Not configured"
+
+#: src/components/editor/dialogs.tsx:522
+#: src/components/editor/extensions/slash-command.tsx:109
+#: src/components/editor/toolbar.tsx:510
+msgid "Numbered list"
+msgstr "Numbered list"
+
+#: src/components/editor/bubble-menus.tsx:282
+msgid "Open"
+msgstr "Open"
+
+#: src/components/editor/dialogs.tsx:320
+msgid "Open in new tab"
+msgstr "Open in new tab"
+
+#: src/routes/dashboard.plugins_.s3.tsx:194
+msgid "Optional folder inside the bucket"
+msgstr "Optional folder inside the bucket"
+
+#: src/components/editor/dialogs.tsx:520
+#: src/components/editor/extensions/slash-command.tsx:55
+#: src/components/editor/toolbar.tsx:90
+msgid "Paragraph"
+msgstr "Paragraph"
+
+#: src/components/setup/setup-wizard.tsx:529
+#: src/components/setup/setup-wizard.tsx:716
+#: src/routes/login.tsx:98
+msgid "Password"
+msgstr "Password"
+
+#: src/components/editor/dialogs.tsx:110
+#~ msgid "Paste an image address or drag and drop one."
+#~ msgstr "Paste an image address or drag and drop one."
+
+#: src/components/editor/dialogs.tsx:135
+msgid "Paste an image address, drag and drop one, or pick from your media library."
+msgstr "Paste an image address, drag and drop one, or pick from your media library."
+
+#: src/components/editor/dialogs.tsx:227
+msgid "Paste the video link."
+msgstr "Paste the video link."
+
+#: src/routes/dashboard.plugins_.s3.tsx:193
+msgid "Path prefix"
+msgstr "Path prefix"
+
+#: src/components/editor/post-settings.tsx:141
+msgid "Permalink"
+msgstr "Permalink"
+
+#: src/routes/dashboard.tags.tsx:250
+msgid "Pick a tag"
+msgstr "Pick a tag"
+
+#: src/components/editor/extensions/slash-command.tsx:178
+msgid "Pick an image from your computer"
+msgstr "Pick an image from your computer"
+
+#: src/components/editor/code-block-view.tsx:41
+msgid "plain text"
+msgstr "plain text"
+
+#: src/components/editor/extensions/slash-command.tsx:56
+msgid "Plain text block"
+msgstr "Plain text block"
+
+#: src/components/dashboard/dashboard-shell.tsx:31
+#: src/routes/dashboard.plugins_.s3.tsx:113
+#: src/routes/dashboard.plugins.tsx:40
+msgid "Plugins"
+msgstr "Plugins"
+
+#: src/components/setup/setup-wizard.tsx:496
+msgid "Port"
+msgstr "Port"
+
+#: src/components/editor/post-settings.tsx:382
+msgid "post"
+msgstr "post"
+
+#: src/routes/dashboard.index.tsx:75
+msgid "Post deleted"
+msgstr "Post deleted"
+
+#: src/components/editor/mavi-editor.tsx:538
+msgid "Post published"
+msgstr "Post published"
+
+#: src/components/editor/mavi-editor.tsx:609
+msgid "Post settings"
+msgstr "Post settings"
+
+#: src/components/editor/mavi-editor.tsx:594
+#: src/components/editor/post-settings.tsx:385
+msgid "Post title"
+msgstr "Post title"
+
+#: src/components/editor/post-settings.tsx:143
+#: src/components/editor/post-settings.tsx:150
+msgid "post-url"
+msgstr "post-url"
+
+#: src/components/dashboard/dashboard-shell.tsx:26
+msgid "Posts"
+msgstr "Posts"
+
+#: src/components/editor/mavi-editor.tsx:479
+msgid "Preview"
+msgstr "Preview"
+
+#: src/components/editor/find-replace.tsx:104
+msgid "Previous"
+msgstr "Previous"
+
+#: src/components/editor/post-settings.tsx:38
+#~ msgid "Product"
+#~ msgstr "Product"
+
+#: src/routes/dashboard.plugins_.s3.tsx:185
+msgid "Public base URL"
+msgstr "Public base URL"
+
+#: src/components/editor/mavi-editor.tsx:543
+msgid "Publish"
+msgstr "Publish"
+
+#: src/components/editor/post-settings.tsx:131
+msgid "Publish date"
+msgstr "Publish date"
+
+#: src/components/editor/types.ts:29
+msgid "Published"
+msgstr "Published"
+
+#: src/components/editor/dialogs.tsx:524
+#: src/components/editor/extensions/slash-command.tsx:127
+#: src/components/editor/toolbar.tsx:97
+#: src/components/editor/toolbar.tsx:547
+msgid "Quote"
+msgstr "Quote"
+
+#: src/components/editor/extensions/slash-command.tsx:260
+msgid "Raise text above the line"
+msgstr "Raise text above the line"
+
+#: src/components/editor/post-settings.tsx:333
+msgid "Readers can leave comments"
+msgstr "Readers can leave comments"
+
+#: src/components/editor/dialogs.tsx:532
+#: src/components/editor/toolbar.tsx:177
+msgid "Redo"
+msgstr "Redo"
+
+#: src/routes/dashboard.plugins_.s3.tsx:154
+msgid "Region"
+msgstr "Region"
+
+#: src/components/editor/find-replace.tsx:163
+msgid "Regular expression"
+msgstr "Regular expression"
+
+#: src/components/editor/bubble-menus.tsx:193
+#: src/components/editor/bubble-menus.tsx:274
+#: src/routes/dashboard.languages.tsx:196
+msgid "Remove"
+msgstr "Remove"
+
+#: src/components/editor/post-settings.tsx:234
+msgid "Remove {tag} tag"
+msgstr "Remove {tag} tag"
+
+#: src/components/editor/toolbar.tsx:432
+msgid "Remove highlight"
+msgstr "Remove highlight"
+
+#: src/components/editor/bubble-menus.tsx:334
+msgid "Remove link"
+msgstr "Remove link"
+
+#: src/routes/dashboard.languages.tsx:188
+msgid "Remove this language?"
+msgstr "Remove this language?"
+
+#: src/components/editor/find-replace.tsx:129
+msgid "Replace"
+msgstr "Replace"
+
+#: src/components/editor/find-replace.tsx:139
+msgid "Replace all"
+msgstr "Replace all"
+
+#: src/components/editor/dialogs.tsx:488
+msgid "Replace content"
+msgstr "Replace content"
+
+#: src/components/editor/find-replace.tsx:124
+msgid "Replace…"
+msgstr "Replace…"
+
+#: src/routes/dashboard.plugins_.s3.tsx:74
+msgid "Request failed"
+msgstr "Request failed"
+
+#: src/components/editor/bubble-menus.tsx:450
+msgid "Row"
+msgstr "Row"
+
+#: src/routes/dashboard.plugins_.s3.tsx:117
+#: src/routes/dashboard.plugins.tsx:26
+msgid "S3 compatible storage"
+msgstr "S3 compatible storage"
+
+#: src/components/editor/mavi-editor.tsx:532
+#: src/routes/dashboard.plugins_.s3.tsx:238
+msgid "Save"
+msgstr "Save"
+
+#: src/components/editor/status-bar.tsx:113
+msgid "Saved"
+msgstr "Saved"
+
+#. placeholder {0}: savedAt.toLocaleTimeString(i18n.locale, { hour: "2-digit", minute: "2-digit", })
+#: src/components/editor/status-bar.tsx:105
+msgid "Saved at {0}"
+msgstr "Saved at {0}"
+
+#: src/components/editor/status-bar.tsx:98
+msgid "Saving…"
+msgstr "Saving…"
+
+#: src/components/editor/types.ts:28
+msgid "Scheduled"
+msgstr "Scheduled"
+
+#: src/components/editor/post-settings.tsx:341
+msgid "Search engine"
+msgstr "Search engine"
+
+#: src/routes/dashboard.plugins_.s3.tsx:173
+msgid "Secret access key"
+msgstr "Secret access key"
+
+#: src/components/editor/extensions/index.ts:167
+msgid "section"
+msgstr "section"
+
+#: src/components/editor/extensions/index.ts:179
+msgid "Section title"
+msgstr "Section title"
+
+#: src/components/editor/post-settings.tsx:117
+msgid "Select"
+msgstr "Select"
+
+#: src/components/editor/dialogs.tsx:533
+msgid "Select all"
+msgstr "Select all"
+
+#: src/components/setup/setup-wizard.tsx:207
+msgid "Select your language"
+msgstr "Select your language"
+
+#: src/components/editor/post-settings.tsx:356
+msgid "SEO description"
+msgstr "SEO description"
+
+#: src/components/editor/post-settings.tsx:344
+msgid "SEO title"
+msgstr "SEO title"
+
+#: src/components/editor/mavi-editor.tsx:507
+msgid "Settings panel"
+msgstr "Settings panel"
+
+#: src/routes/dashboard.plugins_.s3.tsx:87
+msgid "Settings saved"
+msgstr "Settings saved"
+
+#: src/components/setup/setup-wizard.tsx:865
+msgid "Setup failed"
+msgstr "Setup failed"
+
+#: src/components/editor/dialogs.tsx:193
+msgid "Short description of the image"
+msgstr "Short description of the image"
+
+#: src/components/editor/post-settings.tsx:254
+msgid "Short description shown on listing pages"
+msgstr "Short description shown on listing pages"
+
+#: src/components/editor/dialogs.tsx:545
+#: src/components/editor/mavi-editor.tsx:500
+msgid "Shortcuts"
+msgstr "Shortcuts"
+
+#: src/components/setup/setup-wizard.tsx:735
+msgid "Show password"
+msgstr "Show password"
+
+#: src/routes/login.tsx:71
+#: src/routes/login.tsx:112
+msgid "Sign in"
+msgstr "Sign in"
+
+#: src/routes/login.tsx:74
+msgid "Sign in to manage your site."
+msgstr "Sign in to manage your site."
+
+#: src/components/dashboard/dashboard-shell.tsx:76
+#: src/components/editor/mavi-editor.tsx:516
+msgid "Sign out"
+msgstr "Sign out"
+
+#: src/components/setup/setup-wizard.tsx:590
+msgid "Site title"
+msgstr "Site title"
+
+#: src/components/editor/extensions/slash-command.tsx:83
+msgid "Small section heading"
+msgstr "Small section heading"
+
+#: src/components/editor/bubble-menus.tsx:481
+msgid "Split cell"
+msgstr "Split cell"
+
+#: src/components/editor/extensions/index.ts:185
+msgid "Start writing, or type “/” for commands…"
+msgstr "Start writing, or type “/” for commands…"
+
+#: src/components/editor/post-settings.tsx:109
+msgid "Status"
+msgstr "Status"
+
+#: src/routes/dashboard.plugins.tsx:27
+msgid "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
+msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
+
+#: src/routes/dashboard.plugins_.s3.tsx:177
+msgid "Stored — leave empty to keep it unchanged"
+msgstr "Stored — leave empty to keep it unchanged"
+
+#: src/components/editor/bubble-menus.tsx:143
+#: src/components/editor/dialogs.tsx:510
+#: src/components/editor/toolbar.tsx:315
+msgid "Strikethrough"
+msgstr "Strikethrough"
+
+#: src/components/setup/setup-wizard.tsx:643
+msgid "Strong"
+msgstr "Strong"
+
+#: src/components/editor/extensions/slash-command.tsx:92
+msgid "Sub-heading"
+msgstr "Sub-heading"
+
+#: src/components/editor/toolbar.tsx:438
+msgid "Subscript"
+msgstr "Subscript"
+
+#: src/components/setup/setup-wizard.tsx:835
+msgid "Success!"
+msgstr "Success!"
+
+#: src/components/editor/extensions/slash-command.tsx:259
+#: src/components/editor/toolbar.tsx:445
+msgid "Superscript"
+msgstr "Superscript"
+
+#: src/components/editor/extensions/slash-command.tsx:137
+msgid "Syntax-highlighted code"
+msgstr "Syntax-highlighted code"
+
+#: src/components/mode-toggle.tsx:49
+msgid "System"
+msgstr "System"
+
+#: src/components/editor/extensions/slash-command.tsx:163
+#: src/components/editor/toolbar.tsx:599
+msgid "Table"
+msgstr "Table"
+
+#: src/components/editor/mavi-editor.tsx:464
+#: src/components/editor/mavi-editor.tsx:559
+msgid "Table of contents"
+msgstr "Table of contents"
+
+#: src/components/setup/setup-wizard.tsx:603
+msgid "Tagline"
+msgstr "Tagline"
+
+#: src/components/dashboard/dashboard-shell.tsx:29
+#: src/components/editor/post-settings.tsx:206
+#: src/routes/dashboard.tags.tsx:142
+msgid "Tags"
+msgstr "Tags"
+
+#: src/routes/dashboard.tags.tsx:101
+msgid "Tags linked"
+msgstr "Tags linked"
+
+#: src/components/editor/dialogs.tsx:523
+#: src/components/editor/extensions/slash-command.tsx:118
+#: src/components/editor/toolbar.tsx:518
+msgid "Task list"
+msgstr "Task list"
+
+#: src/components/setup/setup-wizard.tsx:581
+msgid "Tell us about your site"
+msgstr "Tell us about your site"
+
+#: src/components/setup/setup-wizard.tsx:548
+msgid "Test & continue"
+msgstr "Test & continue"
+
+#: src/routes/dashboard.plugins_.s3.tsx:234
+msgid "Test connection"
+msgstr "Test connection"
+
+#: src/components/setup/setup-wizard.tsx:360
+msgid "Testing connection…"
+msgstr "Testing connection…"
+
+#: src/components/editor/dialogs.tsx:310
+#: src/components/editor/dialogs.tsx:419
+msgid "Text"
+msgstr "Text"
+
+#: src/components/editor/toolbar.tsx:339
+#: src/components/editor/toolbar.tsx:352
+msgid "Text color"
+msgstr "Text color"
+
+#: src/components/editor/post-settings.tsx:364
+msgid "Text shown in search results"
+msgstr "Text shown in search results"
+
+#: src/routes/dashboard.languages.tsx:94
+msgid "The languages your content can be written in. This is separate from the language of this admin panel."
+msgstr "The languages your content can be written in. This is separate from the language of this admin panel."
+
+#: src/components/editor/dialogs.tsx:567
+msgid "The most common shortcuts in the editor."
+msgstr "The most common shortcuts in the editor."
+
+#: src/components/setup/setup-wizard.tsx:322
+msgid "The server is taking longer than expected to restart. Reload this page in a moment."
+msgstr "The server is taking longer than expected to restart. Reload this page in a moment."
+
+#: src/components/mode-toggle.tsx:24
+msgid "Theme"
+msgstr "Theme"
+
+#: src/components/editor/extensions/slash-command.tsx:221
+msgid "Today's date"
+msgstr "Today's date"
+
+#: src/components/editor/mavi-editor.tsx:422
+msgid "Translations"
+msgstr "Translations"
+
+#: src/components/setup/setup-wizard.tsx:870
+msgid "Try again"
+msgstr "Try again"
+
+#: src/components/editor/block-handle.tsx:163
+msgid "Turn into"
+msgstr "Turn into"
+
+#: src/routes/dashboard.index.tsx:145
+msgid "Uncategorized"
+msgstr "Uncategorized"
+
+#: src/components/editor/bubble-menus.tsx:135
+#: src/components/editor/dialogs.tsx:509
+#: src/components/editor/toolbar.tsx:307
+msgid "Underline"
+msgstr "Underline"
+
+#: src/components/editor/dialogs.tsx:531
+#: src/components/editor/toolbar.tsx:169
+msgid "Undo"
+msgstr "Undo"
+
+#: src/routes/dashboard.tags.tsx:224
+msgid "Unlink"
+msgstr "Unlink"
+
+#: src/components/editor/status-bar.tsx:119
+msgid "Unsaved changes"
+msgstr "Unsaved changes"
+
+#: src/components/editor/toc-panel.tsx:53
+msgid "Untitled"
+msgstr "Untitled"
+
+#: src/components/editor/mavi-editor.tsx:404
+#: src/components/editor/mavi-editor.tsx:592
+#: src/routes/dashboard.index.tsx:142
+msgid "Untitled post"
+msgstr "Untitled post"
+
+#: src/routes/dashboard.media.tsx:78
+msgid "Upload"
+msgstr "Upload"
+
+#: src/components/editor/post-settings.tsx:282
+msgid "Upload cover image"
+msgstr "Upload cover image"
+
+#: src/components/editor/extensions/slash-command.tsx:177
+msgid "Upload image"
+msgstr "Upload image"
+
+#: src/components/editor/dialogs.tsx:141
+msgid "URL"
+msgstr "URL"
+
+#: src/routes/dashboard.plugins_.s3.tsx:132
+msgid "Use S3 for new uploads"
+msgstr "Use S3 for new uploads"
+
+#: src/components/setup/setup-wizard.tsx:519
+#: src/components/setup/setup-wizard.tsx:680
+#: src/routes/login.tsx:86
+msgid "Username"
+msgstr "Username"
+
+#: src/components/editor/dialogs.tsx:541
+msgid "View"
+msgstr "View"
+
+#: src/components/setup/setup-wizard.tsx:641
+msgid "Weak"
+msgstr "Weak"
+
+#: src/routes/dashboard.plugins_.s3.tsx:134
+msgid "When off, uploads are stored on the server's disk."
+msgstr "When off, uploads are stored on the server's disk."
+
+#: src/routes/dashboard.plugins_.s3.tsx:186
+msgid "Where readers load the images from (bucket public URL or CDN)"
+msgstr "Where readers load the images from (bucket public URL or CDN)"
+
+#: src/components/editor/find-replace.tsx:156
+msgid "Whole word"
+msgstr "Whole word"
+
+#: src/routes/dashboard.plugins_.s3.tsx:119
+msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
+msgstr "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
+
+#: src/components/setup/setup-wizard.tsx:584
+msgid "You can change this later in your post settings."
+msgstr "You can change this later in your post settings."
+
+#: src/components/setup/setup-wizard.tsx:210
+msgid "You can change this later."
+msgstr "You can change this later."
+
+#: src/components/setup/setup-wizard.tsx:674
+msgid "You'll use this to sign in and manage your site."
+msgstr "You'll use this to sign in and manage your site."
+
+#: src/components/editor/toolbar.tsx:595
+msgid "YouTube"
+msgstr "YouTube"
+
+#: src/components/editor/dialogs.tsx:226
+msgid "YouTube video"
+msgstr "YouTube video"
