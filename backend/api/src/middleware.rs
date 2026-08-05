@@ -14,8 +14,7 @@ pub async fn require_database(
     next: Next,
 ) -> Response {
     if state.db.is_none() {
-        return AppError::Unavailable("database is not configured yet".to_string())
-            .into_response();
+        return AppError::Unavailable("database is not configured yet".to_string()).into_response();
     }
     next.run(request).await
 }

@@ -39,10 +39,7 @@ pub fn validate_code(code: &str) -> AppResult<()> {
             "language code must be 1-35 characters".to_string(),
         ));
     }
-    if !code
-        .chars()
-        .all(|c| c.is_ascii_alphanumeric() || c == '-')
-    {
+    if !code.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
         return Err(AppError::Validation(
             "language code may only contain letters, digits and -".to_string(),
         ));

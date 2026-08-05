@@ -37,8 +37,8 @@ pub async fn login(
         .await?
         .ok_or_else(invalid)?;
 
-    let parsed_hash =
-        PasswordHash::new(&user.password_hash).map_err(|_| AppError::Internal("corrupt password hash".to_string()))?;
+    let parsed_hash = PasswordHash::new(&user.password_hash)
+        .map_err(|_| AppError::Internal("corrupt password hash".to_string()))?;
     Argon2::default()
         .verify_password(payload.password.as_bytes(), &parsed_hash)
         .map_err(|_| invalid())?;

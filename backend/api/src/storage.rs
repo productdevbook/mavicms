@@ -168,9 +168,7 @@ impl MediaStorage {
                 bucket
                     .put_object_with_content_type(config.object_key(key), bytes, mime_type)
                     .await
-                    .map_err(|err| {
-                        AppError::Internal(format!("failed to upload to S3: {err}"))
-                    })?;
+                    .map_err(|err| AppError::Internal(format!("failed to upload to S3: {err}")))?;
                 Ok(config.public_url(key))
             }
         }

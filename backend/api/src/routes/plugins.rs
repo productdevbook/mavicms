@@ -1,9 +1,7 @@
 use axum::{Json, extract::State, http::StatusCode};
 
 use crate::{
-    dto::plugins::{
-        ConnectionTestResponse, PluginSummary, S3SettingsRequest, S3SettingsResponse,
-    },
+    dto::plugins::{ConnectionTestResponse, PluginSummary, S3SettingsRequest, S3SettingsResponse},
     error::AppResult,
     plugins::{S3_PLUGIN, load_s3, save_s3},
     state::AppState,
@@ -38,9 +36,7 @@ pub async fn list_plugins(State(state): State<AppState>) -> AppResult<Json<Vec<P
     tag = "plugins",
     responses((status = 200, description = "S3 settings", body = S3SettingsResponse))
 )]
-pub async fn get_s3_settings(
-    State(state): State<AppState>,
-) -> AppResult<Json<S3SettingsResponse>> {
+pub async fn get_s3_settings(State(state): State<AppState>) -> AppResult<Json<S3SettingsResponse>> {
     let stored = load_s3(state.db(), &state.secrets).await?;
 
     let response = match stored {
@@ -71,10 +67,7 @@ pub async fn get_s3_settings(
 
 /// Merges the request over the stored config, keeping the existing secret when
 /// the field was left blank.
-async fn resolve_config(
-    state: &AppState,
-    payload: &S3SettingsRequest,
-) -> AppResult<S3Config> {
+async fn resolve_config(state: &AppState, payload: &S3SettingsRequest) -> AppResult<S3Config> {
     let stored = load_s3(state.db(), &state.secrets).await?;
     let secret = match payload.secret_access_key.as_deref() {
         Some(value) if !value.trim().is_empty() => value.trim().to_string(),

@@ -49,8 +49,9 @@ pub async fn save_s3(
     enabled: bool,
     config: &S3Config,
 ) -> AppResult<()> {
-    let json = serde_json::to_string(config)
-        .map_err(|err| crate::error::AppError::Internal(format!("failed to encode config: {err}")))?;
+    let json = serde_json::to_string(config).map_err(|err| {
+        crate::error::AppError::Internal(format!("failed to encode config: {err}"))
+    })?;
     let encrypted = secrets.encrypt(&json)?;
     let now = Utc::now().fixed_offset();
 

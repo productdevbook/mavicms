@@ -11,10 +11,10 @@ use uuid::Uuid;
 
 use crate::{
     dto::taxonomy::{CreateTagRequest, LocaleQuery, TagResponse},
-    routes::posts::TranslationGroupRequest,
     entities::tag,
     error::{AppError, AppResult},
     languages::resolve,
+    routes::posts::TranslationGroupRequest,
     slug::slugify_or,
     state::AppState,
 };

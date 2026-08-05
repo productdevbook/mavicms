@@ -10,9 +10,7 @@ use sea_orm::{
 use uuid::Uuid;
 
 use crate::{
-    dto::taxonomy::{
-        CategoryResponse, CreateCategoryRequest, LocaleQuery, UpdateCategoryRequest,
-    },
+    dto::taxonomy::{CategoryResponse, CreateCategoryRequest, LocaleQuery, UpdateCategoryRequest},
     entities::category,
     error::{AppError, AppResult},
     languages::resolve,

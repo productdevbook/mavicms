@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{path::Path, time::Duration};
 
 use argon2::{
     Argon2,
@@ -79,7 +79,7 @@ pub async fn configure_database(
         .map_err(|err| AppError::Validation(format!("could not connect to database: {err}")))?;
 
     let path = state.data_dir.join("database_url");
-    tokio::fs::write(&path, &url).await.map_err(|err| {
+    write_private(&path, &url).await.map_err(|err| {
         AppError::Internal(format!("failed to persist database configuration: {err}"))
     })?;
 
@@ -243,4 +243,69 @@ fn hash_password(password: &str) -> AppResult<String> {
         .hash_password(password.as_bytes(), &salt)
         .map(|hash| hash.to_string())
         .map_err(|err| AppError::Validation(format!("failed to hash password: {err}")))
+}
+
+/// Writes a file only the owner can read. Used for the database URL, which
+/// carries the database password.
+async fn write_private(path: &Path, contents: &str) -> std::io::Result<()> {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        use tokio::io::AsyncWriteExt;
+
+        let mut file = tokio::fs::OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .mode(0o600)
+            .open(path)
+            .await?;
+        file.write_all(contents.as_bytes()).await?;
+        file.sync_all().await?;
+        // `mode` above only applies when the file is created, so an existing
+        // file keeps whatever permissions it had.
+        tokio::fs::set_permissions(path, std::fs::Permissions::from_mode(0o600)).await
+    }
+
+    #[cfg(not(unix))]
+    tokio::fs::write(path, contents).await
+}
+
+#[cfg(all(test, unix))]
+mod tests {
+    use std::os::unix::fs::PermissionsExt;
+
+    use super::write_private;
+
+    #[tokio::test]
+    async fn database_url_is_only_readable_by_its_owner() {
+        let dir = std::env::temp_dir().join(format!("mavicms-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("database_url");
+
+        write_private(&path, "postgres://u:p@host/db")
+            .await
+            .unwrap();
+        assert_eq!(
+            std::fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+            0o600
+        );
+
+        // A file left world-readable by an older version is tightened on rewrite.
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644)).unwrap();
+        write_private(&path, "postgres://u:p2@host/db")
+            .await
+            .unwrap();
+        assert_eq!(
+            std::fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+            0o600
+        );
+        assert_eq!(
+            std::fs::read_to_string(&path).unwrap(),
+            "postgres://u:p2@host/db"
+        );
+
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 }

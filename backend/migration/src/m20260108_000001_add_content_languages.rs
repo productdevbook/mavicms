@@ -290,7 +290,12 @@ impl MigrationTrait for Migration {
             ] {
                 if manager.has_index(table, &index).await? {
                     manager
-                        .drop_index(Index::drop().name(&index).table(table_iden.clone()).to_owned())
+                        .drop_index(
+                            Index::drop()
+                                .name(&index)
+                                .table(table_iden.clone())
+                                .to_owned(),
+                        )
                         .await?;
                 }
             }

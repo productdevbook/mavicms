@@ -11,11 +11,7 @@ pub mod tags;
 use axum::{extract::DefaultBodyLimit, middleware::from_fn_with_state};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-use crate::{
-    auth::require_auth,
-    middleware::require_database,
-    state::AppState,
-};
+use crate::{auth::require_auth, middleware::require_database, state::AppState};
 
 pub fn router(state: AppState) -> OpenApiRouter<AppState> {
     let public = OpenApiRouter::new()
@@ -38,7 +34,10 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
             posts::delete_post
         ))
         .routes(routes!(posts::set_translation_group))
-        .routes(routes!(categories::list_categories, categories::create_category))
+        .routes(routes!(
+            categories::list_categories,
+            categories::create_category
+        ))
         .routes(routes!(
             categories::update_category,
             categories::delete_category
@@ -47,7 +46,10 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
         .routes(routes!(tags::delete_tag))
         .routes(routes!(tags::set_tag_translation_group))
         .routes(routes!(media::delete_media))
-        .routes(routes!(languages::list_languages, languages::create_language))
+        .routes(routes!(
+            languages::list_languages,
+            languages::create_language
+        ))
         .routes(routes!(
             languages::update_language,
             languages::delete_language
