@@ -1,0 +1,527 @@
+<?php
+/**
+ * Moves WordPress content into Mavi CMS.
+ *
+ * @package MaviCMS_Migrator
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Migrates posts, taxonomies and media in resumable batches.
+ *
+ * Every WordPress id that has been sent is recorded, so a run that stops
+ * halfway — a timeout, a closed browser tab, an expired session — can be
+ * started again without creating duplicates.
+ */
+class MaviCMS_Migrator {
+
+	const OPTION_MAP_POSTS      = 'mavicms_map_posts';
+	const OPTION_MAP_TERMS      = 'mavicms_map_terms';
+	const OPTION_MAP_MEDIA      = 'mavicms_map_media';
+	const OPTION_DEFAULT_LOCALE = 'mavicms_default_locale';
+
+	/**
+	 * API client for the destination site.
+	 *
+	 * @var MaviCMS_Client
+	 */
+	private $client;
+
+	/**
+	 * Things that went wrong during the current post but did not stop it.
+	 *
+	 * @var string[]
+	 */
+	private $warnings = array();
+
+	/**
+	 * Builds a migrator around a connected client.
+	 *
+	 * @param MaviCMS_Client $client Configured API client.
+	 */
+	public function __construct( MaviCMS_Client $client ) {
+		$this->client = $client;
+	}
+
+	/**
+	 * Everything that will be migrated, in a stable order.
+	 *
+	 * @return int[] Ids of published and draft posts, oldest first.
+	 */
+	public function post_ids() {
+		return get_posts(
+			array(
+				'post_type'        => 'post',
+				'post_status'      => array( 'publish', 'draft', 'pending', 'future', 'private' ),
+				'numberposts'      => -1,
+				'orderby'          => 'ID',
+				'order'            => 'ASC',
+				'fields'           => 'ids',
+				'suppress_filters' => true,
+			)
+		);
+	}
+
+	/**
+	 * How far the migration has got.
+	 *
+	 * @return array{total:int,done:int,failed:int} Progress so far.
+	 */
+	public function progress() {
+		$map = $this->map( self::OPTION_MAP_POSTS );
+		$ids = $this->post_ids();
+		return array(
+			'total'  => count( $ids ),
+			'done'   => count( array_intersect( $ids, array_keys( $map ) ) ),
+			'failed' => 0,
+		);
+	}
+
+	/**
+	 * Forgets what has been migrated. The content already in Mavi CMS stays.
+	 */
+	public function reset() {
+		delete_option( self::OPTION_MAP_POSTS );
+		delete_option( self::OPTION_MAP_TERMS );
+		delete_option( self::OPTION_MAP_MEDIA );
+	}
+
+	/**
+	 * Migrates one post: its category, tags, featured image and inline images.
+	 *
+	 * @param int $post_id WordPress post id.
+	 * @return array{status:string,message:string}
+	 */
+	public function migrate_post( $post_id ) {
+		$posts_map = $this->map( self::OPTION_MAP_POSTS );
+		if ( isset( $posts_map[ $post_id ] ) ) {
+			return array(
+				'status'  => 'skipped',
+				'message' => __( 'Already migrated.', 'mavicms-migrator' ),
+			);
+		}
+
+		$this->warnings = array();
+
+		$post = get_post( $post_id );
+		if ( ! $post ) {
+			return array(
+				'status'  => 'failed',
+				'message' => __( 'Post not found.', 'mavicms-migrator' ),
+			);
+		}
+
+		$locale = $this->locale_of( $post_id );
+
+		$category_ids = array();
+		foreach ( wp_get_post_categories( $post_id ) as $term_id ) {
+			$mapped = $this->migrate_category( $term_id, $locale );
+			if ( is_wp_error( $mapped ) ) {
+				return array(
+					'status'  => 'failed',
+					'message' => $mapped->get_error_message(),
+				);
+			}
+			// WordPress puts everything in "Uncategorized" by default; carrying
+			// that across would categorise the whole archive under a word the
+			// author never chose.
+			if ( '' !== $mapped ) {
+				$category_ids[] = $mapped;
+			}
+		}
+
+		$tags = array();
+		foreach ( wp_get_post_tags( $post_id ) as $tag ) {
+			$tags[] = $tag->name;
+		}
+
+		$content = $this->rewrite_images( (string) $post->post_content );
+		if ( is_wp_error( $content ) ) {
+			return array(
+				'status'  => 'failed',
+				'message' => $content->get_error_message(),
+			);
+		}
+
+		$cover_url = '';
+		$thumbnail = get_post_thumbnail_id( $post_id );
+		if ( $thumbnail ) {
+			$media = $this->migrate_attachment( (int) $thumbnail );
+			if ( is_wp_error( $media ) ) {
+				$this->warnings[] = sprintf(
+					/* translators: %s: reason the featured image failed. */
+					__( 'the featured image was left behind (%s)', 'mavicms-migrator' ),
+					$media->get_error_message()
+				);
+			} else {
+				$cover_url = $media;
+			}
+		}
+
+		$payload = array(
+			'title'          => $post->post_title,
+			'slug'           => $post->post_name ? $post->post_name : sanitize_title( $post->post_title ),
+			'excerpt'        => (string) $post->post_excerpt,
+			'status'         => $this->status_of( $post ),
+			'content_html'   => $content,
+			'category_ids'   => $category_ids,
+			'tags'           => $tags,
+			'cover_url'      => $cover_url,
+			'author'         => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
+			'locale'         => $locale,
+			'created_at'     => $this->utc( $post->post_date_gmt, $post->post_date ),
+			'publish_at'     => $this->utc( $post->post_date_gmt, $post->post_date ),
+			'allow_comments' => 'closed' !== $post->comment_status,
+		);
+
+		$created = $this->client->create_post( $payload );
+		if ( is_wp_error( $created ) ) {
+			return array(
+				'status'  => 'failed',
+				'message' => $created->get_error_message(),
+			);
+		}
+
+		$posts_map             = $this->map( self::OPTION_MAP_POSTS );
+		$posts_map[ $post_id ] = $created['id'];
+		$this->save_map( self::OPTION_MAP_POSTS, $posts_map );
+
+		/* translators: %s: post title. */
+		$message = sprintf( __( 'Migrated "%s".', 'mavicms-migrator' ), $post->post_title );
+		if ( $this->warnings ) {
+			$message .= ' ' . implode( '; ', $this->warnings ) . '.';
+		}
+
+		return array(
+			'status'  => $this->warnings ? 'warned' : 'migrated',
+			'message' => $message,
+		);
+	}
+
+	/**
+	 * Links translations once every post exists.
+	 *
+	 * Runs as a second pass because a translation can only join a group whose
+	 * other side has already been created.
+	 *
+	 * @return array{linked:int,skipped:int}
+	 */
+	public function link_translations() {
+		$posts_map = $this->map( self::OPTION_MAP_POSTS );
+		$linked    = 0;
+		$skipped   = 0;
+		$seen      = array();
+
+		foreach ( array_keys( $posts_map ) as $post_id ) {
+			$group = $this->translation_group_of( (int) $post_id );
+			if ( count( $group ) < 2 ) {
+				continue;
+			}
+
+			$anchor = null;
+			foreach ( $group as $sibling_id ) {
+				if ( ! isset( $posts_map[ $sibling_id ] ) || isset( $seen[ $sibling_id ] ) ) {
+					continue;
+				}
+				$seen[ $sibling_id ] = true;
+				if ( null === $anchor ) {
+					$anchor = $posts_map[ $sibling_id ];
+					continue;
+				}
+				$result = $this->client->join_translation_group( $posts_map[ $sibling_id ], $anchor );
+				if ( is_wp_error( $result ) ) {
+					++$skipped;
+					continue;
+				}
+				++$linked;
+			}
+		}
+
+		return array(
+			'linked'  => $linked,
+			'skipped' => $skipped,
+		);
+	}
+
+	/**
+	 * Creates the category in Mavi CMS, parents first.
+	 *
+	 * @param int    $term_id WordPress term id.
+	 * @param string $locale  Content language for the new category.
+	 * @return string|WP_Error Mavi CMS category id, or '' for "Uncategorized".
+	 */
+	private function migrate_category( $term_id, $locale ) {
+		$term = get_term( $term_id, 'category' );
+		if ( ! $term || is_wp_error( $term ) ) {
+			return '';
+		}
+		if ( 'uncategorized' === $term->slug ) {
+			return '';
+		}
+
+		$key   = $locale . ':' . $term_id;
+		$terms = $this->map( self::OPTION_MAP_TERMS );
+		if ( isset( $terms[ $key ] ) ) {
+			return $terms[ $key ];
+		}
+
+		$parent_id = '';
+		if ( $term->parent ) {
+			$parent = $this->migrate_category( (int) $term->parent, $locale );
+			if ( is_wp_error( $parent ) ) {
+				return $parent;
+			}
+			$parent_id = $parent;
+		}
+
+		$payload = array(
+			'name'        => $term->name,
+			'description' => (string) $term->description,
+			'locale'      => $locale,
+		);
+		if ( '' !== $parent_id ) {
+			$payload['parent_id'] = $parent_id;
+		}
+
+		$created = $this->client->create_category( $payload );
+		if ( is_wp_error( $created ) ) {
+			return $created;
+		}
+
+		$terms         = $this->map( self::OPTION_MAP_TERMS );
+		$terms[ $key ] = $created['id'];
+		$this->save_map( self::OPTION_MAP_TERMS, $terms );
+
+		return $created['id'];
+	}
+
+	/**
+	 * Hands an attachment to Mavi CMS, which fetches it from this site.
+	 *
+	 * @param int $attachment_id WordPress attachment id.
+	 * @return string|WP_Error New URL on the Mavi CMS side.
+	 */
+	private function migrate_attachment( $attachment_id ) {
+		$media = $this->map( self::OPTION_MAP_MEDIA );
+		if ( isset( $media[ $attachment_id ] ) ) {
+			return $media[ $attachment_id ];
+		}
+
+		$source = wp_get_attachment_url( $attachment_id );
+		if ( ! $source ) {
+			return new WP_Error( 'mavicms_no_attachment', __( 'The attachment has no URL.', 'mavicms-migrator' ) );
+		}
+
+		$filename = basename( wp_parse_url( $source, PHP_URL_PATH ) );
+		$alt      = (string) get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+
+		$imported = $this->client->import_media( $source, $filename, $alt );
+		if ( is_wp_error( $imported ) ) {
+			// Mavi CMS could not reach this site — behind a firewall, on a
+			// private network, or on the same machine. Push the bytes instead
+			// of asking it to pull them.
+			$path = get_attached_file( $attachment_id );
+			if ( ! $path || ! file_exists( $path ) ) {
+				return $imported;
+			}
+			$imported = $this->client->upload_media( $path, $filename );
+			if ( is_wp_error( $imported ) ) {
+				return $imported;
+			}
+		}
+
+		$url = $this->absolute_media_url( $imported['url'] );
+
+		$media                   = $this->map( self::OPTION_MAP_MEDIA );
+		$media[ $attachment_id ] = $url;
+		$this->save_map( self::OPTION_MAP_MEDIA, $media );
+
+		return $url;
+	}
+
+	/**
+	 * Repoints every uploaded image in the content at its Mavi CMS copy.
+	 *
+	 * Images that fail to transfer keep their original address rather than
+	 * breaking the post: a picture still served by the old site beats a broken
+	 * one, and the failure is visible in the log.
+	 *
+	 * @param string $content Post content.
+	 * @return string
+	 */
+	private function rewrite_images( $content ) {
+		if ( ! preg_match_all( '/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches ) ) {
+			return $content;
+		}
+
+		$uploads = wp_get_upload_dir();
+		$base    = isset( $uploads['baseurl'] ) ? $uploads['baseurl'] : '';
+
+		$replacements = array();
+		foreach ( array_unique( $matches[1] ) as $source ) {
+			// Only this site's own uploads: a hotlinked image belongs to
+			// someone else and copying it is not ours to do.
+			if ( '' === $base || 0 !== strpos( $source, $base ) ) {
+				continue;
+			}
+			$attachment_id = attachment_url_to_postid( $this->strip_size_suffix( $source ) );
+			if ( ! $attachment_id ) {
+				continue;
+			}
+			$new = $this->migrate_attachment( (int) $attachment_id );
+			if ( is_wp_error( $new ) ) {
+				$this->warnings[] = sprintf(
+					/* translators: 1: image file name, 2: reason it failed. */
+					__( '%1$s still points at the old site (%2$s)', 'mavicms-migrator' ),
+					basename( $source ),
+					$new->get_error_message()
+				);
+				continue;
+			}
+			$replacements[ $source ] = $new;
+		}
+
+		if ( ! $replacements ) {
+			return $content;
+		}
+		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
+	}
+
+	/**
+	 * Turns `photo-800x600.jpg` back into `photo.jpg`.
+	 *
+	 * Content usually points at a generated size, which is not an attachment of
+	 * its own and would not resolve to an id.
+	 *
+	 * @param string $url Image URL.
+	 * @return string
+	 */
+	private function strip_size_suffix( $url ) {
+		return preg_replace( '/-\d+x\d+(\.[a-zA-Z0-9]+)$/', '$1', $url );
+	}
+
+	/**
+	 * Makes a media URL absolute, whatever storage backend produced it.
+	 *
+	 * @param string $path URL or path returned by the media API.
+	 * @return string Absolute URL usable from anywhere.
+	 */
+	private function absolute_media_url( $path ) {
+		if ( preg_match( '#^https?://#i', $path ) ) {
+			return $path;
+		}
+		return $this->client->site_url() . $path;
+	}
+
+	/**
+	 * Maps a WordPress post status onto the Mavi CMS one.
+	 *
+	 * @param WP_Post $post Post being migrated.
+	 * @return string Mavi CMS status.
+	 */
+	private function status_of( $post ) {
+		switch ( $post->post_status ) {
+			case 'publish':
+				return 'published';
+			case 'future':
+				return 'scheduled';
+			case 'pending':
+				return 'review';
+			default:
+				return 'draft';
+		}
+	}
+
+	/**
+	 * Normalises a WordPress timestamp to UTC.
+	 *
+	 * @param string $gmt   GMT timestamp, which WordPress sometimes leaves empty.
+	 * @param string $local Site-local timestamp.
+	 * @return string RFC 3339 timestamp in UTC.
+	 */
+	private function utc( $gmt, $local ) {
+		$value = ( $gmt && '0000-00-00 00:00:00' !== $gmt ) ? $gmt : get_gmt_from_date( $local );
+		return gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $value . ' UTC' ) );
+	}
+
+	/**
+	 * Content language of a post, from Polylang or WPML when either is active.
+	 *
+	 * @param int $post_id WordPress post id.
+	 * @return string Language code, or the configured default.
+	 */
+	private function locale_of( $post_id ) {
+		$default = (string) get_option( self::OPTION_DEFAULT_LOCALE, '' );
+
+		if ( function_exists( 'pll_get_post_language' ) ) {
+			$code = pll_get_post_language( $post_id, 'slug' );
+			if ( $code ) {
+				return $code;
+			}
+		}
+
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$details = apply_filters(
+				'wpml_post_language_details',
+				null,
+				$post_id
+			);
+			if ( is_array( $details ) && ! empty( $details['language_code'] ) ) {
+				return $details['language_code'];
+			}
+		}
+
+		return $default;
+	}
+
+	/**
+	 * Every post that is a translation of the given one, itself included.
+	 *
+	 * @param int $post_id WordPress post id.
+	 * @return int[]
+	 */
+	private function translation_group_of( $post_id ) {
+		if ( function_exists( 'pll_get_post_translations' ) ) {
+			return array_map( 'intval', array_values( pll_get_post_translations( $post_id ) ) );
+		}
+
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$trid = apply_filters( 'wpml_element_trid', null, $post_id, 'post_post' );
+			if ( $trid ) {
+				$translations = apply_filters( 'wpml_get_element_translations', null, $trid, 'post_post' );
+				if ( is_array( $translations ) ) {
+					return array_map(
+						static function ( $translation ) {
+							return (int) $translation->element_id;
+						},
+						array_values( $translations )
+					);
+				}
+			}
+		}
+
+		return array();
+	}
+
+	/**
+	 * Reads one of the id maps.
+	 *
+	 * @param string $option Option name.
+	 * @return array
+	 */
+	private function map( $option ) {
+		$value = get_option( $option, array() );
+		return is_array( $value ) ? $value : array();
+	}
+
+	/**
+	 * Writes one of the id maps.
+	 *
+	 * @param string $option Option name.
+	 * @param array  $value  Map to store.
+	 */
+	private function save_map( $option, array $value ) {
+		update_option( $option, $value, false );
+	}
+}
