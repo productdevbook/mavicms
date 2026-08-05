@@ -1,5 +1,5 @@
-# Runs the published images. To build from this checkout instead:
-#   docker compose -f docker-compose.dev.yml up --build
+# Builds both images from this checkout. For the published images use
+# docker-compose.yml instead.
 services:
   postgres:
     image: postgres:18-alpine
@@ -17,7 +17,8 @@ services:
       retries: 10
 
   backend:
-    image: ghcr.io/productdevbook/mavicms-backend:${MAVICMS_VERSION:-latest}
+    build:
+      context: ./backend
     restart: unless-stopped
     environment:
       # Point this at any Postgres/MySQL/SQLite instance you like — the
@@ -37,7 +38,8 @@ services:
       - "${BACKEND_PORT:-8080}:8080"
 
   frontend:
-    image: ghcr.io/productdevbook/mavicms-frontend:${MAVICMS_VERSION:-latest}
+    build:
+      context: .
     restart: unless-stopped
     depends_on:
       - backend
