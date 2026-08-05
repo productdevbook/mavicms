@@ -52,6 +52,7 @@ class MaviCMS_Admin {
 		$migrator  = new MaviCMS_Migrator( $client );
 		$connected = $client->has_session();
 		$progress  = $migrator->progress();
+		$breakdown = $migrator->language_breakdown();
 
 		// Filled in here rather than left to the script, so returning to the
 		// page with a stored session does not show an empty language list.

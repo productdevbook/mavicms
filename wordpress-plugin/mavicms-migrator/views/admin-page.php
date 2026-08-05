@@ -10,6 +10,7 @@
  * @var array            $progress  Counts for the progress display.
  * @var array            $languages Content languages of the destination.
  * @var string           $locale    Currently chosen default language.
+ * @var array            $breakdown Post counts per source language.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -64,6 +65,38 @@ defined( 'ABSPATH' ) || exit;
 	</p>
 
 	<h2 class="title"><?php esc_html_e( '2. Migrate', 'mavicms-migrator' ); ?></h2>
+	<?php if ( count( $breakdown ) > 1 || isset( $breakdown[''] ) ) : ?>
+		<table class="widefat striped" style="max-width:32em;margin-bottom:1em">
+			<thead>
+				<tr>
+					<th><?php esc_html_e( 'Language in WordPress', 'mavicms-migrator' ); ?></th>
+					<th><?php esc_html_e( 'Posts', 'mavicms-migrator' ); ?></th>
+					<th><?php esc_html_e( 'Goes to', 'mavicms-migrator' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $breakdown as $code => $count ) : ?>
+					<tr>
+						<td>
+							<?php
+							echo '' === $code
+								? '<em>' . esc_html__( 'not set', 'mavicms-migrator' ) . '</em>'
+								: esc_html( $code );
+							?>
+						</td>
+						<td><?php echo (int) $count; ?></td>
+						<td><?php echo esc_html( '' === $code ? $locale : $code ); ?></td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+		<?php if ( isset( $breakdown[''] ) ) : ?>
+			<p class="description" style="max-width:40em">
+				<?php esc_html_e( 'Posts with no language are ones no multilingual plugin has tagged. They all go to the language chosen above, whatever language they are actually written in.', 'mavicms-migrator' ); ?>
+			</p>
+		<?php endif; ?>
+	<?php endif; ?>
+
 	<p id="mavicms-stored-progress">
 		<?php
 		printf(

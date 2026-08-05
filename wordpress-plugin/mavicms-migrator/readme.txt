@@ -4,7 +4,7 @@ Tags: migration, export, cms, headless
 Requires at least: 5.9
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,17 @@ its own copy. An image it cannot fetch keeps its original address, and the
 failure is shown in the log.
 
 == Changelog ==
+
+= 0.1.4 =
+* Migrate posts in every language. Polylang narrows admin queries to the
+  language selected in the admin bar, so posts in the other languages were
+  never even listed for migration, let alone sent. WPML does the same and is
+  handled too.
+* Show, before anything is sent, how many posts are in each language and where
+  each group will end up — including posts no multilingual plugin has tagged,
+  which go to the chosen fallback language.
+* Create a language on the destination when a post first needs it, instead of
+  only when connecting.
 
 = 0.1.3 =
 * Report posts that were skipped because they had already been migrated. A

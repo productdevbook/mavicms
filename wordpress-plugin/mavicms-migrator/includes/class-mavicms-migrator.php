@@ -36,6 +36,13 @@ class MaviCMS_Migrator {
 	private $warnings = array();
 
 	/**
+	 * Language codes known to exist on the destination, once looked up.
+	 *
+	 * @var string[]|null
+	 */
+	private $languages = null;
+
+	/**
 	 * Builds a migrator around a connected client.
 	 *
 	 * @param MaviCMS_Client $client Configured API client.
@@ -50,7 +57,15 @@ class MaviCMS_Migrator {
 	 * @return int[] Ids of published and draft posts, oldest first.
 	 */
 	public function post_ids() {
-		return get_posts(
+		// WPML narrows admin queries to the language being edited, and does not
+		// answer to a query argument, so it has to be switched and switched
+		// back around the call.
+		$wpml = defined( 'ICL_SITEPRESS_VERSION' );
+		if ( $wpml ) {
+			do_action( 'wpml_switch_language', 'all' );
+		}
+
+		$ids = get_posts(
 			array(
 				'post_type'        => 'post',
 				'post_status'      => array( 'publish', 'draft', 'pending', 'future', 'private' ),
@@ -58,9 +73,22 @@ class MaviCMS_Migrator {
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
 				'fields'           => 'ids',
+				// Polylang filters admin queries down to the language currently
+				// selected in the admin bar, and `suppress_filters` does not
+				// stop it: it hooks the query, not the SQL. Without this an
+				// English archive is invisible to the migration and simply
+				// never gets sent.
+				'lang'             => '',
 				'suppress_filters' => true,
 			)
 		);
+
+		if ( $wpml ) {
+			do_action( 'wpml_switch_language', null );
+		}
+
+		sort( $ids );
+		return $ids;
 	}
 
 	/**
@@ -76,6 +104,27 @@ class MaviCMS_Migrator {
 			'done'   => count( array_intersect( $ids, array_keys( $map ) ) ),
 			'failed' => 0,
 		);
+	}
+
+	/**
+	 * How many posts will go to each language, worked out the same way the
+	 * migration itself works it out.
+	 *
+	 * Shown before anything is sent, because "why did my English posts end up
+	 * in Turkish" is otherwise only answerable after the fact: a post that no
+	 * multilingual plugin has tagged has no language of its own, and there is
+	 * no way to tell from the post list.
+	 *
+	 * @return array<string,int> Language code (or '' for untagged) to count.
+	 */
+	public function language_breakdown() {
+		$counts = array();
+		foreach ( $this->post_ids() as $post_id ) {
+			$code            = $this->post_language( (int) $post_id );
+			$counts[ $code ] = isset( $counts[ $code ] ) ? $counts[ $code ] + 1 : 1;
+		}
+		ksort( $counts );
+		return $counts;
 	}
 
 	/**
@@ -113,6 +162,10 @@ class MaviCMS_Migrator {
 		}
 
 		$locale = $this->locale_of( $post_id );
+		// The destination refuses a post in a language it does not have. Adding
+		// it here rather than only when connecting means a language added to
+		// WordPress afterwards does not fail every post that uses it.
+		$this->ensure_language( $locale );
 
 		$category_ids = array();
 		foreach ( wp_get_post_categories( $post_id ) as $term_id ) {
@@ -470,8 +523,64 @@ class MaviCMS_Migrator {
 	 * @return string Language code, or the configured default.
 	 */
 	private function locale_of( $post_id ) {
-		$default = (string) get_option( self::OPTION_DEFAULT_LOCALE, '' );
+		$code = $this->post_language( $post_id );
+		return '' !== $code ? $code : (string) get_option( self::OPTION_DEFAULT_LOCALE, '' );
+	}
 
+	/**
+	 * Creates the language on the destination if it does not have it yet.
+	 *
+	 * @param string $code Language code.
+	 */
+	private function ensure_language( $code ) {
+		if ( '' === $code ) {
+			return;
+		}
+		if ( null === $this->languages ) {
+			$languages       = $this->client->languages();
+			$this->languages = is_wp_error( $languages ) ? array() : wp_list_pluck( $languages, 'code' );
+		}
+		if ( in_array( $code, $this->languages, true ) ) {
+			return;
+		}
+
+		$result = $this->client->create_language( $code, $this->language_name( $code ) );
+		if ( ! is_wp_error( $result ) ) {
+			$this->languages[] = $code;
+		}
+	}
+
+	/**
+	 * What this site calls the language, so the destination does not end up
+	 * listing bare codes.
+	 *
+	 * @param string $code Language code.
+	 * @return string
+	 */
+	private function language_name( $code ) {
+		if ( function_exists( 'pll_languages_list' ) ) {
+			foreach ( pll_languages_list( array( 'fields' => '' ) ) as $language ) {
+				if ( $language->slug === $code ) {
+					return $language->name;
+				}
+			}
+		}
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$active = apply_filters( 'wpml_active_languages', null );
+			if ( is_array( $active ) && isset( $active[ $code ]['native_name'] ) ) {
+				return $active[ $code ]['native_name'];
+			}
+		}
+		return $code;
+	}
+
+	/**
+	 * The post's own language, or an empty string when nothing has tagged it.
+	 *
+	 * @param int $post_id WordPress post id.
+	 * @return string
+	 */
+	private function post_language( $post_id ) {
 		if ( function_exists( 'pll_get_post_language' ) ) {
 			$code = pll_get_post_language( $post_id, 'slug' );
 			if ( $code ) {
@@ -490,7 +599,7 @@ class MaviCMS_Migrator {
 			}
 		}
 
-		return $default;
+		return '';
 	}
 
 	/**
