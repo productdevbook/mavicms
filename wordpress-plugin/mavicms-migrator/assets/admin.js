@@ -6,6 +6,7 @@
 	var queue = [];
 	var index = 0;
 	var running = false;
+	var tally = { migrated: 0, warned: 0, failed: 0, skipped: 0 };
 
 	function element(id) {
 		return document.getElementById(id);
@@ -100,6 +101,7 @@
 		var postId = queue[index];
 		post('mavicms_migrate_post', { post_id: postId })
 			.then(function (data) {
+				tally[data.status] = (tally[data.status] || 0) + 1;
 				if ('failed' === data.status) {
 					log('#' + postId + ' — ' + data.message, 'error');
 				} else if ('warned' === data.status) {
@@ -107,8 +109,12 @@
 				} else if ('migrated' === data.status) {
 					log(data.message, 'ok');
 				}
+				// A skipped post logs nothing of its own — one line each would
+				// bury the real news on a second run — but it is counted and
+				// reported in the summary below.
 			})
 			.catch(function (error) {
+				tally.failed += 1;
 				log('#' + postId + ' — ' + error.message, 'error');
 			})
 			.then(function () {
@@ -122,6 +128,17 @@
 	}
 
 	function finish() {
+		log(
+			settings.i18n.summary
+				.replace('%1$d', tally.migrated + tally.warned)
+				.replace('%2$d', tally.skipped)
+				.replace('%3$d', tally.failed),
+			tally.failed ? 'warn' : 'ok'
+		);
+		if (tally.skipped && !tally.migrated && !tally.warned) {
+			log(settings.i18n.allSkipped, 'warn');
+		}
+
 		log(settings.i18n.linking);
 		post('mavicms_link_translations')
 			.then(function (data) {
@@ -144,6 +161,7 @@
 		queue = settings.postIds || [];
 		index = 0;
 		running = true;
+		tally = { migrated: 0, warned: 0, failed: 0, skipped: 0 };
 
 		if (!queue.length) {
 			log(settings.i18n.nothingToDo);

@@ -4,7 +4,7 @@ Tags: migration, export, cms, headless
 Requires at least: 5.9
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,11 @@ its own copy. An image it cannot fetch keeps its original address, and the
 failure is shown in the log.
 
 == Changelog ==
+
+= 0.1.3 =
+* Report posts that were skipped because they had already been migrated. A
+  second run used to log nothing at all, so a run where everything was skipped
+  looked identical to one that had done nothing.
 
 = 0.1.2 =
 * Save the content language when it is changed. It was only stored while

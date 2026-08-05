@@ -3,7 +3,7 @@
  * Plugin Name:       Migrate to Mavi CMS
  * Plugin URI:        https://github.com/productdevbook/mavicms
  * Description:       Sends your WordPress posts, categories, tags and images to a Mavi CMS site.
- * Version:           0.1.2
+ * Version:           0.1.3
  * Requires at least: 5.9
  * Requires PHP:      7.4
  * Author:            productdevbook
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MAVICMS_MIGRATOR_VERSION', '0.1.2' );
+define( 'MAVICMS_MIGRATOR_VERSION', '0.1.3' );
 define( 'MAVICMS_MIGRATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MAVICMS_MIGRATOR_URL', plugin_dir_url( __FILE__ ) );
 
@@ -71,6 +71,9 @@ add_action(
 					/* translators: %d: number of linked translations. */
 					'linked'        => __( 'Linked %d translations.', 'mavicms-migrator' ),
 					'done'          => __( 'Migration finished.', 'mavicms-migrator' ),
+					/* translators: 1: posts sent, 2: posts skipped, 3: posts that failed. */
+					'summary'       => __( '%1$d sent, %2$d skipped as already migrated, %3$d failed.', 'mavicms-migrator' ),
+					'allSkipped'    => __( 'Nothing new was sent — every post had been migrated before. To send them again, for instance into a different language, use "Forget history" first and remove the earlier copies from Mavi CMS, or they will be duplicated.', 'mavicms-migrator' ),
 					'stopped'       => __( 'Stopped. Press start to continue where you left off.', 'mavicms-migrator' ),
 					'nothingToDo'   => __( 'There are no posts to migrate.', 'mavicms-migrator' ),
 					'confirmReset'  => __( 'Forget which posts have been migrated? Content already sent to Mavi CMS is not removed, and migrating again would duplicate it.', 'mavicms-migrator' ),
