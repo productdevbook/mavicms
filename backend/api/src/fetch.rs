@@ -10,7 +10,7 @@
 //! same way.
 
 use std::{
-    net::{IpAddr, Ipv4Addr, Ipv6Addr},
+    net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr},
     time::Duration,
 };
 
@@ -93,8 +93,11 @@ fn to_ipv4(ip: Ipv6Addr) -> Option<Ipv4Addr> {
     }
 }
 
-/// Resolves the URL's host and refuses anything that is not a public address.
-async fn assert_public(url: &Url) -> Result<(), FetchError> {
+/// Resolves the URL's host, refuses anything that is not a public address, and
+/// returns the domain and address the connection must be pinned to.
+///
+/// Returns `None` for an address literal, where there is no name to rebind.
+async fn resolve_public(url: &Url) -> Result<Option<(String, SocketAddr)>, FetchError> {
     if !matches!(url.scheme(), "http" | "https") {
         return Err(FetchError::Rejected(
             "only http and https addresses can be imported".to_string(),
@@ -109,18 +112,21 @@ async fn assert_public(url: &Url) -> Result<(), FetchError> {
     // An IPv6 literal arrives bracketed, which the resolver will not parse.
     let bare = host.trim_start_matches('[').trim_end_matches(']');
 
-    let addresses: Vec<IpAddr> = match bare.parse::<IpAddr>() {
-        Ok(ip) => vec![ip],
-        Err(_) => tokio::net::lookup_host((bare, port))
-            .await
-            .map_err(|_| FetchError::Unreachable(host.to_string()))?
-            .map(|addr| addr.ip())
-            .collect(),
+    let (addresses, is_literal) = match bare.parse::<IpAddr>() {
+        Ok(ip) => (vec![ip], true),
+        Err(_) => (
+            tokio::net::lookup_host((bare, port))
+                .await
+                .map_err(|_| FetchError::Unreachable(host.to_string()))?
+                .map(|addr| addr.ip())
+                .collect(),
+            false,
+        ),
     };
 
-    if addresses.is_empty() {
-        return Err(FetchError::Unreachable(host.to_string()));
-    }
+    let first = *addresses
+        .first()
+        .ok_or_else(|| FetchError::Unreachable(host.to_string()))?;
     // Every answer has to be public: one private address among them is enough
     // for the connection to end up there.
     if addresses.iter().copied().any(is_forbidden) {
@@ -128,7 +134,8 @@ async fn assert_public(url: &Url) -> Result<(), FetchError> {
             "{host} resolves to a private address, which cannot be imported"
         )));
     }
-    Ok(())
+
+    Ok((!is_literal).then(|| (bare.to_string(), SocketAddr::new(first, port))))
 }
 
 /// Downloads a remote file, refusing private hosts and anything over `max_bytes`.
@@ -136,16 +143,24 @@ pub async fn fetch_remote_file(url: &str, max_bytes: usize) -> Result<Vec<u8>, F
     let mut current = Url::parse(url)
         .map_err(|_| FetchError::Rejected("that is not a valid address".to_string()))?;
 
-    let client = reqwest::Client::builder()
-        .timeout(REQUEST_TIMEOUT)
-        .user_agent(USER_AGENT)
-        // Followed by hand below so that every hop gets the same host check.
-        .redirect(Policy::none())
-        .build()
-        .map_err(|_| FetchError::Unreachable(url.to_string()))?;
-
     for _ in 0..=MAX_REDIRECTS {
-        assert_public(&current).await?;
+        let pinned = resolve_public(&current).await?;
+
+        let mut builder = reqwest::Client::builder()
+            .timeout(REQUEST_TIMEOUT)
+            .user_agent(USER_AGENT)
+            // Followed by hand below so that every hop gets the same host check.
+            .redirect(Policy::none());
+        // Connect to the address that was just checked. Resolving again inside
+        // the client would let a hostile DNS server answer with a public
+        // address for the check and a private one for the connection; the
+        // hostname is kept for SNI and Host, so TLS still has to match.
+        if let Some((domain, address)) = &pinned {
+            builder = builder.resolve(domain, *address);
+        }
+        let client = builder
+            .build()
+            .map_err(|_| FetchError::Unreachable(current.to_string()))?;
 
         let response = client
             .get(current.clone())
