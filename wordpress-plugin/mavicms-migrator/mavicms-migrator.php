@@ -3,7 +3,7 @@
  * Plugin Name:       Migrate to Mavi CMS
  * Plugin URI:        https://github.com/productdevbook/mavicms
  * Description:       Sends your WordPress posts, categories, tags and images to a Mavi CMS site.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 5.9
  * Requires PHP:      7.4
  * Author:            productdevbook
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MAVICMS_MIGRATOR_VERSION', '0.1.0' );
+define( 'MAVICMS_MIGRATOR_VERSION', '0.1.1' );
 define( 'MAVICMS_MIGRATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MAVICMS_MIGRATOR_URL', plugin_dir_url( __FILE__ ) );
 
