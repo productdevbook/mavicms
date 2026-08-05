@@ -168,6 +168,17 @@
 		log(settings.i18n.stopped);
 	}
 
+	function saveLocale() {
+		var status = element('mavicms-connection-status');
+		post('mavicms_set_locale', { locale: element('mavicms-locale').value })
+			.then(function () {
+				status.textContent = settings.i18n.languageSaved;
+			})
+			.catch(function (error) {
+				log(error.message, 'error');
+			});
+	}
+
 	function reset() {
 		if (!window.confirm(settings.i18n.confirmReset)) {
 			return;
@@ -186,5 +197,6 @@
 		element('mavicms-start').addEventListener('click', start);
 		element('mavicms-stop').addEventListener('click', stop);
 		element('mavicms-reset').addEventListener('click', reset);
+		element('mavicms-locale').addEventListener('change', saveLocale);
 	});
 })();

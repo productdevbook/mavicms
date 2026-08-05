@@ -4,7 +4,7 @@ Tags: migration, export, cms, headless
 Requires at least: 5.9
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,11 @@ its own copy. An image it cannot fetch keeps its original address, and the
 failure is shown in the log.
 
 == Changelog ==
+
+= 0.1.2 =
+* Save the content language when it is changed. It was only stored while
+  connecting, so changing it meant signing in again — and the password field
+  is cleared after connecting.
 
 = 0.1.1 =
 * Rewrite every image URL in post content, not only the one in `src`. `srcset`

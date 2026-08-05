@@ -23,6 +23,7 @@ class MaviCMS_Admin {
 		add_action( 'wp_ajax_mavicms_connect', array( $this, 'ajax_connect' ) );
 		add_action( 'wp_ajax_mavicms_migrate_post', array( $this, 'ajax_migrate_post' ) );
 		add_action( 'wp_ajax_mavicms_link_translations', array( $this, 'ajax_link_translations' ) );
+		add_action( 'wp_ajax_mavicms_set_locale', array( $this, 'ajax_set_locale' ) );
 		add_action( 'wp_ajax_mavicms_reset', array( $this, 'ajax_reset' ) );
 	}
 
@@ -151,6 +152,34 @@ class MaviCMS_Admin {
 		$result   = $migrator->migrate_post( $post_id );
 
 		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Stores the fallback language.
+	 *
+	 * Its own endpoint so that changing the language does not mean signing in
+	 * again — the password field is cleared after connecting, so reconnecting
+	 * to change one dropdown would mean typing it out afresh.
+	 */
+	public function ajax_set_locale() {
+		$this->guard();
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- guard() verifies the nonce.
+		$locale = isset( $_POST['locale'] ) ? sanitize_text_field( wp_unslash( $_POST['locale'] ) ) : '';
+		if ( '' === $locale ) {
+			wp_send_json_error( array( 'message' => __( 'No language given.', 'mavicms-migrator' ) ) );
+		}
+
+		$languages = ( new MaviCMS_Client() )->languages();
+		if ( is_wp_error( $languages ) ) {
+			wp_send_json_error( array( 'message' => $languages->get_error_message() ) );
+		}
+		if ( ! in_array( $locale, wp_list_pluck( $languages, 'code' ), true ) ) {
+			wp_send_json_error( array( 'message' => __( 'That language does not exist on the destination.', 'mavicms-migrator' ) ) );
+		}
+
+		update_option( MaviCMS_Migrator::OPTION_DEFAULT_LOCALE, $locale, false );
+		wp_send_json_success( array( 'locale' => $locale ) );
 	}
 
 	/**

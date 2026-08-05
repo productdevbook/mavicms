@@ -3,7 +3,7 @@
  * Plugin Name:       Migrate to Mavi CMS
  * Plugin URI:        https://github.com/productdevbook/mavicms
  * Description:       Sends your WordPress posts, categories, tags and images to a Mavi CMS site.
- * Version:           0.1.1
+ * Version:           0.1.2
  * Requires at least: 5.9
  * Requires PHP:      7.4
  * Author:            productdevbook
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MAVICMS_MIGRATOR_VERSION', '0.1.1' );
+define( 'MAVICMS_MIGRATOR_VERSION', '0.1.2' );
 define( 'MAVICMS_MIGRATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MAVICMS_MIGRATOR_URL', plugin_dir_url( __FILE__ ) );
 
@@ -63,17 +63,18 @@ add_action(
 				'nonce'   => wp_create_nonce( MaviCMS_Admin::NONCE ),
 				'postIds' => $migrator->post_ids(),
 				'i18n'    => array(
-					'connecting'   => __( 'Connecting…', 'mavicms-migrator' ),
+					'connecting'    => __( 'Connecting…', 'mavicms-migrator' ),
 					/* translators: 1: number of posts done, 2: total number of posts. */
-					'progress'     => __( '%1$d of %2$d posts done.', 'mavicms-migrator' ),
-					'linking'      => __( 'Linking translations…', 'mavicms-migrator' ),
+					'progress'      => __( '%1$d of %2$d posts done.', 'mavicms-migrator' ),
+					'languageSaved' => __( 'Language saved.', 'mavicms-migrator' ),
+					'linking'       => __( 'Linking translations…', 'mavicms-migrator' ),
 					/* translators: %d: number of linked translations. */
-					'linked'       => __( 'Linked %d translations.', 'mavicms-migrator' ),
-					'done'         => __( 'Migration finished.', 'mavicms-migrator' ),
-					'stopped'      => __( 'Stopped. Press start to continue where you left off.', 'mavicms-migrator' ),
-					'nothingToDo'  => __( 'There are no posts to migrate.', 'mavicms-migrator' ),
-					'confirmReset' => __( 'Forget which posts have been migrated? Content already sent to Mavi CMS is not removed, and migrating again would duplicate it.', 'mavicms-migrator' ),
-					'unknownError' => __( 'Something went wrong.', 'mavicms-migrator' ),
+					'linked'        => __( 'Linked %d translations.', 'mavicms-migrator' ),
+					'done'          => __( 'Migration finished.', 'mavicms-migrator' ),
+					'stopped'       => __( 'Stopped. Press start to continue where you left off.', 'mavicms-migrator' ),
+					'nothingToDo'   => __( 'There are no posts to migrate.', 'mavicms-migrator' ),
+					'confirmReset'  => __( 'Forget which posts have been migrated? Content already sent to Mavi CMS is not removed, and migrating again would duplicate it.', 'mavicms-migrator' ),
+					'unknownError'  => __( 'Something went wrong.', 'mavicms-migrator' ),
 				),
 			)
 		);
