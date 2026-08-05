@@ -8,9 +8,10 @@ use sea_orm::{ActiveModelTrait, ActiveValue::Set, EntityTrait, QueryOrder};
 use uuid::Uuid;
 
 use crate::{
-    dto::media::MediaResponse,
+    dto::media::{ImportMediaRequest, MediaResponse},
     entities::media,
     error::{AppError, AppResult},
+    fetch::{FetchError, fetch_remote_file},
     plugins::{active_storage, storage_for},
     state::AppState,
 };
@@ -72,12 +73,23 @@ pub async fn upload_media(
     }
 
     let bytes = file_bytes.ok_or_else(|| AppError::Validation("no file provided".to_string()))?;
+    let saved = store_image(&state, &bytes, original_filename, String::new()).await?;
+    Ok((StatusCode::CREATED, Json(saved.into())))
+}
+
+/// Validates, stores and records an image. Shared by uploading and importing.
+async fn store_image(
+    state: &AppState,
+    bytes: &[u8],
+    filename: String,
+    alt_text: String,
+) -> AppResult<media::Model> {
     if bytes.len() > MAX_UPLOAD_BYTES {
         return Err(AppError::Validation(
             "file is too large (max 10MB)".to_string(),
         ));
     }
-    let (mime_type, extension) = sniff_image(&bytes).ok_or_else(|| {
+    let (mime_type, extension) = sniff_image(bytes).ok_or_else(|| {
         AppError::Validation("unsupported file type (PNG, JPEG, GIF or WebP only)".to_string())
     })?;
 
@@ -85,22 +97,65 @@ pub async fn upload_media(
     let id = Uuid::new_v4();
     let key = format!("{}/{}/{id}.{extension}", now.format("%Y"), now.format("%m"));
 
-    let storage = active_storage(&state).await?;
-    let url = storage.put(&key, &bytes, mime_type).await?;
+    let storage = active_storage(state).await?;
+    let url = storage.put(&key, bytes, mime_type).await?;
 
     let model = media::ActiveModel {
         id: Set(id),
-        filename: Set(original_filename),
+        filename: Set(filename),
         url_path: Set(url),
         mime_type: Set(mime_type.to_string()),
         size_bytes: Set(bytes.len() as i64),
-        alt_text: Set(String::new()),
+        alt_text: Set(alt_text),
         uploaded_at: Set(now.fixed_offset()),
         storage_backend: Set(storage.name().to_string()),
         storage_key: Set(key),
     };
 
-    let saved = model.insert(state.db()).await?;
+    Ok(model.insert(state.db()).await?)
+}
+
+/// Import an image from a public URL. Only public hosts are reachable: the
+/// address is resolved and refused if it points anywhere private.
+#[utoipa::path(
+    post,
+    path = "/media/import",
+    tag = "media",
+    request_body = ImportMediaRequest,
+    responses(
+        (status = 201, description = "Media imported", body = MediaResponse),
+        (status = 400, description = "Unreachable, refused or unsupported file", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn import_media(
+    State(state): State<AppState>,
+    Json(payload): Json<ImportMediaRequest>,
+) -> AppResult<(StatusCode, Json<MediaResponse>)> {
+    let bytes = fetch_remote_file(&payload.url, MAX_UPLOAD_BYTES)
+        .await
+        .map_err(|err| match err {
+            FetchError::Rejected(message) => AppError::Validation(message),
+            other => AppError::Validation(other.to_string()),
+        })?;
+
+    let filename = payload.filename.unwrap_or_else(|| {
+        payload
+            .url
+            .rsplit('/')
+            .next()
+            .and_then(|name| name.split(['?', '#']).next())
+            .filter(|name| !name.is_empty())
+            .unwrap_or("import")
+            .to_string()
+    });
+
+    let saved = store_image(
+        &state,
+        &bytes,
+        filename,
+        payload.alt_text.unwrap_or_default(),
+    )
+    .await?;
     Ok((StatusCode::CREATED, Json(saved.into())))
 }
 

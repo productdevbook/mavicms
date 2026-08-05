@@ -5,6 +5,7 @@ mod db;
 mod dto;
 mod entities;
 mod error;
+mod fetch;
 mod languages;
 mod middleware;
 mod openapi;

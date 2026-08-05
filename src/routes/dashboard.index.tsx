@@ -143,7 +143,7 @@ function DashboardIndexRoute() {
                 </Link>
                 <p className="truncate text-xs text-muted-foreground">
                   {post.category || t`Uncategorized`} ·{" "}
-                  {new Date(post.updated_at).toLocaleString()}
+                  {new Date(post.publish_at ?? post.updated_at).toLocaleString()}
                   {post.locales.length > 1 && (
                     <>
                       {" · "}

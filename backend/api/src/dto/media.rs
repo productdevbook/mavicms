@@ -1,9 +1,21 @@
 use chrono::{DateTime, FixedOffset};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use uuid::Uuid;
 
 use crate::entities::media;
+
+/// Pulls an image from a public URL into the media library — the migration
+/// path for sites moving off WordPress.
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct ImportMediaRequest {
+    pub url: String,
+    /// Defaults to the last path segment of the URL.
+    #[serde(default)]
+    pub filename: Option<String>,
+    #[serde(default)]
+    pub alt_text: Option<String>,
+}
 
 #[derive(Debug, Serialize, ToSchema)]
 pub struct MediaResponse {

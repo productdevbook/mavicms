@@ -8,7 +8,7 @@ use axum::{
 use chrono::Utc;
 use sea_orm::{
     ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter,
-    TransactionTrait,
+    QueryOrder, TransactionTrait,
 };
 use serde::Deserialize;
 use uuid::Uuid;
@@ -141,7 +141,7 @@ pub async fn list_posts(
 ) -> AppResult<Json<Vec<PostResponse>>> {
     let db = state.db();
 
-    let mut find = post::Entity::find();
+    let mut find = post::Entity::find().order_by_desc(post::Column::CreatedAt);
     if let Some(codes) = query.codes() {
         find = find.filter(post::Column::Locale.is_in(codes));
     }
@@ -296,7 +296,7 @@ pub async fn create_post(
         content_html: Set(payload.content_html),
         locale: Set(locale.clone()),
         translation_group_id: Set(translation_group_id),
-        created_at: Set(now),
+        created_at: Set(payload.created_at.map_or(now, |value| value.fixed_offset())),
         updated_at: Set(now),
     };
 

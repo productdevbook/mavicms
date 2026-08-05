@@ -247,6 +247,8 @@ export interface PostPayload {
   excerpt?: string
   status?: PostStatus
   publish_at?: string | null
+  /** Preserved when importing from another CMS; defaults to now. */
+  created_at?: string
   author?: string
   category?: string
   category_ids?: string[]

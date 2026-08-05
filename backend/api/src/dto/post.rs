@@ -162,6 +162,10 @@ pub struct CreatePostRequest {
     /// that post's translation group.
     #[serde(default)]
     pub translation_of: Option<Uuid>,
+    /// Original creation time, for content imported from another system.
+    /// Without it an archive of old posts would all read as written today.
+    #[serde(default)]
+    pub created_at: Option<DateTime<Utc>>,
 }
 
 /// Payload for updating an existing post. Every field is optional; only the

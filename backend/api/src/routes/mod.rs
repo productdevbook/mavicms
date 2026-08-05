@@ -46,6 +46,7 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
         .routes(routes!(tags::delete_tag))
         .routes(routes!(tags::set_tag_translation_group))
         .routes(routes!(media::delete_media))
+        .routes(routes!(media::import_media))
         .routes(routes!(
             languages::list_languages,
             languages::create_language

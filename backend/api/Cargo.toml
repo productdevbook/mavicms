@@ -27,6 +27,8 @@ aes-gcm = { version = "0.11", features = ["getrandom"] }
 base64 = "0.23"
 percent-encoding = "2"
 rust-s3 = { version = "0.37", default-features = false, features = ["tokio-rustls-tls"] }
+# rustls to match rust-s3 and sea-orm: pulling native-tls would add OpenSSL to the image.
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "charset", "http2"] }
 axum = { version = "0.8", features = ["multipart"] }
 tower = "0.5"
 tower-http = { version = "0.7", features = ["cors", "trace", "timeout", "fs", "set-header"] }
