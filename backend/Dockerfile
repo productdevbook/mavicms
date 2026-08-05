@@ -1,12 +1,25 @@
 # syntax=docker/dockerfile:1
 
-FROM rust:1.97-slim-bookworm AS builder
+FROM rust:1.97-slim-bookworm AS base
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     libssl-dev \
     && rm -rf /var/lib/apt/lists/*
+
+RUN cargo install cargo-chef --locked --version 0.1.72
+
+# Reduces the whole dependency tree to a recipe that changes only when the
+# dependencies do, so editing this project's own code no longer rebuilds the
+# six hundred crates underneath it.
+FROM base AS planner
+COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
+
+FROM base AS builder
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json
 
 COPY . .
 RUN cargo build --release --package mavicms-api

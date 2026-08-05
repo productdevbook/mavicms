@@ -16,9 +16,8 @@ jobs:
           # version, and a canary writes one no release can read.
           bun-version: "1.3.14"
       - run: bun install --frozen-lockfile
-      # vite build first: it generates routeTree.gen.ts, which tsc needs.
-      - run: bunx vite build
-      - run: bun run typecheck
+      # Builds, then typechecks — vite generates the route tree that tsc needs.
+      - run: bun run build
       - run: bun run lint
 
   backend:
