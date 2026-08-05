@@ -351,20 +351,24 @@ class MaviCMS_Migrator {
 	 * @return string
 	 */
 	private function rewrite_images( $content ) {
-		if ( ! preg_match_all( '/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches ) ) {
+		$uploads = wp_get_upload_dir();
+		$base    = isset( $uploads['baseurl'] ) ? $uploads['baseurl'] : '';
+		if ( '' === $base ) {
 			return $content;
 		}
 
-		$uploads = wp_get_upload_dir();
-		$base    = isset( $uploads['baseurl'] ) ? $uploads['baseurl'] : '';
+		// Every address into this site's uploads, not just the one in `src`:
+		// WordPress also writes each generated size into `srcset` and usually
+		// links the full-size file from an enclosing `<a href>`. Rewriting only
+		// `src` leaves a post that looks migrated but still loads half its
+		// bytes from the old site.
+		$pattern = '#' . preg_quote( $base, '#' ) . '[^\s"\'<>\\\\)]+#i';
+		if ( ! preg_match_all( $pattern, $content, $matches ) ) {
+			return $content;
+		}
 
 		$replacements = array();
-		foreach ( array_unique( $matches[1] ) as $source ) {
-			// Only this site's own uploads: a hotlinked image belongs to
-			// someone else and copying it is not ours to do.
-			if ( '' === $base || 0 !== strpos( $source, $base ) ) {
-				continue;
-			}
+		foreach ( array_unique( $matches[0] ) as $source ) {
 			$attachment_id = attachment_url_to_postid( $this->strip_size_suffix( $source ) );
 			if ( ! $attachment_id ) {
 				continue;
@@ -385,7 +389,21 @@ class MaviCMS_Migrator {
 		if ( ! $replacements ) {
 			return $content;
 		}
-		return str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
+
+		// Longest first: `photo-300x200.jpg` must be replaced before `photo.jpg`,
+		// or the shorter match rewrites the start of the longer one and leaves
+		// `-300x200.jpg` stuck on the end.
+		uksort(
+			$replacements,
+			static function ( $a, $b ) {
+				return strlen( $b ) - strlen( $a );
+			}
+		);
+		$content = str_replace( array_keys( $replacements ), array_values( $replacements ), $content );
+
+		// One file replaces the whole set of generated sizes, so a srcset of
+		// identical candidates is just noise for the browser to weigh.
+		return preg_replace( '/\s(?:srcset|sizes)=(["\'])(?:(?!\1).)*\1/i', '', $content );
 	}
 
 	/**
