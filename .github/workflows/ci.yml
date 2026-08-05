@@ -12,7 +12,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          # Pinned: the lockfile format tracks the bun version, and the
+          # action's "latest" lags behind releases.
+          bun-version: "1.4.0"
       - run: bun install --frozen-lockfile
       # vite build first: it generates routeTree.gen.ts, which tsc needs.
       - run: bunx vite build
