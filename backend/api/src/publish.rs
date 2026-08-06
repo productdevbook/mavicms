@@ -561,6 +561,28 @@ pub async fn claim(db: &DatabaseConnection) -> AppResult<Option<(String, Uuid)>>
     Ok(Some((id, tenant_id)))
 }
 
+/// The last `LOG_LIMIT` bytes, cut on a character boundary.
+///
+/// This used to search `char_indices().rev()` for the first index within the
+/// limit, which is the index nearest the end — so every log over the limit was
+/// stored as its final character. Successful builds print more than 64 KiB
+/// installing dependencies, so in practice a build only kept its output when
+/// it failed early enough to have produced almost none.
+fn tail_of(log: &str) -> &str {
+    if log.len() <= LOG_LIMIT {
+        return log;
+    }
+
+    // Forward to a boundary rather than back: a byte-wise cut through UTF-8
+    // makes a string the database will not take, and taking slightly less than
+    // the limit is the harmless direction to be wrong in.
+    let mut start = log.len() - LOG_LIMIT;
+    while !log.is_char_boundary(start) {
+        start += 1;
+    }
+    &log[start..]
+}
+
 pub async fn finish(
     db: &DatabaseConnection,
     id: &str,
@@ -569,19 +591,7 @@ pub async fn finish(
 ) -> AppResult<()> {
     let backend = db.get_database_backend();
 
-    // The tail, and on a character boundary — a byte-wise cut through UTF-8
-    // makes a string the database will not take.
-    let tail = if log.len() > LOG_LIMIT {
-        let start = log
-            .char_indices()
-            .rev()
-            .map(|(index, _)| index)
-            .find(|index| log.len() - index <= LOG_LIMIT)
-            .unwrap_or(0);
-        &log[start..]
-    } else {
-        log
-    };
+    let tail = tail_of(log);
 
     db.execute_raw(Statement::from_sql_and_values(
         backend,
@@ -623,5 +633,35 @@ mod tests {
         assert!(clean_output(Some("../../etc".into())).is_err());
         assert!(clean_output(Some("dist/../..".into())).is_err());
         assert!(clean_output(Some(r"..\windows".into())).is_err());
+    }
+}
+
+#[cfg(test)]
+mod log_tests {
+    use super::{LOG_LIMIT, tail_of};
+
+    #[test]
+    fn a_short_log_is_kept_whole() {
+        assert_eq!(tail_of("$ bun run build\nok\n"), "$ bun run build\nok\n");
+    }
+
+    #[test]
+    fn a_long_log_keeps_its_end_not_its_last_character() {
+        let log = format!("{}the reason it failed", "noise\n".repeat(LOG_LIMIT));
+        let kept = tail_of(&log);
+
+        assert!(kept.ends_with("the reason it failed"));
+        assert!(kept.len() > LOG_LIMIT - 8, "kept only {} bytes", kept.len());
+        assert!(kept.len() <= LOG_LIMIT);
+    }
+
+    #[test]
+    fn a_cut_through_a_character_is_not_made() {
+        // Every character three bytes, so a naive cut would land inside one.
+        let log = "ş".repeat(LOG_LIMIT);
+        let kept = tail_of(&log);
+
+        assert!(kept.chars().all(|c| c == 'ş'));
+        assert!(kept.len() <= LOG_LIMIT);
     }
 }
