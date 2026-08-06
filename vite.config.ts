@@ -8,6 +8,9 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
+  // The panel lives under /admin, because "/" belongs to the site being
+  // published — every hosted site serves its own pages there.
+  base: "/admin/",
   plugins: [
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
     react(),

@@ -8,7 +8,7 @@ import { routeTree } from "./routeTree.gen"
 import { i18n } from "@/i18n"
 import { ThemeProvider } from "@/components/theme-provider.tsx"
 
-const router = createRouter({ routeTree })
+const router = createRouter({ routeTree, basepath: "/admin" })
 
 declare module "@tanstack/react-router" {
   interface Register {

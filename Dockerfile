@@ -12,7 +12,9 @@ RUN bun run build
 
 FROM nginx:alpine AS runtime
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Under admin/ so that the paths the build wrote (/admin/assets/…) are the
+# paths nginx finds on disk.
+COPY --from=builder /app/dist /usr/share/nginx/html/admin
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

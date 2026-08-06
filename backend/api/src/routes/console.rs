@@ -359,7 +359,7 @@ pub async fn create_entry(
     let token = console::create_entry(db, tenant.id, operator.id).await?;
 
     Ok(Json(EntryResponse {
-        url: format!("https://{}/enter?token={}", tenant.host, token),
+        url: format!("https://{}/admin/enter?token={}", tenant.host, token),
     }))
 }
 
