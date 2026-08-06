@@ -3,8 +3,12 @@ import { useLingui } from "@lingui/react/macro"
 import { Check, ChevronDown, Copy, ExternalLink } from "lucide-react"
 import { toast } from "sonner"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
 /**
  * How to get the keys this plugin wants, without leaving the page to find out.
@@ -92,7 +96,6 @@ function Away({ href, children }: { href: string; children: React.ReactNode }) {
 
 export function SesSetupGuide({ region }: { region: string }) {
   const { t } = useLingui()
-  const [open, setOpen] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
 
   // Every SES screen belongs to one region. Falling back to the one most
@@ -111,20 +114,21 @@ export function SesSetupGuide({ region }: { region: string }) {
   }
 
   return (
-    <div className="rounded-xl border border-border">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium"
+    <Collapsible className="rounded-xl border">
+      <CollapsibleTrigger
+        render={
+          <button
+            type="button"
+            className="group flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium"
+          />
+        }
       >
-        <ChevronDown
-          className={cn("size-4 transition-transform", open && "rotate-180")}
-        />
+        <ChevronDown className="size-4 transition-transform group-data-[panel-open]:rotate-180" />
         {t`How to get these keys`}
-      </button>
+      </CollapsibleTrigger>
 
-      {open && (
-        <div className="flex flex-col gap-5 border-t border-border px-4 py-4 text-sm">
+      <CollapsibleContent>
+        <div className="flex flex-col gap-5 border-t px-4 py-4 text-sm">
           <ol className="flex list-decimal flex-col gap-4 pl-5">
             <li>
               <p>
@@ -230,7 +234,7 @@ export function SesSetupGuide({ region }: { region: string }) {
             </Away>
           </div>
         </div>
-      )}
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }

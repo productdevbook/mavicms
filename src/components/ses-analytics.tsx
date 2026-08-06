@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useLingui } from "@lingui/react/macro"
-import { CheckCircle2, Loader2, Radio } from "lucide-react"
+import { CheckCircle2, Radio } from "lucide-react"
 import { toast } from "sonner"
 
 import {
@@ -9,7 +9,24 @@ import {
   setupSesEvents,
   type SesDeliverability,
 } from "@/lib/api"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
+import { Spinner } from "@/components/ui/spinner"
 
 /** One number and what it means. */
 function Figure({
@@ -22,7 +39,7 @@ function Figure({
   rate?: number
 }) {
   return (
-    <div className="rounded-xl border border-border px-4 py-3">
+    <div className="rounded-xl border px-4 py-3">
       <p className="text-lg font-semibold">
         {value.toLocaleString()}
         {rate !== undefined && value > 0 && (
@@ -92,70 +109,90 @@ export function SesAnalyticsPanel({ siteId }: { siteId?: string }) {
   }
 
   return (
-    <section className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-medium">{t`What Amazon saw`}</h2>
-          <p className="text-sm text-muted-foreground">
-            {t`The last thirty days, from SES itself. Delivered, bounced and reported are things only Amazon knows — a pixel in the letter cannot tell you any of them.`}
-          </p>
-        </div>
-        <Button variant="outline" onClick={() => void build()} disabled={busy}>
-          {busy ? <Loader2 className="animate-spin" /> : <Radio />}
-          {t`Wire up the events`}
-        </Button>
-      </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t`What Amazon saw`}</CardTitle>
+        <CardDescription>
+          {t`The last thirty days, from SES itself. Delivered, bounced and reported are things only Amazon knows — a pixel in the letter cannot tell you any of them.`}
+        </CardDescription>
+        <CardAction>
+          <Button
+            variant="outline"
+            onClick={() => void build()}
+            disabled={busy}
+          >
+            {busy ? <Spinner /> : <Radio />}
+            {t`Wire up the events`}
+          </Button>
+        </CardAction>
+      </CardHeader>
 
-      {loading ? (
-        <div className="flex justify-center py-8">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
-        </div>
-      ) : problem || !figures ? (
-        <div className="flex flex-col gap-2 rounded-xl border border-dashed border-border px-4 py-5">
-          <p className="text-sm text-muted-foreground">
-            {problem ?? t`Could not ask Amazon`}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {t`These figures come from Amazon's deliverability manager, which has to be switched on for the account. "Wire up the events" does that, along with everything else that has to exist before an event can reach this site.`}
-          </p>
-        </div>
-      ) : figures.sent === 0 ? (
-        <p className="rounded-xl border border-dashed border-border py-8 text-center text-sm text-muted-foreground">
-          {t`Nothing sent in the last thirty days`}
-        </p>
-      ) : (
-        <>
-          <div className="grid gap-3 sm:grid-cols-4">
-            <Figure label={t`sent`} value={figures.sent} />
-            <Figure
-              label={t`arrived`}
-              value={figures.delivered}
-              rate={figures.delivery_rate}
-            />
-            <Figure
-              label={t`opened`}
-              value={figures.opened}
-              rate={figures.open_rate}
-            />
-            <Figure
-              label={t`clicked`}
-              value={figures.clicked}
-              rate={figures.click_rate}
-            />
+      <CardContent>
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <Spinner className="size-5 text-muted-foreground" />
           </div>
+        ) : problem || !figures ? (
+          <Empty className="border">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Radio />
+              </EmptyMedia>
+              <EmptyTitle>{problem ?? t`Could not ask Amazon`}</EmptyTitle>
+              <EmptyDescription>
+                {t`These figures come from Amazon's deliverability manager, which has to be switched on for the account. "Wire up the events" does that, along with everything else that has to exist before an event can reach this site.`}
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : figures.sent === 0 ? (
+          <Empty className="border">
+            <EmptyHeader>
+              <EmptyTitle>{t`Nothing sent in the last thirty days`}</EmptyTitle>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div className="grid gap-3 sm:grid-cols-4">
+              <Figure label={t`sent`} value={figures.sent} />
+              <Figure
+                label={t`arrived`}
+                value={figures.delivered}
+                rate={figures.delivery_rate}
+              />
+              <Figure
+                label={t`opened`}
+                value={figures.opened}
+                rate={figures.open_rate}
+              />
+              <Figure
+                label={t`clicked`}
+                value={figures.clicked}
+                rate={figures.click_rate}
+              />
+            </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Figure label={t`gone for good`} value={figures.permanent_bounces} />
-            <Figure label={t`failed for now`} value={figures.transient_bounces} />
-            <Figure label={t`reported as spam`} value={figures.complaints} />
+            <div className="grid gap-3 sm:grid-cols-3">
+              <Figure
+                label={t`gone for good`}
+                value={figures.permanent_bounces}
+              />
+              <Figure
+                label={t`failed for now`}
+                value={figures.transient_bounces}
+              />
+              <Figure label={t`reported as spam`} value={figures.complaints} />
+            </div>
+
+            <Alert>
+              <CheckCircle2 className="text-emerald-600" />
+              <AlertTitle>{t`Bad addresses stop themselves`}</AlertTitle>
+              <AlertDescription>
+                {t`An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out.`}
+              </AlertDescription>
+            </Alert>
           </div>
-
-          <p className="flex items-start gap-2 text-sm text-muted-foreground">
-            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600" />
-            {t`An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out.`}
-          </p>
-        </>
-      )}
-    </section>
+        )}
+      </CardContent>
+    </Card>
   )
 }
