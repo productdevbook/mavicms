@@ -54,10 +54,25 @@ pub async fn connect_in_schema(
     database_url: &str,
     schema: &str,
 ) -> Result<DatabaseConnection, DbErr> {
+    let db = open_in_schema(database_url, schema).await?;
+    Migrator::up(&db, None).await?;
+    Ok(db)
+}
+
+/// The same, without migrating — for something that only writes rows a site
+/// already has. Migrating is what a request that opens a site does; a
+/// background task doing it as well would run them on a schedule, against
+/// sites nobody has asked for.
+pub async fn connect_plain_in_schema(
+    database_url: &str,
+    schema: &str,
+) -> Result<DatabaseConnection, DbErr> {
+    open_in_schema(database_url, schema).await
+}
+
+async fn open_in_schema(database_url: &str, schema: &str) -> Result<DatabaseConnection, DbErr> {
     let mut options = options(database_url);
     options.set_schema_search_path(schema.to_owned());
 
-    let db = Database::connect(options).await?;
-    Migrator::up(&db, None).await?;
-    Ok(db)
+    Database::connect(options).await
 }

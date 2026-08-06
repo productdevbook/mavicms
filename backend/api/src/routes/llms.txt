@@ -114,7 +114,10 @@ Worth knowing about the fields:
   on this server: put `{{origin}}` in front of it. When the site uploads to
   object storage the addresses are already absolute.
 - **`status`** is `draft`, `review`, `scheduled` or `published`. A scheduled
-  post is not published — it is waiting for somebody to publish it.
+  post has a `publish_at` and becomes published on its own within a minute of
+  it, and the site is asked to build. So a build that asks for `published`
+  gets the post the first time it runs after the time the writer picked, and
+  nothing has to poll for it.
 
 ### Asking again, cheaply
 

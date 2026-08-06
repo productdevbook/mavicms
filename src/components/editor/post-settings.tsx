@@ -139,7 +139,15 @@ export function PostSettings({
         </Select>
       </Field>
 
-      <Field label={t`Publish date`} htmlFor="meta-date">
+      <Field
+        label={t`Publish date`}
+        htmlFor="meta-date"
+        hint={
+          meta.status === "scheduled" && !meta.publishAt
+            ? t`Needed to schedule`
+            : undefined
+        }
+      >
         <Input
           id="meta-date"
           type="datetime-local"

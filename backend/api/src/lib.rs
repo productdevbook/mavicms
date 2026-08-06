@@ -21,6 +21,7 @@ pub mod openapi;
 pub mod plugins;
 pub mod publish;
 pub mod routes;
+pub mod schedule;
 pub mod slug;
 pub mod state;
 pub mod storage;
