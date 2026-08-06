@@ -841,3 +841,189 @@ pub async fn restore_site_backup(
 
     Ok(Json(crate::backup::restore(&state, &bytes).await?))
 }
+
+/// The account local development reads as.
+///
+/// Its own, not the one a build uses: revoking what a designer's laptop holds
+/// should not stop the site publishing, and stopping a build should not lock
+/// somebody out of their editor. Passwordless, like the others here — the only
+/// way to be it is a token this handed out.
+async fn local_reader(db: &sea_orm::DatabaseConnection) -> AppResult<Uuid> {
+    use sea_orm::{ActiveModelTrait, ActiveValue::Set, ColumnTrait, EntityTrait, QueryFilter};
+
+    use crate::entities::user;
+
+    if let Some(found) = user::Entity::find()
+        .filter(user::Column::Username.eq(LOCAL_READER))
+        .one(db)
+        .await?
+    {
+        return Ok(found.id);
+    }
+
+    let created = user::ActiveModel {
+        id: Set(Uuid::now_v7()),
+        username: Set(LOCAL_READER.to_string()),
+        email: Set(format!("{LOCAL_READER}@localhost")),
+        password_hash: Set(String::new()),
+        role: Set(crate::auth::BUILDER.to_string()),
+        created_at: Set(chrono::Utc::now().fixed_offset()),
+    }
+    .insert(db)
+    .await?;
+
+    Ok(created.id)
+}
+
+/// The username of that account. Also listed in `routes::users` as one a site
+/// may not remove.
+pub const LOCAL_READER: &str = "local";
+
+/// How long a development token lasts.
+///
+/// Long enough to not be a weekly errand, short enough that a laptop that
+/// leaves the agency stops working by itself.
+const DEVELOPMENT_TOKEN_DAYS: i64 = 30;
+
+async fn development_tokens(
+    db: &sea_orm::DatabaseConnection,
+) -> AppResult<Vec<crate::dto::plugins::DevelopmentToken>> {
+    use sea_orm::{ColumnTrait, EntityTrait, Order, QueryFilter, QueryOrder};
+
+    use crate::entities::session;
+
+    let reader = local_reader(db).await?;
+    Ok(session::Entity::find()
+        .filter(session::Column::UserId.eq(reader))
+        .order_by(session::Column::CreatedAt, Order::Desc)
+        .all(db)
+        .await?
+        .into_iter()
+        .map(|row| crate::dto::plugins::DevelopmentToken {
+            id: row.id.to_string(),
+            created_at: row.created_at.to_rfc3339(),
+            expires_at: row.expires_at.to_rfc3339(),
+        })
+        .collect())
+}
+
+/// What to put in a `.env` to work on one of this agency's sites locally.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/development",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Local settings", body = crate::dto::plugins::DevelopmentResponse))
+)]
+pub async fn get_site_development(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::dto::plugins::DevelopmentResponse>> {
+    let (operator, control) = signed_in(&hosting, &resolved, &cookies).await?;
+    let tenant = owned_site(&hosting, &operator, id).await?;
+    let state = hosting.registry()?.state_for(&tenant).await?;
+    let site_db = state.db_or_unavailable()?;
+
+    let variables = crate::publish::config(control, tenant.id)
+        .await?
+        .map(|config| config.environment_keys)
+        .unwrap_or_default();
+
+    Ok(Json(crate::dto::plugins::DevelopmentResponse {
+        api_url: format!("https://{}/api", tenant.host),
+        site_url: format!("https://{}", tenant.host),
+        variables,
+        tokens: development_tokens(site_db).await?,
+    }))
+}
+
+/// Hand out a token for somebody's own machine.
+///
+/// Read-only, and it is shown once. Nothing else here needs to leave the
+/// server: an address is not a secret, and the alternative — an agency
+/// sending a password over chat because a designer could not fetch any posts
+/// — is how one password ends up on four laptops and in a group thread.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/development/tokens",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 201, description = "The token, once", body = crate::dto::plugins::NewDevelopmentToken))
+)]
+pub async fn create_site_development_token(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<(StatusCode, Json<crate::dto::plugins::NewDevelopmentToken>)> {
+    use sea_orm::{ActiveModelTrait, ActiveValue::Set};
+
+    use crate::entities::session;
+
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+    let db = state.db_or_unavailable()?;
+
+    let reader = local_reader(db).await?;
+    let token = Uuid::now_v7();
+    let expires_at = chrono::Utc::now() + chrono::Duration::days(DEVELOPMENT_TOKEN_DAYS);
+
+    session::ActiveModel {
+        id: Set(token),
+        user_id: Set(reader),
+        expires_at: Set(expires_at.fixed_offset()),
+        created_at: Set(chrono::Utc::now().fixed_offset()),
+    }
+    .insert(db)
+    .await?;
+
+    Ok((
+        StatusCode::CREATED,
+        Json(crate::dto::plugins::NewDevelopmentToken {
+            token: token.to_string(),
+            expires_at: expires_at.to_rfc3339(),
+        }),
+    ))
+}
+
+/// Take one back.
+#[utoipa::path(
+    delete,
+    path = "/console/sites/{id}/development/tokens/{token_id}",
+    tag = "console",
+    params(
+        ("id" = String, Path, description = "Site id"),
+        ("token_id" = String, Path, description = "Token id"),
+    ),
+    responses((status = 204, description = "Revoked"))
+)]
+pub async fn delete_site_development_token(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path((id, token_id)): Path<(Uuid, Uuid)>,
+) -> AppResult<StatusCode> {
+    use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
+
+    use crate::entities::session;
+
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+    let db = state.db_or_unavailable()?;
+
+    let reader = local_reader(db).await?;
+    let result = session::Entity::delete_many()
+        .filter(session::Column::Id.eq(token_id))
+        // Only this account's. A session id from the panel is somebody's
+        // login, and revoking one from here would be signing them out.
+        .filter(session::Column::UserId.eq(reader))
+        .exec(db)
+        .await?;
+
+    if result.rows_affected == 0 {
+        return Err(AppError::NotFound(format!("token {token_id}")));
+    }
+    Ok(StatusCode::NO_CONTENT)
+}

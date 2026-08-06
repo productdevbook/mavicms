@@ -37,9 +37,10 @@ import {
   PublishForm,
 } from "@/components/publish-panel"
 import { BackupFields, S3Fields } from "@/components/plugin-forms"
+import { LocalEnv } from "@/components/local-env"
 import { EMPTY_CONFIG, isBusy } from "@/lib/publish"
 
-type Tab = "publish" | "storage" | "backups"
+type Tab = "publish" | "storage" | "backups" | "local"
 
 /** The server never sends the secret back; empty means keep what is stored. */
 function payloadOf(settings: S3Settings): S3SettingsPayload {
@@ -306,6 +307,7 @@ function ConsoleSiteRoute() {
               ["publish", t`Publish`],
               ["storage", t`Storage`],
               ["backups", t`Backups`],
+              ["local", t`Local`],
             ] as const
           ).map(([id, label]) => (
             <button
@@ -448,6 +450,8 @@ function ConsoleSiteRoute() {
               </div>
             </div>
           ))}
+        {tab === "local" && <LocalEnv siteId={siteId} />}
+
       </main>
     </div>
   )

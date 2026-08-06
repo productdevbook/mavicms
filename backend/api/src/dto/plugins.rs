@@ -69,3 +69,36 @@ pub struct UpdateBackupRequest {
     pub enabled: bool,
     pub config: crate::backup::BackupConfig,
 }
+
+/// What somebody needs in a `.env` to run a site's front end on their own
+/// machine.
+///
+/// The question this answers used to be asked by message: a designer clones
+/// the project, runs it, gets nothing, and writes to the agency to ask which
+/// address and which password. The agency then sends a password over chat,
+/// which is the worst possible way for one to travel.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct DevelopmentResponse {
+    /// What CMS_API_URL should be: this site's API, on this site's address.
+    pub api_url: String,
+    pub site_url: String,
+    /// The names of the variables this site's build runs with. Only the names
+    /// — the values are encrypted on the server and do not come back, so a
+    /// person setting up a machine still has to be told them.
+    pub variables: Vec<String>,
+    pub tokens: Vec<DevelopmentToken>,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct DevelopmentToken {
+    pub id: String,
+    pub created_at: String,
+    pub expires_at: String,
+}
+
+/// A token, the once. It is not stored anywhere it can be read back.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct NewDevelopmentToken {
+    pub token: String,
+    pub expires_at: String,
+}

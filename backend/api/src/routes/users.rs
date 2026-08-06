@@ -48,7 +48,9 @@ pub struct UserRow {
 /// Removing the build's would stop publishing until the next build made it
 /// again.
 fn managed(username: &str) -> bool {
-    username.starts_with("agency-") || username == "build"
+    username.starts_with("agency-")
+        || username == "build"
+        || username == crate::routes::console::LOCAL_READER
 }
 
 #[derive(Debug, Deserialize, ToSchema)]

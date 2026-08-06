@@ -415,7 +415,7 @@ msgstr "API"
 msgid "Apply"
 msgstr "Uygula"
 
-#: src/routes/console.sites.$siteId.tsx:417
+#: src/routes/console.sites.$siteId.tsx:419
 #: src/routes/dashboard.plugins_.backup.tsx:347
 msgid "Archives"
 msgstr "Arşivler"
@@ -442,7 +442,7 @@ msgstr "Geri"
 msgid "Back to editing"
 msgstr "Düzenlemeye dön"
 
-#: src/routes/console.sites.$siteId.tsx:412
+#: src/routes/console.sites.$siteId.tsx:414
 #: src/routes/dashboard.plugins_.backup.tsx:337
 msgid "Back up now"
 msgstr "Şimdi yedek al"
@@ -452,12 +452,12 @@ msgid "Backup settings saved"
 msgstr "Yedekleme ayarları kaydedildi"
 
 #. placeholder {0}: file.name
-#: src/routes/console.sites.$siteId.tsx:223
+#: src/routes/console.sites.$siteId.tsx:224
 #: src/routes/dashboard.plugins_.backup.tsx:116
 msgid "Backup written: {0}"
 msgstr "Yedek yazıldı: {0}"
 
-#: src/routes/console.sites.$siteId.tsx:308
+#: src/routes/console.sites.$siteId.tsx:309
 #: src/routes/dashboard.plugins_.backup.tsx:198
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Backups"
@@ -600,6 +600,10 @@ msgstr "Biçimi temizle"
 msgid "Close"
 msgstr "Kapat"
 
+#: src/components/local-env.tsx:138
+msgid "CMS_TOKEN is blank until you make one. Without it the site answers nothing, which is the \"why can I not see any posts\" everybody runs into."
+msgstr "Bir tane üretene kadar CMS_TOKEN boş. O olmadan site hiçbir şey döndürmez — herkesin takıldığı \"neden yazıları göremiyorum\" bu."
+
 #: src/components/editor/bubble-menus.tsx:150
 msgid "Code"
 msgstr "Kod"
@@ -677,6 +681,7 @@ msgstr "Panele devam et"
 
 #: src/components/editor/bubble-menus.tsx:317
 #: src/components/editor/dialogs.tsx:462
+#: src/components/local-env.tsx:128
 #: src/routes/dashboard.forms_.$formId.tsx:53
 msgid "Copy"
 msgstr "Kopyala"
@@ -684,6 +689,10 @@ msgstr "Kopyala"
 #: src/components/editor/code-block-view.tsx:52
 msgid "Copy code"
 msgstr "Kodu kopyala"
+
+#: src/components/local-env.tsx:159
+msgid "Copy it now"
+msgstr "Şimdi kopyalayın"
 
 #: src/components/editor/block-handle.tsx:182
 msgid "Copy text"
@@ -717,6 +726,7 @@ msgstr "Site eklenemedi"
 msgid "Could not change it"
 msgstr "Değiştirilemedi"
 
+#: src/components/local-env.tsx:109
 #: src/routes/dashboard.forms_.$formId.tsx:41
 msgid "Could not copy it"
 msgstr "Kopyalanamadı"
@@ -762,7 +772,7 @@ msgstr "Yazı yüklenemedi"
 msgid "Could not load the accounts"
 msgstr "Hesaplar yüklenemedi"
 
-#: src/routes/console.sites.$siteId.tsx:128
+#: src/routes/console.sites.$siteId.tsx:129
 #: src/routes/dashboard.plugins_.backup.tsx:84
 msgid "Could not load the backup settings"
 msgstr "Yedekleme ayarları yüklenemedi"
@@ -775,7 +785,11 @@ msgstr "Form yüklenemedi"
 msgid "Could not load the forms"
 msgstr "Formlar yüklenemedi"
 
-#: src/routes/console.sites.$siteId.tsx:135
+#: src/components/local-env.tsx:62
+msgid "Could not load the local settings"
+msgstr "Yerel ayarlar yüklenemedi"
+
+#: src/routes/console.sites.$siteId.tsx:136
 #: src/routes/dashboard.publish.tsx:48
 msgid "Could not load the publishing settings"
 msgstr "Yayın ayarları yüklenemedi"
@@ -784,7 +798,7 @@ msgstr "Yayın ayarları yüklenemedi"
 msgid "Could not load the sites"
 msgstr "Siteler yüklenemedi"
 
-#: src/routes/console.sites.$siteId.tsx:123
+#: src/routes/console.sites.$siteId.tsx:124
 msgid "Could not load the storage settings"
 msgstr "Depolama ayarları yüklenemedi"
 
@@ -792,8 +806,12 @@ msgstr "Depolama ayarları yüklenemedi"
 msgid "Could not load your sites"
 msgstr "Siteleriniz yüklenemedi"
 
+#: src/components/local-env.tsx:75
+msgid "Could not make a token"
+msgstr "Jeton üretilemedi"
+
 #: src/routes/console.index.tsx:84
-#: src/routes/console.sites.$siteId.tsx:255
+#: src/routes/console.sites.$siteId.tsx:256
 msgid "Could not open the site"
 msgstr "Site açılamadı"
 
@@ -833,18 +851,22 @@ msgid "Could not save the form"
 msgstr "Form kaydedilemedi"
 
 #: src/routes/console.account.tsx:61
-#: src/routes/console.sites.$siteId.tsx:167
-#: src/routes/console.sites.$siteId.tsx:197
-#: src/routes/console.sites.$siteId.tsx:212
+#: src/routes/console.sites.$siteId.tsx:168
+#: src/routes/console.sites.$siteId.tsx:198
+#: src/routes/console.sites.$siteId.tsx:213
 #: src/routes/dashboard.plugins_.backup.tsx:105
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Ayarlar kaydedilemedi"
 
-#: src/routes/console.sites.$siteId.tsx:182
+#: src/routes/console.sites.$siteId.tsx:183
 #: src/routes/dashboard.publish.tsx:97
 msgid "Could not start the build"
 msgstr "Derleme başlatılamadı"
+
+#: src/components/local-env.tsx:88
+msgid "Could not take it back"
+msgstr "Geri alınamadı"
 
 #: src/routes/dashboard.tags.tsx:115
 msgid "Could not unlink tag"
@@ -1509,9 +1531,22 @@ msgstr "Listeler"
 msgid "Loading…"
 msgstr "Yükleniyor…"
 
+#: src/routes/console.sites.$siteId.tsx:310
+msgid "Local"
+msgstr "Yerel"
+
 #: src/components/form-fields-editor.tsx:50
 msgid "Long text"
 msgstr "Uzun metin"
+
+#. placeholder {0}: new Date(token.created_at).toLocaleString()
+#: src/components/local-env.tsx:180
+msgid "Made {0}"
+msgstr "{0} tarihinde üretildi"
+
+#: src/components/local-env.tsx:153
+msgid "Make a token"
+msgstr "Jeton üret"
 
 #: src/routes/dashboard.languages.tsx:166
 msgid "Make default"
@@ -1523,7 +1558,7 @@ msgid "Makes the archive much larger. Worth it when media sits on this machine; 
 msgstr "Arşivi belirgin biçimde büyütür. Medya bu makinedeyse değer; zaten bir kovadaysa daha az."
 
 #: src/routes/console.index.tsx:179
-#: src/routes/console.sites.$siteId.tsx:292
+#: src/routes/console.sites.$siteId.tsx:293
 msgid "Manage"
 msgstr "Yönet"
 
@@ -1631,7 +1666,7 @@ msgstr "Yeni etiket"
 msgid "Next"
 msgstr "Sonraki"
 
-#: src/routes/console.sites.$siteId.tsx:420
+#: src/routes/console.sites.$siteId.tsx:422
 #: src/routes/dashboard.plugins_.backup.tsx:350
 msgid "No backups yet"
 msgstr "Henüz yedek yok"
@@ -1682,6 +1717,10 @@ msgstr "Henüz site yok"
 #: src/routes/dashboard.tags.tsx:184
 msgid "No tags yet"
 msgstr "Henüz etiket yok"
+
+#: src/components/local-env.tsx:171
+msgid "No tokens yet"
+msgstr "Henüz jeton yok"
 
 #: src/routes/dashboard.plugins.tsx:81
 msgid "Not configured"
@@ -1746,6 +1785,10 @@ msgstr "Tek dil, sayfa sayfa."
 #: src/components/form-fields-editor.tsx:55
 msgid "One of a list"
 msgstr "Listeden biri"
+
+#: src/components/local-env.tsx:148
+msgid "One per person. It can read this site and change nothing, lasts 30 days, and can be taken back here."
+msgstr "Kişi başına bir tane. Bu siteyi okur, hiçbir şeyi değiştiremez, 30 gün geçerlidir ve buradan geri alınabilir."
 
 #: src/routes/dashboard.api.tsx:95
 msgid "One post by its address."
@@ -1939,7 +1982,7 @@ msgstr "Genel URL tabanı"
 #: src/components/dashboard/dashboard-shell.tsx:90
 #: src/components/editor/mavi-editor.tsx:607
 #: src/components/publish-panel.tsx:306
-#: src/routes/console.sites.$siteId.tsx:306
+#: src/routes/console.sites.$siteId.tsx:307
 #: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
 msgstr "Yayınla"
@@ -1952,7 +1995,7 @@ msgstr "Yayın tarihi"
 msgid "Published"
 msgstr "Yayında"
 
-#: src/routes/console.sites.$siteId.tsx:179
+#: src/routes/console.sites.$siteId.tsx:180
 #: src/routes/dashboard.publish.tsx:94
 msgid "Publishing — this takes a minute or two"
 msgstr "Yayınlanıyor — bir iki dakika sürer"
@@ -1960,6 +2003,10 @@ msgstr "Yayınlanıyor — bir iki dakika sürer"
 #: src/components/publish-panel.tsx:306
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
+
+#: src/components/local-env.tsx:118
+msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
+msgstr "Bunu projenin yanına bir .env dosyasına koyun. Canlı siteyi gösterir; tasarımcının kendi makinesinde gördüğü, burada gerçekten yazılmış olandır."
 
 #: src/components/editor/dialogs.tsx:524
 #: src/components/editor/extensions/slash-command.tsx:127
@@ -1984,7 +2031,7 @@ msgstr "Okuma"
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Okumak için bu sitede bir hesap gerekiyor. Bir kez giriş yapıp dönen çerezi kullanın."
 
-#: src/routes/console.sites.$siteId.tsx:352
+#: src/routes/console.sites.$siteId.tsx:354
 #: src/routes/dashboard.publish.tsx:152
 msgid "Recent builds"
 msgstr "Son derlemeler"
@@ -2073,7 +2120,7 @@ msgstr "Depo"
 msgid "Request failed"
 msgstr "İstek başarısız oldu"
 
-#: src/routes/console.sites.$siteId.tsx:442
+#: src/routes/console.sites.$siteId.tsx:444
 #: src/routes/dashboard.plugins_.backup.tsx:369
 #: src/routes/dashboard.plugins_.backup.tsx:448
 msgid "Restore"
@@ -2084,7 +2131,7 @@ msgid "Restore this backup?"
 msgstr "Bu yedek geri yüklensin mi?"
 
 #. placeholder {0}: report.media_files
-#: src/routes/console.sites.$siteId.tsx:237
+#: src/routes/console.sites.$siteId.tsx:238
 #: src/routes/dashboard.plugins_.backup.tsx:143
 msgid "Restored: {rows} rows and {0} files"
 msgstr "Geri yüklendi: {rows} satır ve {0} dosya"
@@ -2116,8 +2163,8 @@ msgstr "S3 uyumlu depolama"
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:264
 #: src/routes/console.account.tsx:144
-#: src/routes/console.sites.$siteId.tsx:377
-#: src/routes/console.sites.$siteId.tsx:405
+#: src/routes/console.sites.$siteId.tsx:379
+#: src/routes/console.sites.$siteId.tsx:407
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.forms.tsx:311
 #: src/routes/dashboard.plugins_.backup.tsx:333
@@ -2127,9 +2174,9 @@ msgstr "Kaydet"
 
 #: src/components/editor/status-bar.tsx:113
 #: src/routes/console.account.tsx:58
-#: src/routes/console.sites.$siteId.tsx:164
-#: src/routes/console.sites.$siteId.tsx:194
-#: src/routes/console.sites.$siteId.tsx:209
+#: src/routes/console.sites.$siteId.tsx:165
+#: src/routes/console.sites.$siteId.tsx:195
+#: src/routes/console.sites.$siteId.tsx:210
 #: src/routes/dashboard.forms.tsx:107
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
@@ -2318,7 +2365,12 @@ msgstr "Yazmaya başla veya komutlar için “/” yaz…"
 msgid "Status"
 msgstr "Durum"
 
-#: src/routes/console.sites.$siteId.tsx:307
+#. placeholder {0}: new Date(token.expires_at).toLocaleString()
+#: src/components/local-env.tsx:183
+msgid "Stops working {0}"
+msgstr "{0} tarihinde geçerliliği biter"
+
+#: src/routes/console.sites.$siteId.tsx:308
 msgid "Storage"
 msgstr "Depolama"
 
@@ -2414,6 +2466,10 @@ msgstr "Etiketler bağlandı"
 msgid "Tags, per language."
 msgstr "Etiketler, dile göre."
 
+#: src/components/local-env.tsx:189
+msgid "Take it back"
+msgstr "Geri al"
+
 #: src/routes/dashboard.plugins.tsx:31
 msgid "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 msgstr "Veritabanını, istersen yüklenen dosyalarla birlikte, tek bir arşive alır — zamanlanmış olarak, diske ya da S3 kovana."
@@ -2463,7 +2519,7 @@ msgstr "Bir başlığın alacağı adres."
 msgid "the agency's, not this site's"
 msgstr "ajansın, bu sitenin değil"
 
-#: src/routes/console.sites.$siteId.tsx:226
+#: src/routes/console.sites.$siteId.tsx:227
 #: src/routes/dashboard.plugins_.backup.tsx:120
 msgid "The backup failed"
 msgstr "Yedekleme başarısız oldu"
@@ -2493,7 +2549,7 @@ msgstr "Son yedekleme başarısız oldu: {0}"
 msgid "The most common shortcuts in the editor."
 msgstr "Editörde en sık kullanılan kısayollar."
 
-#: src/routes/console.sites.$siteId.tsx:241
+#: src/routes/console.sites.$siteId.tsx:242
 #: src/routes/dashboard.plugins_.backup.tsx:154
 #: src/routes/dashboard.plugins_.backup.tsx:170
 msgid "The restore failed"
@@ -2531,6 +2587,10 @@ msgstr "Bu siteyi yazabilir, yayınlayabilir ve yönetebilirler."
 #~ msgid "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
 #~ msgstr "Herkese açık tek adres burası; iletişim formunu dolduran ziyaretçinin burada hesabı yok. Yalnızca formun tanımladığı alanları alır, gerisini reddeder."
 
+#: src/components/local-env.tsx:161
+msgid "This is the only time it is shown. Leave this page and it cannot be read again — make another one instead."
+msgstr "Yalnızca bir kez gösterilir. Bu sayfadan çıkarsanız bir daha okunamaz; yenisini üretmeniz gerekir."
+
 #: src/routes/console.account.tsx:106
 msgid "This is what you sign in with."
 msgstr "Giriş yaparken bunu kullanırsınız."
@@ -2550,6 +2610,10 @@ msgstr "Bu site"
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
 msgstr "Bugünün tarihi"
+
+#: src/components/local-env.tsx:146
+msgid "Tokens"
+msgstr "Jetonlar"
 
 #. placeholder {0}: Math.max( 1, Math.round( (new Date(build.finished_at).getTime() - new Date(build.started_at).getTime()) / 1000 ) )
 #: src/components/publish-panel.tsx:53
@@ -2672,7 +2736,7 @@ msgstr "Kapalıyken yüklemeler sunucunun diskinde saklanır."
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Okuyucuların görselleri yüklediği adres (bucket genel URL'si veya CDN)"
 
-#: src/routes/console.sites.$siteId.tsx:278
+#: src/routes/console.sites.$siteId.tsx:279
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Bu sitenin sayfaları nereden geliyor ve son derlemeler nasıl gitti."
 
@@ -2700,6 +2764,10 @@ msgstr "Hesapsız"
 #: src/routes/login.tsx:165
 msgid "Working on a site? Type its address"
 msgstr "Bir site üzerinde mi çalışıyorsunuz? Adresini yazın"
+
+#: src/components/local-env.tsx:116
+msgid "Working on this site locally"
+msgstr "Bu site üzerinde yerelde çalışmak"
 
 #: src/routes/dashboard.plugins_.s3.tsx:117
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
@@ -2752,7 +2820,7 @@ msgstr "Sayfalarınız kendi projenizden derleniyor. Yayınlamak, onları CMS'te
 
 #: src/routes/console.account.tsx:77
 #: src/routes/console.index.tsx:129
-#: src/routes/console.sites.$siteId.tsx:271
+#: src/routes/console.sites.$siteId.tsx:272
 msgid "Your sites"
 msgstr "Siteleriniz"
 

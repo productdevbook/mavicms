@@ -975,3 +975,39 @@ export function deleteFormSubmission(
     method: "DELETE",
   })
 }
+
+export interface DevelopmentToken {
+  id: string
+  created_at: string
+  expires_at: string
+}
+
+export interface SiteDevelopment {
+  api_url: string
+  site_url: string
+  /** Names only — the values never leave the server. */
+  variables: string[]
+  tokens: DevelopmentToken[]
+}
+
+export function getSiteDevelopment(id: string): Promise<SiteDevelopment> {
+  return request<SiteDevelopment>(`/console/sites/${id}/development`)
+}
+
+export function createSiteDevelopmentToken(
+  id: string
+): Promise<{ token: string; expires_at: string }> {
+  return request<{ token: string; expires_at: string }>(
+    `/console/sites/${id}/development/tokens`,
+    { method: "POST" }
+  )
+}
+
+export function deleteSiteDevelopmentToken(
+  id: string,
+  tokenId: string
+): Promise<void> {
+  return request<void>(`/console/sites/${id}/development/tokens/${tokenId}`, {
+    method: "DELETE",
+  })
+}

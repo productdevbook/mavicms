@@ -47,6 +47,9 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         ))
         .routes(routes!(console::get_site_s3, console::save_site_s3))
         .routes(routes!(console::get_site_backup, console::save_site_backup))
+        .routes(routes!(console::get_site_development))
+        .routes(routes!(console::create_site_development_token))
+        .routes(routes!(console::delete_site_development_token))
         .routes(routes!(console::run_site_backup))
         .routes(routes!(console::restore_site_backup))
         .routes(routes!(console::enter));
