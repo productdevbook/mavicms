@@ -434,6 +434,53 @@ mod tests {
         assert!(looks_like_an_address("ada.lovelace+news@example.co.uk"));
         assert!(looks_like_an_address("a_b-c@sub.example.com"));
     }
+
+    #[test]
+    fn a_new_domain_gets_every_record_it_has_to_publish() {
+        let tokens = ["aaa".to_string(), "bbb".to_string(), "ccc".to_string()];
+
+        // Before a bounce subdomain is chosen: proof of ownership and DMARC.
+        let fresh = domain_records("example.com", &tokens, "PENDING", "", "", "eu-central-1");
+        assert_eq!(fresh.len(), 4);
+        assert_eq!(fresh[0].kind, "CNAME");
+        assert_eq!(fresh[0].host, "aaa._domainkey.example.com");
+        assert_eq!(fresh[0].value, "aaa.dkim.amazonses.com");
+        assert_eq!(fresh[0].status, "waiting");
+        assert!(fresh.iter().all(|r| r.required));
+        assert_eq!(fresh[3].host, "_dmarc.example.com");
+        assert!(fresh[3].value.contains("p=none"));
+        // Amazon neither sets nor reads DMARC, so nothing can claim it is up.
+        assert_eq!(fresh[3].status, "unchecked");
+
+        // After: the MX and SPF that make bounces come back to the site.
+        let full = domain_records(
+            "example.com",
+            &tokens,
+            "SUCCESS",
+            "mail.example.com",
+            "PENDING",
+            "eu-central-1",
+        );
+        assert_eq!(full.len(), 6);
+        assert_eq!(full[0].status, "verified");
+        assert_eq!(full[3].kind, "MX");
+        assert_eq!(full[3].host, "mail.example.com");
+        assert_eq!(full[3].value, "10 feedback-smtp.eu-central-1.amazonses.com");
+        assert_eq!(full[4].kind, "TXT");
+        assert!(full[4].value.contains("include:amazonses.com"));
+
+        // The MX has to name the region the identity lives in; a record copied
+        // from another region's console is accepted by DNS and never works.
+        let elsewhere = domain_records(
+            "example.com",
+            &tokens,
+            "SUCCESS",
+            "mail.example.com",
+            "SUCCESS",
+            "us-east-1",
+        );
+        assert!(elsewhere[3].value.contains("us-east-1"));
+    }
 }
 
 /// What Amazon will say about the account behind these credentials.
