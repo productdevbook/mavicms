@@ -485,14 +485,49 @@ fn csv_row(line: &str) -> Vec<String> {
         }
     }
     out.push(field);
-    out
+    out.into_iter()
+        .map(|field| unescape_formula(&field))
+        .collect()
 }
 
+/// Characters a spreadsheet reads as the start of a formula.
+const FORMULA_START: [char; 6] = ['=', '+', '-', '@', '\t', '\r'];
+
+/// One field, quoted for CSV and defused for a spreadsheet.
+///
+/// The names and fields in here come from a form on the open web — anybody
+/// may sign up, and nobody vouches for what they type. Excel and its
+/// relatives treat a cell beginning with = + - or @ as a formula, so an
+/// address book exported by an administrator and opened by them is a way to
+/// run something on their machine. Quoting alone does not help: the
+/// spreadsheet strips the quotes as CSV syntax and evaluates what is left.
+///
+/// A leading apostrophe is what stops it, and `unescape_formula` takes it off
+/// again on the way back in, so the file still round-trips through this
+/// program unchanged.
 fn csv_field(value: &str) -> String {
+    let value = if value.starts_with(FORMULA_START) {
+        format!("'{value}")
+    } else {
+        value.to_string()
+    };
+
     if value.contains([',', '"', '\n']) {
         format!("\"{}\"", value.replace('"', "\"\""))
     } else {
-        value.to_string()
+        value
+    }
+}
+
+/// Undoes what `csv_field` added, and only that.
+///
+/// The apostrophe comes off only when a formula character is behind it, so a
+/// name that genuinely begins with one — "'Tis", an Irish surname typed with
+/// a leading quote — keeps it.
+fn unescape_formula(value: &str) -> String {
+    match value.strip_prefix('\'') {
+        Some(rest) if rest.starts_with(FORMULA_START) => rest.to_string(),
+        _ => value.to_string(),
     }
 }
 
@@ -1464,18 +1499,33 @@ pub async fn confirm(Site(state): Site, Path(token): Path<String>) -> AppResult<
 /// A GET shows a page rather than acting: mail clients and security scanners
 /// follow every link in a message, and a link that unsubscribes on sight
 /// removes people who never touched it.
+///
+/// Nothing from the address reaches the page. The form carries no action, so
+/// the browser posts back to the URL it was served from — which means the
+/// token never has to be written into the HTML, and a token shaped like
+/// `"><script>` has nowhere to land. Escaping would also have worked; not
+/// interpolating cannot be got wrong later.
 #[utoipa::path(get, path = "/mail/unsubscribe/{token}", tag = "mail",
     params(("token" = String, Path, description = "From the message")),
     responses((status = 200, description = "A page with a button on it")))]
-pub async fn unsubscribe_page(Path(token): Path<String>) -> Response {
+pub async fn unsubscribe_page(Site(state): Site, Path(token): Path<String>) -> Response {
+    let readable = state
+        .db_or_unavailable()
+        .is_ok()
+        .then(|| mailing::read_token(&state.secrets, "unsubscribe", &token))
+        .flatten()
+        .is_some();
+
+    if !readable {
+        return page("Link expired", "<p>That link cannot be read.</p>");
+    }
+
     page(
         "Unsubscribe",
-        &format!(
-            "<p>Stop receiving these messages?</p>\
-             <form method=\"post\" action=\"/api/mail/unsubscribe/{token}\">\
-             <button style=\"font:inherit;padding:10px 18px;cursor:pointer\">Yes, unsubscribe</button>\
-             </form>"
-        ),
+        "<p>Stop receiving these messages?</p>\
+         <form method=\"post\">\
+         <button style=\"font:inherit;padding:10px 18px;cursor:pointer\">Yes, unsubscribe</button>\
+         </form>",
     )
 }
 
@@ -1593,4 +1643,56 @@ pub async fn click(Site(state): Site, Path(token): Path<String>) -> Response {
     }
 
     Redirect::to(&url).into_response()
+}
+
+#[cfg(test)]
+mod csv_tests {
+    use super::{csv_field, csv_row};
+
+    #[test]
+    fn ordinary_values_are_left_alone() {
+        assert_eq!(csv_field("Ada Lovelace"), "Ada Lovelace");
+        assert_eq!(csv_field("ada@example.com"), "ada@example.com");
+    }
+
+    #[test]
+    fn commas_and_quotes_are_still_quoted() {
+        assert_eq!(csv_field("Hopper, Grace"), "\"Hopper, Grace\"");
+        assert_eq!(csv_field("she said \"hi\""), "\"she said \"\"hi\"\"\"");
+    }
+
+    #[test]
+    fn a_formula_cannot_reach_a_spreadsheet() {
+        // Anybody may put this in the name field of a public sign-up form.
+        for attack in [
+            "=1+1",
+            "+1+1",
+            "-1+1",
+            "@SUM(A1)",
+            "=HYPERLINK(\"http://example.test\",\"click\")",
+            "=cmd|'/c calc'!A1",
+        ] {
+            let written = csv_field(attack);
+            assert!(
+                written.starts_with('\'') || written.starts_with("\"'"),
+                "{attack} was written as {written}"
+            );
+        }
+    }
+
+    #[test]
+    fn the_file_still_reads_back_as_what_went_in() {
+        for original in ["=1+1", "Hopper, Grace", "Ada", "@home", "-5"] {
+            let line = csv_field(original);
+            assert_eq!(csv_row(&line)[0], original, "{original} did not round-trip");
+        }
+    }
+
+    #[test]
+    fn an_apostrophe_somebody_meant_is_kept() {
+        // Only the one this program added comes off, and it is known by what
+        // follows it.
+        assert_eq!(csv_row("'Tis")[0], "'Tis");
+        assert_eq!(csv_row("O'Brien")[0], "O'Brien");
+    }
 }
