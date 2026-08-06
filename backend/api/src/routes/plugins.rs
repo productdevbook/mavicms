@@ -811,3 +811,54 @@ pub async fn list_email_requests(
 pub async fn email_requests_of(state: &AppState) -> AppResult<Vec<crate::email::SupportCase>> {
     crate::email::support_cases(&email_config_of(state).await?).await
 }
+
+#[derive(Debug, serde::Deserialize, utoipa::ToSchema)]
+pub struct MailFromRequest {
+    /// A subdomain of the identity, such as `mail.example.com`. Empty puts it
+    /// back to Amazon's own.
+    pub subdomain: String,
+}
+
+/// Set the subdomain bounces come back to.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/identities/{name}/mail-from",
+    tag = "plugins",
+    params(("name" = String, Path, description = "The domain")),
+    request_body = MailFromRequest,
+    responses((status = 204, description = "Set"))
+)]
+pub async fn set_email_mail_from(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    axum::extract::Path(name): axum::extract::Path<String>,
+    Json(payload): Json<MailFromRequest>,
+) -> AppResult<StatusCode> {
+    set_mail_from_of(&state, &name, &payload.subdomain).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn set_mail_from_of(state: &AppState, identity: &str, subdomain: &str) -> AppResult<()> {
+    crate::email::set_mail_from(&email_config_of(state).await?, identity, subdomain).await
+}
+
+/// Make a configuration set.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/configuration-sets",
+    tag = "plugins",
+    request_body = IdentityRequest,
+    responses((status = 204, description = "Made"))
+)]
+pub async fn create_email_configuration_set(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    Json(payload): Json<IdentityRequest>,
+) -> AppResult<StatusCode> {
+    create_configuration_set_of(&state, &payload.name).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn create_configuration_set_of(state: &AppState, name: &str) -> AppResult<()> {
+    crate::email::create_configuration_set(&email_config_of(state).await?, name).await
+}

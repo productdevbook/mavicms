@@ -1366,3 +1366,52 @@ pub async fn request_site_quota_increase(
         Json(crate::routes::plugins::request_quota_increase_of(&state, payload).await?),
     ))
 }
+
+/// Set the bounce subdomain for one of this agency's sites.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/identities/{name}/mail-from",
+    tag = "console",
+    params(
+        ("id" = String, Path, description = "Site id"),
+        ("name" = String, Path, description = "The domain"),
+    ),
+    request_body = crate::routes::plugins::MailFromRequest,
+    responses((status = 204, description = "Set"))
+)]
+pub async fn set_site_email_mail_from(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path((id, name)): Path<(Uuid, String)>,
+    Json(payload): Json<crate::routes::plugins::MailFromRequest>,
+) -> AppResult<StatusCode> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    crate::routes::plugins::set_mail_from_of(&state, &name, &payload.subdomain).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Make a configuration set for one of this agency's sites.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/configuration-sets",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    request_body = crate::routes::plugins::IdentityRequest,
+    responses((status = 204, description = "Made"))
+)]
+pub async fn create_site_email_configuration_set(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::routes::plugins::IdentityRequest>,
+) -> AppResult<StatusCode> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    crate::routes::plugins::create_configuration_set_of(&state, &payload.name).await?;
+    Ok(StatusCode::NO_CONTENT)
+}

@@ -20,6 +20,7 @@ import {
   getSesSuppressed,
   requestProductionAccess,
   setSesSending,
+  setSesMailFrom,
   unsuppressSesAddress,
   type SesAccount,
   type SesIdentity,
@@ -68,7 +69,6 @@ export function SesAccountPanel({
   const [loading, setLoading] = React.useState(ready)
   const [busy, setBusy] = React.useState(false)
   const [newIdentity, setNewIdentity] = React.useState("")
-  const [copied, setCopied] = React.useState<string | null>(null)
 
   const [request, setRequest] = React.useState({
     mail_type: "TRANSACTIONAL",
@@ -140,16 +140,6 @@ export function SesAccountPanel({
     } finally {
       setBusy(false)
     }
-  }
-
-  const copy = (value: string) => {
-    void navigator.clipboard.writeText(value).then(
-      () => {
-        setCopied(value)
-        setTimeout(() => setCopied(null), 1500)
-      },
-      () => toast.error(t`Could not copy it`)
-    )
   }
 
   if (loading) {
@@ -387,6 +377,9 @@ export function SesAccountPanel({
                     <p className="text-xs text-muted-foreground">
                       {identity.verified ? t`Verified` : t`Waiting`}
                       {identity.dkim_status ? ` · DKIM ${identity.dkim_status}` : ""}
+                      {identity.mail_from_domain
+                        ? ` · ${t`bounces to ${identity.mail_from_domain}`}`
+                        : ""}
                     </p>
                   </div>
                   <Button
@@ -404,30 +397,12 @@ export function SesAccountPanel({
                   </Button>
                 </div>
 
-                {identity.dkim_tokens.length > 0 && !identity.verified && (
-                  <div className="flex flex-col gap-1 rounded-lg bg-muted/40 p-3">
-                    <p className="text-xs text-muted-foreground">
-                      {t`Publish these three CNAME records on the domain, then this turns itself green.`}
-                    </p>
-                    {identity.dkim_tokens.map((token) => {
-                      const record = `${token}._domainkey.${identity.name} CNAME ${token}.dkim.amazonses.com`
-                      return (
-                        <button
-                          key={token}
-                          type="button"
-                          onClick={() => copy(record)}
-                          className="flex items-center gap-2 overflow-x-auto text-left font-mono text-xs hover:text-foreground"
-                        >
-                          {copied === record ? (
-                            <Check className="size-3 shrink-0" />
-                          ) : (
-                            <Copy className="size-3 shrink-0" />
-                          )}
-                          <span className="whitespace-nowrap">{record}</span>
-                        </button>
-                      )
-                    })}
-                  </div>
+                {identity.kind === "DOMAIN" && (
+                  <DomainRecords
+                    identity={identity}
+                    siteId={siteId}
+                    onChanged={load}
+                  />
                 )}
               </div>
             ))}
@@ -479,6 +454,157 @@ export function SesAccountPanel({
           </div>
         )}
       </section>
+    </div>
+  )
+}
+
+/**
+ * Everything a domain has to have in DNS, in one place, ready to paste.
+ *
+ * The whole point of this panel is that somebody sets up a sending domain
+ * without reading Amazon's documentation: three CNAMEs so SES can sign, an MX
+ * and an SPF line so bounces come back to a subdomain the site owns, and
+ * DMARC, which Gmail and Yahoo have required of bulk senders since 2024 and
+ * which nothing in AWS tells you is missing.
+ */
+function DomainRecords({
+  identity,
+  siteId,
+  onChanged,
+}: {
+  identity: SesIdentity
+  siteId?: string
+  onChanged: () => void
+}) {
+  const { t } = useLingui()
+  const [copied, setCopied] = React.useState<string | null>(null)
+  const [busy, setBusy] = React.useState(false)
+  const [bounce, setBounce] = React.useState(
+    identity.mail_from_domain || `mail.${identity.name}`
+  )
+
+  const copy = (value: string, key: string) => {
+    void navigator.clipboard.writeText(value).then(
+      () => {
+        setCopied(key)
+        setTimeout(() => setCopied(null), 1500)
+      },
+      () => toast.error(t`Could not copy it`)
+    )
+  }
+
+  // One block for a registrar that takes a paste, rows for one that does not.
+  const asZoneFile = identity.records
+    .map((r) => `${r.host}\t${r.kind}\t${r.value}`)
+    .join("\n")
+
+  const label = (purpose: string) =>
+    ({
+      dkim: t`Lets Amazon sign as you`,
+      mail_from: t`Sends bounces back to you`,
+      dmarc: t`What Gmail and Yahoo ask for`,
+    })[purpose] ?? purpose
+
+  const standing = (status: string) =>
+    ({
+      verified: t`published`,
+      waiting: t`waiting for DNS`,
+      failed: t`Amazon could not find it`,
+      unchecked: t`Amazon does not check this one`,
+    })[status] ?? status
+
+  return (
+    <div className="flex flex-col gap-3 rounded-lg bg-muted/40 p-3">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-muted-foreground">
+          {t`Publish these at whoever holds the domain. Amazon finds them by itself, usually within the hour.`}
+        </p>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => copy(asZoneFile, "all")}
+        >
+          {copied === "all" ? <Check /> : <Copy />}
+          {t`Copy all`}
+        </Button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs">
+          <tbody>
+            {identity.records.map((record) => {
+              const line = `${record.host}\t${record.kind}\t${record.value}`
+              return (
+                <tr key={record.host + record.kind} className="align-top">
+                  <td className="py-1 pr-3 font-mono whitespace-nowrap">
+                    {record.kind}
+                  </td>
+                  <td className="py-1 pr-3 font-mono break-all">
+                    {record.host}
+                  </td>
+                  <td className="py-1 pr-3 font-mono break-all">
+                    {record.value}
+                  </td>
+                  <td className="py-1 pr-2 whitespace-nowrap text-muted-foreground">
+                    {label(record.purpose)} · {standing(record.status)}
+                  </td>
+                  <td className="py-1">
+                    <button
+                      type="button"
+                      aria-label={t`Copy`}
+                      onClick={() => copy(line, line)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      {copied === line ? (
+                        <Check className="size-3" />
+                      ) : (
+                        <Copy className="size-3" />
+                      )}
+                    </button>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {!identity.mail_from_domain && (
+        <div className="flex flex-wrap items-end gap-2 border-t border-border pt-3">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor={`mailfrom-${identity.name}`} className="text-xs">
+              {t`Subdomain for bounces`}
+            </Label>
+            <Input
+              id={`mailfrom-${identity.name}`}
+              value={bounce}
+              onChange={(event) => setBounce(event.target.value)}
+              className="h-8 max-w-xs text-xs"
+            />
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy || !bounce.endsWith(identity.name)}
+            onClick={() => {
+              setBusy(true)
+              void setSesMailFrom(identity.name, bounce, siteId)
+                .then(onChanged)
+                .catch((error) =>
+                  toast.error(
+                    error instanceof ApiError ? error.message : t`Could not set it`
+                  )
+                )
+                .finally(() => setBusy(false))
+            }}
+          >
+            {t`Set it up`}
+          </Button>
+          <p className="w-full text-xs text-muted-foreground">
+            {t`Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two more records appear above once it is set.`}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

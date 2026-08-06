@@ -324,6 +324,26 @@ pub struct AccountStatus {
     pub review_status: String,
 }
 
+/// One line of DNS somebody has to publish.
+///
+/// Given whole rather than described: the point of this panel is that nobody
+/// has to work out from Amazon's documentation what `_dmarc` is or which of
+/// three CNAMEs goes where. Copy the row, paste it at the registrar, carry on.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct DnsRecord {
+    /// "CNAME", "MX" or "TXT".
+    pub kind: String,
+    pub host: String,
+    pub value: String,
+    /// What it buys: "dkim", "mail_from" or "dmarc".
+    pub purpose: String,
+    /// What Amazon says about it — "verified", "waiting", "failed" — or
+    /// "unchecked" for DMARC, which Amazon does not look at.
+    pub status: String,
+    /// Whether the site must publish it, or only should.
+    pub required: bool,
+}
+
 /// One address or domain SES has been asked to trust.
 #[derive(Debug, Serialize, ToSchema)]
 pub struct Identity {
@@ -331,10 +351,13 @@ pub struct Identity {
     /// "EMAIL_ADDRESS" or "DOMAIN".
     pub kind: String,
     pub verified: bool,
-    /// The CNAME records a domain needs before SES will sign for it. Empty
-    /// for an address, which is verified by clicking a link instead.
-    pub dkim_tokens: Vec<String>,
     pub dkim_status: String,
+    /// The subdomain bounces come back to, when one is set up.
+    pub mail_from_domain: String,
+    pub mail_from_status: String,
+    /// Everything to publish, in one list. Empty for an address, which is
+    /// verified by following a link instead.
+    pub records: Vec<DnsRecord>,
 }
 
 /// A request to be let out of the sandbox.
@@ -495,13 +518,19 @@ pub async fn identities(config: &EmailConfig) -> AppResult<Vec<Identity>> {
     .map_err(|_| AppError::Validation("SES did not answer in time".to_string()))?
     .map_err(|err| refused("list the identities", err))?;
 
+    let region = config.region.trim();
     let mut out = Vec::new();
+
     for entry in listed.email_identities() {
         let name = entry.identity_name().unwrap_or_default().to_string();
+        let kind = entry
+            .identity_type()
+            .map(|t| t.as_str().to_string())
+            .unwrap_or_default();
 
-        // The list says whether it is verified but not the DKIM records a
-        // domain still needs, and those records are the whole of what
-        // somebody has to do next.
+        // The list says whether it is verified but not the records a domain
+        // still needs, and those records are the whole of what somebody has
+        // to do next.
         let detail = client
             .get_email_identity()
             .email_identity(&name)
@@ -509,27 +538,181 @@ pub async fn identities(config: &EmailConfig) -> AppResult<Vec<Identity>> {
             .await
             .ok();
 
+        let dkim = detail.as_ref().and_then(|d| d.dkim_attributes());
+        let dkim_status = dkim
+            .and_then(|d| d.status())
+            .map(|s| s.as_str().to_string())
+            .unwrap_or_default();
+
+        let mail_from = detail.as_ref().and_then(|d| d.mail_from_attributes());
+        let mail_from_domain = mail_from
+            .map(|m| m.mail_from_domain().to_string())
+            .unwrap_or_default();
+        let mail_from_status = mail_from
+            .map(|m| m.mail_from_domain_status().as_str().to_string())
+            .unwrap_or_default();
+
+        let records = if kind == "DOMAIN" {
+            domain_records(
+                &name,
+                dkim.map(|d| d.tokens()).unwrap_or_default(),
+                &dkim_status,
+                &mail_from_domain,
+                &mail_from_status,
+                region,
+            )
+        } else {
+            Vec::new()
+        };
+
         out.push(Identity {
-            kind: entry
-                .identity_type()
-                .map(|t| t.as_str().to_string())
-                .unwrap_or_default(),
+            kind,
             verified: entry.sending_enabled(),
-            dkim_tokens: detail
-                .as_ref()
-                .and_then(|d| d.dkim_attributes())
-                .map(|d| d.tokens().to_vec())
-                .unwrap_or_default(),
-            dkim_status: detail
-                .as_ref()
-                .and_then(|d| d.dkim_attributes())
-                .and_then(|d| d.status())
-                .map(|s| s.as_str().to_string())
-                .unwrap_or_default(),
+            dkim_status,
+            mail_from_domain,
+            mail_from_status,
+            records,
             name,
         });
     }
     Ok(out)
+}
+
+/// Everything a domain has to publish, in the order somebody should do it.
+///
+/// Three CNAMEs so Amazon can sign; an MX and an SPF line so bounces come back
+/// to a subdomain the site owns rather than to amazonses.com, which is what
+/// makes the visible sender and the envelope sender agree; and DMARC, which
+/// Gmail and Yahoo have required of bulk senders since 2024 and which nothing
+/// in AWS will tell you is missing.
+fn domain_records(
+    domain: &str,
+    dkim_tokens: &[String],
+    dkim_status: &str,
+    mail_from: &str,
+    mail_from_status: &str,
+    region: &str,
+) -> Vec<DnsRecord> {
+    let readable = |status: &str| {
+        match status {
+            "SUCCESS" => "verified",
+            "PENDING" | "NOT_STARTED" => "waiting",
+            "FAILED" | "TEMPORARY_FAILURE" => "failed",
+            "" => "waiting",
+            other => other,
+        }
+        .to_string()
+    };
+
+    let mut out: Vec<DnsRecord> = dkim_tokens
+        .iter()
+        .map(|token| DnsRecord {
+            kind: "CNAME".to_string(),
+            host: format!("{token}._domainkey.{domain}"),
+            value: format!("{token}.dkim.amazonses.com"),
+            purpose: "dkim".to_string(),
+            status: readable(dkim_status),
+            required: true,
+        })
+        .collect();
+
+    if !mail_from.is_empty() {
+        out.push(DnsRecord {
+            kind: "MX".to_string(),
+            host: mail_from.to_string(),
+            value: format!("10 feedback-smtp.{region}.amazonses.com"),
+            purpose: "mail_from".to_string(),
+            status: readable(mail_from_status),
+            required: true,
+        });
+        out.push(DnsRecord {
+            kind: "TXT".to_string(),
+            host: mail_from.to_string(),
+            value: "\"v=spf1 include:amazonses.com ~all\"".to_string(),
+            purpose: "mail_from".to_string(),
+            status: readable(mail_from_status),
+            required: true,
+        });
+    }
+
+    out.push(DnsRecord {
+        kind: "TXT".to_string(),
+        host: format!("_dmarc.{domain}"),
+        // p=none to begin with: a policy that rejects before anybody has seen
+        // a report is how a domain silently stops delivering its own mail.
+        value: format!("\"v=DMARC1; p=none; rua=mailto:dmarc@{domain}\""),
+        purpose: "dmarc".to_string(),
+        // Amazon neither sets nor checks this, so nothing here can say
+        // whether it is published.
+        status: "unchecked".to_string(),
+        required: true,
+    });
+
+    out
+}
+
+/// Sets the subdomain bounces are returned to.
+///
+/// Without one, the envelope sender is amazonses.com and SPF is aligned to
+/// Amazon rather than to the site — which passes, but tells a receiving server
+/// less about whoever actually sent it, and fails DMARC alignment on SPF.
+pub async fn set_mail_from(config: &EmailConfig, identity: &str, subdomain: &str) -> AppResult<()> {
+    use aws_sdk_sesv2::types::BehaviorOnMxFailure;
+
+    account_settings(config)?;
+    let subdomain = subdomain.trim();
+
+    let mut call = client_for(config)
+        .put_email_identity_mail_from_attributes()
+        .email_identity(identity.trim());
+
+    if subdomain.is_empty() {
+        // Left empty, SES goes back to its own domain.
+        call = call.behavior_on_mx_failure(BehaviorOnMxFailure::UseDefaultValue);
+    } else {
+        if !subdomain.ends_with(identity.trim()) {
+            return Err(AppError::Validation(format!(
+                "the bounce subdomain has to be under {}",
+                identity.trim()
+            )));
+        }
+        call = call
+            .mail_from_domain(subdomain)
+            // Rejecting on MX failure would stop the site's mail the moment
+            // the MX record was mistyped. Falling back keeps it sending while
+            // somebody fixes the DNS.
+            .behavior_on_mx_failure(BehaviorOnMxFailure::UseDefaultValue);
+    }
+
+    tokio::time::timeout(TIMEOUT, call.send())
+        .await
+        .map_err(|_| AppError::Validation("SES did not answer in time".to_string()))?
+        .map_err(|err| refused("set the bounce subdomain", err))?;
+
+    Ok(())
+}
+
+/// Makes a configuration set, so that too is one less reason to open the AWS
+/// console.
+pub async fn create_configuration_set(config: &EmailConfig, name: &str) -> AppResult<()> {
+    account_settings(config)?;
+    let name = name.trim();
+    if name.is_empty() {
+        return Err(AppError::Validation("it needs a name".to_string()));
+    }
+
+    tokio::time::timeout(
+        TIMEOUT,
+        client_for(config)
+            .create_configuration_set()
+            .configuration_set_name(name)
+            .send(),
+    )
+    .await
+    .map_err(|_| AppError::Validation("SES did not answer in time".to_string()))?
+    .map_err(|err| refused("make it", err))?;
+
+    Ok(())
 }
 
 /// Asks SES to trust an address or a domain.

@@ -1098,13 +1098,26 @@ export interface SesAccount {
   review_status: string
 }
 
+export interface SesDnsRecord {
+  kind: string
+  host: string
+  value: string
+  /** "dkim", "mail_from" or "dmarc". */
+  purpose: string
+  /** "verified", "waiting", "failed", or "unchecked" for DMARC. */
+  status: string
+  required: boolean
+}
+
 export interface SesIdentity {
   name: string
   kind: string
   verified: boolean
-  /** CNAMEs a domain needs published before SES will sign for it. */
-  dkim_tokens: string[]
   dkim_status: string
+  mail_from_domain: string
+  mail_from_status: string
+  /** Everything to publish at the registrar, in one list. */
+  records: SesDnsRecord[]
 }
 
 export interface SesSuppressed {
@@ -1164,6 +1177,27 @@ export function deleteSesIdentity(
     `${mailBase(siteId)}/identities/${encodeURIComponent(name)}`,
     { method: "DELETE" }
   )
+}
+
+export function setSesMailFrom(
+  identity: string,
+  subdomain: string,
+  siteId?: string
+): Promise<void> {
+  return request<void>(
+    `${mailBase(siteId)}/identities/${encodeURIComponent(identity)}/mail-from`,
+    { method: "POST", body: JSON.stringify({ subdomain }) }
+  )
+}
+
+export function createSesConfigurationSet(
+  name: string,
+  siteId?: string
+): Promise<void> {
+  return request<void>(`${mailBase(siteId)}/configuration-sets`, {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  })
 }
 
 export function getSesSuppressed(siteId?: string): Promise<SesSuppressed[]> {

@@ -63,6 +63,8 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::list_site_email_configuration_sets))
         .routes(routes!(console::request_site_quota_increase))
         .routes(routes!(console::list_site_email_requests))
+        .routes(routes!(console::set_site_email_mail_from))
+        .routes(routes!(console::create_site_email_configuration_set))
         .routes(routes!(console::get_site_backup, console::save_site_backup))
         .routes(routes!(console::get_site_development))
         .routes(routes!(console::create_site_development_token))
@@ -150,6 +152,8 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(plugins::list_email_configuration_sets))
         .routes(routes!(plugins::request_email_quota_increase))
         .routes(routes!(plugins::list_email_requests))
+        .routes(routes!(plugins::set_email_mail_from))
+        .routes(routes!(plugins::create_email_configuration_set))
         .routes(routes!(
             plugins::get_backup_settings,
             plugins::update_backup_settings
