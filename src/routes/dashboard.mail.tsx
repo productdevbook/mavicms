@@ -141,6 +141,7 @@ function Campaigns() {
         subject: name.trim(),
         body: "",
         template_id: null,
+        from_address: "",
         lists: [],
         send_at: null,
       })

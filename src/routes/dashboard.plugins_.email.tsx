@@ -35,6 +35,7 @@ const EMPTY: EmailSettingsPayload = {
   from_name: "",
   reply_to: "",
   configuration_set: "",
+  senders: [],
 }
 
 function EmailSettingsRoute() {

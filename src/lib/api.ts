@@ -1015,6 +1015,11 @@ export function deleteSiteDevelopmentToken(
   })
 }
 
+export interface Sender {
+  address: string
+  name: string
+}
+
 export interface EmailSettings {
   enabled: boolean
   region: string
@@ -1025,6 +1030,8 @@ export interface EmailSettings {
   configuration_set: string
   /** The secret itself never comes back; this says whether one is stored. */
   has_secret_access_key: boolean
+  /** The addresses beyond the default one. */
+  senders: Sender[]
 }
 
 export interface EmailSettingsPayload {
@@ -1037,6 +1044,7 @@ export interface EmailSettingsPayload {
   from_name: string
   reply_to: string
   configuration_set: string
+  senders: Sender[]
 }
 
 export function getEmailSettings(): Promise<EmailSettings> {
@@ -1252,6 +1260,8 @@ export interface Campaign {
   subject: string
   body: string
   template_id: string | null
+  /** Which of the site's addresses it goes out as. Empty for the default. */
+  from_address: string
   status: string
   lists: string[]
   send_at: string | null
@@ -1381,6 +1391,7 @@ export function saveCampaign(
     subject: string
     body: string
     template_id: string | null
+    from_address: string
     lists: string[]
     send_at: string | null
   },

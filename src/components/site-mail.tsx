@@ -38,6 +38,7 @@ const EMPTY: EmailSettingsPayload = {
   from_name: "",
   reply_to: "",
   configuration_set: "",
+  senders: [],
 }
 
 export function SiteMail({ siteId }: { siteId: string }) {

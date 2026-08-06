@@ -869,6 +869,7 @@ pub struct CampaignResponse {
     pub subject: String,
     pub body: String,
     pub template_id: Option<String>,
+    pub from_address: String,
     pub status: String,
     pub lists: Vec<String>,
     pub send_at: Option<String>,
@@ -891,6 +892,9 @@ pub struct SaveCampaignRequest {
     pub body: String,
     #[serde(default)]
     pub template_id: Option<Uuid>,
+    /// Which of the site's addresses it goes out as. Empty for the default.
+    #[serde(default)]
+    pub from_address: String,
     #[serde(default)]
     pub lists: Vec<Uuid>,
     /// When to send it. Absent means when somebody presses send.
@@ -930,6 +934,7 @@ async fn campaign_row(
         subject: row.subject,
         body: row.body,
         template_id: row.template_id.map(|id| id.to_string()),
+        from_address: row.from_address,
         status: row.status,
         send_at: row.send_at.map(|t| t.to_rfc3339()),
         started_at: row.started_at.map(|t| t.to_rfc3339()),
@@ -1008,6 +1013,7 @@ pub async fn create_campaign(
         subject: Set(payload.subject.trim().to_string()),
         body: Set(payload.body),
         template_id: Set(payload.template_id),
+        from_address: Set(payload.from_address.trim().to_string()),
         status: Set(mailing::DRAFT.to_string()),
         send_at: Set(send_at),
         started_at: Set(None),
@@ -1062,6 +1068,7 @@ pub async fn update_campaign(
     changed.subject = Set(payload.subject.trim().to_string());
     changed.body = Set(payload.body);
     changed.template_id = Set(payload.template_id);
+    changed.from_address = Set(payload.from_address.trim().to_string());
     changed.send_at = Set(send_at);
     let saved = changed.update(db).await?;
 
@@ -1154,14 +1161,25 @@ pub async fn send_campaign(
         ));
     }
 
+    // A time in the future means scheduled, not running: nothing has gone
+    // out yet, and a page that says "going out" while nothing is would be
+    // lying for however long the wait is.
+    let later = found
+        .send_at
+        .filter(|when| *when > Utc::now().fixed_offset());
+
     let mut changed: campaign::ActiveModel = found.into();
-    changed.status = Set(mailing::RUNNING.to_string());
-    changed.started_at = Set(Some(Utc::now().fixed_offset()));
+    changed.status = Set(if later.is_some() {
+        mailing::SCHEDULED.to_string()
+    } else {
+        mailing::RUNNING.to_string()
+    });
+    changed.started_at = Set(later.is_none().then(|| Utc::now().fixed_offset()));
     changed.finished_at = Set(None);
     changed.to_send = Set(audience as i32);
     let saved = changed.update(db).await?;
 
-    mailing::enqueue(hosting.registry()?.control(), tenant.id, id).await?;
+    mailing::enqueue(hosting.registry()?.control(), tenant.id, id, later).await?;
 
     Ok((StatusCode::ACCEPTED, Json(campaign_row(db, saved).await?)))
 }
@@ -1281,6 +1299,8 @@ pub async fn test_campaign(
             subject: &format!("[test] {}", message.subject),
             text: &message.text,
             html: Some(&message.html),
+            from: None,
+            unsubscribe_url: None,
         },
     )
     .await;
@@ -1438,6 +1458,8 @@ pub async fn subscribe(
                     subject: &subject,
                     text: &mailing::as_text(&html),
                     html: Some(&html),
+                    from: None,
+                    unsubscribe_url: None,
                 },
             )
             .await;

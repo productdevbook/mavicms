@@ -12,6 +12,8 @@ pub struct Model {
     #[sea_orm(column_type = "Text")]
     pub body: String,
     pub template_id: Option<Uuid>,
+    /// Which of the site's senders this goes out as. Empty means the default.
+    pub from_address: String,
     /// draft, scheduled, running, paused, finished or cancelled.
     pub status: String,
     pub send_at: Option<DateTimeWithTimeZone>,

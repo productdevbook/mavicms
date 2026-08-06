@@ -383,6 +383,7 @@ pub async fn email_settings_of(state: &AppState) -> AppResult<crate::email::Emai
             reply_to: stored.config.reply_to,
             configuration_set: stored.config.configuration_set,
             has_secret_access_key: !stored.config.secret_access_key.is_empty(),
+            senders: stored.config.senders,
         },
         None => crate::email::EmailSettingsResponse {
             enabled: false,
@@ -393,6 +394,7 @@ pub async fn email_settings_of(state: &AppState) -> AppResult<crate::email::Emai
             reply_to: String::new(),
             configuration_set: String::new(),
             has_secret_access_key: false,
+            senders: Vec::new(),
         },
     })
 }
@@ -441,6 +443,12 @@ async fn resolve_email(
         from_name: payload.from_name.trim().to_string(),
         reply_to: payload.reply_to.trim().to_string(),
         configuration_set: payload.configuration_set.trim().to_string(),
+        senders: payload
+            .senders
+            .iter()
+            .filter(|sender| crate::email::looks_like_an_address(&sender.address))
+            .cloned()
+            .collect(),
     })
 }
 
@@ -542,6 +550,8 @@ pub async fn test_email_of(
             text: "This is the test message from your site's mail settings. \
                    If you are reading it, sending works.",
             html: None,
+            from: None,
+            unsubscribe_url: None,
         },
     )
     .await;

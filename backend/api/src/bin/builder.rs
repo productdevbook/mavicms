@@ -216,6 +216,26 @@ impl Builder {
         let site_url = format!("{}://{}", self.site_scheme, tenant.host);
         let api_base = format!("{site_url}/api");
 
+        // Amazon's own limit, asked once. A campaign that outruns it gets
+        // throttling errors that land in the log looking like real failures.
+        // Nought means it could not be read, and then nothing is paced —
+        // better a fast campaign than none.
+        let rate = mavicms_api::email::account(&settings.config)
+            .await
+            .map(|account| account.max_send_rate)
+            .unwrap_or(0.0);
+
+        // Anyone Amazon has stopped writing to is stopped here too, before a
+        // campaign spends its quota finding that out one message at a time.
+        if let Err(err) = mavicms_api::mailing::block_the_suppressed(&db, &settings.config).await {
+            tracing::warn!(error = %err, "could not read Amazon's blocked list");
+        }
+
+        // A scheduled campaign becomes a running one the moment its turn
+        // arrives, which is now: the queue would not have handed it over
+        // otherwise.
+        mavicms_api::mailing::begin(&db, campaign_id).await?;
+
         // Until nobody is left. Each pass re-reads the campaign, so pausing
         // or cancelling it in the panel stops the next batch rather than
         // being noticed only at the end.
@@ -227,6 +247,7 @@ impl Builder {
                 &api_base,
                 &site_url,
                 campaign_id,
+                rate,
             )
             .await?;
 

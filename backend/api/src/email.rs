@@ -24,15 +24,28 @@ use crate::error::{AppError, AppResult};
 /// submission is stored whether or not the notification goes out.
 const TIMEOUT: std::time::Duration = std::time::Duration::from_secs(15);
 
+/// One address this site may send as.
+#[derive(Debug, Clone, Default, Serialize, Deserialize, ToSchema, PartialEq)]
+pub struct Sender {
+    pub address: String,
+    pub name: String,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct EmailConfig {
     pub region: String,
     pub access_key_id: String,
     pub secret_access_key: String,
-    /// The address mail comes from. SES will refuse to send from one it has
-    /// not verified, which is the most common reason a first send fails.
+    /// The address mail comes from when nothing says otherwise. SES will
+    /// refuse to send from one it has not verified, which is the most common
+    /// reason a first send fails.
     pub from_address: String,
     pub from_name: String,
+    /// The others. A site sends notifications as one address and its
+    /// newsletter as another often enough that one field was never going to
+    /// be enough — and every one of them still has to be verified in SES.
+    #[serde(default)]
+    pub senders: Vec<Sender>,
     pub reply_to: String,
     /// An SES configuration set, if the account uses them for tracking or
     /// dedicated IPs. Left empty, SES uses the account default.
@@ -51,6 +64,8 @@ pub struct EmailSettingsResponse {
     pub reply_to: String,
     pub configuration_set: String,
     pub has_secret_access_key: bool,
+    /// Every address this site may send as, the default first.
+    pub senders: Vec<Sender>,
 }
 
 #[derive(Debug, Deserialize, ToSchema)]
@@ -72,6 +87,9 @@ pub struct EmailSettingsRequest {
     pub reply_to: String,
     #[serde(default)]
     pub configuration_set: String,
+    /// The addresses beyond the default one.
+    #[serde(default)]
+    pub senders: Vec<Sender>,
 }
 
 #[derive(Debug, Deserialize, ToSchema)]
@@ -91,6 +109,13 @@ pub struct Message<'a> {
     /// reader's own client decide, and one with only HTML looks like spam to
     /// several filters that count parts.
     pub html: Option<&'a str>,
+    /// Which of the site's addresses to send as. The default when absent.
+    pub from: Option<&'a Sender>,
+    /// Where the reader's own mail client should point its unsubscribe
+    /// button. Gmail and Yahoo have required this of bulk senders since
+    /// February 2024; without it a newsletter lands in spam however clean the
+    /// list is.
+    pub unsubscribe_url: Option<&'a str>,
 }
 
 /// An address as SES wants it: `Name <someone@example.com>`, or the bare
@@ -133,6 +158,32 @@ pub fn looks_like_an_address(value: &str) -> bool {
 }
 
 /// The subject and body, as the SDK's types.
+/// The unsubscribe headers, when the message has somewhere to point them.
+///
+/// Two of them, and both are needed: the first says where, the second says
+/// that a single POST is enough and no page has to be visited. Gmail and
+/// Yahoo check for the pair.
+fn unsubscribe_headers(url: &str) -> Vec<aws_sdk_sesv2::types::MessageHeader> {
+    use aws_sdk_sesv2::types::MessageHeader;
+
+    [
+        ("List-Unsubscribe", format!("<{url}>")),
+        (
+            "List-Unsubscribe-Post",
+            "List-Unsubscribe=One-Click".to_string(),
+        ),
+    ]
+    .into_iter()
+    .filter_map(|(name, value)| {
+        MessageHeader::builder()
+            .name(name)
+            .value(value)
+            .build()
+            .ok()
+    })
+    .collect()
+}
+
 fn content_of(message: &Message<'_>) -> AppResult<EmailContent> {
     let utf8 = |data: &str| {
         Content::builder()
@@ -147,14 +198,15 @@ fn content_of(message: &Message<'_>) -> AppResult<EmailContent> {
         body = body.html(utf8(html)?);
     }
 
-    Ok(EmailContent::builder()
-        .simple(
-            SesMessage::builder()
-                .subject(utf8(message.subject)?)
-                .body(body.build())
-                .build(),
-        )
-        .build())
+    let mut simple = SesMessage::builder()
+        .subject(utf8(message.subject)?)
+        .body(body.build());
+
+    if let Some(url) = message.unsubscribe_url {
+        simple = simple.set_headers(Some(unsubscribe_headers(url)));
+    }
+
+    Ok(EmailContent::builder().simple(simple.build()).build())
 }
 
 fn client_for(config: &EmailConfig) -> Client {
@@ -190,7 +242,12 @@ pub async fn send(config: &EmailConfig, message: Message<'_>) -> AppResult<()> {
             "no access key is set for SES".to_string(),
         ));
     }
-    if !looks_like_an_address(&config.from_address) {
+    let from = message.from.cloned().unwrap_or_else(|| Sender {
+        address: config.from_address.clone(),
+        name: config.from_name.clone(),
+    });
+
+    if !looks_like_an_address(&from.address) {
         return Err(AppError::Validation(
             "the address mail comes from is not an email address".to_string(),
         ));
@@ -203,7 +260,7 @@ pub async fn send(config: &EmailConfig, message: Message<'_>) -> AppResult<()> {
 
     let mut request = client_for(config)
         .send_email()
-        .from_email_address(addressed(&config.from_name, &config.from_address))
+        .from_email_address(addressed(&from.name, &from.address))
         .destination(
             Destination::builder()
                 .to_addresses(message.to.trim())
@@ -258,6 +315,8 @@ mod tests {
             subject: "Subject",
             text: "plain",
             html: Some("<p>rich</p>"),
+            from: None,
+            unsubscribe_url: None,
         })
         .unwrap();
 
@@ -267,12 +326,60 @@ mod tests {
     }
 
     #[test]
+    fn an_unsubscribe_link_becomes_the_two_headers_gmail_looks_for() {
+        let content = content_of(&Message {
+            to: "to@example.com",
+            subject: "s",
+            text: "t",
+            html: None,
+            from: None,
+            unsubscribe_url: Some("https://example.com/u/abc"),
+        })
+        .unwrap();
+
+        let headers = content.simple().unwrap().headers();
+        let named = |name: &str| {
+            headers
+                .iter()
+                .find(|h| h.name().eq_ignore_ascii_case(name))
+                .map(|h| h.value().to_string())
+        };
+
+        assert_eq!(
+            named("List-Unsubscribe").as_deref(),
+            Some("<https://example.com/u/abc>")
+        );
+        // Without the second one, a one-click button is not offered at all.
+        assert_eq!(
+            named("List-Unsubscribe-Post").as_deref(),
+            Some("List-Unsubscribe=One-Click")
+        );
+    }
+
+    #[test]
+    fn a_message_with_nowhere_to_unsubscribe_carries_no_such_header() {
+        let content = content_of(&Message {
+            to: "to@example.com",
+            subject: "s",
+            text: "t",
+            html: None,
+            from: None,
+            unsubscribe_url: None,
+        })
+        .unwrap();
+
+        assert!(content.simple().unwrap().headers().is_empty());
+    }
+
+    #[test]
     fn a_message_without_html_has_no_empty_html_part() {
         let content = content_of(&Message {
             to: "to@example.com",
             subject: "Subject",
             text: "plain",
             html: None,
+            from: None,
+            unsubscribe_url: None,
         })
         .unwrap();
 

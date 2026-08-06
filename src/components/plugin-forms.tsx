@@ -1,3 +1,4 @@
+import * as React from "react"
 import { useLingui } from "@lingui/react/macro"
 
 import type {
@@ -297,6 +298,7 @@ export function EmailFields({
   onChange: (values: Partial<EmailSettingsPayload>) => void
 }) {
   const { t } = useLingui()
+  const [extra, setExtra] = React.useState({ address: "", name: "" })
 
   return (
     <>
@@ -367,6 +369,63 @@ export function EmailFields({
             onChange={(event) => onChange({ from_name: event.target.value })}
           />
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>{t`Other addresses you send as`}</Label>
+        {form.senders.length > 0 && (
+          <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
+            {form.senders.map((sender, index) => (
+              <div key={index} className="flex items-center gap-2 px-3 py-2">
+                <span className="min-w-0 flex-1 truncate text-sm">
+                  {sender.name ? `${sender.name} <${sender.address}>` : sender.address}
+                </span>
+                <button
+                  type="button"
+                  aria-label={t`Remove`}
+                  className="text-xs text-muted-foreground hover:text-destructive"
+                  onClick={() =>
+                    onChange({
+                      senders: form.senders.filter((_, at) => at !== index),
+                    })
+                  }
+                >
+                  {t`Remove`}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex flex-wrap gap-2">
+          <Input
+            value={extra.address}
+            onChange={(event) =>
+              setExtra({ ...extra, address: event.target.value })
+            }
+            placeholder="bulten@example.com"
+            className="max-w-xs"
+          />
+          <Input
+            value={extra.name}
+            onChange={(event) => setExtra({ ...extra, name: event.target.value })}
+            placeholder={t`Name shown`}
+            className="max-w-40"
+          />
+          <button
+            type="button"
+            disabled={!extra.address.includes("@")}
+            className="rounded-md border border-border px-3 text-sm disabled:opacity-50"
+            onClick={() => {
+              onChange({ senders: [...form.senders, extra] })
+              setExtra({ address: "", name: "" })
+            }}
+          >
+            {t`Add`}
+          </button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {t`A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so.`}
+        </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

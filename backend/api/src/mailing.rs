@@ -383,6 +383,7 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
             campaign_id TEXT NOT NULL,
             status TEXT NOT NULL,
             requested_at TEXT NOT NULL,
+            not_before TEXT NULL,
             started_at TEXT NULL,
             finished_at TEXT NULL
         )",
@@ -391,6 +392,18 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
         db.execute_raw(Statement::from_string(db.get_database_backend(), statement))
             .await?;
     }
+
+    // For a queue made before scheduling existed. Adding a column that is
+    // already there is an error on every database and means nothing here, so
+    // the answer is ignored rather than guarded with a dialect-specific
+    // catalogue query.
+    let _ = db
+        .execute_raw(Statement::from_string(
+            db.get_database_backend(),
+            "ALTER TABLE mail_runs ADD COLUMN not_before TEXT NULL",
+        ))
+        .await;
+
     Ok(())
 }
 
@@ -400,6 +413,8 @@ pub async fn enqueue(
     db: &DatabaseConnection,
     tenant_id: uuid::Uuid,
     campaign_id: uuid::Uuid,
+    // When it may start. Absent means now.
+    not_before: Option<chrono::DateTime<chrono::FixedOffset>>,
 ) -> AppResult<()> {
     let backend = db.get_database_backend();
 
@@ -421,18 +436,20 @@ pub async fn enqueue(
     db.execute_raw(Statement::from_sql_and_values(
         backend,
         format!(
-            "INSERT INTO mail_runs (id, tenant_id, campaign_id, status, requested_at) \
-             VALUES ({}, {}, {}, '{RUN_QUEUED}', {})",
+            "INSERT INTO mail_runs (id, tenant_id, campaign_id, status, requested_at, not_before) \
+             VALUES ({}, {}, {}, '{RUN_QUEUED}', {}, {})",
             parameter(backend, 1),
             parameter(backend, 2),
             parameter(backend, 3),
-            parameter(backend, 4)
+            parameter(backend, 4),
+            parameter(backend, 5)
         ),
         [
             uuid::Uuid::now_v7().to_string().into(),
             tenant_id.to_string().into(),
             campaign_id.to_string().into(),
             chrono::Utc::now().to_rfc3339().into(),
+            not_before.map(|when| when.to_rfc3339()).into(),
         ],
     ))
     .await?;
@@ -454,19 +471,24 @@ pub async fn claim_run(
     db: &DatabaseConnection,
 ) -> AppResult<Option<(String, uuid::Uuid, uuid::Uuid)>> {
     let backend = db.get_database_backend();
+    let now = chrono::Utc::now().to_rfc3339();
     let stale = (chrono::Utc::now() - chrono::Duration::minutes(STALE_RUN_MINUTES)).to_rfc3339();
 
     let Some(row) = db
         .query_one_raw(Statement::from_sql_and_values(
             backend,
             format!(
+                // A scheduled run waits; anything else queued is due now.
+                // Comparing timestamps as text works because they are all
+                // RFC 3339 in UTC, which sorts the same either way.
                 "SELECT id, tenant_id, campaign_id FROM mail_runs \
-                 WHERE status = '{RUN_QUEUED}' \
+                 WHERE (status = '{RUN_QUEUED}' AND (not_before IS NULL OR not_before <= {})) \
                  OR (status = '{RUN_RUNNING}' AND started_at < {}) \
                  ORDER BY requested_at LIMIT 1",
-                parameter(backend, 1)
+                parameter(backend, 1),
+                parameter(backend, 2)
             ),
-            [stale.clone().into()],
+            [now.clone().into(), stale.clone().into()],
         ))
         .await?
     else {
@@ -630,6 +652,9 @@ pub struct Rendered {
     pub subject: String,
     pub html: String,
     pub text: String,
+    /// The same link the letter shows, so the header and the footer cannot
+    /// disagree about where leaving happens.
+    pub unsubscribe_url: String,
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -669,6 +694,7 @@ pub fn render_for(
         subject: fill(&campaign.subject, &to),
         text: as_text(&html),
         html: format!("{html}{pixel}"),
+        unsubscribe_url: to.unsubscribe_url,
     })
 }
 
@@ -723,6 +749,8 @@ pub async fn send_batch(
     api_base: &str,
     site_url: &str,
     campaign_id: uuid::Uuid,
+    // Messages a second the account is allowed. Zero for no pacing.
+    rate: f64,
 ) -> AppResult<u64> {
     let Some(found) = campaign::Entity::find_by_id(campaign_id).one(db).await? else {
         return Ok(0);
@@ -736,6 +764,21 @@ pub async fn send_batch(
         None => None,
     };
 
+    // Whichever of the site's addresses this campaign names, if it still
+    // exists; the default otherwise, so deleting a sender does not silently
+    // stop a campaign.
+    let from = (!found.from_address.trim().is_empty()).then(|| {
+        settings
+            .senders
+            .iter()
+            .find(|sender| sender.address == found.from_address)
+            .cloned()
+            .unwrap_or_else(|| crate::email::Sender {
+                address: found.from_address.clone(),
+                name: settings.from_name.clone(),
+            })
+    });
+
     let people = remaining(db, campaign_id, BATCH).await?;
     if people.is_empty() {
         let mut done: campaign::ActiveModel = found.into();
@@ -748,7 +791,18 @@ pub async fn send_batch(
     let mut sent = 0;
     let mut failed = 0;
 
+    // Amazon caps how fast an account may send and answers a burst with
+    // throttling errors, which land in the log looking like real failures.
+    // Spacing the batch out by the account's own rate keeps under it without
+    // anybody having to know the number.
+    let gap =
+        (rate > 0.0).then(|| std::time::Duration::from_secs_f64((1.0 / rate).clamp(0.0, 2.0)));
+
     for person in &people {
+        if let Some(gap) = gap {
+            tokio::time::sleep(gap).await;
+        }
+
         let message = render_for(
             secrets,
             api_base,
@@ -765,6 +819,11 @@ pub async fn send_batch(
                 subject: &message.subject,
                 text: &message.text,
                 html: Some(&message.html),
+                from: from.as_ref(),
+                // What a mail client's own unsubscribe button points at. A
+                // newsletter without this lands in spam whatever else is
+                // right about it.
+                unsubscribe_url: Some(&message.unsubscribe_url),
             },
         )
         .await;
@@ -833,6 +892,66 @@ pub async fn log_message(
     if let Err(err) = written {
         tracing::warn!(error = %err, "could not write the mail log");
     }
+}
+
+/// Marks a scheduled campaign as running, now that its turn has come.
+///
+/// Only from scheduled: a campaign somebody paused or cancelled while it sat
+/// in the queue stays that way, and the worker finds nothing to send.
+pub async fn begin(db: &DatabaseConnection, campaign_id: uuid::Uuid) -> AppResult<()> {
+    let Some(found) = campaign::Entity::find_by_id(campaign_id).one(db).await? else {
+        return Ok(());
+    };
+    if found.status != SCHEDULED {
+        return Ok(());
+    }
+
+    let mut changed: campaign::ActiveModel = found.into();
+    changed.status = Set(RUNNING.to_string());
+    changed.started_at = Set(Some(chrono::Utc::now().fixed_offset()));
+    changed.update(db).await?;
+    Ok(())
+}
+
+/// Blocks everybody Amazon has stopped writing to.
+///
+/// SES keeps its own suppression list and honours it whatever this program
+/// does — so an address that bounced was going to be refused anyway. The
+/// difference is where the refusal lands: without this, every campaign spends
+/// its quota rediscovering the same bad addresses and writing the same
+/// failures into the log, while the bounce rate this panel warns about keeps
+/// climbing.
+pub async fn block_the_suppressed(
+    db: &DatabaseConnection,
+    settings: &crate::email::EmailConfig,
+) -> AppResult<u64> {
+    let listed = crate::email::suppressed(settings).await?;
+    if listed.is_empty() {
+        return Ok(0);
+    }
+
+    let addresses: Vec<String> = listed
+        .into_iter()
+        .map(|entry| entry.address.to_lowercase())
+        .collect();
+
+    let mut blocked = 0;
+    for person in subscriber::Entity::find()
+        .filter(subscriber::Column::Email.is_in(addresses))
+        .filter(subscriber::Column::Status.eq(ENABLED))
+        .all(db)
+        .await?
+    {
+        let mut changed: subscriber::ActiveModel = person.into();
+        changed.status = Set(BLOCKED.to_string());
+        changed.update(db).await?;
+        blocked += 1;
+    }
+
+    if blocked > 0 {
+        tracing::info!(blocked, "blocked addresses Amazon had already stopped");
+    }
+    Ok(blocked)
 }
 
 #[cfg(test)]

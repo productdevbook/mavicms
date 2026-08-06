@@ -10,12 +10,14 @@ import {
   cancelCampaign,
   getCampaign,
   getMailLists,
+  getEmailSettings,
   getMailTemplates,
   pauseCampaign,
   saveCampaign,
   startCampaign,
   testCampaign,
   type Campaign,
+  type EmailSettings,
   type MailList,
   type MailTemplate,
 } from "@/lib/api"
@@ -39,6 +41,7 @@ function CampaignRoute() {
   const [campaign, setCampaign] = React.useState<Campaign | null>(null)
   const [lists, setLists] = React.useState<MailList[]>([])
   const [templates, setTemplates] = React.useState<MailTemplate[]>([])
+  const [settings, setSettings] = React.useState<EmailSettings | null>(null)
   const [busy, setBusy] = React.useState(false)
   const [testTo, setTestTo] = React.useState("")
 
@@ -52,6 +55,7 @@ function CampaignRoute() {
   React.useEffect(() => {
     getMailLists().then(setLists).catch(() => setLists([]))
     getMailTemplates().then(setTemplates).catch(() => setTemplates([]))
+    getEmailSettings().then(setSettings).catch(() => setSettings(null))
   }, [])
 
   // Only while something is happening; a finished campaign is not polled.
@@ -72,6 +76,7 @@ function CampaignRoute() {
           subject: campaign.subject,
           body: campaign.body,
           template_id: campaign.template_id,
+          from_address: campaign.from_address,
           lists: campaign.lists,
           send_at: campaign.send_at,
         },
@@ -178,7 +183,11 @@ function CampaignRoute() {
               disabled={busy || campaign.status === "finished"}
             >
               {busy ? <Loader2 className="animate-spin" /> : <Send />}
-              {campaign.status === "paused" ? t`Carry on` : t`Send it`}
+              {campaign.status === "paused"
+                ? t`Carry on`
+                : campaign.send_at
+                  ? t`Schedule it`
+                  : t`Send it`}
             </Button>
           )}
         </div>
@@ -238,6 +247,59 @@ function CampaignRoute() {
               </Label>
             ))
           )}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="c-from">{t`Sent as`}</Label>
+            <select
+              id="c-from"
+              disabled={!editable}
+              value={campaign.from_address}
+              onChange={(event) =>
+                setCampaign({ ...campaign, from_address: event.target.value })
+              }
+              className="h-9 rounded-md border border-border bg-transparent px-3 text-sm"
+            >
+              <option value="">
+                {settings?.from_address
+                  ? t`${settings.from_address} (the usual one)`
+                  : t`The usual one`}
+              </option>
+              {(settings?.senders ?? []).map((sender) => (
+                <option key={sender.address} value={sender.address}>
+                  {sender.name
+                    ? `${sender.name} <${sender.address}>`
+                    : sender.address}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="c-when">{t`When to send it`}</Label>
+            <Input
+              id="c-when"
+              type="datetime-local"
+              disabled={!editable}
+              value={
+                campaign.send_at
+                  ? new Date(campaign.send_at).toISOString().slice(0, 16)
+                  : ""
+              }
+              onChange={(event) =>
+                setCampaign({
+                  ...campaign,
+                  send_at: event.target.value
+                    ? new Date(event.target.value).toISOString()
+                    : null,
+                })
+              }
+            />
+            <p className="text-sm text-muted-foreground">
+              {t`Leave it empty to send when you press the button. With a time, pressing it queues the campaign for then.`}
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">
