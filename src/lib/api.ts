@@ -672,7 +672,10 @@ export interface Build {
 }
 
 export interface PublishStatus {
+  /** Null for a site whose agency keeps these settings — see managed_by. */
   config: BuildConfig | null
+  /** Whether publishing has somewhere to build from, config visible or not. */
+  configured: boolean
   builds: Build[]
   /** The agency that looks after how this site is built, if one does. */
   managed_by: string | null
@@ -733,6 +736,8 @@ export interface SiteUser {
   role: string
   /** False for the account an agency arrives on: no password, link only. */
   can_sign_in: boolean
+  /** The server's own account, not this site's: shown but not editable. */
+  managed: boolean
   created_at: string
 }
 
@@ -874,4 +879,99 @@ export function restoreSiteBackup(
     `/console/sites/${id}/plugins/backup/${encodeURIComponent(name)}/restore`,
     { method: "POST" }
   )
+}
+
+export type FormFieldKind =
+  | "text"
+  | "textarea"
+  | "email"
+  | "phone"
+  | "number"
+  | "checkbox"
+  | "select"
+  | "date"
+  | "url"
+
+export interface FormField {
+  name: string
+  label: string
+  type: FormFieldKind
+  required: boolean
+  options: string[]
+}
+
+export interface SiteForm {
+  id: string
+  name: string
+  /** The last part of the address other software posts to. */
+  slug: string
+  description: string
+  fields: FormField[]
+  active: boolean
+  submissions: number
+  unseen: number
+  created_at: string
+  updated_at: string
+}
+
+export interface FormSubmission {
+  id: string
+  form_id: string
+  data: Record<string, unknown>
+  seen: boolean
+  created_at: string
+}
+
+export interface SaveFormPayload {
+  name: string
+  slug?: string
+  description: string
+  fields: FormField[]
+  active: boolean
+}
+
+export function getForms(): Promise<SiteForm[]> {
+  return request<SiteForm[]>("/forms")
+}
+
+export function getForm(id: string): Promise<SiteForm> {
+  return request<SiteForm>(`/forms/${id}`)
+}
+
+export function createForm(payload: SaveFormPayload): Promise<SiteForm> {
+  return request<SiteForm>("/forms", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function updateForm(
+  id: string,
+  payload: SaveFormPayload
+): Promise<SiteForm> {
+  return request<SiteForm>(`/forms/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteForm(id: string): Promise<void> {
+  return request<void>(`/forms/${id}`, { method: "DELETE" })
+}
+
+export function getFormSubmissions(id: string): Promise<FormSubmission[]> {
+  return request<FormSubmission[]>(`/forms/${id}/submissions`)
+}
+
+export function markFormSeen(id: string): Promise<void> {
+  return request<void>(`/forms/${id}/seen`, { method: "POST" })
+}
+
+export function deleteFormSubmission(
+  formId: string,
+  submissionId: string
+): Promise<void> {
+  return request<void>(`/forms/${formId}/submissions/${submissionId}`, {
+    method: "DELETE",
+  })
 }

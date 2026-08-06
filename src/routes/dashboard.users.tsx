@@ -178,25 +178,34 @@ function UsersRoute() {
                   </p>
                   <p className="truncate text-xs text-muted-foreground">
                     {person.email}
-                    {!person.can_sign_in && ` · ${t`signs in from the console`}`}
+                    {person.managed
+                      ? ` · ${t`the agency's, not this site's`}`
+                      : !person.can_sign_in && ` · ${t`signs in from the console`}`}
                   </p>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setResetting(person)}
-                >
-                  <KeyRound /> {t`Set a password`}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label={t`Remove`}
-                  disabled={person.username === me.username}
-                  onClick={() => setRemoving(person)}
-                >
-                  <Trash2 />
-                </Button>
+                {/* An account the server keeps is shown so nobody wonders what
+                    it is, and left alone: removing the agency's would lock the
+                    people who look after this site out of it. */}
+                {!person.managed && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setResetting(person)}
+                    >
+                      <KeyRound /> {t`Set a password`}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label={t`Remove`}
+                      disabled={person.username === me.username}
+                      onClick={() => setRemoving(person)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </>
+                )}
               </div>
             ))}
           </div>

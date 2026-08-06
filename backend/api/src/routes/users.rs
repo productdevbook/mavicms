@@ -34,7 +34,21 @@ pub struct UserRow {
     /// False for the account an agency arrives on: it has no password, and the
     /// only way in is a fresh link from the console.
     pub can_sign_in: bool,
+    /// The server's own, not this site's: the account an agency signs in
+    /// through and the one a build reads with. Shown so nobody wonders what
+    /// they are, and left alone.
+    pub managed: bool,
     pub created_at: String,
+}
+
+/// Accounts this site did not make and may not unmake.
+///
+/// Removing the agency's would lock out whoever looks after the site from
+/// inside the site — and the agency, not the site, is who answers for it.
+/// Removing the build's would stop publishing until the next build made it
+/// again.
+fn managed(username: &str) -> bool {
+    username.starts_with("agency-") || username == "build"
 }
 
 #[derive(Debug, Deserialize, ToSchema)]
@@ -93,10 +107,11 @@ fn clean_email(email: &str) -> AppResult<String> {
 fn row(model: user::Model) -> UserRow {
     UserRow {
         id: model.id.to_string(),
+        managed: managed(&model.username),
+        can_sign_in: !model.password_hash.is_empty(),
         username: model.username,
         email: model.email,
         role: model.role,
-        can_sign_in: !model.password_hash.is_empty(),
         created_at: model.created_at.to_rfc3339(),
     }
 }
@@ -194,6 +209,12 @@ pub async fn update_user(
         .await?
         .ok_or_else(|| AppError::NotFound("user".to_string()))?;
 
+    if managed(&existing.username) {
+        return Err(AppError::Forbidden(
+            "this account belongs to the agency that looks after this site".to_string(),
+        ));
+    }
+
     let mut changed: user::ActiveModel = existing.clone().into();
 
     if let Some(email) = payload.email {
@@ -241,6 +262,16 @@ pub async fn delete_user(
     if who.id == id {
         return Err(AppError::Validation(
             "you cannot remove your own account".to_string(),
+        ));
+    }
+
+    let target = user::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound("user".to_string()))?;
+    if managed(&target.username) {
+        return Err(AppError::Forbidden(
+            "this account belongs to the agency that looks after this site".to_string(),
         ));
     }
 
