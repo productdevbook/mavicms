@@ -88,7 +88,7 @@ msgstr "{0} ve içindeki {1} yanıt birlikte gider. Kapatırsanız yanıtlar kal
 
 #. placeholder {0}: health.delivery_attempts
 #. placeholder {1}: health.rejects
-#: src/components/ses-health.tsx:198
+#: src/components/ses-health.tsx:201
 msgid "{0} attempted, {1} refused before sending."
 msgstr "{0} denendi, {1} gönderilmeden reddedildi."
 
@@ -213,7 +213,7 @@ msgstr "{2} yazıdan {0}–{1}"
 #. placeholder {0}: day.day
 #. placeholder {1}: day.delivery_attempts
 #. placeholder {2}: day.bounces
-#: src/components/ses-health.tsx:220
+#: src/components/ses-health.tsx:223
 msgid "{0}: {1} sent, {2} did not arrive"
 msgstr "{0}: {1} gönderildi, {2} ulaşmadı"
 
@@ -222,7 +222,7 @@ msgstr "{0}: {1} gönderildi, {2} ulaşmadı"
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. Sitelerinizi açan ve yöneten hesap budur."
 
-#: src/components/ses-health.tsx:82
+#: src/components/ses-health.tsx:83
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} tanesi · Amazon %{reviewAt} oranında inceler, %{pauseAt} oranında durdurur"
 
@@ -514,6 +514,10 @@ msgstr "Amazon SES"
 msgid "Amazon's own pages"
 msgstr "Amazon'un kendi sayfaları"
 
+#: src/components/ses-analytics.tsx:155
+msgid "An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out."
+msgstr "Kalıcı olarak ulaşılamayan ya da postayı spam bildiren bir adres, Amazon söyler söylemez burada da engellenir — bir sonraki kampanyanın bunu keşfetmesi beklenmez."
+
 #: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
 msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
@@ -558,7 +562,11 @@ msgstr "Uygula"
 msgid "Archives"
 msgstr "Arşivler"
 
-#: src/components/ses-health.tsx:317
+#: src/components/ses-analytics.tsx:131
+msgid "arrived"
+msgstr "ulaştı"
+
+#: src/components/ses-health.tsx:320
 msgid "Ask for it"
 msgstr "Başvur"
 
@@ -582,7 +590,7 @@ msgstr "Neyi değiştiriyorsanız değiştirin, sorulur — bir yerde açık kal
 msgid "Asked SES to verify it"
 msgstr "SES'ten doğrulaması istendi"
 
-#: src/components/ses-health.tsx:141
+#: src/components/ses-health.tsx:142
 msgid "Asked. Amazon usually answers within a day or two."
 msgstr "Başvuruldu. Amazon genellikle bir iki gün içinde yanıtlar."
 
@@ -590,7 +598,7 @@ msgstr "Başvuruldu. Amazon genellikle bir iki gün içinde yanıtlar."
 msgid "Asked. Amazon usually answers within a day."
 msgstr "İstendi. Amazon genellikle bir gün içinde yanıtlar."
 
-#: src/components/ses-health.tsx:247
+#: src/components/ses-health.tsx:250
 msgid "Asking for a bigger quota"
 msgstr "Daha yüksek kota istemek"
 
@@ -790,7 +798,7 @@ msgstr "Dosya seç"
 msgid "Choose a list first"
 msgstr "Önce bir liste seçin"
 
-#: src/components/ses-health.tsx:205
+#: src/components/ses-health.tsx:208
 msgid "Clean the list before sending again: take off the addresses that bounced, and stop writing to anybody who has not opened anything in a year."
 msgstr "Yeniden göndermeden önce listeyi temizleyin: geri dönen adresleri çıkarın ve bir yıldır hiçbir şey açmamış kimseye yazmayı bırakın."
 
@@ -798,6 +806,10 @@ msgstr "Yeniden göndermeden önce listeyi temizleyin: geri dönen adresleri ç�
 #: src/components/editor/toolbar.tsx:452
 msgid "Clear formatting"
 msgstr "Biçimi temizle"
+
+#: src/components/ses-analytics.tsx:141
+msgid "clicked"
+msgstr "tıkladı"
 
 #: src/components/editor/find-replace.tsx:75
 msgid "Close"
@@ -941,15 +953,17 @@ msgid "Could not add them"
 msgstr "Eklenemedi"
 
 #: src/components/ses-account.tsx:122
-#: src/components/ses-health.tsx:144
+#: src/components/ses-health.tsx:145
 msgid "Could not ask"
 msgstr "İstek gönderilemedi"
 
 #: src/components/ses-account.tsx:100
 #: src/components/ses-account.tsx:165
-#: src/components/ses-health.tsx:114
-#: src/components/ses-health.tsx:130
-#: src/components/ses-health.tsx:170
+#: src/components/ses-analytics.tsx:69
+#: src/components/ses-analytics.tsx:116
+#: src/components/ses-health.tsx:115
+#: src/components/ses-health.tsx:131
+#: src/components/ses-health.tsx:173
 msgid "Could not ask Amazon"
 msgstr "Amazon'a sorulamadı"
 
@@ -1160,6 +1174,10 @@ msgstr "Gönderilemedi"
 msgid "Could not set it"
 msgstr "Ayarlanamadı"
 
+#: src/components/ses-analytics.tsx:87
+msgid "Could not set it up"
+msgstr "Kurulamadı"
+
 #: src/routes/console.sites.$siteId.tsx:184
 #: src/routes/dashboard.publish.tsx:97
 msgid "Could not start the build"
@@ -1345,7 +1363,7 @@ msgstr "Arama sonuçlarında görünecek açıklama metni."
 #~ msgstr "Tasarım"
 
 #: src/components/ses-account.tsx:437
-#: src/components/ses-health.tsx:180
+#: src/components/ses-health.tsx:183
 msgid "Did not arrive"
 msgstr "Ulaşmadı"
 
@@ -1493,6 +1511,10 @@ msgstr "Özet"
 msgid "Export"
 msgstr "Dışa aktar"
 
+#: src/components/ses-analytics.tsx:149
+msgid "failed for now"
+msgstr "şimdilik ulaşmadı"
+
 #: src/components/editor/post-settings.tsx:345
 msgid "Featured"
 msgstr "Öne çıkar"
@@ -1598,6 +1620,10 @@ msgstr "Git"
 msgid "Going out"
 msgstr "Gönderiliyor"
 
+#: src/components/ses-analytics.tsx:148
+msgid "gone for good"
+msgstr "kalıcı olarak ulaşılmadı"
+
 #: src/components/editor/post-settings.tsx:42
 #~ msgid "Guide"
 #~ msgstr "Rehber"
@@ -1687,7 +1713,7 @@ msgstr "Kaç tanesi saklansın"
 msgid "How often"
 msgstr "Ne sıklıkla"
 
-#: src/components/ses-health.tsx:162
+#: src/components/ses-health.tsx:165
 msgid "How the sending is going"
 msgstr "Gönderim nasıl gidiyor"
 
@@ -1883,7 +1909,7 @@ msgstr "Düğmeye bastığınızda gitmesi için boş bırakın. Bir zaman girer
 msgid "Leaving the sandbox"
 msgstr "Kum havuzundan çıkmak"
 
-#: src/components/ses-health.tsx:249
+#: src/components/ses-health.tsx:252
 msgid "Leaving the sandbox is the first increase. This is the one after it — Amazon treats it as a support request, and this opens one in the same words its console would."
 msgstr "Kum havuzundan çıkmak ilk artıştır. Bu ondan sonraki — Amazon bunu bir destek talebi sayar ve buradan, konsolunun kullanacağı ifadelerle bir talep açılır."
 
@@ -2043,11 +2069,11 @@ msgstr "Hücreleri birleştir"
 msgid "messages a day"
 msgstr "günde mesaj"
 
-#: src/components/ses-health.tsx:256
+#: src/components/ses-health.tsx:259
 msgid "Messages a day"
 msgstr "Günde mesaj"
 
-#: src/components/ses-health.tsx:268
+#: src/components/ses-health.tsx:271
 msgid "Messages a second"
 msgstr "Saniyede mesaj"
 
@@ -2243,7 +2269,7 @@ msgstr "Henüz ayarlanmadı"
 msgid "Note"
 msgstr "Not"
 
-#: src/components/ses-health.tsx:332
+#: src/components/ses-health.tsx:335
 msgid "Nothing asked for yet"
 msgstr "Henüz bir başvuru yok"
 
@@ -2255,7 +2281,11 @@ msgstr "Henüz bir şey gelmedi"
 msgid "Nothing published yet"
 msgstr "Henüz bir şey yayınlanmadı"
 
-#: src/components/ses-health.tsx:174
+#: src/components/ses-analytics.tsx:124
+msgid "Nothing sent in the last thirty days"
+msgstr "Son otuz günde bir şey gönderilmemiş"
+
+#: src/components/ses-health.tsx:177
 msgid "Nothing sent in the last two weeks"
 msgstr "Son iki haftada hiçbir şey gönderilmemiş"
 
@@ -2366,6 +2396,10 @@ msgstr "Yeni sekmede aç"
 #: src/routes/dashboard.api.tsx:237
 msgid "OpenAPI document"
 msgstr "OpenAPI belgesi"
+
+#: src/components/ses-analytics.tsx:136
+msgid "opened"
+msgstr "açtı"
 
 #: src/components/plugin-forms.tsx:439
 #: src/components/plugin-forms.tsx:450
@@ -2714,7 +2748,11 @@ msgstr "Değiştir…"
 msgid "Reply-to"
 msgstr "Yanıt adresi"
 
-#: src/components/ses-health.tsx:188
+#: src/components/ses-analytics.tsx:150
+msgid "reported as spam"
+msgstr "spam bildirildi"
+
+#: src/components/ses-health.tsx:191
 msgid "Reported as spam"
 msgstr "Spam bildirilen"
 
@@ -2929,6 +2967,10 @@ msgstr "Gönderim durduruldu"
 #: src/components/ses-account.tsx:504
 msgid "Sends bounces back to you"
 msgstr "İadeleri size geri gönderir"
+
+#: src/components/ses-analytics.tsx:129
+msgid "sent"
+msgstr "gönderildi"
 
 #: src/routes/dashboard.mail.tsx:79
 #: src/routes/dashboard.mail.tsx:164
@@ -3305,7 +3347,11 @@ msgstr "İçeriğinizin yazılabileceği diller. Bu, yönetim panelinin dilinden
 msgid "The last backup failed: {0}"
 msgstr "Son yedekleme başarısız oldu: {0}"
 
-#: src/components/ses-health.tsx:164
+#: src/components/ses-analytics.tsx:100
+msgid "The last thirty days, from SES itself. Delivered, bounced and reported are things only Amazon knows — a pixel in the letter cannot tell you any of them."
+msgstr "Son otuz gün, doğrudan SES'ten. Ulaştı, geri döndü ve bildirildi — bunları yalnızca Amazon bilir; mektuptaki bir piksel hiçbirini söyleyemez."
+
+#: src/components/ses-health.tsx:167
 msgid "The last two weeks, which is as far back as Amazon keeps it. These two numbers are what an account gets suspended over."
 msgstr "Son iki hafta — Amazon bundan gerisini tutmuyor. Bir hesabın askıya alınmasına sebep olan iki sayı bunlar."
 
@@ -3363,6 +3409,10 @@ msgstr "Tema"
 #: src/routes/dashboard.api.tsx:188
 msgid "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
 msgstr "Bunlar herkese cevap verir; iletişim formunu dolduran ziyaretçinin burada hesabı yok. Form bu panelde oluşturulduğu için sabit bir API tanımı hangi alanları aldığını yazamaz — önce sorun, sonra gönderin. Yazdığınız yazılım ya da sizin için çalışan bir yapay zekâ, bir formun ne istediğini böyle öğrenir."
+
+#: src/components/ses-analytics.tsx:119
+msgid "These figures come from Amazon's deliverability manager, which has to be switched on for the account. \"Wire up the events\" does that, along with everything else that has to exist before an event can reach this site."
+msgstr "Bu rakamlar Amazon'un teslimat yöneticisinden gelir; hesap için açılmış olması gerekir. \"Olayları bağla\" bunu yapar, bir olayın bu siteye ulaşabilmesi için var olması gereken diğer her şeyle birlikte."
 
 #: src/routes/dashboard.users.tsx:257
 msgid "They can write, publish and manage this site."
@@ -3542,7 +3592,7 @@ msgid "Weak"
 msgstr "Zayıf"
 
 #: src/components/ses-account.tsx:296
-#: src/components/ses-health.tsx:282
+#: src/components/ses-health.tsx:285
 msgid "Website"
 msgstr "Web sitesi"
 
@@ -3553,6 +3603,10 @@ msgstr "Amazon'un izin verdiği"
 #: src/components/ses-setup.tsx:205
 msgid "What Amazon does about bounces and complaints"
 msgstr "Amazon'un iade ve şikâyetlere ne yaptığı"
+
+#: src/components/ses-analytics.tsx:98
+msgid "What Amazon saw"
+msgstr "Amazon'un gördüğü"
 
 #: src/routes/dashboard.forms.tsx:231
 msgid "What comes in is kept as it was sent, so changing the fields later never rewrites it."
@@ -3582,7 +3636,7 @@ msgstr "Bu form ne için — bunu yalnızca siz görürsünüz"
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "Bu sitenin postayı neyle gönderdiği. Bir form haber verilecek bir adres belirtebilir; oraya bu yoldan ulaşır."
 
-#: src/components/ses-health.tsx:324
+#: src/components/ses-health.tsx:327
 msgid "What you have asked for"
 msgstr "Başvurularınız"
 
@@ -3633,7 +3687,7 @@ msgstr "Kimlere gidecek"
 msgid "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 msgstr "Kimin aldığı, listeye nasıl girdiği ve nasıl çıkabildiği. Bunu Amazon'da bir insan okuyor."
 
-#: src/components/ses-health.tsx:302
+#: src/components/ses-health.tsx:305
 msgid "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 msgstr "Postayı kimin aldığı, listeye nasıl girdiği, nasıl çıkabildiği ve geri dönenlere ne yaptığınız. Bunu Amazon'da bir insan okuyup karar veriyor."
 
@@ -3649,13 +3703,22 @@ msgstr "Kime yazdığınız ve ne gönderdiğiniz. Gönderim Amazon SES eklentis
 msgid "Whole word"
 msgstr "Tam kelime"
 
-#: src/components/ses-health.tsx:294
+#: src/components/ses-health.tsx:297
 msgid "Why you need it"
 msgstr "Neden gerekiyor"
 
 #: src/components/ses-account.tsx:308
 msgid "Why you send"
 msgstr "Neden gönderiyorsunuz"
+
+#: src/components/ses-analytics.tsx:105
+msgid "Wire up the events"
+msgstr "Olayları bağla"
+
+#. placeholder {0}: built.configuration_set
+#: src/components/ses-analytics.tsx:82
+msgid "Wired up. Events go to {0} and arrive here."
+msgstr "Bağlandı. Olaylar {0} üzerinden buraya geliyor."
 
 #: src/routes/dashboard.api.tsx:185
 msgid "Without an account"

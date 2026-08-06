@@ -1415,3 +1415,48 @@ pub async fn create_site_email_configuration_set(
     crate::routes::plugins::create_configuration_set_of(&state, &payload.name).await?;
     Ok(StatusCode::NO_CONTENT)
 }
+
+/// Build one of this agency's sites' event pipeline.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/events/setup",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "What was built", body = crate::routes::plugins::PipelineResponse))
+)]
+pub async fn setup_site_email_events(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::routes::plugins::PipelineResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let tenant = owned_site(&hosting, &operator, id).await?;
+    let state = hosting.registry()?.state_for(&tenant).await?;
+
+    Ok(Json(
+        crate::routes::plugins::setup_events_of(&state, &tenant.host).await?,
+    ))
+}
+
+/// Amazon's own figures for one of this agency's sites.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email/deliverability",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Deliverability", body = crate::email::Deliverability))
+)]
+pub async fn get_site_email_deliverability(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::email::Deliverability>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::deliverability_of(&state, 30).await?,
+    ))
+}

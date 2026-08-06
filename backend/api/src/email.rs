@@ -46,6 +46,13 @@ pub struct EmailConfig {
     /// be enough — and every one of them still has to be verified in SES.
     #[serde(default)]
     pub senders: Vec<Sender>,
+    /// The unguessable part of the address Amazon posts events to. Made once,
+    /// when the pipeline is built.
+    #[serde(default)]
+    pub events_token: String,
+    /// The topic those events come from, so one that did not is refused.
+    #[serde(default)]
+    pub events_topic_arn: String,
     pub reply_to: String,
     /// An SES configuration set, if the account uses them for tracking or
     /// dedicated IPs. Left empty, SES uses the account default.
@@ -66,6 +73,10 @@ pub struct EmailSettingsResponse {
     pub has_secret_access_key: bool,
     /// Every address this site may send as, the default first.
     pub senders: Vec<Sender>,
+    /// The unguessable part of the address Amazon posts events to. Shown so
+    /// somebody who would rather wire the topic up themselves can, and so
+    /// that when nothing arrives there is an address to check.
+    pub events_token: String,
 }
 
 #[derive(Debug, Deserialize, ToSchema)]
@@ -116,6 +127,11 @@ pub struct Message<'a> {
     /// February 2024; without it a newsletter lands in spam however clean the
     /// list is.
     pub unsubscribe_url: Option<&'a str>,
+    /// Name and value pairs that come back on every event Amazon sends about
+    /// this message. This is how a bounce arriving twenty minutes later is
+    /// known to belong to one campaign and one subscriber, without keeping a
+    /// table of message ids to look them up in.
+    pub tags: &'a [(String, String)],
 }
 
 /// An address as SES wants it: `Name <someone@example.com>`, or the bare
@@ -275,6 +291,19 @@ pub async fn send(config: &EmailConfig, message: Message<'_>) -> AppResult<()> {
         request = request.configuration_set_name(config.configuration_set.trim());
     }
 
+    for (name, value) in message.tags {
+        // Amazon takes letters, numbers, dash and underscore and refuses the
+        // whole send over anything else, so a uuid is fine and a subject line
+        // would not be.
+        if let Ok(tag) = aws_sdk_sesv2::types::MessageTag::builder()
+            .name(name)
+            .value(value)
+            .build()
+        {
+            request = request.email_tags(tag);
+        }
+    }
+
     // Somebody is waiting on a page while this happens, so it is not allowed
     // to take as long as the SDK would wait by default.
     let sent = tokio::time::timeout(TIMEOUT, request.send())
@@ -317,6 +346,7 @@ mod tests {
             html: Some("<p>rich</p>"),
             from: None,
             unsubscribe_url: None,
+            tags: &[],
         })
         .unwrap();
 
@@ -334,6 +364,7 @@ mod tests {
             html: None,
             from: None,
             unsubscribe_url: Some("https://example.com/u/abc"),
+            tags: &[],
         })
         .unwrap();
 
@@ -365,6 +396,7 @@ mod tests {
             html: None,
             from: None,
             unsubscribe_url: None,
+            tags: &[],
         })
         .unwrap();
 
@@ -380,6 +412,7 @@ mod tests {
             html: None,
             from: None,
             unsubscribe_url: None,
+            tags: &[],
         })
         .unwrap();
 
@@ -1325,4 +1358,315 @@ pub async fn support_cases(config: &EmailConfig) -> AppResult<Vec<SupportCase>> 
                 .collect(),
         })
         .collect())
+}
+
+// ---------------------------------------------------------------------------
+// The event pipeline: a configuration set, a topic, and everything Amazon
+// knows coming back to this site.
+// ---------------------------------------------------------------------------
+
+/// What one press of "set up analytics" produced.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct EventPipeline {
+    pub configuration_set: String,
+    pub topic_arn: String,
+    /// Where SNS was told to post. Kept so the panel can show what to check
+    /// when nothing arrives.
+    pub endpoint: String,
+    /// Whether SNS has confirmed the subscription. It confirms itself by
+    /// posting to the endpoint, so this is usually true within seconds.
+    pub confirmed: bool,
+}
+
+fn sns_client(config: &EmailConfig) -> aws_sdk_sns::Client {
+    let credentials = aws_sdk_sns::config::Credentials::new(
+        config.access_key_id.trim(),
+        config.secret_access_key.trim(),
+        None,
+        None,
+        "mavicms-site-settings",
+    );
+
+    aws_sdk_sns::Client::from_conf(
+        aws_sdk_sns::Config::builder()
+            .behavior_version(aws_sdk_sns::config::BehaviorVersion::latest())
+            .region(aws_sdk_sns::config::Region::new(
+                config.region.trim().to_string(),
+            ))
+            .credentials_provider(credentials)
+            .build(),
+    )
+}
+
+/// Every event worth hearing about.
+///
+/// Not RENDERING_FAILURE or SUBSCRIPTION: the first only happens with
+/// Amazon's own templates, which this does not use, and the second is about
+/// Amazon's subscription management rather than this site's.
+fn wanted_events() -> Vec<aws_sdk_sesv2::types::EventType> {
+    use aws_sdk_sesv2::types::EventType;
+
+    vec![
+        EventType::Send,
+        EventType::Delivery,
+        EventType::Bounce,
+        EventType::Complaint,
+        EventType::Reject,
+        EventType::Open,
+        EventType::Click,
+        EventType::DeliveryDelay,
+    ]
+}
+
+/// Builds the whole path an event travels, in one call.
+///
+/// A configuration set so sends can be grouped and measured; Virtual
+/// Deliverability Manager on it, which is where Amazon's own analytics come
+/// from now; an SNS topic; a subscription pointing back at this site; and an
+/// event destination joining them. Every one of these is a screen in the AWS
+/// console, and doing them in the wrong order leaves a configuration set that
+/// silently measures nothing.
+///
+/// Safe to run twice: everything here is created only if it is missing.
+pub async fn build_event_pipeline(
+    config: &EmailConfig,
+    set_name: &str,
+    endpoint: &str,
+) -> AppResult<EventPipeline> {
+    use aws_sdk_sesv2::types::{
+        DashboardOptions, EventDestinationDefinition, FeatureStatus, GuardianOptions,
+        SnsDestination, VdmOptions,
+    };
+
+    account_settings(config)?;
+    let set_name = set_name.trim();
+    if set_name.is_empty() {
+        return Err(AppError::Validation(
+            "the configuration set needs a name".to_string(),
+        ));
+    }
+
+    let ses = client_for(config);
+
+    // 1. The configuration set. Already there is not an error — this is
+    //    expected to be run again after somebody changes the address.
+    let _ = ses
+        .create_configuration_set()
+        .configuration_set_name(set_name)
+        .send()
+        .await;
+
+    // 2. Amazon's own deliverability analytics, on that set.
+    let _ = ses
+        .put_configuration_set_vdm_options()
+        .configuration_set_name(set_name)
+        .vdm_options(
+            VdmOptions::builder()
+                .dashboard_options(
+                    DashboardOptions::builder()
+                        .engagement_metrics(FeatureStatus::Enabled)
+                        .build(),
+                )
+                .guardian_options(
+                    GuardianOptions::builder()
+                        .optimized_shared_delivery(FeatureStatus::Enabled)
+                        .build(),
+                )
+                .build(),
+        )
+        .send()
+        .await;
+
+    // 3. A topic for the events to be published to.
+    let topic = tokio::time::timeout(
+        TIMEOUT,
+        sns_client(config)
+            .create_topic()
+            .name(format!("{set_name}-events"))
+            .send(),
+    )
+    .await
+    .map_err(|_| AppError::Validation("SNS did not answer in time".to_string()))?
+    .map_err(|err| {
+        use aws_sdk_sns::error::ProvideErrorMetadata as _;
+        AppError::Validation(format!(
+            "SNS would not make the topic: {}",
+            err.message().unwrap_or("no reason given")
+        ))
+    })?;
+
+    let topic_arn = topic.topic_arn().unwrap_or_default().to_string();
+
+    // 4. Point it back here. SNS confirms by posting to the address, which
+    //    the endpoint answers by itself.
+    let subscription = tokio::time::timeout(
+        TIMEOUT,
+        sns_client(config)
+            .subscribe()
+            .topic_arn(&topic_arn)
+            .protocol("https")
+            .endpoint(endpoint)
+            .return_subscription_arn(true)
+            .send(),
+    )
+    .await
+    .map_err(|_| AppError::Validation("SNS did not answer in time".to_string()))?
+    .map_err(|err| {
+        use aws_sdk_sns::error::ProvideErrorMetadata as _;
+        AppError::Validation(format!(
+            "SNS would not subscribe this site: {}",
+            err.message().unwrap_or("no reason given")
+        ))
+    })?;
+
+    let subscription_arn = subscription
+        .subscription_arn()
+        .unwrap_or_default()
+        .to_string();
+
+    // 5. And join the two. Updating rather than creating when it is already
+    //    there, so changing the address does not need the set deleting.
+    let destination = EventDestinationDefinition::builder()
+        .enabled(true)
+        .set_matching_event_types(Some(wanted_events()))
+        .sns_destination(
+            SnsDestination::builder()
+                .topic_arn(&topic_arn)
+                .build()
+                .map_err(|err| {
+                    AppError::Internal(format!("could not describe the topic: {err}"))
+                })?,
+        )
+        .build();
+
+    let made = ses
+        .create_configuration_set_event_destination()
+        .configuration_set_name(set_name)
+        .event_destination_name("mavicms")
+        .event_destination(destination.clone())
+        .send()
+        .await;
+
+    if made.is_err() {
+        tokio::time::timeout(
+            TIMEOUT,
+            ses.update_configuration_set_event_destination()
+                .configuration_set_name(set_name)
+                .event_destination_name("mavicms")
+                .event_destination(destination)
+                .send(),
+        )
+        .await
+        .map_err(|_| AppError::Validation("SES did not answer in time".to_string()))?
+        .map_err(|err| refused("connect the events", err))?;
+    }
+
+    Ok(EventPipeline {
+        configuration_set: set_name.to_string(),
+        topic_arn,
+        endpoint: endpoint.to_string(),
+        // "pending confirmation" until SNS has posted to us and been answered.
+        confirmed: !subscription_arn.contains("pending"),
+    })
+}
+
+/// Amazon's own view of how mail is doing, from Virtual Deliverability
+/// Manager — which is where SES keeps this now.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct Deliverability {
+    pub sent: i64,
+    pub delivered: i64,
+    pub opened: i64,
+    pub clicked: i64,
+    pub permanent_bounces: i64,
+    pub transient_bounces: i64,
+    pub complaints: i64,
+    /// Of what was sent. Percentages, because that is how they are read.
+    pub delivery_rate: f64,
+    pub open_rate: f64,
+    pub click_rate: f64,
+}
+
+/// The last `days` of it.
+///
+/// VDM has to be switched on for an account before it answers, which is what
+/// `build_event_pipeline` does. Until then this is a refusal with a sentence
+/// saying so rather than a silent zero.
+pub async fn deliverability(config: &EmailConfig, days: i64) -> AppResult<Deliverability> {
+    use aws_sdk_sesv2::types::{
+        BatchGetMetricDataQuery, Metric, MetricDimensionName, MetricNamespace,
+    };
+
+    account_settings(config)?;
+
+    let now = chrono::Utc::now();
+    let from = now - chrono::Duration::days(days.clamp(1, 60));
+    let as_smithy = |when: chrono::DateTime<chrono::Utc>| {
+        aws_smithy_types::DateTime::from_secs(when.timestamp())
+    };
+
+    let wanted = [
+        ("SEND", Metric::Send),
+        ("DELIVERY", Metric::Delivery),
+        ("OPEN", Metric::Open),
+        ("CLICK", Metric::Click),
+        ("PERMANENT_BOUNCE", Metric::PermanentBounce),
+        ("TRANSIENT_BOUNCE", Metric::TransientBounce),
+        ("COMPLAINT", Metric::Complaint),
+    ];
+
+    let mut call = client_for(config).batch_get_metric_data();
+    for (id, metric) in &wanted {
+        let query = BatchGetMetricDataQuery::builder()
+            .id(id.to_lowercase())
+            .namespace(MetricNamespace::Vdm)
+            .metric(metric.clone())
+            .start_date(as_smithy(from))
+            .end_date(as_smithy(now))
+            // Everything the account sent, not one identity's worth.
+            .dimensions(MetricDimensionName::EmailIdentity, "*")
+            .build()
+            .map_err(|err| AppError::Internal(format!("could not ask for {id}: {err}")))?;
+        call = call.queries(query);
+    }
+
+    let answered = tokio::time::timeout(TIMEOUT, call.send())
+        .await
+        .map_err(|_| AppError::Validation("SES did not answer in time".to_string()))?
+        .map_err(|err| refused("give the deliverability figures", err))?;
+
+    let total = |id: &str| -> i64 {
+        answered
+            .results()
+            .iter()
+            .find(|result| result.id() == Some(id))
+            .map(|result| result.values().iter().sum::<i64>())
+            .unwrap_or(0)
+    };
+
+    let sent = total("send");
+    let delivered = total("delivery");
+    let opened = total("open");
+    let clicked = total("click");
+
+    let of_sent = |count: i64| {
+        if sent == 0 {
+            0.0
+        } else {
+            (count as f64 / sent as f64) * 100.0
+        }
+    };
+
+    Ok(Deliverability {
+        sent,
+        delivered,
+        opened,
+        clicked,
+        permanent_bounces: total("permanent_bounce"),
+        transient_bounces: total("transient_bounce"),
+        complaints: total("complaint"),
+        delivery_rate: of_sent(delivered),
+        open_rate: of_sent(opened),
+        click_rate: of_sent(clicked),
+    })
 }

@@ -6,7 +6,10 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // .claude holds tooling state, including git worktrees, whose files are
+  // copies of this project under a path tsconfig does not cover — linting
+  // them fails on every file for a reason that has nothing to do with them.
+  globalIgnores(['dist', '.claude']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
