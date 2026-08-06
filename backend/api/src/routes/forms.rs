@@ -54,6 +54,7 @@ fn row(model: form::Model, submissions: u64, unseen: u64) -> AppResult<FormRespo
         slug: model.slug,
         description: model.description,
         active: model.active,
+        notify: model.notify,
         submissions,
         unseen,
         created_at: model.created_at.to_rfc3339(),
@@ -172,6 +173,7 @@ pub async fn create_form(
         fields: Set(serde_json::to_string(&fields)
             .map_err(|err| AppError::Internal(format!("could not store the fields: {err}")))?),
         active: Set(payload.active),
+        notify: Set(notify_address(&payload.notify)?),
         created_at: Set(now),
         updated_at: Set(now),
     }
@@ -190,6 +192,22 @@ async fn counts(db: &sea_orm::DatabaseConnection, id: Uuid) -> AppResult<(u64, u
             .count(db)
             .await?,
     ))
+}
+
+/// The address a form tells, checked before it is stored rather than when
+/// something finally comes in — a typo found at save time is a typo; one
+/// found on the first submission is a lost enquiry.
+fn notify_address(given: &str) -> AppResult<String> {
+    let given = given.trim();
+    if given.is_empty() {
+        return Ok(String::new());
+    }
+    if !crate::email::looks_like_an_address(given) {
+        return Err(AppError::Validation(format!(
+            "\"{given}\" is not an email address"
+        )));
+    }
+    Ok(given.to_string())
 }
 
 async fn find_form(db: &sea_orm::DatabaseConnection, id: Uuid) -> AppResult<form::Model> {
@@ -270,6 +288,7 @@ pub async fn update_form(
     changed.fields = Set(serde_json::to_string(&fields)
         .map_err(|err| AppError::Internal(format!("could not store the fields: {err}")))?);
     changed.active = Set(payload.active);
+    changed.notify = Set(notify_address(&payload.notify)?);
     changed.updated_at = Set(Utc::now().fixed_offset());
     let saved = changed.update(db).await?;
     let (submissions, unseen) = counts(db, id).await?;
@@ -509,5 +528,73 @@ pub async fn submit_form(
     .insert(db)
     .await?;
 
+    notify(&state, &form, &data).await;
+
     Ok(StatusCode::CREATED)
+}
+
+/// Tells whoever the form names that something came in.
+///
+/// After the row is written and never in front of it: a visitor filling in a
+/// contact form is owed their answer being kept, and mail that Amazon is slow
+/// about, or refuses, is not their problem. Every failure here is logged and
+/// swallowed for the same reason.
+async fn notify(state: &crate::state::AppState, form: &form::Model, data: &serde_json::Value) {
+    if form.notify.trim().is_empty() {
+        return;
+    }
+    let Ok(db) = state.db_or_unavailable() else {
+        return;
+    };
+
+    let settings = crate::plugins::load::<crate::email::EmailConfig>(
+        db,
+        &state.secrets,
+        crate::plugins::EMAIL_PLUGIN,
+    )
+    .await;
+
+    let Ok(Some(settings)) = settings else {
+        tracing::warn!(form = %form.slug, "a form names an address but mail is not set up");
+        return;
+    };
+    if !settings.enabled {
+        return;
+    }
+
+    let subject = format!("{}: a new submission", form.name);
+    let body = readable(form, data);
+
+    if let Err(err) = crate::email::send(
+        &settings.config,
+        crate::email::Message {
+            to: &form.notify,
+            subject: &subject,
+            text: &body,
+            html: None,
+        },
+    )
+    .await
+    {
+        tracing::warn!(form = %form.slug, error = %err, "could not send the notification");
+    }
+}
+
+/// The submission as a person reads it: the label somebody gave the field,
+/// then what was answered. The stored JSON is the record; this is the letter.
+fn readable(form: &form::Model, data: &serde_json::Value) -> String {
+    let fields = fields_of(form).unwrap_or_default();
+    let mut out = format!("{}\n\n", form.name);
+
+    for field in &fields {
+        let value = match data.get(&field.name) {
+            None | Some(serde_json::Value::Null) => "—".to_string(),
+            Some(serde_json::Value::String(text)) => text.clone(),
+            Some(serde_json::Value::Bool(flag)) => if *flag { "yes" } else { "no" }.to_string(),
+            Some(other) => other.to_string(),
+        };
+        out.push_str(&format!("{}: {}\n", field.label, value));
+    }
+
+    out
 }

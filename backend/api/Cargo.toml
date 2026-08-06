@@ -46,6 +46,10 @@ tar = "0.4"
 flate2 = "1"
 slug = "0.1"
 html-escape = "0.2"
+# Amazon's own SDK rather than a signed request written here: SigV4 is
+# fiddly, and Amazon maintaining it is worth the compile. Apache-2.0, which
+# this project's MIT licence can carry.
+aws-sdk-sesv2 = { version = "1", default-features = false, features = ["rt-tokio", "rustls", "behavior-version-latest"] }
 hmac = "0.12"
 sha2 = "0.10"
 hex = "0.4"

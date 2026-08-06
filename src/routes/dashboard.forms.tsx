@@ -52,6 +52,7 @@ interface Draft {
   description: string
   fields: FormField[]
   active: boolean
+  notify: string
 }
 
 function blank(label: string): Draft {
@@ -62,6 +63,7 @@ function blank(label: string): Draft {
     description: "",
     fields: [{ ...emptyField(), name: "name", label, required: true }],
     active: true,
+    notify: "",
   }
 }
 
@@ -96,6 +98,7 @@ function FormsRoute() {
         description: draft.description.trim(),
         fields: draft.fields,
         active: draft.active,
+        notify: draft.notify.trim(),
       }
       if (draft.id) {
         await updateForm(draft.id, payload)
@@ -136,6 +139,7 @@ function FormsRoute() {
       description: form.description,
       fields: form.fields,
       active: form.active,
+      notify: form.notify,
     })
 
   const ready =
@@ -289,6 +293,22 @@ function FormsRoute() {
                 fields={draft.fields}
                 onChange={(fields) => setDraft({ ...draft, fields })}
               />
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="form-notify">{t`Tell somebody`}</Label>
+                <Input
+                  id="form-notify"
+                  type="email"
+                  value={draft.notify}
+                  onChange={(event) =>
+                    setDraft({ ...draft, notify: event.target.value })
+                  }
+                  placeholder={t`Leave empty to tell nobody`}
+                />
+                <p className="text-sm text-muted-foreground">
+                  {t`An email each time somebody fills this in. Needs Amazon SES switched on under Plugins — what comes in is kept either way.`}
+                </p>
+              </div>
 
               <Label className="flex items-center gap-3 font-normal">
                 <Switch

@@ -21,6 +21,14 @@ use crate::{
 )]
 pub async fn list_plugins(Site(state): Site) -> AppResult<Json<Vec<PluginSummary>>> {
     let stored = load_s3(state.db(), &state.secrets).await.ok().flatten();
+    let email = crate::plugins::load::<crate::email::EmailConfig>(
+        state.db(),
+        &state.secrets,
+        crate::plugins::EMAIL_PLUGIN,
+    )
+    .await
+    .ok()
+    .flatten();
     let backup = crate::plugins::load::<crate::backup::BackupConfig>(
         state.db(),
         &state.secrets,
@@ -39,6 +47,15 @@ pub async fn list_plugins(Site(state): Site) -> AppResult<Json<Vec<PluginSummary
                     .to_string(),
             enabled: stored.as_ref().is_some_and(|s| s.enabled),
             configured: stored.is_some(),
+        },
+        PluginSummary {
+            id: crate::plugins::EMAIL_PLUGIN.to_string(),
+            name: "Amazon SES".to_string(),
+            description:
+                "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
+                    .to_string(),
+            enabled: email.as_ref().is_some_and(|s| s.enabled),
+            configured: email.is_some(),
         },
         PluginSummary {
             id: crate::plugins::BACKUP_PLUGIN.to_string(),
@@ -346,4 +363,347 @@ pub async fn import_backup(
     tracing::warn!(by = %who.username, bytes = body.len(), "restoring an uploaded archive");
 
     Ok(Json(crate::backup::restore(&state, &body).await?))
+}
+
+/// The plugin id that mail settings are stored under.
+pub const EMAIL_PLUGIN: &str = crate::plugins::EMAIL_PLUGIN;
+
+pub async fn email_settings_of(state: &AppState) -> AppResult<crate::email::EmailSettingsResponse> {
+    let stored =
+        crate::plugins::load::<crate::email::EmailConfig>(state.db(), &state.secrets, EMAIL_PLUGIN)
+            .await?;
+
+    Ok(match stored {
+        Some(stored) => crate::email::EmailSettingsResponse {
+            enabled: stored.enabled,
+            region: stored.config.region,
+            access_key_id: stored.config.access_key_id,
+            from_address: stored.config.from_address,
+            from_name: stored.config.from_name,
+            reply_to: stored.config.reply_to,
+            configuration_set: stored.config.configuration_set,
+            has_secret_access_key: !stored.config.secret_access_key.is_empty(),
+        },
+        None => crate::email::EmailSettingsResponse {
+            enabled: false,
+            region: String::new(),
+            access_key_id: String::new(),
+            from_address: String::new(),
+            from_name: String::new(),
+            reply_to: String::new(),
+            configuration_set: String::new(),
+            has_secret_access_key: false,
+        },
+    })
+}
+
+/// How mail is sent from this site.
+#[utoipa::path(
+    get,
+    path = "/plugins/email",
+    tag = "plugins",
+    responses((status = 200, description = "Mail settings", body = crate::email::EmailSettingsResponse))
+)]
+pub async fn get_email_settings(
+    Site(state): Site,
+) -> AppResult<Json<crate::email::EmailSettingsResponse>> {
+    Ok(Json(email_settings_of(&state).await?))
+}
+
+/// Turns what the panel sent into what is stored, keeping the secret when the
+/// field came back empty — the panel never receives it, so an untouched form
+/// would otherwise erase it on every save.
+async fn resolve_email(
+    state: &AppState,
+    payload: &crate::email::EmailSettingsRequest,
+) -> AppResult<crate::email::EmailConfig> {
+    let stored =
+        crate::plugins::load::<crate::email::EmailConfig>(state.db(), &state.secrets, EMAIL_PLUGIN)
+            .await?;
+
+    let secret = match payload.secret_access_key.as_deref() {
+        Some(given) if !given.trim().is_empty() => given.trim().to_string(),
+        _ => stored
+            .as_ref()
+            .map(|stored| stored.config.secret_access_key.clone())
+            .unwrap_or_default(),
+    };
+
+    Ok(crate::email::EmailConfig {
+        region: payload.region.trim().to_string(),
+        access_key_id: payload.access_key_id.trim().to_string(),
+        secret_access_key: secret,
+        from_address: payload.from_address.trim().to_string(),
+        from_name: payload.from_name.trim().to_string(),
+        reply_to: payload.reply_to.trim().to_string(),
+        configuration_set: payload.configuration_set.trim().to_string(),
+    })
+}
+
+fn usable(config: &crate::email::EmailConfig) -> AppResult<()> {
+    if config.region.is_empty() {
+        return Err(AppError::Validation("a region is needed".to_string()));
+    }
+    if config.access_key_id.is_empty() || config.secret_access_key.is_empty() {
+        return Err(AppError::Validation(
+            "an access key and its secret are needed".to_string(),
+        ));
+    }
+    if !crate::email::looks_like_an_address(&config.from_address) {
+        return Err(AppError::Validation(
+            "the address mail comes from is not an email address".to_string(),
+        ));
+    }
+    if !config.reply_to.is_empty() && !crate::email::looks_like_an_address(&config.reply_to) {
+        return Err(AppError::Validation(
+            "the reply-to is not an email address".to_string(),
+        ));
+    }
+    Ok(())
+}
+
+/// Set them.
+#[utoipa::path(
+    put,
+    path = "/plugins/email",
+    tag = "plugins",
+    request_body = crate::email::EmailSettingsRequest,
+    responses((status = 200, description = "Saved", body = crate::email::EmailSettingsResponse))
+)]
+pub async fn update_email_settings(
+    Site(state): Site,
+    Json(payload): Json<crate::email::EmailSettingsRequest>,
+) -> AppResult<Json<crate::email::EmailSettingsResponse>> {
+    Ok(Json(save_email_of(&state, payload).await?))
+}
+
+pub async fn save_email_of(
+    state: &AppState,
+    payload: crate::email::EmailSettingsRequest,
+) -> AppResult<crate::email::EmailSettingsResponse> {
+    let config = resolve_email(state, &payload).await?;
+    // Checked only when it is switched on. Half-filled settings somebody is
+    // still typing are worth keeping; ones that are supposed to be working
+    // are not worth pretending about.
+    if payload.enabled {
+        usable(&config)?;
+    }
+
+    crate::plugins::save(
+        state.db(),
+        &state.secrets,
+        EMAIL_PLUGIN,
+        payload.enabled,
+        &config,
+    )
+    .await?;
+    email_settings_of(state).await
+}
+
+/// Send one message to an address, and say what SES said.
+///
+/// The only honest test of mail settings: a key with the wrong permissions, an
+/// address SES has not verified and an account still in the sandbox all look
+/// identical until something is actually sent.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/test",
+    tag = "plugins",
+    request_body = crate::email::TestEmailRequest,
+    responses((status = 200, description = "Test result", body = ConnectionTestResponse))
+)]
+pub async fn test_email_settings(
+    Site(state): Site,
+    Json(payload): Json<crate::email::TestEmailRequest>,
+) -> AppResult<Json<ConnectionTestResponse>> {
+    Ok(Json(test_email_of(&state, payload).await?))
+}
+
+pub async fn test_email_of(
+    state: &AppState,
+    payload: crate::email::TestEmailRequest,
+) -> AppResult<ConnectionTestResponse> {
+    let stored =
+        crate::plugins::load::<crate::email::EmailConfig>(state.db(), &state.secrets, EMAIL_PLUGIN)
+            .await?
+            .ok_or_else(|| AppError::Validation("mail is not set up yet".to_string()))?;
+
+    usable(&stored.config)?;
+
+    let outcome = crate::email::send(
+        &stored.config,
+        crate::email::Message {
+            to: &payload.to,
+            subject: "Mavi CMS test",
+            text: "This is the test message from your site's mail settings. \
+                   If you are reading it, sending works.",
+            html: None,
+        },
+    )
+    .await;
+
+    Ok(match outcome {
+        Ok(()) => ConnectionTestResponse {
+            ok: true,
+            message: format!("sent to {}", payload.to.trim()),
+        },
+        Err(err) => ConnectionTestResponse {
+            ok: false,
+            message: err.to_string(),
+        },
+    })
+}
+
+/// The stored settings, or a refusal saying they are not there yet.
+async fn email_config_of(state: &AppState) -> AppResult<crate::email::EmailConfig> {
+    crate::plugins::load::<crate::email::EmailConfig>(
+        state.db(),
+        &state.secrets,
+        crate::plugins::EMAIL_PLUGIN,
+    )
+    .await?
+    .map(|stored| stored.config)
+    .ok_or_else(|| AppError::Validation("mail is not set up yet".to_string()))
+}
+
+/// What Amazon says about the account these keys belong to.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/account",
+    tag = "plugins",
+    responses((status = 200, description = "Quota, sandbox and enforcement", body = crate::email::AccountStatus))
+)]
+pub async fn get_email_account(Site(state): Site) -> AppResult<Json<crate::email::AccountStatus>> {
+    Ok(Json(email_account_of(&state).await?))
+}
+
+pub async fn email_account_of(state: &AppState) -> AppResult<crate::email::AccountStatus> {
+    crate::email::account(&email_config_of(state).await?).await
+}
+
+/// Ask Amazon to take the account out of the sandbox.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/production-access",
+    tag = "plugins",
+    request_body = crate::email::ProductionAccessRequest,
+    responses((status = 204, description = "Asked"))
+)]
+pub async fn request_email_production_access(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    Json(payload): Json<crate::email::ProductionAccessRequest>,
+) -> AppResult<StatusCode> {
+    request_production_access_of(&state, payload).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn request_production_access_of(
+    state: &AppState,
+    payload: crate::email::ProductionAccessRequest,
+) -> AppResult<()> {
+    crate::email::request_production_access(&email_config_of(state).await?, payload).await
+}
+
+/// The addresses and domains SES will send from.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/identities",
+    tag = "plugins",
+    responses((status = 200, description = "Verified senders", body = Vec<crate::email::Identity>))
+)]
+pub async fn list_email_identities(
+    Site(state): Site,
+) -> AppResult<Json<Vec<crate::email::Identity>>> {
+    Ok(Json(email_identities_of(&state).await?))
+}
+
+pub async fn email_identities_of(state: &AppState) -> AppResult<Vec<crate::email::Identity>> {
+    crate::email::identities(&email_config_of(state).await?).await
+}
+
+#[derive(Debug, serde::Deserialize, utoipa::ToSchema)]
+pub struct IdentityRequest {
+    /// An address, or a domain to sign for.
+    pub name: String,
+}
+
+/// Ask SES to trust one.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/identities",
+    tag = "plugins",
+    request_body = IdentityRequest,
+    responses((status = 204, description = "Asked"))
+)]
+pub async fn add_email_identity(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    Json(payload): Json<IdentityRequest>,
+) -> AppResult<StatusCode> {
+    add_email_identity_of(&state, &payload.name).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn add_email_identity_of(state: &AppState, name: &str) -> AppResult<()> {
+    crate::email::add_identity(&email_config_of(state).await?, name).await
+}
+
+/// Stop trusting one.
+#[utoipa::path(
+    delete,
+    path = "/plugins/email/identities/{name}",
+    tag = "plugins",
+    params(("name" = String, Path, description = "The address or domain")),
+    responses((status = 204, description = "Removed"))
+)]
+pub async fn delete_email_identity(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    axum::extract::Path(name): axum::extract::Path<String>,
+) -> AppResult<StatusCode> {
+    remove_email_identity_of(&state, &name).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn remove_email_identity_of(state: &AppState, name: &str) -> AppResult<()> {
+    crate::email::remove_identity(&email_config_of(state).await?, name).await
+}
+
+/// The addresses SES has stopped writing to.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/suppressed",
+    tag = "plugins",
+    responses((status = 200, description = "Blocked addresses", body = Vec<crate::email::Suppressed>))
+)]
+pub async fn list_email_suppressed(
+    Site(state): Site,
+) -> AppResult<Json<Vec<crate::email::Suppressed>>> {
+    Ok(Json(email_suppressed_of(&state).await?))
+}
+
+pub async fn email_suppressed_of(state: &AppState) -> AppResult<Vec<crate::email::Suppressed>> {
+    crate::email::suppressed(&email_config_of(state).await?).await
+}
+
+/// Take one off that list.
+#[utoipa::path(
+    delete,
+    path = "/plugins/email/suppressed/{address}",
+    tag = "plugins",
+    params(("address" = String, Path, description = "The address")),
+    responses((status = 204, description = "Unblocked"))
+)]
+pub async fn delete_email_suppressed(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    axum::extract::Path(address): axum::extract::Path<String>,
+) -> AppResult<StatusCode> {
+    unsuppress_email_of(&state, &address).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn unsuppress_email_of(state: &AppState, address: &str) -> AppResult<()> {
+    crate::email::unsuppress(&email_config_of(state).await?, address).await
 }

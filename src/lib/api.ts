@@ -903,6 +903,8 @@ export interface FormField {
 export interface SiteForm {
   id: string
   name: string
+  /** Where a submission is announced. Empty means nowhere. */
+  notify: string
   /** The last part of the address other software posts to. */
   slug: string
   description: string
@@ -924,6 +926,7 @@ export interface FormSubmission {
 
 export interface SaveFormPayload {
   name: string
+  notify: string
   slug?: string
   description: string
   fields: FormField[]
@@ -1010,4 +1013,169 @@ export function deleteSiteDevelopmentToken(
   return request<void>(`/console/sites/${id}/development/tokens/${tokenId}`, {
     method: "DELETE",
   })
+}
+
+export interface EmailSettings {
+  enabled: boolean
+  region: string
+  access_key_id: string
+  from_address: string
+  from_name: string
+  reply_to: string
+  configuration_set: string
+  /** The secret itself never comes back; this says whether one is stored. */
+  has_secret_access_key: boolean
+}
+
+export interface EmailSettingsPayload {
+  enabled: boolean
+  region: string
+  access_key_id: string
+  /** Left out to keep the stored secret. */
+  secret_access_key?: string
+  from_address: string
+  from_name: string
+  reply_to: string
+  configuration_set: string
+}
+
+export function getEmailSettings(): Promise<EmailSettings> {
+  return request<EmailSettings>("/plugins/email")
+}
+
+export function updateEmailSettings(
+  payload: EmailSettingsPayload
+): Promise<EmailSettings> {
+  return request<EmailSettings>("/plugins/email", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function testEmailSettings(to: string): Promise<ConnectionTest> {
+  return request<ConnectionTest>("/plugins/email/test", {
+    method: "POST",
+    body: JSON.stringify({ to }),
+  })
+}
+
+export function getSiteEmailSettings(id: string): Promise<EmailSettings> {
+  return request<EmailSettings>(`/console/sites/${id}/plugins/email`)
+}
+
+export function saveSiteEmailSettings(
+  id: string,
+  payload: EmailSettingsPayload
+): Promise<EmailSettings> {
+  return request<EmailSettings>(`/console/sites/${id}/plugins/email`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function testSiteEmailSettings(
+  id: string,
+  to: string
+): Promise<ConnectionTest> {
+  return request<ConnectionTest>(`/console/sites/${id}/plugins/email/test`, {
+    method: "POST",
+    body: JSON.stringify({ to }),
+  })
+}
+
+export interface SesAccount {
+  production_access: boolean
+  sending_enabled: boolean
+  enforcement_status: string
+  max_24_hour_send: number
+  max_send_rate: number
+  sent_last_24_hours: number
+  mail_type: string
+  website_url: string
+  use_case_description: string
+  contact_language: string
+  additional_contacts: string[]
+  review_status: string
+}
+
+export interface SesIdentity {
+  name: string
+  kind: string
+  verified: boolean
+  /** CNAMEs a domain needs published before SES will sign for it. */
+  dkim_tokens: string[]
+  dkim_status: string
+}
+
+export interface SesSuppressed {
+  address: string
+  reason: string
+  since: string
+}
+
+export interface ProductionAccessPayload {
+  mail_type: string
+  website_url: string
+  use_case_description: string
+  contact_language: string
+  additional_contacts: string[]
+}
+
+/**
+ * The SES account, from whichever side is asking.
+ *
+ * A site reads its own under Plugins; an agency reads its sites' from the
+ * console. Same questions, same answers, so the calls are one shape with the
+ * site id supplied or not.
+ */
+const mailBase = (siteId?: string) =>
+  siteId ? `/console/sites/${siteId}/plugins/email` : "/plugins/email"
+
+export function getSesAccount(siteId?: string): Promise<SesAccount> {
+  return request<SesAccount>(`${mailBase(siteId)}/account`)
+}
+
+export function requestProductionAccess(
+  payload: ProductionAccessPayload,
+  siteId?: string
+): Promise<void> {
+  return request<void>(`${mailBase(siteId)}/production-access`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function getSesIdentities(siteId?: string): Promise<SesIdentity[]> {
+  return request<SesIdentity[]>(`${mailBase(siteId)}/identities`)
+}
+
+export function addSesIdentity(name: string, siteId?: string): Promise<void> {
+  return request<void>(`${mailBase(siteId)}/identities`, {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  })
+}
+
+export function deleteSesIdentity(
+  name: string,
+  siteId?: string
+): Promise<void> {
+  return request<void>(
+    `${mailBase(siteId)}/identities/${encodeURIComponent(name)}`,
+    { method: "DELETE" }
+  )
+}
+
+export function getSesSuppressed(siteId?: string): Promise<SesSuppressed[]> {
+  return request<SesSuppressed[]>(`${mailBase(siteId)}/suppressed`)
+}
+
+export function unsuppressSesAddress(
+  address: string,
+  siteId?: string
+): Promise<void> {
+  return request<void>(
+    `${mailBase(siteId)}/suppressed/${encodeURIComponent(address)}`,
+    { method: "DELETE" }
+  )
 }

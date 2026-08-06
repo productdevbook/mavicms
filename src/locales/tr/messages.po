@@ -66,7 +66,7 @@ msgstr "{0} · {1} · {2} · {3}"
 
 #. placeholder {0}: removing?.name
 #. placeholder {1}: removing?.submissions ?? 0
-#: src/routes/dashboard.forms.tsx:325
+#: src/routes/dashboard.forms.tsx:345
 msgid "{0} and the {1} answers it holds go with it. Switching it off instead keeps them."
 msgstr "{0} ve içindeki {1} yanıt birlikte gider. Kapatırsanız yanıtlar kalır."
 
@@ -108,7 +108,7 @@ msgid "{0} of {1} used."
 msgstr "{1} siteden {0} tanesi kullanılıyor."
 
 #. placeholder {0}: form.submissions
-#: src/routes/dashboard.forms.tsx:198
+#: src/routes/dashboard.forms.tsx:202
 msgid "{0} received"
 msgstr "{0} yanıt"
 
@@ -191,7 +191,7 @@ msgstr "Derleme giriş yapmaz. Kendisine CMS_TOKEN verilir; derleme kadar yaşar
 #~ msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 #~ msgstr "Çoğu site için bir dosya yeter. Yoğun bir siteye bunun yerine Postgres ya da MySQL adresi verilebilir."
 
-#: src/components/plugin-forms.tsx:220
+#: src/components/plugin-forms.tsx:225
 #: src/routes/dashboard.plugins_.backup.tsx:265
 msgid "A folder inside the data directory."
 msgstr "Veri dizininin içinde bir klasör."
@@ -200,16 +200,28 @@ msgstr "Veri dizininin içinde bir klasör."
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "Liste, yazıların gövdesini vermez; bütün arşivi tek yanıtta göndermek kimsenin istemediği megabaytlar demek. Gövdeler için include=content ekleyin."
 
+#: src/components/ses-account.tsx:389
+msgid "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
+msgstr "Sert şekilde geri dönen ya da birinin spam olarak bildirdiği mesajlar. Amazon bu listeyi kendi tutar ve bu panel ne yaparsa yapsın ona uyar — iade para götürür, şikâyet hesap kapatır."
+
+#: src/components/ses-account.tsx:207
+msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
+msgstr "Yeni bir SES hesabı kum havuzunda başlar; yalnızca aşağıda doğruladığınız adreslere yazabilir. Ziyaretçilerinize yazabilmek için buradan çıkmayı istemeniz gerekir."
+
 #: src/routes/dashboard.api.tsx:202
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "Bir yazı hem <0>content_markdown</0> taşır — yazının kendisi budur — hem de <1>content_html</1>, yani karşılığı. Markdown <2>comark</2> için yazılıyor, böylece bir proje bloklarını kendi bileşenlerine çevirebilir."
 
-#: src/components/plugin-forms.tsx:219
+#: src/components/plugin-forms.tsx:224
 #: src/routes/dashboard.plugins_.backup.tsx:264
 msgid "A prefix inside the bucket."
 msgstr "Kovanın içinde bir önek."
 
-#: src/routes/dashboard.forms.tsx:300
+#: src/components/ses-account.tsx:189
+msgid "a second, at most"
+msgstr "saniyede en fazla"
+
+#: src/routes/dashboard.forms.tsx:320
 msgid "Accepting answers"
 msgstr "Yanıt alıyor"
 
@@ -217,7 +229,8 @@ msgstr "Yanıt alıyor"
 msgid "Accepts"
 msgstr "Kabul ettiği"
 
-#: src/components/plugin-forms.tsx:105
+#: src/components/plugin-forms.tsx:110
+#: src/components/plugin-forms.tsx:317
 msgid "Access key ID"
 msgstr "Erişim anahtarı (Access key ID)"
 
@@ -325,10 +338,14 @@ msgstr "Tablo ekle"
 #: src/components/editor/dialogs.tsx:300
 #: src/routes/console.index.tsx:197
 #: src/routes/dashboard.api.tsx:143
-#: src/routes/dashboard.forms.tsx:260
+#: src/routes/dashboard.forms.tsx:264
 #: src/routes/dashboard.sites.tsx:257
 msgid "Address"
 msgstr "Adres"
+
+#: src/components/ses-account.tsx:387
+msgid "Addresses Amazon refuses"
+msgstr "Amazon'un reddettiği adresler"
 
 #: src/routes/dashboard.sites.tsx:189
 msgid "Agencies"
@@ -388,6 +405,16 @@ msgstr "Hesabınız var mı? Giriş yapın"
 msgid "Alt text"
 msgstr "Alternatif metin"
 
+#. placeholder {0}: account.enforcement_status
+#: src/components/ses-account.tsx:196
+msgid "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
+msgstr "Amazon bu hesapta göndermeyi durdurmuş ({0}). Onlarla çözülene kadar hiçbir şey çıkmaz."
+
+#: src/routes/dashboard.plugins_.email.tsx:119
+#: src/routes/dashboard.plugins.tsx:30
+msgid "Amazon SES"
+msgstr "Amazon SES"
+
 #: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
 msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
@@ -396,12 +423,20 @@ msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
 msgid "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 msgstr "Başka bir sunucuda alınmış arşiv. Bir site böyle taşınır — buradaki her şeyin yerine dosyadakiler geçer."
 
+#: src/routes/dashboard.forms.tsx:309
+msgid "An email each time somebody fills this in. Needs Amazon SES switched on under Plugins — what comes in is kept either way."
+msgstr "Bu form her doldurulduğunda bir e-posta. Eklentiler altında Amazon SES'in açık olması gerekir — gelen kayıt her hâlükârda saklanır."
+
+#: src/components/plugin-forms.tsx:342
+msgid "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
+msgstr "Tek yetkisi ses:SendEmail olan bir IAM kullanıcısı. Bu anahtar sizin adınıza posta gönderebilir; buranın ondan başka bir şey yapmasına ihtiyacı yok."
+
 #: src/components/editor/post-settings.tsx:41
 #~ msgid "Announcement"
 #~ msgstr "Duyuru"
 
 #. placeholder {0}: draft.slug || "…"
-#: src/routes/dashboard.forms.tsx:271
+#: src/routes/dashboard.forms.tsx:275
 msgid "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 msgstr "Yanıtlar /api/forms/{0}/submit adresine gönderilir. Değiştirirseniz oraya gönderim yapan ne varsa durur."
 
@@ -415,14 +450,26 @@ msgstr "API"
 msgid "Apply"
 msgstr "Uygula"
 
-#: src/routes/console.sites.$siteId.tsx:419
+#: src/routes/console.sites.$siteId.tsx:421
 #: src/routes/dashboard.plugins_.backup.tsx:347
 msgid "Archives"
 msgstr "Arşivler"
 
+#: src/components/ses-account.tsx:290
+msgid "Ask to leave the sandbox"
+msgstr "Kum havuzundan çıkmayı iste"
+
 #: src/routes/console.account.tsx:130
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Neyi değiştiriyorsanız değiştirin, sorulur — bir yerde açık kalmış oturum hesabı elinizden almaya yetmemeli."
+
+#: src/components/ses-account.tsx:121
+msgid "Asked SES to verify it"
+msgstr "SES'ten doğrulaması istendi"
+
+#: src/components/ses-account.tsx:105
+msgid "Asked. Amazon usually answers within a day."
+msgstr "İstendi. Amazon genellikle bir gün içinde yanıtlar."
 
 #: src/routes/console.register.tsx:140
 msgid "At least {MINIMUM_PASSWORD} characters."
@@ -442,7 +489,7 @@ msgstr "Geri"
 msgid "Back to editing"
 msgstr "Düzenlemeye dön"
 
-#: src/routes/console.sites.$siteId.tsx:414
+#: src/routes/console.sites.$siteId.tsx:416
 #: src/routes/dashboard.plugins_.backup.tsx:337
 msgid "Back up now"
 msgstr "Şimdi yedek al"
@@ -452,14 +499,14 @@ msgid "Backup settings saved"
 msgstr "Yedekleme ayarları kaydedildi"
 
 #. placeholder {0}: file.name
-#: src/routes/console.sites.$siteId.tsx:224
+#: src/routes/console.sites.$siteId.tsx:225
 #: src/routes/dashboard.plugins_.backup.tsx:116
 msgid "Backup written: {0}"
 msgstr "Yedek yazıldı: {0}"
 
-#: src/routes/console.sites.$siteId.tsx:309
+#: src/routes/console.sites.$siteId.tsx:311
 #: src/routes/dashboard.plugins_.backup.tsx:198
-#: src/routes/dashboard.plugins.tsx:30
+#: src/routes/dashboard.plugins.tsx:34
 msgid "Backups"
 msgstr "Yedekler"
 
@@ -497,7 +544,7 @@ msgstr "Kalın"
 msgid "Branch"
 msgstr "Dal"
 
-#: src/components/plugin-forms.tsx:99
+#: src/components/plugin-forms.tsx:104
 msgid "Bucket"
 msgstr "Bucket"
 
@@ -513,7 +560,7 @@ msgstr "Bu sitenin sayfalarını yeniden derler."
 msgid "Build variables"
 msgstr "Derleme değişkenleri"
 
-#: src/routes/dashboard.plugins.tsx:51
+#: src/routes/dashboard.plugins.tsx:59
 msgid "Built-in integrations you can switch on and configure."
 msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
 
@@ -529,8 +576,8 @@ msgstr "Madde listesi"
 #: src/routes/console.index.tsx:209
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
-#: src/routes/dashboard.forms.tsx:307
-#: src/routes/dashboard.forms.tsx:329
+#: src/routes/dashboard.forms.tsx:327
+#: src/routes/dashboard.forms.tsx:349
 #: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
@@ -636,7 +683,11 @@ msgstr "Komut menüsü"
 msgid "Comments"
 msgstr "Yorumlar"
 
-#: src/routes/dashboard.plugins.tsx:97
+#: src/components/plugin-forms.tsx:384
+msgid "Configuration set"
+msgstr "Yapılandırma kümesi"
+
+#: src/routes/dashboard.plugins.tsx:105
 msgid "Configure"
 msgstr "Yapılandır"
 
@@ -702,6 +753,10 @@ msgstr "Metni kopyala"
 msgid "Copy your post in different formats, download it, or import Markdown."
 msgstr "Yazını farklı biçimlerde kopyala, indir veya Markdown yükle."
 
+#: src/components/ses-account.tsx:125
+msgid "Could not add it"
+msgstr "Eklenemedi"
+
 #: src/routes/dashboard.languages.tsx:61
 msgid "Could not add language"
 msgstr "Dil eklenemedi"
@@ -719,6 +774,15 @@ msgstr "Hesap eklenemedi"
 msgid "Could not add the site"
 msgstr "Site eklenemedi"
 
+#: src/components/ses-account.tsx:109
+msgid "Could not ask"
+msgstr "İstek gönderilemedi"
+
+#: src/components/ses-account.tsx:87
+#: src/components/ses-account.tsx:153
+msgid "Could not ask Amazon"
+msgstr "Amazon'a sorulamadı"
+
 #: src/routes/dashboard.sites.tsx:84
 #: src/routes/dashboard.sites.tsx:113
 #: src/routes/dashboard.users.tsx:108
@@ -727,6 +791,7 @@ msgid "Could not change it"
 msgstr "Değiştirilemedi"
 
 #: src/components/local-env.tsx:109
+#: src/components/ses-account.tsx:138
 #: src/routes/dashboard.forms_.$formId.tsx:41
 msgid "Could not copy it"
 msgstr "Kopyalanamadı"
@@ -756,7 +821,9 @@ msgstr "Etiket silinemedi"
 msgid "Could not delete the backup"
 msgstr "Yedek silinemedi"
 
+#: src/components/site-mail.tsx:92
 #: src/routes/dashboard.forms_.$formId.tsx:89
+#: src/routes/dashboard.plugins_.email.tsx:92
 msgid "Could not do it"
 msgstr "Yapılamadı"
 
@@ -772,7 +839,7 @@ msgstr "Yazı yüklenemedi"
 msgid "Could not load the accounts"
 msgstr "Hesaplar yüklenemedi"
 
-#: src/routes/console.sites.$siteId.tsx:129
+#: src/routes/console.sites.$siteId.tsx:130
 #: src/routes/dashboard.plugins_.backup.tsx:84
 msgid "Could not load the backup settings"
 msgstr "Yedekleme ayarları yüklenemedi"
@@ -781,7 +848,7 @@ msgstr "Yedekleme ayarları yüklenemedi"
 msgid "Could not load the form"
 msgstr "Form yüklenemedi"
 
-#: src/routes/dashboard.forms.tsx:84
+#: src/routes/dashboard.forms.tsx:86
 msgid "Could not load the forms"
 msgstr "Formlar yüklenemedi"
 
@@ -789,7 +856,12 @@ msgstr "Formlar yüklenemedi"
 msgid "Could not load the local settings"
 msgstr "Yerel ayarlar yüklenemedi"
 
-#: src/routes/console.sites.$siteId.tsx:136
+#: src/components/site-mail.tsx:58
+#: src/routes/dashboard.plugins_.email.tsx:55
+msgid "Could not load the mail settings"
+msgstr "Posta ayarları yüklenemedi"
+
+#: src/routes/console.sites.$siteId.tsx:137
 #: src/routes/dashboard.publish.tsx:48
 msgid "Could not load the publishing settings"
 msgstr "Yayın ayarları yüklenemedi"
@@ -798,7 +870,7 @@ msgstr "Yayın ayarları yüklenemedi"
 msgid "Could not load the sites"
 msgstr "Siteler yüklenemedi"
 
-#: src/routes/console.sites.$siteId.tsx:124
+#: src/routes/console.sites.$siteId.tsx:125
 msgid "Could not load the storage settings"
 msgstr "Depolama ayarları yüklenemedi"
 
@@ -811,7 +883,7 @@ msgid "Could not make a token"
 msgstr "Jeton üretilemedi"
 
 #: src/routes/console.index.tsx:84
-#: src/routes/console.sites.$siteId.tsx:256
+#: src/routes/console.sites.$siteId.tsx:257
 msgid "Could not open the site"
 msgstr "Site açılamadı"
 
@@ -823,8 +895,9 @@ msgstr "Site açılamadı"
 msgid "Could not reach the server. Please try again."
 msgstr "Sunucuya ulaşılamadı. Lütfen tekrar deneyin."
 
+#: src/components/ses-account.tsx:347
 #: src/routes/dashboard.forms_.$formId.tsx:103
-#: src/routes/dashboard.forms.tsx:124
+#: src/routes/dashboard.forms.tsx:127
 #: src/routes/dashboard.sites.tsx:100
 #: src/routes/dashboard.users.tsx:122
 msgid "Could not remove it"
@@ -833,6 +906,11 @@ msgstr "Kaldırılamadı"
 #: src/routes/dashboard.languages.tsx:83
 msgid "Could not remove language"
 msgstr "Dil silinemedi"
+
+#: src/components/site-mail.tsx:78
+#: src/routes/dashboard.plugins_.email.tsx:78
+msgid "Could not save it"
+msgstr "Kaydedilemedi"
 
 #: src/components/editor/mavi-editor.tsx:311
 msgid "Could not save post"
@@ -846,20 +924,20 @@ msgstr "Ayarlar kaydedilemedi"
 msgid "Could not save tag"
 msgstr "Etiket kaydedilemedi"
 
-#: src/routes/dashboard.forms.tsx:110
+#: src/routes/dashboard.forms.tsx:113
 msgid "Could not save the form"
 msgstr "Form kaydedilemedi"
 
 #: src/routes/console.account.tsx:61
-#: src/routes/console.sites.$siteId.tsx:168
-#: src/routes/console.sites.$siteId.tsx:198
-#: src/routes/console.sites.$siteId.tsx:213
+#: src/routes/console.sites.$siteId.tsx:169
+#: src/routes/console.sites.$siteId.tsx:199
+#: src/routes/console.sites.$siteId.tsx:214
 #: src/routes/dashboard.plugins_.backup.tsx:105
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Ayarlar kaydedilemedi"
 
-#: src/routes/console.sites.$siteId.tsx:183
+#: src/routes/console.sites.$siteId.tsx:184
 #: src/routes/dashboard.publish.tsx:97
 msgid "Could not start the build"
 msgstr "Derleme başlatılamadı"
@@ -867,6 +945,10 @@ msgstr "Derleme başlatılamadı"
 #: src/components/local-env.tsx:88
 msgid "Could not take it back"
 msgstr "Geri alınamadı"
+
+#: src/components/ses-account.tsx:419
+msgid "Could not unblock it"
+msgstr "Engeli kaldırılamadı"
 
 #: src/routes/dashboard.tags.tsx:115
 msgid "Could not unlink tag"
@@ -1023,7 +1105,7 @@ msgstr "Bu yazı silinsin mi?"
 msgid "Delete this tag?"
 msgstr "Bu etiket silinsin mi?"
 
-#: src/routes/dashboard.forms.tsx:153
+#: src/routes/dashboard.forms.tsx:157
 msgid "Describe what a form accepts here, then have your own pages post to it."
 msgstr "Formun neleri kabul ettiğini burada tanımlayın, sonra kendi sayfalarınızdan bu adrese gönderin."
 
@@ -1035,7 +1117,11 @@ msgstr "Arama sonuçlarında görünecek açıklama metni."
 #~ msgid "Design"
 #~ msgstr "Tasarım"
 
-#: src/routes/dashboard.plugins.tsx:80
+#: src/components/ses-account.tsx:409
+msgid "Did not arrive"
+msgstr "Ulaşmadı"
+
+#: src/routes/dashboard.plugins.tsx:88
 msgid "Disabled"
 msgstr "Devre dışı"
 
@@ -1067,12 +1153,12 @@ msgstr "Her dilin kendi etiketleri vardır. Bir yazının etiketinin başka dild
 #: src/components/editor/bubble-menus.tsx:323
 #: src/components/editor/mavi-editor.tsx:516
 #: src/routes/dashboard.categories.tsx:309
-#: src/routes/dashboard.forms.tsx:202
+#: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.index.tsx:192
 msgid "Edit"
 msgstr "Düzenle"
 
-#: src/routes/dashboard.forms.tsx:224
+#: src/routes/dashboard.forms.tsx:228
 msgid "Edit the form"
 msgstr "Formu düzenle"
 
@@ -1101,13 +1187,13 @@ msgstr "Video gömme ekle"
 msgid "Emoji"
 msgstr "Emoji"
 
-#: src/components/plugin-forms.tsx:165
+#: src/components/plugin-forms.tsx:170
 #: src/routes/dashboard.plugins_.backup.tsx:207
-#: src/routes/dashboard.plugins.tsx:78
+#: src/routes/dashboard.plugins.tsx:86
 msgid "Enabled"
 msgstr "Etkin"
 
-#: src/components/plugin-forms.tsx:84
+#: src/components/plugin-forms.tsx:89
 msgid "Endpoint"
 msgstr "Endpoint"
 
@@ -1123,12 +1209,12 @@ msgstr "Geçerli bir e-posta adresi girin"
 msgid "Enter details"
 msgstr "Bilgileri gir"
 
-#: src/components/plugin-forms.tsx:157
+#: src/components/plugin-forms.tsx:162
 #: src/routes/dashboard.plugins_.backup.tsx:90
 msgid "Every day"
 msgstr "Günde bir"
 
-#: src/components/plugin-forms.tsx:156
+#: src/components/plugin-forms.tsx:161
 #: src/routes/dashboard.plugins_.backup.tsx:89
 msgid "Every hour"
 msgstr "Saatte bir"
@@ -1146,7 +1232,7 @@ msgstr "Bu sitedeki bütün yazı, kategori, etiket ve hesapların yerine \"{pen
 msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 msgstr "Her sitenin kendi adresinde kendi API'si var. Hepsine aynı sunucu yanıt veriyor ve kimin içeriğini alacağınızı adres belirliyor — bu adres bu sitenin içeriğini döner, başkasınınkini değil."
 
-#: src/components/plugin-forms.tsx:158
+#: src/components/plugin-forms.tsx:163
 #: src/routes/dashboard.plugins_.backup.tsx:91
 msgid "Every week"
 msgstr "Haftada bir"
@@ -1186,7 +1272,7 @@ msgstr "Odak modu"
 msgid "Foldable details block"
 msgstr "Katlanabilir detay bloğu"
 
-#: src/components/plugin-forms.tsx:216
+#: src/components/plugin-forms.tsx:221
 #: src/routes/dashboard.plugins_.backup.tsx:255
 msgid "Folder"
 msgstr "Klasör"
@@ -1207,9 +1293,21 @@ msgstr "Biçimlendirme"
 
 #: src/components/dashboard/dashboard-shell.tsx:76
 #: src/routes/dashboard.forms_.$formId.tsx:144
-#: src/routes/dashboard.forms.tsx:151
+#: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
 msgstr "Formlar"
+
+#: src/components/plugin-forms.tsx:348
+msgid "From address"
+msgstr "Gönderen adresi"
+
+#: src/components/plugin-forms.tsx:363
+msgid "From name"
+msgstr "Gönderen adı"
+
+#: src/components/ses-account.tsx:214
+msgid "Full access"
+msgstr "Tam erişim"
 
 #: src/components/editor/bubble-menus.tsx:387
 msgid "Full width"
@@ -1319,12 +1417,12 @@ msgstr "Ana sayfada vitrine alınır"
 msgid "Host"
 msgstr "Sunucu adresi"
 
-#: src/components/plugin-forms.tsx:266
+#: src/components/plugin-forms.tsx:271
 #: src/routes/dashboard.plugins_.backup.tsx:307
 msgid "How many to keep"
 msgstr "Kaç tanesi saklansın"
 
-#: src/components/plugin-forms.tsx:242
+#: src/components/plugin-forms.tsx:247
 #: src/routes/dashboard.plugins_.backup.tsx:284
 msgid "How often"
 msgstr "Ne sıklıkla"
@@ -1367,7 +1465,7 @@ msgstr "Bu arşiv içe aktarılsın mı?"
 msgid "In review"
 msgstr "İncelemede"
 
-#: src/components/plugin-forms.tsx:229
+#: src/components/plugin-forms.tsx:234
 #: src/routes/dashboard.plugins_.backup.tsx:271
 msgid "Include the uploaded files"
 msgstr "Yüklenen dosyaları da al"
@@ -1467,6 +1565,11 @@ msgstr "Diller"
 msgid "Large section heading"
 msgstr "Büyük bölüm başlığı"
 
+#. placeholder {0}: account.review_status
+#: src/components/ses-account.tsx:220
+msgid "Last request: {0}"
+msgstr "Son başvuru: {0}"
+
 #. placeholder {0}: new Date(config.last_run_at).toLocaleString()
 #: src/routes/dashboard.plugins_.backup.tsx:341
 msgid "Last run {0}"
@@ -1476,13 +1579,17 @@ msgstr "Son çalışma {0}"
 #~ msgid "Leave empty for a file of its own"
 #~ msgstr "Kendi dosyası için boş bırakın"
 
-#: src/components/plugin-forms.tsx:85
+#: src/components/plugin-forms.tsx:90
 msgid "Leave empty for AWS S3"
 msgstr "AWS S3 için boş bırakın"
 
 #: src/routes/console.account.tsx:117
 msgid "Leave empty to keep the one you have"
 msgstr "Mevcut parolayı korumak için boş bırakın"
+
+#: src/routes/dashboard.forms.tsx:306
+msgid "Leave empty to tell nobody"
+msgstr "Kimseye haber vermemek için boş bırakın"
 
 #: src/routes/dashboard.sites.tsx:273
 msgid "Leave empty to use this server's database"
@@ -1531,7 +1638,7 @@ msgstr "Listeler"
 msgid "Loading…"
 msgstr "Yükleniyor…"
 
-#: src/routes/console.sites.$siteId.tsx:310
+#: src/routes/console.sites.$siteId.tsx:312
 msgid "Local"
 msgstr "Yerel"
 
@@ -1544,6 +1651,14 @@ msgstr "Uzun metin"
 msgid "Made {0}"
 msgstr "{0} tarihinde üretildi"
 
+#: src/routes/console.sites.$siteId.tsx:310
+msgid "Mail"
+msgstr "Posta"
+
+#: src/routes/dashboard.plugins_.email.tsx:121
+msgid "Mail this site sends — a notification when somebody fills in one of your forms."
+msgstr "Bu sitenin gönderdiği postalar — formlarınızdan biri doldurulduğunda bildirim."
+
 #: src/components/local-env.tsx:153
 msgid "Make a token"
 msgstr "Jeton üret"
@@ -1552,13 +1667,13 @@ msgstr "Jeton üret"
 msgid "Make default"
 msgstr "Varsayılan yap"
 
-#: src/components/plugin-forms.tsx:231
+#: src/components/plugin-forms.tsx:236
 #: src/routes/dashboard.plugins_.backup.tsx:273
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Arşivi belirgin biçimde büyütür. Medya bu makinedeyse değer; zaten bir kovadaysa daha az."
 
 #: src/routes/console.index.tsx:179
-#: src/routes/console.sites.$siteId.tsx:293
+#: src/routes/console.sites.$siteId.tsx:294
 msgid "Manage"
 msgstr "Yönet"
 
@@ -1607,6 +1722,10 @@ msgstr "Kişi etiketle"
 msgid "Merge cells"
 msgstr "Hücreleri birleştir"
 
+#: src/components/ses-account.tsx:174
+msgid "messages a day"
+msgstr "günde mesaj"
+
 #: src/components/form-fields-editor.tsx:166
 msgid "Move down"
 msgstr "Aşağı al"
@@ -1623,8 +1742,8 @@ msgstr "Doldurulması zorunlu"
 msgid "My Mavi CMS Site"
 msgstr "Mavi CMS Sitem"
 
-#: src/routes/dashboard.forms.tsx:156
-#: src/routes/dashboard.forms.tsx:234
+#: src/routes/dashboard.forms.tsx:160
+#: src/routes/dashboard.forms.tsx:238
 msgid "Name"
 msgstr "Ad"
 
@@ -1641,8 +1760,8 @@ msgstr "çeviri bekliyor"
 msgid "New category"
 msgstr "Yeni kategori"
 
-#: src/routes/dashboard.forms.tsx:157
-#: src/routes/dashboard.forms.tsx:224
+#: src/routes/dashboard.forms.tsx:161
+#: src/routes/dashboard.forms.tsx:228
 msgid "New form"
 msgstr "Yeni form"
 
@@ -1661,12 +1780,17 @@ msgstr "Yeni yazı"
 msgid "New tag"
 msgstr "Yeni etiket"
 
+#: src/components/ses-account.tsx:236
+#: src/components/ses-account.tsx:246
+msgid "Newsletters and campaigns"
+msgstr "Bültenler ve kampanyalar"
+
 #: src/components/editor/find-replace.tsx:112
 #: src/routes/dashboard.index.tsx:235
 msgid "Next"
 msgstr "Sonraki"
 
-#: src/routes/console.sites.$siteId.tsx:422
+#: src/routes/console.sites.$siteId.tsx:424
 #: src/routes/dashboard.plugins_.backup.tsx:350
 msgid "No backups yet"
 msgstr "Henüz yedek yok"
@@ -1679,9 +1803,13 @@ msgstr "Henüz kategori yok"
 msgid "No emoji found"
 msgstr "Emoji bulunamadı"
 
-#: src/routes/dashboard.forms.tsx:167
+#: src/routes/dashboard.forms.tsx:171
 msgid "No forms yet"
 msgstr "Henüz form yok"
+
+#: src/components/ses-account.tsx:171
+msgid "no limit"
+msgstr "sınırsız"
 
 #: src/components/editor/dialogs.tsx:154
 #: src/routes/dashboard.media.tsx:96
@@ -1722,11 +1850,19 @@ msgstr "Henüz etiket yok"
 msgid "No tokens yet"
 msgstr "Henüz jeton yok"
 
-#: src/routes/dashboard.plugins.tsx:81
+#: src/components/ses-account.tsx:395
+msgid "None"
+msgstr "Yok"
+
+#: src/routes/dashboard.plugins.tsx:89
 msgid "Not configured"
 msgstr "Yapılandırılmadı"
 
-#: src/routes/dashboard.forms.tsx:276
+#: src/components/plugin-forms.tsx:338
+msgid "Not set yet"
+msgstr "Henüz ayarlanmadı"
+
+#: src/routes/dashboard.forms.tsx:280
 msgid "Note"
 msgstr "Not"
 
@@ -1737,6 +1873,15 @@ msgstr "Henüz bir şey gelmedi"
 #: src/components/publish-panel.tsx:34
 msgid "Nothing published yet"
 msgstr "Henüz bir şey yayınlanmadı"
+
+#: src/components/ses-account.tsx:323
+msgid "Nothing verified yet"
+msgstr "Henüz doğrulanmış bir şey yok"
+
+#: src/components/ses-account.tsx:237
+#: src/components/ses-account.tsx:243
+msgid "Notifications people asked for"
+msgstr "Kişilerin istediği bildirimler"
 
 #: src/components/form-fields-editor.tsx:53
 msgid "Number"
@@ -1753,7 +1898,7 @@ msgstr "Numaralı liste"
 msgid "Off"
 msgstr "Kapalı"
 
-#: src/components/plugin-forms.tsx:267
+#: src/components/plugin-forms.tsx:272
 #: src/routes/dashboard.plugins_.backup.tsx:319
 msgid "Older archives are removed once a new one is written."
 msgstr "Yeni bir arşiv yazılınca eskiler silinir."
@@ -1763,8 +1908,8 @@ msgstr "Yeni bir arşiv yazılınca eskiler silinir."
 msgid "On"
 msgstr "Açık"
 
-#: src/components/plugin-forms.tsx:190
 #: src/components/plugin-forms.tsx:195
+#: src/components/plugin-forms.tsx:200
 #: src/routes/dashboard.plugins_.backup.tsx:230
 #: src/routes/dashboard.plugins_.backup.tsx:235
 msgid "On the server's disk"
@@ -1798,7 +1943,7 @@ msgstr "Adresinden tek yazı."
 msgid "One post, with its other languages."
 msgstr "Tek yazı, diğer dilleriyle birlikte."
 
-#: src/components/plugin-forms.tsx:155
+#: src/components/plugin-forms.tsx:160
 #: src/routes/dashboard.plugins_.backup.tsx:88
 msgid "Only by hand"
 msgstr "Yalnızca elle"
@@ -1824,7 +1969,12 @@ msgstr "Yeni sekmede aç"
 msgid "OpenAPI document"
 msgstr "OpenAPI belgesi"
 
-#: src/components/plugin-forms.tsx:130
+#: src/components/plugin-forms.tsx:380
+#: src/components/plugin-forms.tsx:391
+msgid "Optional"
+msgstr "İsteğe bağlı"
+
+#: src/components/plugin-forms.tsx:135
 msgid "Optional folder inside the bucket"
 msgstr "Bucket içinde isteğe bağlı klasör"
 
@@ -1875,7 +2025,7 @@ msgstr "Bir görsel adresi yapıştırın, sürükleyip bırakın veya medya kü
 msgid "Paste the video link."
 msgstr "Video bağlantısını yapıştır."
 
-#: src/components/plugin-forms.tsx:129
+#: src/components/plugin-forms.tsx:134
 msgid "Path prefix"
 msgstr "Yol öneki"
 
@@ -1910,8 +2060,9 @@ msgstr "Düz metin bloğu"
 
 #: src/components/dashboard/dashboard-shell.tsx:83
 #: src/routes/dashboard.plugins_.backup.tsx:194
+#: src/routes/dashboard.plugins_.email.tsx:115
 #: src/routes/dashboard.plugins_.s3.tsx:111
-#: src/routes/dashboard.plugins.tsx:49
+#: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
 msgstr "Eklentiler"
 
@@ -1975,14 +2126,14 @@ msgstr "Önceki"
 #~ msgid "Product"
 #~ msgstr "Ürün"
 
-#: src/components/plugin-forms.tsx:121
+#: src/components/plugin-forms.tsx:126
 msgid "Public base URL"
 msgstr "Genel URL tabanı"
 
 #: src/components/dashboard/dashboard-shell.tsx:90
 #: src/components/editor/mavi-editor.tsx:607
 #: src/components/publish-panel.tsx:306
-#: src/routes/console.sites.$siteId.tsx:307
+#: src/routes/console.sites.$siteId.tsx:308
 #: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
 msgstr "Yayınla"
@@ -1991,11 +2142,15 @@ msgstr "Yayınla"
 msgid "Publish date"
 msgstr "Yayın tarihi"
 
+#: src/components/ses-account.tsx:357
+msgid "Publish these three CNAME records on the domain, then this turns itself green."
+msgstr "Bu üç CNAME kaydını alan adında yayınlayın; sonrası kendiliğinden yeşile döner."
+
 #: src/components/editor/types.ts:29
 msgid "Published"
 msgstr "Yayında"
 
-#: src/routes/console.sites.$siteId.tsx:180
+#: src/routes/console.sites.$siteId.tsx:181
 #: src/routes/dashboard.publish.tsx:94
 msgid "Publishing — this takes a minute or two"
 msgstr "Yayınlanıyor — bir iki dakika sürer"
@@ -2031,7 +2186,7 @@ msgstr "Okuma"
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Okumak için bu sitede bir hesap gerekiyor. Bir kez giriş yapıp dönen çerezi kullanın."
 
-#: src/routes/console.sites.$siteId.tsx:354
+#: src/routes/console.sites.$siteId.tsx:356
 #: src/routes/dashboard.publish.tsx:152
 msgid "Recent builds"
 msgstr "Son derlemeler"
@@ -2045,7 +2200,8 @@ msgstr "İleri al"
 msgid "Refresh"
 msgstr "Yenile"
 
-#: src/components/plugin-forms.tsx:92
+#: src/components/plugin-forms.tsx:97
+#: src/components/plugin-forms.tsx:305
 msgid "Region"
 msgstr "Bölge"
 
@@ -2057,9 +2213,10 @@ msgstr "Düzenli ifade"
 #: src/components/editor/bubble-menus.tsx:274
 #: src/components/form-fields-editor.tsx:175
 #: src/components/publish-panel.tsx:136
+#: src/components/ses-account.tsx:342
 #: src/routes/dashboard.forms_.$formId.tsx:224
-#: src/routes/dashboard.forms.tsx:207
-#: src/routes/dashboard.forms.tsx:331
+#: src/routes/dashboard.forms.tsx:211
+#: src/routes/dashboard.forms.tsx:351
 #: src/routes/dashboard.languages.tsx:196
 #: src/routes/dashboard.sites.tsx:177
 #: src/routes/dashboard.sites.tsx:334
@@ -2084,7 +2241,7 @@ msgstr "Bağlantıyı kaldır"
 msgid "Remove this account?"
 msgstr "Bu hesap kaldırılsın mı?"
 
-#: src/routes/dashboard.forms.tsx:323
+#: src/routes/dashboard.forms.tsx:343
 msgid "Remove this form?"
 msgstr "Bu form kaldırılsın mı?"
 
@@ -2112,6 +2269,14 @@ msgstr "İçeriği değiştir"
 msgid "Replace…"
 msgstr "Değiştir…"
 
+#: src/components/plugin-forms.tsx:374
+msgid "Reply-to"
+msgstr "Yanıt adresi"
+
+#: src/components/ses-account.tsx:408
+msgid "Reported it as spam"
+msgstr "Spam olarak bildirdi"
+
 #: src/components/publish-panel.tsx:199
 msgid "Repository"
 msgstr "Depo"
@@ -2120,7 +2285,7 @@ msgstr "Depo"
 msgid "Request failed"
 msgstr "İstek başarısız oldu"
 
-#: src/routes/console.sites.$siteId.tsx:444
+#: src/routes/console.sites.$siteId.tsx:446
 #: src/routes/dashboard.plugins_.backup.tsx:369
 #: src/routes/dashboard.plugins_.backup.tsx:448
 msgid "Restore"
@@ -2131,7 +2296,7 @@ msgid "Restore this backup?"
 msgstr "Bu yedek geri yüklensin mi?"
 
 #. placeholder {0}: report.media_files
-#: src/routes/console.sites.$siteId.tsx:238
+#: src/routes/console.sites.$siteId.tsx:239
 #: src/routes/dashboard.plugins_.backup.tsx:143
 msgid "Restored: {rows} rows and {0} files"
 msgstr "Geri yüklendi: {rows} satır ve {0} dosya"
@@ -2140,16 +2305,16 @@ msgstr "Geri yüklendi: {rows} satır ve {0} dosya"
 msgid "Row"
 msgstr "Satır"
 
-#: src/components/plugin-forms.tsx:189
-#: src/components/plugin-forms.tsx:202
+#: src/components/plugin-forms.tsx:194
+#: src/components/plugin-forms.tsx:207
 #: src/routes/dashboard.plugins_.backup.tsx:229
 #: src/routes/dashboard.plugins_.backup.tsx:242
 msgid "S3 bucket"
 msgstr "S3 kovası"
 
 #. placeholder {0}: settings.s3_bucket
-#: src/components/plugin-forms.tsx:188
-#: src/components/plugin-forms.tsx:201
+#: src/components/plugin-forms.tsx:193
+#: src/components/plugin-forms.tsx:206
 #: src/routes/dashboard.plugins_.backup.tsx:228
 #: src/routes/dashboard.plugins_.backup.tsx:241
 msgid "S3 bucket ({0})"
@@ -2160,24 +2325,32 @@ msgstr "S3 kovası ({0})"
 msgid "S3 compatible storage"
 msgstr "S3 uyumlu depolama"
 
+#: src/components/ses-account.tsx:203
+msgid "Sandbox"
+msgstr "Kum havuzu"
+
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:264
+#: src/components/site-mail.tsx:132
 #: src/routes/console.account.tsx:144
-#: src/routes/console.sites.$siteId.tsx:379
-#: src/routes/console.sites.$siteId.tsx:407
+#: src/routes/console.sites.$siteId.tsx:381
+#: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
-#: src/routes/dashboard.forms.tsx:311
+#: src/routes/dashboard.forms.tsx:331
 #: src/routes/dashboard.plugins_.backup.tsx:333
+#: src/routes/dashboard.plugins_.email.tsx:145
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Kaydet"
 
 #: src/components/editor/status-bar.tsx:113
+#: src/components/site-mail.tsx:75
 #: src/routes/console.account.tsx:58
-#: src/routes/console.sites.$siteId.tsx:165
-#: src/routes/console.sites.$siteId.tsx:195
-#: src/routes/console.sites.$siteId.tsx:210
-#: src/routes/dashboard.forms.tsx:107
+#: src/routes/console.sites.$siteId.tsx:166
+#: src/routes/console.sites.$siteId.tsx:196
+#: src/routes/console.sites.$siteId.tsx:211
+#: src/routes/dashboard.forms.tsx:110
+#: src/routes/dashboard.plugins_.email.tsx:75
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Kaydedildi"
@@ -2195,7 +2368,7 @@ msgstr "Kaydediliyor…"
 msgid "Scheduled"
 msgstr "Zamanlanmış"
 
-#: src/components/plugin-forms.tsx:167
+#: src/components/plugin-forms.tsx:172
 #: src/routes/dashboard.plugins_.backup.tsx:209
 msgid "Scheduled backups only run while this is on. You can always back up by hand below."
 msgstr "Zamanlanmış yedekler yalnızca bu açıkken çalışır. Aşağıdan her zaman elle yedek alabilirsiniz."
@@ -2213,7 +2386,8 @@ msgstr "Arama motoru"
 msgid "Search titles, summaries and bodies."
 msgstr "Başlık, özet ve gövdede arar."
 
-#: src/components/plugin-forms.tsx:111
+#: src/components/plugin-forms.tsx:116
+#: src/components/plugin-forms.tsx:329
 msgid "Secret access key"
 msgstr "Gizli anahtar (Secret access key)"
 
@@ -2237,9 +2411,32 @@ msgstr "Tümünü seç"
 msgid "Select your language"
 msgstr "Dilinizi seçin"
 
+#: src/components/site-mail.tsx:158
+#: src/routes/dashboard.plugins_.email.tsx:175
+msgid "Send"
+msgstr "Gönder"
+
 #: src/routes/dashboard.api.tsx:128
 msgid "Send a form's answers. No account needed."
 msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
+
+#: src/components/site-mail.tsx:138
+#: src/routes/dashboard.plugins_.email.tsx:151
+msgid "Send a test"
+msgstr "Deneme gönder"
+
+#: src/routes/dashboard.plugins.tsx:31
+msgid "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
+msgstr "Amazon SES üzerinden posta gönderin — bu sitenin formlarından biri doldurulduğunda bildirim."
+
+#: src/components/site-mail.tsx:120
+#: src/routes/dashboard.plugins_.email.tsx:133
+msgid "Send mail through SES"
+msgstr "Postaları SES ile gönder"
+
+#: src/components/ses-account.tsx:185
+msgid "sent in the last day"
+msgstr "son günde gönderilen"
 
 #: src/components/editor/post-settings.tsx:376
 msgid "SEO description"
@@ -2253,6 +2450,14 @@ msgstr "SEO başlığı"
 msgid "Separated by commas"
 msgstr "Virgülle ayırın"
 
+#: src/components/ses-account.tsx:301
+msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
+msgstr "SES, doğrulamadığı bir adres ya da alan adından göndermeyi reddeder. Adres eklerseniz ona bir bağlantı gider; alan adı eklerseniz yayınlanacak kayıtlar gelir — o alan adındaki her adresin göndermesini sağlayan budur."
+
+#: src/components/plugin-forms.tsx:359
+msgid "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
+msgstr "SES, doğrulamadığı bir adres ya da alan adından göndermeyi reddeder. İlk mesajın ulaşmamasının olağan sebebi budur."
+
 #: src/routes/dashboard.users.tsx:196
 #: src/routes/dashboard.users.tsx:315
 msgid "Set a password"
@@ -2262,7 +2467,7 @@ msgstr "Parola ata"
 msgid "Set it"
 msgstr "Ata"
 
-#: src/components/plugin-forms.tsx:209
+#: src/components/plugin-forms.tsx:214
 #: src/routes/dashboard.plugins_.backup.tsx:249
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Yedeklerin bu makinenin dışında durmasını istiyorsanız önce S3 eklentisini kurun."
@@ -2353,6 +2558,10 @@ msgstr "Siteler"
 msgid "Small section heading"
 msgstr "Küçük bölüm başlığı"
 
+#: src/components/ses-account.tsx:309
+msgid "someone@example.com or example.com"
+msgstr "biri@example.com ya da example.com"
+
 #: src/components/editor/bubble-menus.tsx:481
 msgid "Split cell"
 msgstr "Hücreyi böl"
@@ -2370,7 +2579,7 @@ msgstr "Durum"
 msgid "Stops working {0}"
 msgstr "{0} tarihinde geçerliliği biter"
 
-#: src/routes/console.sites.$siteId.tsx:308
+#: src/routes/console.sites.$siteId.tsx:309
 msgid "Storage"
 msgstr "Depolama"
 
@@ -2378,10 +2587,11 @@ msgstr "Depolama"
 msgid "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 msgstr "Yüklenen medyayı yerel disk yerine bir S3 bucket'ında saklar (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces)."
 
-#: src/components/plugin-forms.tsx:114
+#: src/components/plugin-forms.tsx:119
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Kayıtlı — değiştirmemek için boş bırakın"
 
+#: src/components/plugin-forms.tsx:338
 #: src/components/publish-panel.tsx:248
 msgid "Stored — type to replace"
 msgstr "Kayıtlı — değiştirmek için yazın"
@@ -2418,7 +2628,7 @@ msgstr "Başarılı!"
 msgid "Superscript"
 msgstr "Üst simge"
 
-#: src/routes/dashboard.forms.tsx:179
+#: src/routes/dashboard.forms.tsx:183
 msgid "switched off"
 msgstr "kapalı"
 
@@ -2470,7 +2680,7 @@ msgstr "Etiketler, dile göre."
 msgid "Take it back"
 msgstr "Geri al"
 
-#: src/routes/dashboard.plugins.tsx:31
+#: src/routes/dashboard.plugins.tsx:35
 msgid "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 msgstr "Veritabanını, istersen yüklenen dosyalarla birlikte, tek bir arşive alır — zamanlanmış olarak, diske ya da S3 kovana."
 
@@ -2479,6 +2689,10 @@ msgstr "Veritabanını, istersen yüklenen dosyalarla birlikte, tek bir arşive 
 #: src/components/editor/toolbar.tsx:518
 msgid "Task list"
 msgstr "Görev listesi"
+
+#: src/routes/dashboard.forms.tsx:298
+msgid "Tell somebody"
+msgstr "Haber ver"
 
 #: src/components/setup/setup-wizard.tsx:581
 msgid "Tell us about your site"
@@ -2519,7 +2733,7 @@ msgstr "Bir başlığın alacağı adres."
 msgid "the agency's, not this site's"
 msgstr "ajansın, bu sitenin değil"
 
-#: src/routes/console.sites.$siteId.tsx:227
+#: src/routes/console.sites.$siteId.tsx:228
 #: src/routes/dashboard.plugins_.backup.tsx:120
 msgid "The backup failed"
 msgstr "Yedekleme başarısız oldu"
@@ -2549,7 +2763,16 @@ msgstr "Son yedekleme başarısız oldu: {0}"
 msgid "The most common shortcuts in the editor."
 msgstr "Editörde en sık kullanılan kısayollar."
 
-#: src/routes/console.sites.$siteId.tsx:242
+#: src/components/plugin-forms.tsx:313
+msgid "The one your SES identities are verified in. Verification does not cross regions."
+msgstr "SES kimliklerinizin doğrulandığı bölge. Doğrulama bölgeler arasında geçmez."
+
+#: src/components/site-mail.tsx:140
+#: src/routes/dashboard.plugins_.email.tsx:153
+msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
+msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, SES'in doğrulamadığı bir adres ve hâlâ kum havuzundaki bir hesap — gerçekten bir şey gönderilene kadar üçü de aynı görünür."
+
+#: src/routes/console.sites.$siteId.tsx:243
 #: src/routes/dashboard.plugins_.backup.tsx:154
 #: src/routes/dashboard.plugins_.backup.tsx:170
 msgid "The restore failed"
@@ -2582,6 +2805,10 @@ msgstr "Bunlar herkese cevap verir; iletişim formunu dolduran ziyaretçinin bur
 #: src/routes/dashboard.users.tsx:257
 msgid "They can write, publish and manage this site."
 msgstr "Bu siteyi yazabilir, yayınlayabilir ve yönetebilirler."
+
+#: src/components/ses-account.tsx:206
+msgid "This account is out of the sandbox: it can write to anybody."
+msgstr "Bu hesap kum havuzundan çıkmış: herkese yazabilir."
 
 #: src/routes/dashboard.api.tsx:183
 #~ msgid "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
@@ -2631,6 +2858,10 @@ msgstr "Tekrar dene"
 #: src/components/editor/block-handle.tsx:163
 msgid "Turn into"
 msgstr "Şuna dönüştür"
+
+#: src/components/ses-account.tsx:422
+msgid "Unblock"
+msgstr "Engeli kaldır"
 
 #: src/routes/dashboard.index.tsx:169
 msgid "Uncategorized"
@@ -2689,7 +2920,7 @@ msgstr "Yüklenen dosyalar ve adresleri."
 msgid "URL"
 msgstr "URL"
 
-#: src/components/plugin-forms.tsx:70
+#: src/components/plugin-forms.tsx:75
 msgid "Use S3 for new uploads"
 msgstr "Yeni yüklemelerde S3 kullan"
 
@@ -2704,15 +2935,35 @@ msgstr "Kullanıcı adı"
 msgid "value"
 msgstr "değer"
 
+#: src/components/ses-account.tsx:335
+msgid "Verified"
+msgstr "Doğrulandı"
+
+#: src/components/ses-account.tsx:317
+msgid "Verify"
+msgstr "Doğrula"
+
 #: src/components/editor/dialogs.tsx:541
 msgid "View"
 msgstr "Görünüm"
+
+#: src/components/ses-account.tsx:335
+msgid "Waiting"
+msgstr "Bekliyor"
 
 #: src/components/setup/setup-wizard.tsx:641
 msgid "Weak"
 msgstr "Zayıf"
 
-#: src/routes/dashboard.forms.tsx:227
+#: src/components/ses-account.tsx:253
+msgid "Website"
+msgstr "Web sitesi"
+
+#: src/components/ses-account.tsx:165
+msgid "What Amazon allows"
+msgstr "Amazon'un izin verdiği"
+
+#: src/routes/dashboard.forms.tsx:231
 msgid "What comes in is kept as it was sent, so changing the fields later never rewrites it."
 msgstr "Gelenler gönderildiği gibi saklanır; alanları sonradan değiştirmek geleni yeniden yazmaz."
 
@@ -2720,30 +2971,43 @@ msgstr "Gelenler gönderildiği gibi saklanır; alanları sonradan değiştirmek
 msgid "What has come in, newest first."
 msgstr "Gelenler, en yenisi başta."
 
-#: src/routes/dashboard.forms.tsx:283
+#: src/components/ses-account.tsx:225
+msgid "What the mail is"
+msgstr "Postanın türü"
+
+#: src/routes/dashboard.forms.tsx:287
 msgid "What this form is for — only you see this"
 msgstr "Bu form ne için — bunu yalnızca siz görürsünüz"
+
+#: src/components/site-mail.tsx:110
+msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
+msgstr "Bu sitenin postayı neyle gönderdiği. Bir form haber verilecek bir adres belirtebilir; oraya bu yoldan ulaşır."
 
 #: src/routes/dashboard.forms_.$formId.tsx:188
 msgid "When"
 msgstr "Ne zaman"
 
-#: src/components/plugin-forms.tsx:72
+#: src/components/plugin-forms.tsx:77
 msgid "When off, uploads are stored on the server's disk."
 msgstr "Kapalıyken yüklemeler sunucunun diskinde saklanır."
 
-#: src/components/plugin-forms.tsx:122
+#: src/components/plugin-forms.tsx:127
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Okuyucuların görselleri yüklediği adres (bucket genel URL'si veya CDN)"
 
-#: src/routes/console.sites.$siteId.tsx:279
+#: src/routes/console.sites.$siteId.tsx:280
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Bu sitenin sayfaları nereden geliyor ve son derlemeler nasıl gitti."
 
-#: src/components/plugin-forms.tsx:174
+#: src/components/plugin-forms.tsx:179
 #: src/routes/dashboard.plugins_.backup.tsx:216
 msgid "Where to keep them"
 msgstr "Nerede saklansın"
+
+#: src/components/site-mail.tsx:149
+#: src/routes/dashboard.plugins_.email.tsx:162
+msgid "Where to send it"
+msgstr "Nereye gönderilsin"
 
 #: src/routes/dashboard.api.tsx:123
 msgid "Which fields a form takes, and which are required."
@@ -2753,9 +3017,21 @@ msgstr "Bir formun hangi alanları aldığı ve hangileri zorunlu."
 msgid "Who can sign in to this site and write on it."
 msgstr "Bu siteye kimler girip yazabilir."
 
+#: src/components/ses-account.tsx:276
+msgid "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
+msgstr "Kimin aldığı, listeye nasıl girdiği ve nasıl çıkabildiği. Bunu Amazon'da bir insan okuyor."
+
+#: src/components/ses-account.tsx:299
+msgid "Who you may send as"
+msgstr "Kimin adına gönderebilirsiniz"
+
 #: src/components/editor/find-replace.tsx:156
 msgid "Whole word"
 msgstr "Tam kelime"
+
+#: src/components/ses-account.tsx:265
+msgid "Why you send"
+msgstr "Neden gönderiyorsunuz"
 
 #: src/routes/dashboard.api.tsx:185
 msgid "Without an account"
@@ -2820,7 +3096,7 @@ msgstr "Sayfalarınız kendi projenizden derleniyor. Yayınlamak, onları CMS'te
 
 #: src/routes/console.account.tsx:77
 #: src/routes/console.index.tsx:129
-#: src/routes/console.sites.$siteId.tsx:272
+#: src/routes/console.sites.$siteId.tsx:273
 msgid "Your sites"
 msgstr "Siteleriniz"
 

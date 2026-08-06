@@ -26,14 +26,22 @@ function PluginsRoute() {
       name: t`S3 compatible storage`,
       description: t`Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk.`,
     },
+    amazon_ses: {
+      name: t`Amazon SES`,
+      description: t`Send mail through Amazon SES — a notification when somebody fills in one of this site's forms.`,
+    },
     backup: {
       name: t`Backups`,
       description: t`Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket.`,
     },
   }
 
-  const SETTINGS_PATH: Record<string, "/dashboard/plugins/s3" | "/dashboard/plugins/backup"> = {
+  const SETTINGS_PATH: Record<
+    string,
+    "/dashboard/plugins/s3" | "/dashboard/plugins/backup" | "/dashboard/plugins/email"
+  > = {
     s3_storage: "/dashboard/plugins/s3",
+    amazon_ses: "/dashboard/plugins/email",
     backup: "/dashboard/plugins/backup",
   }
 

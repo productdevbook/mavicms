@@ -38,9 +38,10 @@ import {
 } from "@/components/publish-panel"
 import { BackupFields, S3Fields } from "@/components/plugin-forms"
 import { LocalEnv } from "@/components/local-env"
+import { SiteMail } from "@/components/site-mail"
 import { EMPTY_CONFIG, isBusy } from "@/lib/publish"
 
-type Tab = "publish" | "storage" | "backups" | "local"
+type Tab = "publish" | "storage" | "mail" | "backups" | "local"
 
 /** The server never sends the secret back; empty means keep what is stored. */
 function payloadOf(settings: S3Settings): S3SettingsPayload {
@@ -306,6 +307,7 @@ function ConsoleSiteRoute() {
             [
               ["publish", t`Publish`],
               ["storage", t`Storage`],
+              ["mail", t`Mail`],
               ["backups", t`Backups`],
               ["local", t`Local`],
             ] as const
@@ -450,6 +452,8 @@ function ConsoleSiteRoute() {
               </div>
             </div>
           ))}
+        {tab === "mail" && <SiteMail siteId={siteId} />}
+
         {tab === "local" && <LocalEnv siteId={siteId} />}
 
       </main>

@@ -255,6 +255,9 @@ pub struct SaveFormRequest {
     pub fields: Vec<FormField>,
     #[serde(default = "yes")]
     pub active: bool,
+    /// An address to tell when something comes in. Empty means nobody.
+    #[serde(default)]
+    pub notify: String,
 }
 
 fn yes() -> bool {
@@ -269,6 +272,7 @@ pub struct FormResponse {
     pub description: String,
     pub fields: Vec<FormField>,
     pub active: bool,
+    pub notify: String,
     pub submissions: u64,
     /// How many have not been opened in the panel yet.
     pub unseen: u64,

@@ -1027,3 +1027,233 @@ pub async fn delete_site_development_token(
     }
     Ok(StatusCode::NO_CONTENT)
 }
+
+/// One of this agency's sites' mail settings.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Mail settings", body = crate::email::EmailSettingsResponse))
+)]
+pub async fn get_site_email(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::email::EmailSettingsResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::email_settings_of(&state).await?,
+    ))
+}
+
+/// Set them.
+#[utoipa::path(
+    put,
+    path = "/console/sites/{id}/plugins/email",
+    tag = "console",
+    request_body = crate::email::EmailSettingsRequest,
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Saved", body = crate::email::EmailSettingsResponse))
+)]
+pub async fn save_site_email(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::email::EmailSettingsRequest>,
+) -> AppResult<Json<crate::email::EmailSettingsResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::save_email_of(&state, payload).await?,
+    ))
+}
+
+/// Send a test message from one of this agency's sites.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/test",
+    tag = "console",
+    request_body = crate::email::TestEmailRequest,
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Test result", body = crate::dto::plugins::ConnectionTestResponse))
+)]
+pub async fn test_site_email(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::email::TestEmailRequest>,
+) -> AppResult<Json<crate::dto::plugins::ConnectionTestResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::test_email_of(&state, payload).await?,
+    ))
+}
+
+/// What Amazon says about one of this agency's sites' SES account.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email/account",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Quota, sandbox and enforcement", body = crate::email::AccountStatus))
+)]
+pub async fn get_site_email_account(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::email::AccountStatus>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::email_account_of(&state).await?,
+    ))
+}
+
+/// Ask Amazon to take it out of the sandbox.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/production-access",
+    tag = "console",
+    request_body = crate::email::ProductionAccessRequest,
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 204, description = "Asked"))
+)]
+pub async fn request_site_production_access(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::email::ProductionAccessRequest>,
+) -> AppResult<StatusCode> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    crate::routes::plugins::request_production_access_of(&state, payload).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// The senders SES will send as.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email/identities",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Verified senders", body = Vec<crate::email::Identity>))
+)]
+pub async fn list_site_email_identities(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<Vec<crate::email::Identity>>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::email_identities_of(&state).await?,
+    ))
+}
+
+/// Ask SES to trust one.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/identities",
+    tag = "console",
+    request_body = crate::routes::plugins::IdentityRequest,
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 204, description = "Asked"))
+)]
+pub async fn add_site_email_identity(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::routes::plugins::IdentityRequest>,
+) -> AppResult<StatusCode> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    crate::routes::plugins::add_email_identity_of(&state, &payload.name).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Stop trusting one.
+#[utoipa::path(
+    delete,
+    path = "/console/sites/{id}/plugins/email/identities/{name}",
+    tag = "console",
+    params(
+        ("id" = String, Path, description = "Site id"),
+        ("name" = String, Path, description = "The address or domain"),
+    ),
+    responses((status = 204, description = "Removed"))
+)]
+pub async fn delete_site_email_identity(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path((id, name)): Path<(Uuid, String)>,
+) -> AppResult<StatusCode> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    crate::routes::plugins::remove_email_identity_of(&state, &name).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// The addresses SES has stopped writing to.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email/suppressed",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Blocked addresses", body = Vec<crate::email::Suppressed>))
+)]
+pub async fn list_site_email_suppressed(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<Vec<crate::email::Suppressed>>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::email_suppressed_of(&state).await?,
+    ))
+}
+
+/// Take one off that list.
+#[utoipa::path(
+    delete,
+    path = "/console/sites/{id}/plugins/email/suppressed/{address}",
+    tag = "console",
+    params(
+        ("id" = String, Path, description = "Site id"),
+        ("address" = String, Path, description = "The address"),
+    ),
+    responses((status = 204, description = "Unblocked"))
+)]
+pub async fn delete_site_email_suppressed(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path((id, address)): Path<(Uuid, String)>,
+) -> AppResult<StatusCode> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    crate::routes::plugins::unsuppress_email_of(&state, &address).await?;
+    Ok(StatusCode::NO_CONTENT)
+}

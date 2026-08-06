@@ -66,7 +66,7 @@ msgstr "{0} · {1} · {2} · {3}"
 
 #. placeholder {0}: removing?.name
 #. placeholder {1}: removing?.submissions ?? 0
-#: src/routes/dashboard.forms.tsx:325
+#: src/routes/dashboard.forms.tsx:345
 msgid "{0} and the {1} answers it holds go with it. Switching it off instead keeps them."
 msgstr "{0} and the {1} answers it holds go with it. Switching it off instead keeps them."
 
@@ -108,7 +108,7 @@ msgid "{0} of {1} used."
 msgstr "{0} of {1} used."
 
 #. placeholder {0}: form.submissions
-#: src/routes/dashboard.forms.tsx:198
+#: src/routes/dashboard.forms.tsx:202
 msgid "{0} received"
 msgstr "{0} received"
 
@@ -191,7 +191,7 @@ msgstr "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as
 #~ msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 #~ msgstr "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 
-#: src/components/plugin-forms.tsx:220
+#: src/components/plugin-forms.tsx:225
 #: src/routes/dashboard.plugins_.backup.tsx:265
 msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
@@ -200,16 +200,28 @@ msgstr "A folder inside the data directory."
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 
+#: src/components/ses-account.tsx:389
+msgid "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
+msgstr "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
+
+#: src/components/ses-account.tsx:207
+msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
+msgstr "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
+
 #: src/routes/dashboard.api.tsx:202
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 
-#: src/components/plugin-forms.tsx:219
+#: src/components/plugin-forms.tsx:224
 #: src/routes/dashboard.plugins_.backup.tsx:264
 msgid "A prefix inside the bucket."
 msgstr "A prefix inside the bucket."
 
-#: src/routes/dashboard.forms.tsx:300
+#: src/components/ses-account.tsx:189
+msgid "a second, at most"
+msgstr "a second, at most"
+
+#: src/routes/dashboard.forms.tsx:320
 msgid "Accepting answers"
 msgstr "Accepting answers"
 
@@ -217,7 +229,8 @@ msgstr "Accepting answers"
 msgid "Accepts"
 msgstr "Accepts"
 
-#: src/components/plugin-forms.tsx:105
+#: src/components/plugin-forms.tsx:110
+#: src/components/plugin-forms.tsx:317
 msgid "Access key ID"
 msgstr "Access key ID"
 
@@ -325,10 +338,14 @@ msgstr "Add table"
 #: src/components/editor/dialogs.tsx:300
 #: src/routes/console.index.tsx:197
 #: src/routes/dashboard.api.tsx:143
-#: src/routes/dashboard.forms.tsx:260
+#: src/routes/dashboard.forms.tsx:264
 #: src/routes/dashboard.sites.tsx:257
 msgid "Address"
 msgstr "Address"
+
+#: src/components/ses-account.tsx:387
+msgid "Addresses Amazon refuses"
+msgstr "Addresses Amazon refuses"
 
 #: src/routes/dashboard.sites.tsx:189
 msgid "Agencies"
@@ -388,6 +405,16 @@ msgstr "Already have an account? Sign in"
 msgid "Alt text"
 msgstr "Alt text"
 
+#. placeholder {0}: account.enforcement_status
+#: src/components/ses-account.tsx:196
+msgid "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
+msgstr "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
+
+#: src/routes/dashboard.plugins_.email.tsx:119
+#: src/routes/dashboard.plugins.tsx:30
+msgid "Amazon SES"
+msgstr "Amazon SES"
+
 #: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
 msgstr "An archive holding the database, and the uploaded files if you ask for them."
@@ -396,12 +423,20 @@ msgstr "An archive holding the database, and the uploaded files if you ask for t
 msgid "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 msgstr "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 
+#: src/routes/dashboard.forms.tsx:309
+msgid "An email each time somebody fills this in. Needs Amazon SES switched on under Plugins — what comes in is kept either way."
+msgstr "An email each time somebody fills this in. Needs Amazon SES switched on under Plugins — what comes in is kept either way."
+
+#: src/components/plugin-forms.tsx:342
+msgid "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
+msgstr "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
+
 #: src/components/editor/post-settings.tsx:41
 #~ msgid "Announcement"
 #~ msgstr "Announcement"
 
 #. placeholder {0}: draft.slug || "…"
-#: src/routes/dashboard.forms.tsx:271
+#: src/routes/dashboard.forms.tsx:275
 msgid "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 msgstr "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 
@@ -415,14 +450,26 @@ msgstr "API"
 msgid "Apply"
 msgstr "Apply"
 
-#: src/routes/console.sites.$siteId.tsx:419
+#: src/routes/console.sites.$siteId.tsx:421
 #: src/routes/dashboard.plugins_.backup.tsx:347
 msgid "Archives"
 msgstr "Archives"
 
+#: src/components/ses-account.tsx:290
+msgid "Ask to leave the sandbox"
+msgstr "Ask to leave the sandbox"
+
 #: src/routes/console.account.tsx:130
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
+
+#: src/components/ses-account.tsx:121
+msgid "Asked SES to verify it"
+msgstr "Asked SES to verify it"
+
+#: src/components/ses-account.tsx:105
+msgid "Asked. Amazon usually answers within a day."
+msgstr "Asked. Amazon usually answers within a day."
 
 #: src/routes/console.register.tsx:140
 msgid "At least {MINIMUM_PASSWORD} characters."
@@ -442,7 +489,7 @@ msgstr "Back"
 msgid "Back to editing"
 msgstr "Back to editing"
 
-#: src/routes/console.sites.$siteId.tsx:414
+#: src/routes/console.sites.$siteId.tsx:416
 #: src/routes/dashboard.plugins_.backup.tsx:337
 msgid "Back up now"
 msgstr "Back up now"
@@ -452,14 +499,14 @@ msgid "Backup settings saved"
 msgstr "Backup settings saved"
 
 #. placeholder {0}: file.name
-#: src/routes/console.sites.$siteId.tsx:224
+#: src/routes/console.sites.$siteId.tsx:225
 #: src/routes/dashboard.plugins_.backup.tsx:116
 msgid "Backup written: {0}"
 msgstr "Backup written: {0}"
 
-#: src/routes/console.sites.$siteId.tsx:309
+#: src/routes/console.sites.$siteId.tsx:311
 #: src/routes/dashboard.plugins_.backup.tsx:198
-#: src/routes/dashboard.plugins.tsx:30
+#: src/routes/dashboard.plugins.tsx:34
 msgid "Backups"
 msgstr "Backups"
 
@@ -497,7 +544,7 @@ msgstr "Bold"
 msgid "Branch"
 msgstr "Branch"
 
-#: src/components/plugin-forms.tsx:99
+#: src/components/plugin-forms.tsx:104
 msgid "Bucket"
 msgstr "Bucket"
 
@@ -513,7 +560,7 @@ msgstr "Build this site's pages again."
 msgid "Build variables"
 msgstr "Build variables"
 
-#: src/routes/dashboard.plugins.tsx:51
+#: src/routes/dashboard.plugins.tsx:59
 msgid "Built-in integrations you can switch on and configure."
 msgstr "Built-in integrations you can switch on and configure."
 
@@ -529,8 +576,8 @@ msgstr "Bullet list"
 #: src/routes/console.index.tsx:209
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
-#: src/routes/dashboard.forms.tsx:307
-#: src/routes/dashboard.forms.tsx:329
+#: src/routes/dashboard.forms.tsx:327
+#: src/routes/dashboard.forms.tsx:349
 #: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
@@ -636,7 +683,11 @@ msgstr "Command menu"
 msgid "Comments"
 msgstr "Comments"
 
-#: src/routes/dashboard.plugins.tsx:97
+#: src/components/plugin-forms.tsx:384
+msgid "Configuration set"
+msgstr "Configuration set"
+
+#: src/routes/dashboard.plugins.tsx:105
 msgid "Configure"
 msgstr "Configure"
 
@@ -702,6 +753,10 @@ msgstr "Copy text"
 msgid "Copy your post in different formats, download it, or import Markdown."
 msgstr "Copy your post in different formats, download it, or import Markdown."
 
+#: src/components/ses-account.tsx:125
+msgid "Could not add it"
+msgstr "Could not add it"
+
 #: src/routes/dashboard.languages.tsx:61
 msgid "Could not add language"
 msgstr "Could not add language"
@@ -719,6 +774,15 @@ msgstr "Could not add the account"
 msgid "Could not add the site"
 msgstr "Could not add the site"
 
+#: src/components/ses-account.tsx:109
+msgid "Could not ask"
+msgstr "Could not ask"
+
+#: src/components/ses-account.tsx:87
+#: src/components/ses-account.tsx:153
+msgid "Could not ask Amazon"
+msgstr "Could not ask Amazon"
+
 #: src/routes/dashboard.sites.tsx:84
 #: src/routes/dashboard.sites.tsx:113
 #: src/routes/dashboard.users.tsx:108
@@ -727,6 +791,7 @@ msgid "Could not change it"
 msgstr "Could not change it"
 
 #: src/components/local-env.tsx:109
+#: src/components/ses-account.tsx:138
 #: src/routes/dashboard.forms_.$formId.tsx:41
 msgid "Could not copy it"
 msgstr "Could not copy it"
@@ -756,7 +821,9 @@ msgstr "Could not delete tag"
 msgid "Could not delete the backup"
 msgstr "Could not delete the backup"
 
+#: src/components/site-mail.tsx:92
 #: src/routes/dashboard.forms_.$formId.tsx:89
+#: src/routes/dashboard.plugins_.email.tsx:92
 msgid "Could not do it"
 msgstr "Could not do it"
 
@@ -772,7 +839,7 @@ msgstr "Could not load post"
 msgid "Could not load the accounts"
 msgstr "Could not load the accounts"
 
-#: src/routes/console.sites.$siteId.tsx:129
+#: src/routes/console.sites.$siteId.tsx:130
 #: src/routes/dashboard.plugins_.backup.tsx:84
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
@@ -781,7 +848,7 @@ msgstr "Could not load the backup settings"
 msgid "Could not load the form"
 msgstr "Could not load the form"
 
-#: src/routes/dashboard.forms.tsx:84
+#: src/routes/dashboard.forms.tsx:86
 msgid "Could not load the forms"
 msgstr "Could not load the forms"
 
@@ -789,7 +856,12 @@ msgstr "Could not load the forms"
 msgid "Could not load the local settings"
 msgstr "Could not load the local settings"
 
-#: src/routes/console.sites.$siteId.tsx:136
+#: src/components/site-mail.tsx:58
+#: src/routes/dashboard.plugins_.email.tsx:55
+msgid "Could not load the mail settings"
+msgstr "Could not load the mail settings"
+
+#: src/routes/console.sites.$siteId.tsx:137
 #: src/routes/dashboard.publish.tsx:48
 msgid "Could not load the publishing settings"
 msgstr "Could not load the publishing settings"
@@ -798,7 +870,7 @@ msgstr "Could not load the publishing settings"
 msgid "Could not load the sites"
 msgstr "Could not load the sites"
 
-#: src/routes/console.sites.$siteId.tsx:124
+#: src/routes/console.sites.$siteId.tsx:125
 msgid "Could not load the storage settings"
 msgstr "Could not load the storage settings"
 
@@ -811,7 +883,7 @@ msgid "Could not make a token"
 msgstr "Could not make a token"
 
 #: src/routes/console.index.tsx:84
-#: src/routes/console.sites.$siteId.tsx:256
+#: src/routes/console.sites.$siteId.tsx:257
 msgid "Could not open the site"
 msgstr "Could not open the site"
 
@@ -823,8 +895,9 @@ msgstr "Could not open the site"
 msgid "Could not reach the server. Please try again."
 msgstr "Could not reach the server. Please try again."
 
+#: src/components/ses-account.tsx:347
 #: src/routes/dashboard.forms_.$formId.tsx:103
-#: src/routes/dashboard.forms.tsx:124
+#: src/routes/dashboard.forms.tsx:127
 #: src/routes/dashboard.sites.tsx:100
 #: src/routes/dashboard.users.tsx:122
 msgid "Could not remove it"
@@ -833,6 +906,11 @@ msgstr "Could not remove it"
 #: src/routes/dashboard.languages.tsx:83
 msgid "Could not remove language"
 msgstr "Could not remove language"
+
+#: src/components/site-mail.tsx:78
+#: src/routes/dashboard.plugins_.email.tsx:78
+msgid "Could not save it"
+msgstr "Could not save it"
 
 #: src/components/editor/mavi-editor.tsx:311
 msgid "Could not save post"
@@ -846,20 +924,20 @@ msgstr "Could not save settings"
 msgid "Could not save tag"
 msgstr "Could not save tag"
 
-#: src/routes/dashboard.forms.tsx:110
+#: src/routes/dashboard.forms.tsx:113
 msgid "Could not save the form"
 msgstr "Could not save the form"
 
 #: src/routes/console.account.tsx:61
-#: src/routes/console.sites.$siteId.tsx:168
-#: src/routes/console.sites.$siteId.tsx:198
-#: src/routes/console.sites.$siteId.tsx:213
+#: src/routes/console.sites.$siteId.tsx:169
+#: src/routes/console.sites.$siteId.tsx:199
+#: src/routes/console.sites.$siteId.tsx:214
 #: src/routes/dashboard.plugins_.backup.tsx:105
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Could not save the settings"
 
-#: src/routes/console.sites.$siteId.tsx:183
+#: src/routes/console.sites.$siteId.tsx:184
 #: src/routes/dashboard.publish.tsx:97
 msgid "Could not start the build"
 msgstr "Could not start the build"
@@ -867,6 +945,10 @@ msgstr "Could not start the build"
 #: src/components/local-env.tsx:88
 msgid "Could not take it back"
 msgstr "Could not take it back"
+
+#: src/components/ses-account.tsx:419
+msgid "Could not unblock it"
+msgstr "Could not unblock it"
 
 #: src/routes/dashboard.tags.tsx:115
 msgid "Could not unlink tag"
@@ -1023,7 +1105,7 @@ msgstr "Delete this post?"
 msgid "Delete this tag?"
 msgstr "Delete this tag?"
 
-#: src/routes/dashboard.forms.tsx:153
+#: src/routes/dashboard.forms.tsx:157
 msgid "Describe what a form accepts here, then have your own pages post to it."
 msgstr "Describe what a form accepts here, then have your own pages post to it."
 
@@ -1035,11 +1117,15 @@ msgstr "Description text shown in search results."
 #~ msgid "Design"
 #~ msgstr "Design"
 
+#: src/components/ses-account.tsx:409
+msgid "Did not arrive"
+msgstr "Did not arrive"
+
 #: src/components/locale-toggle.tsx:23
 #~ msgid "Dil"
 #~ msgstr "Dil"
 
-#: src/routes/dashboard.plugins.tsx:80
+#: src/routes/dashboard.plugins.tsx:88
 msgid "Disabled"
 msgstr "Disabled"
 
@@ -1071,12 +1157,12 @@ msgstr "Each language has its own tags. Link them so a post's tag can point at i
 #: src/components/editor/bubble-menus.tsx:323
 #: src/components/editor/mavi-editor.tsx:516
 #: src/routes/dashboard.categories.tsx:309
-#: src/routes/dashboard.forms.tsx:202
+#: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.index.tsx:192
 msgid "Edit"
 msgstr "Edit"
 
-#: src/routes/dashboard.forms.tsx:224
+#: src/routes/dashboard.forms.tsx:228
 msgid "Edit the form"
 msgstr "Edit the form"
 
@@ -1105,13 +1191,13 @@ msgstr "Embed a video"
 msgid "Emoji"
 msgstr "Emoji"
 
-#: src/components/plugin-forms.tsx:165
+#: src/components/plugin-forms.tsx:170
 #: src/routes/dashboard.plugins_.backup.tsx:207
-#: src/routes/dashboard.plugins.tsx:78
+#: src/routes/dashboard.plugins.tsx:86
 msgid "Enabled"
 msgstr "Enabled"
 
-#: src/components/plugin-forms.tsx:84
+#: src/components/plugin-forms.tsx:89
 msgid "Endpoint"
 msgstr "Endpoint"
 
@@ -1127,12 +1213,12 @@ msgstr "Enter a valid email address"
 msgid "Enter details"
 msgstr "Enter details"
 
-#: src/components/plugin-forms.tsx:157
+#: src/components/plugin-forms.tsx:162
 #: src/routes/dashboard.plugins_.backup.tsx:90
 msgid "Every day"
 msgstr "Every day"
 
-#: src/components/plugin-forms.tsx:156
+#: src/components/plugin-forms.tsx:161
 #: src/routes/dashboard.plugins_.backup.tsx:89
 msgid "Every hour"
 msgstr "Every hour"
@@ -1150,7 +1236,7 @@ msgstr "Every post, category, tag and account this site has now is replaced by w
 msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 msgstr "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 
-#: src/components/plugin-forms.tsx:158
+#: src/components/plugin-forms.tsx:163
 #: src/routes/dashboard.plugins_.backup.tsx:91
 msgid "Every week"
 msgstr "Every week"
@@ -1190,7 +1276,7 @@ msgstr "Focus mode"
 msgid "Foldable details block"
 msgstr "Foldable details block"
 
-#: src/components/plugin-forms.tsx:216
+#: src/components/plugin-forms.tsx:221
 #: src/routes/dashboard.plugins_.backup.tsx:255
 msgid "Folder"
 msgstr "Folder"
@@ -1211,9 +1297,21 @@ msgstr "Formatting"
 
 #: src/components/dashboard/dashboard-shell.tsx:76
 #: src/routes/dashboard.forms_.$formId.tsx:144
-#: src/routes/dashboard.forms.tsx:151
+#: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
 msgstr "Forms"
+
+#: src/components/plugin-forms.tsx:348
+msgid "From address"
+msgstr "From address"
+
+#: src/components/plugin-forms.tsx:363
+msgid "From name"
+msgstr "From name"
+
+#: src/components/ses-account.tsx:214
+msgid "Full access"
+msgstr "Full access"
 
 #: src/components/editor/bubble-menus.tsx:387
 msgid "Full width"
@@ -1323,12 +1421,12 @@ msgstr "Highlighted on the home page"
 msgid "Host"
 msgstr "Host"
 
-#: src/components/plugin-forms.tsx:266
+#: src/components/plugin-forms.tsx:271
 #: src/routes/dashboard.plugins_.backup.tsx:307
 msgid "How many to keep"
 msgstr "How many to keep"
 
-#: src/components/plugin-forms.tsx:242
+#: src/components/plugin-forms.tsx:247
 #: src/routes/dashboard.plugins_.backup.tsx:284
 msgid "How often"
 msgstr "How often"
@@ -1371,7 +1469,7 @@ msgstr "Import this archive?"
 msgid "In review"
 msgstr "In review"
 
-#: src/components/plugin-forms.tsx:229
+#: src/components/plugin-forms.tsx:234
 #: src/routes/dashboard.plugins_.backup.tsx:271
 msgid "Include the uploaded files"
 msgstr "Include the uploaded files"
@@ -1471,6 +1569,11 @@ msgstr "Languages"
 msgid "Large section heading"
 msgstr "Large section heading"
 
+#. placeholder {0}: account.review_status
+#: src/components/ses-account.tsx:220
+msgid "Last request: {0}"
+msgstr "Last request: {0}"
+
 #. placeholder {0}: new Date(config.last_run_at).toLocaleString()
 #: src/routes/dashboard.plugins_.backup.tsx:341
 msgid "Last run {0}"
@@ -1480,13 +1583,17 @@ msgstr "Last run {0}"
 #~ msgid "Leave empty for a file of its own"
 #~ msgstr "Leave empty for a file of its own"
 
-#: src/components/plugin-forms.tsx:85
+#: src/components/plugin-forms.tsx:90
 msgid "Leave empty for AWS S3"
 msgstr "Leave empty for AWS S3"
 
 #: src/routes/console.account.tsx:117
 msgid "Leave empty to keep the one you have"
 msgstr "Leave empty to keep the one you have"
+
+#: src/routes/dashboard.forms.tsx:306
+msgid "Leave empty to tell nobody"
+msgstr "Leave empty to tell nobody"
 
 #: src/routes/dashboard.sites.tsx:273
 msgid "Leave empty to use this server's database"
@@ -1535,7 +1642,7 @@ msgstr "Lists"
 msgid "Loading…"
 msgstr "Loading…"
 
-#: src/routes/console.sites.$siteId.tsx:310
+#: src/routes/console.sites.$siteId.tsx:312
 msgid "Local"
 msgstr "Local"
 
@@ -1548,6 +1655,14 @@ msgstr "Long text"
 msgid "Made {0}"
 msgstr "Made {0}"
 
+#: src/routes/console.sites.$siteId.tsx:310
+msgid "Mail"
+msgstr "Mail"
+
+#: src/routes/dashboard.plugins_.email.tsx:121
+msgid "Mail this site sends — a notification when somebody fills in one of your forms."
+msgstr "Mail this site sends — a notification when somebody fills in one of your forms."
+
 #: src/components/local-env.tsx:153
 msgid "Make a token"
 msgstr "Make a token"
@@ -1556,13 +1671,13 @@ msgstr "Make a token"
 msgid "Make default"
 msgstr "Make default"
 
-#: src/components/plugin-forms.tsx:231
+#: src/components/plugin-forms.tsx:236
 #: src/routes/dashboard.plugins_.backup.tsx:273
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
 #: src/routes/console.index.tsx:179
-#: src/routes/console.sites.$siteId.tsx:293
+#: src/routes/console.sites.$siteId.tsx:294
 msgid "Manage"
 msgstr "Manage"
 
@@ -1611,6 +1726,10 @@ msgstr "Mention someone"
 msgid "Merge cells"
 msgstr "Merge cells"
 
+#: src/components/ses-account.tsx:174
+msgid "messages a day"
+msgstr "messages a day"
+
 #: src/components/form-fields-editor.tsx:166
 msgid "Move down"
 msgstr "Move down"
@@ -1627,8 +1746,8 @@ msgstr "Must be filled in"
 msgid "My Mavi CMS Site"
 msgstr "My Mavi CMS Site"
 
-#: src/routes/dashboard.forms.tsx:156
-#: src/routes/dashboard.forms.tsx:234
+#: src/routes/dashboard.forms.tsx:160
+#: src/routes/dashboard.forms.tsx:238
 msgid "Name"
 msgstr "Name"
 
@@ -1645,8 +1764,8 @@ msgstr "needs translation"
 msgid "New category"
 msgstr "New category"
 
-#: src/routes/dashboard.forms.tsx:157
-#: src/routes/dashboard.forms.tsx:224
+#: src/routes/dashboard.forms.tsx:161
+#: src/routes/dashboard.forms.tsx:228
 msgid "New form"
 msgstr "New form"
 
@@ -1665,12 +1784,17 @@ msgstr "New post"
 msgid "New tag"
 msgstr "New tag"
 
+#: src/components/ses-account.tsx:236
+#: src/components/ses-account.tsx:246
+msgid "Newsletters and campaigns"
+msgstr "Newsletters and campaigns"
+
 #: src/components/editor/find-replace.tsx:112
 #: src/routes/dashboard.index.tsx:235
 msgid "Next"
 msgstr "Next"
 
-#: src/routes/console.sites.$siteId.tsx:422
+#: src/routes/console.sites.$siteId.tsx:424
 #: src/routes/dashboard.plugins_.backup.tsx:350
 msgid "No backups yet"
 msgstr "No backups yet"
@@ -1683,9 +1807,13 @@ msgstr "No categories yet"
 msgid "No emoji found"
 msgstr "No emoji found"
 
-#: src/routes/dashboard.forms.tsx:167
+#: src/routes/dashboard.forms.tsx:171
 msgid "No forms yet"
 msgstr "No forms yet"
+
+#: src/components/ses-account.tsx:171
+msgid "no limit"
+msgstr "no limit"
 
 #: src/components/editor/dialogs.tsx:154
 #: src/routes/dashboard.media.tsx:96
@@ -1726,11 +1854,19 @@ msgstr "No tags yet"
 msgid "No tokens yet"
 msgstr "No tokens yet"
 
-#: src/routes/dashboard.plugins.tsx:81
+#: src/components/ses-account.tsx:395
+msgid "None"
+msgstr "None"
+
+#: src/routes/dashboard.plugins.tsx:89
 msgid "Not configured"
 msgstr "Not configured"
 
-#: src/routes/dashboard.forms.tsx:276
+#: src/components/plugin-forms.tsx:338
+msgid "Not set yet"
+msgstr "Not set yet"
+
+#: src/routes/dashboard.forms.tsx:280
 msgid "Note"
 msgstr "Note"
 
@@ -1741,6 +1877,15 @@ msgstr "Nothing has come in yet"
 #: src/components/publish-panel.tsx:34
 msgid "Nothing published yet"
 msgstr "Nothing published yet"
+
+#: src/components/ses-account.tsx:323
+msgid "Nothing verified yet"
+msgstr "Nothing verified yet"
+
+#: src/components/ses-account.tsx:237
+#: src/components/ses-account.tsx:243
+msgid "Notifications people asked for"
+msgstr "Notifications people asked for"
 
 #: src/components/form-fields-editor.tsx:53
 msgid "Number"
@@ -1757,7 +1902,7 @@ msgstr "Numbered list"
 msgid "Off"
 msgstr "Off"
 
-#: src/components/plugin-forms.tsx:267
+#: src/components/plugin-forms.tsx:272
 #: src/routes/dashboard.plugins_.backup.tsx:319
 msgid "Older archives are removed once a new one is written."
 msgstr "Older archives are removed once a new one is written."
@@ -1767,8 +1912,8 @@ msgstr "Older archives are removed once a new one is written."
 msgid "On"
 msgstr "On"
 
-#: src/components/plugin-forms.tsx:190
 #: src/components/plugin-forms.tsx:195
+#: src/components/plugin-forms.tsx:200
 #: src/routes/dashboard.plugins_.backup.tsx:230
 #: src/routes/dashboard.plugins_.backup.tsx:235
 msgid "On the server's disk"
@@ -1802,7 +1947,7 @@ msgstr "One post by its address."
 msgid "One post, with its other languages."
 msgstr "One post, with its other languages."
 
-#: src/components/plugin-forms.tsx:155
+#: src/components/plugin-forms.tsx:160
 #: src/routes/dashboard.plugins_.backup.tsx:88
 msgid "Only by hand"
 msgstr "Only by hand"
@@ -1828,7 +1973,12 @@ msgstr "Open in new tab"
 msgid "OpenAPI document"
 msgstr "OpenAPI document"
 
-#: src/components/plugin-forms.tsx:130
+#: src/components/plugin-forms.tsx:380
+#: src/components/plugin-forms.tsx:391
+msgid "Optional"
+msgstr "Optional"
+
+#: src/components/plugin-forms.tsx:135
 msgid "Optional folder inside the bucket"
 msgstr "Optional folder inside the bucket"
 
@@ -1879,7 +2029,7 @@ msgstr "Paste an image address, drag and drop one, or pick from your media libra
 msgid "Paste the video link."
 msgstr "Paste the video link."
 
-#: src/components/plugin-forms.tsx:129
+#: src/components/plugin-forms.tsx:134
 msgid "Path prefix"
 msgstr "Path prefix"
 
@@ -1914,8 +2064,9 @@ msgstr "Plain text block"
 
 #: src/components/dashboard/dashboard-shell.tsx:83
 #: src/routes/dashboard.plugins_.backup.tsx:194
+#: src/routes/dashboard.plugins_.email.tsx:115
 #: src/routes/dashboard.plugins_.s3.tsx:111
-#: src/routes/dashboard.plugins.tsx:49
+#: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
 msgstr "Plugins"
 
@@ -1979,14 +2130,14 @@ msgstr "Previous"
 #~ msgid "Product"
 #~ msgstr "Product"
 
-#: src/components/plugin-forms.tsx:121
+#: src/components/plugin-forms.tsx:126
 msgid "Public base URL"
 msgstr "Public base URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:90
 #: src/components/editor/mavi-editor.tsx:607
 #: src/components/publish-panel.tsx:306
-#: src/routes/console.sites.$siteId.tsx:307
+#: src/routes/console.sites.$siteId.tsx:308
 #: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
 msgstr "Publish"
@@ -1995,11 +2146,15 @@ msgstr "Publish"
 msgid "Publish date"
 msgstr "Publish date"
 
+#: src/components/ses-account.tsx:357
+msgid "Publish these three CNAME records on the domain, then this turns itself green."
+msgstr "Publish these three CNAME records on the domain, then this turns itself green."
+
 #: src/components/editor/types.ts:29
 msgid "Published"
 msgstr "Published"
 
-#: src/routes/console.sites.$siteId.tsx:180
+#: src/routes/console.sites.$siteId.tsx:181
 #: src/routes/dashboard.publish.tsx:94
 msgid "Publishing — this takes a minute or two"
 msgstr "Publishing — this takes a minute or two"
@@ -2035,7 +2190,7 @@ msgstr "Reading"
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 
-#: src/routes/console.sites.$siteId.tsx:354
+#: src/routes/console.sites.$siteId.tsx:356
 #: src/routes/dashboard.publish.tsx:152
 msgid "Recent builds"
 msgstr "Recent builds"
@@ -2049,7 +2204,8 @@ msgstr "Redo"
 msgid "Refresh"
 msgstr "Refresh"
 
-#: src/components/plugin-forms.tsx:92
+#: src/components/plugin-forms.tsx:97
+#: src/components/plugin-forms.tsx:305
 msgid "Region"
 msgstr "Region"
 
@@ -2061,9 +2217,10 @@ msgstr "Regular expression"
 #: src/components/editor/bubble-menus.tsx:274
 #: src/components/form-fields-editor.tsx:175
 #: src/components/publish-panel.tsx:136
+#: src/components/ses-account.tsx:342
 #: src/routes/dashboard.forms_.$formId.tsx:224
-#: src/routes/dashboard.forms.tsx:207
-#: src/routes/dashboard.forms.tsx:331
+#: src/routes/dashboard.forms.tsx:211
+#: src/routes/dashboard.forms.tsx:351
 #: src/routes/dashboard.languages.tsx:196
 #: src/routes/dashboard.sites.tsx:177
 #: src/routes/dashboard.sites.tsx:334
@@ -2088,7 +2245,7 @@ msgstr "Remove link"
 msgid "Remove this account?"
 msgstr "Remove this account?"
 
-#: src/routes/dashboard.forms.tsx:323
+#: src/routes/dashboard.forms.tsx:343
 msgid "Remove this form?"
 msgstr "Remove this form?"
 
@@ -2116,6 +2273,14 @@ msgstr "Replace content"
 msgid "Replace…"
 msgstr "Replace…"
 
+#: src/components/plugin-forms.tsx:374
+msgid "Reply-to"
+msgstr "Reply-to"
+
+#: src/components/ses-account.tsx:408
+msgid "Reported it as spam"
+msgstr "Reported it as spam"
+
 #: src/components/publish-panel.tsx:199
 msgid "Repository"
 msgstr "Repository"
@@ -2124,7 +2289,7 @@ msgstr "Repository"
 msgid "Request failed"
 msgstr "Request failed"
 
-#: src/routes/console.sites.$siteId.tsx:444
+#: src/routes/console.sites.$siteId.tsx:446
 #: src/routes/dashboard.plugins_.backup.tsx:369
 #: src/routes/dashboard.plugins_.backup.tsx:448
 msgid "Restore"
@@ -2135,7 +2300,7 @@ msgid "Restore this backup?"
 msgstr "Restore this backup?"
 
 #. placeholder {0}: report.media_files
-#: src/routes/console.sites.$siteId.tsx:238
+#: src/routes/console.sites.$siteId.tsx:239
 #: src/routes/dashboard.plugins_.backup.tsx:143
 msgid "Restored: {rows} rows and {0} files"
 msgstr "Restored: {rows} rows and {0} files"
@@ -2144,16 +2309,16 @@ msgstr "Restored: {rows} rows and {0} files"
 msgid "Row"
 msgstr "Row"
 
-#: src/components/plugin-forms.tsx:189
-#: src/components/plugin-forms.tsx:202
+#: src/components/plugin-forms.tsx:194
+#: src/components/plugin-forms.tsx:207
 #: src/routes/dashboard.plugins_.backup.tsx:229
 #: src/routes/dashboard.plugins_.backup.tsx:242
 msgid "S3 bucket"
 msgstr "S3 bucket"
 
 #. placeholder {0}: settings.s3_bucket
-#: src/components/plugin-forms.tsx:188
-#: src/components/plugin-forms.tsx:201
+#: src/components/plugin-forms.tsx:193
+#: src/components/plugin-forms.tsx:206
 #: src/routes/dashboard.plugins_.backup.tsx:228
 #: src/routes/dashboard.plugins_.backup.tsx:241
 msgid "S3 bucket ({0})"
@@ -2164,24 +2329,32 @@ msgstr "S3 bucket ({0})"
 msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
+#: src/components/ses-account.tsx:203
+msgid "Sandbox"
+msgstr "Sandbox"
+
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:264
+#: src/components/site-mail.tsx:132
 #: src/routes/console.account.tsx:144
-#: src/routes/console.sites.$siteId.tsx:379
-#: src/routes/console.sites.$siteId.tsx:407
+#: src/routes/console.sites.$siteId.tsx:381
+#: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
-#: src/routes/dashboard.forms.tsx:311
+#: src/routes/dashboard.forms.tsx:331
 #: src/routes/dashboard.plugins_.backup.tsx:333
+#: src/routes/dashboard.plugins_.email.tsx:145
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Save"
 
 #: src/components/editor/status-bar.tsx:113
+#: src/components/site-mail.tsx:75
 #: src/routes/console.account.tsx:58
-#: src/routes/console.sites.$siteId.tsx:165
-#: src/routes/console.sites.$siteId.tsx:195
-#: src/routes/console.sites.$siteId.tsx:210
-#: src/routes/dashboard.forms.tsx:107
+#: src/routes/console.sites.$siteId.tsx:166
+#: src/routes/console.sites.$siteId.tsx:196
+#: src/routes/console.sites.$siteId.tsx:211
+#: src/routes/dashboard.forms.tsx:110
+#: src/routes/dashboard.plugins_.email.tsx:75
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Saved"
@@ -2199,7 +2372,7 @@ msgstr "Saving…"
 msgid "Scheduled"
 msgstr "Scheduled"
 
-#: src/components/plugin-forms.tsx:167
+#: src/components/plugin-forms.tsx:172
 #: src/routes/dashboard.plugins_.backup.tsx:209
 msgid "Scheduled backups only run while this is on. You can always back up by hand below."
 msgstr "Scheduled backups only run while this is on. You can always back up by hand below."
@@ -2217,7 +2390,8 @@ msgstr "Search engine"
 msgid "Search titles, summaries and bodies."
 msgstr "Search titles, summaries and bodies."
 
-#: src/components/plugin-forms.tsx:111
+#: src/components/plugin-forms.tsx:116
+#: src/components/plugin-forms.tsx:329
 msgid "Secret access key"
 msgstr "Secret access key"
 
@@ -2241,9 +2415,32 @@ msgstr "Select all"
 msgid "Select your language"
 msgstr "Select your language"
 
+#: src/components/site-mail.tsx:158
+#: src/routes/dashboard.plugins_.email.tsx:175
+msgid "Send"
+msgstr "Send"
+
 #: src/routes/dashboard.api.tsx:128
 msgid "Send a form's answers. No account needed."
 msgstr "Send a form's answers. No account needed."
+
+#: src/components/site-mail.tsx:138
+#: src/routes/dashboard.plugins_.email.tsx:151
+msgid "Send a test"
+msgstr "Send a test"
+
+#: src/routes/dashboard.plugins.tsx:31
+msgid "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
+msgstr "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
+
+#: src/components/site-mail.tsx:120
+#: src/routes/dashboard.plugins_.email.tsx:133
+msgid "Send mail through SES"
+msgstr "Send mail through SES"
+
+#: src/components/ses-account.tsx:185
+msgid "sent in the last day"
+msgstr "sent in the last day"
 
 #: src/components/editor/post-settings.tsx:376
 msgid "SEO description"
@@ -2257,6 +2454,14 @@ msgstr "SEO title"
 msgid "Separated by commas"
 msgstr "Separated by commas"
 
+#: src/components/ses-account.tsx:301
+msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
+msgstr "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
+
+#: src/components/plugin-forms.tsx:359
+msgid "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
+msgstr "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
+
 #: src/routes/dashboard.users.tsx:196
 #: src/routes/dashboard.users.tsx:315
 msgid "Set a password"
@@ -2266,7 +2471,7 @@ msgstr "Set a password"
 msgid "Set it"
 msgstr "Set it"
 
-#: src/components/plugin-forms.tsx:209
+#: src/components/plugin-forms.tsx:214
 #: src/routes/dashboard.plugins_.backup.tsx:249
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Set up the S3 plugin first if you want backups kept off this machine."
@@ -2357,6 +2562,10 @@ msgstr "Sites"
 msgid "Small section heading"
 msgstr "Small section heading"
 
+#: src/components/ses-account.tsx:309
+msgid "someone@example.com or example.com"
+msgstr "someone@example.com or example.com"
+
 #: src/components/editor/bubble-menus.tsx:481
 msgid "Split cell"
 msgstr "Split cell"
@@ -2374,7 +2583,7 @@ msgstr "Status"
 msgid "Stops working {0}"
 msgstr "Stops working {0}"
 
-#: src/routes/console.sites.$siteId.tsx:308
+#: src/routes/console.sites.$siteId.tsx:309
 msgid "Storage"
 msgstr "Storage"
 
@@ -2382,10 +2591,11 @@ msgstr "Storage"
 msgid "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 
-#: src/components/plugin-forms.tsx:114
+#: src/components/plugin-forms.tsx:119
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
+#: src/components/plugin-forms.tsx:338
 #: src/components/publish-panel.tsx:248
 msgid "Stored — type to replace"
 msgstr "Stored — type to replace"
@@ -2422,7 +2632,7 @@ msgstr "Success!"
 msgid "Superscript"
 msgstr "Superscript"
 
-#: src/routes/dashboard.forms.tsx:179
+#: src/routes/dashboard.forms.tsx:183
 msgid "switched off"
 msgstr "switched off"
 
@@ -2474,7 +2684,7 @@ msgstr "Tags, per language."
 msgid "Take it back"
 msgstr "Take it back"
 
-#: src/routes/dashboard.plugins.tsx:31
+#: src/routes/dashboard.plugins.tsx:35
 msgid "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 msgstr "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 
@@ -2483,6 +2693,10 @@ msgstr "Take the database, and the uploaded files if you want them, into a singl
 #: src/components/editor/toolbar.tsx:518
 msgid "Task list"
 msgstr "Task list"
+
+#: src/routes/dashboard.forms.tsx:298
+msgid "Tell somebody"
+msgstr "Tell somebody"
 
 #: src/components/setup/setup-wizard.tsx:581
 msgid "Tell us about your site"
@@ -2523,7 +2737,7 @@ msgstr "The address a title would get."
 msgid "the agency's, not this site's"
 msgstr "the agency's, not this site's"
 
-#: src/routes/console.sites.$siteId.tsx:227
+#: src/routes/console.sites.$siteId.tsx:228
 #: src/routes/dashboard.plugins_.backup.tsx:120
 msgid "The backup failed"
 msgstr "The backup failed"
@@ -2553,7 +2767,16 @@ msgstr "The last backup failed: {0}"
 msgid "The most common shortcuts in the editor."
 msgstr "The most common shortcuts in the editor."
 
-#: src/routes/console.sites.$siteId.tsx:242
+#: src/components/plugin-forms.tsx:313
+msgid "The one your SES identities are verified in. Verification does not cross regions."
+msgstr "The one your SES identities are verified in. Verification does not cross regions."
+
+#: src/components/site-mail.tsx:140
+#: src/routes/dashboard.plugins_.email.tsx:153
+msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
+msgstr "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
+
+#: src/routes/console.sites.$siteId.tsx:243
 #: src/routes/dashboard.plugins_.backup.tsx:154
 #: src/routes/dashboard.plugins_.backup.tsx:170
 msgid "The restore failed"
@@ -2586,6 +2809,10 @@ msgstr "These answer to anybody, because a visitor filling in a contact form has
 #: src/routes/dashboard.users.tsx:257
 msgid "They can write, publish and manage this site."
 msgstr "They can write, publish and manage this site."
+
+#: src/components/ses-account.tsx:206
+msgid "This account is out of the sandbox: it can write to anybody."
+msgstr "This account is out of the sandbox: it can write to anybody."
 
 #: src/routes/dashboard.api.tsx:183
 #~ msgid "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
@@ -2635,6 +2862,10 @@ msgstr "Try again"
 #: src/components/editor/block-handle.tsx:163
 msgid "Turn into"
 msgstr "Turn into"
+
+#: src/components/ses-account.tsx:422
+msgid "Unblock"
+msgstr "Unblock"
 
 #: src/routes/dashboard.index.tsx:169
 msgid "Uncategorized"
@@ -2693,7 +2924,7 @@ msgstr "Uploaded files and their addresses."
 msgid "URL"
 msgstr "URL"
 
-#: src/components/plugin-forms.tsx:70
+#: src/components/plugin-forms.tsx:75
 msgid "Use S3 for new uploads"
 msgstr "Use S3 for new uploads"
 
@@ -2708,15 +2939,35 @@ msgstr "Username"
 msgid "value"
 msgstr "value"
 
+#: src/components/ses-account.tsx:335
+msgid "Verified"
+msgstr "Verified"
+
+#: src/components/ses-account.tsx:317
+msgid "Verify"
+msgstr "Verify"
+
 #: src/components/editor/dialogs.tsx:541
 msgid "View"
 msgstr "View"
+
+#: src/components/ses-account.tsx:335
+msgid "Waiting"
+msgstr "Waiting"
 
 #: src/components/setup/setup-wizard.tsx:641
 msgid "Weak"
 msgstr "Weak"
 
-#: src/routes/dashboard.forms.tsx:227
+#: src/components/ses-account.tsx:253
+msgid "Website"
+msgstr "Website"
+
+#: src/components/ses-account.tsx:165
+msgid "What Amazon allows"
+msgstr "What Amazon allows"
+
+#: src/routes/dashboard.forms.tsx:231
 msgid "What comes in is kept as it was sent, so changing the fields later never rewrites it."
 msgstr "What comes in is kept as it was sent, so changing the fields later never rewrites it."
 
@@ -2724,30 +2975,43 @@ msgstr "What comes in is kept as it was sent, so changing the fields later never
 msgid "What has come in, newest first."
 msgstr "What has come in, newest first."
 
-#: src/routes/dashboard.forms.tsx:283
+#: src/components/ses-account.tsx:225
+msgid "What the mail is"
+msgstr "What the mail is"
+
+#: src/routes/dashboard.forms.tsx:287
 msgid "What this form is for — only you see this"
 msgstr "What this form is for — only you see this"
+
+#: src/components/site-mail.tsx:110
+msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
+msgstr "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 
 #: src/routes/dashboard.forms_.$formId.tsx:188
 msgid "When"
 msgstr "When"
 
-#: src/components/plugin-forms.tsx:72
+#: src/components/plugin-forms.tsx:77
 msgid "When off, uploads are stored on the server's disk."
 msgstr "When off, uploads are stored on the server's disk."
 
-#: src/components/plugin-forms.tsx:122
+#: src/components/plugin-forms.tsx:127
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Where readers load the images from (bucket public URL or CDN)"
 
-#: src/routes/console.sites.$siteId.tsx:279
+#: src/routes/console.sites.$siteId.tsx:280
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Where this site's pages come from, and how the last builds went."
 
-#: src/components/plugin-forms.tsx:174
+#: src/components/plugin-forms.tsx:179
 #: src/routes/dashboard.plugins_.backup.tsx:216
 msgid "Where to keep them"
 msgstr "Where to keep them"
+
+#: src/components/site-mail.tsx:149
+#: src/routes/dashboard.plugins_.email.tsx:162
+msgid "Where to send it"
+msgstr "Where to send it"
 
 #: src/routes/dashboard.api.tsx:123
 msgid "Which fields a form takes, and which are required."
@@ -2757,9 +3021,21 @@ msgstr "Which fields a form takes, and which are required."
 msgid "Who can sign in to this site and write on it."
 msgstr "Who can sign in to this site and write on it."
 
+#: src/components/ses-account.tsx:276
+msgid "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
+msgstr "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
+
+#: src/components/ses-account.tsx:299
+msgid "Who you may send as"
+msgstr "Who you may send as"
+
 #: src/components/editor/find-replace.tsx:156
 msgid "Whole word"
 msgstr "Whole word"
+
+#: src/components/ses-account.tsx:265
+msgid "Why you send"
+msgstr "Why you send"
 
 #: src/routes/dashboard.api.tsx:185
 msgid "Without an account"
@@ -2824,7 +3100,7 @@ msgstr "Your pages are built from your own project. Publishing builds them again
 
 #: src/routes/console.account.tsx:77
 #: src/routes/console.index.tsx:129
-#: src/routes/console.sites.$siteId.tsx:272
+#: src/routes/console.sites.$siteId.tsx:273
 msgid "Your sites"
 msgstr "Your sites"
 

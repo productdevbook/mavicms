@@ -1,6 +1,11 @@
 import { useLingui } from "@lingui/react/macro"
 
-import type { BackupConfig, BackupSettings, S3SettingsPayload } from "@/lib/api"
+import type {
+  BackupConfig,
+  BackupSettings,
+  EmailSettingsPayload,
+  S3SettingsPayload,
+} from "@/lib/api"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -269,6 +274,123 @@ export function BackupFields({
           type="number"
           onChange={(value) => onChange({ keep: Math.max(1, Number(value) || 1) })}
         />
+      </div>
+    </>
+  )
+}
+
+/**
+ * Amazon SES settings, shown to whoever is setting them up — the site's own
+ * people under Plugins, or the agency from the console.
+ *
+ * The secret key is write-only. It is never sent back, so an empty box means
+ * "keep what is stored" rather than "clear it"; saying so is the difference
+ * between an untouched form and one that quietly breaks sending.
+ */
+export function EmailFields({
+  form,
+  hasStoredSecret,
+  onChange,
+}: {
+  form: EmailSettingsPayload
+  hasStoredSecret: boolean
+  onChange: (values: Partial<EmailSettingsPayload>) => void
+}) {
+  const { t } = useLingui()
+
+  return (
+    <>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ses-region">{t`Region`}</Label>
+          <Input
+            id="ses-region"
+            value={form.region}
+            onChange={(event) => onChange({ region: event.target.value })}
+            placeholder="eu-central-1"
+          />
+          <p className="text-sm text-muted-foreground">
+            {t`The one your SES identities are verified in. Verification does not cross regions.`}
+          </p>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ses-key">{t`Access key ID`}</Label>
+          <Input
+            id="ses-key"
+            value={form.access_key_id}
+            onChange={(event) =>
+              onChange({ access_key_id: event.target.value })
+            }
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="ses-secret">{t`Secret access key`}</Label>
+        <Input
+          id="ses-secret"
+          type="password"
+          value={form.secret_access_key ?? ""}
+          onChange={(event) =>
+            onChange({ secret_access_key: event.target.value })
+          }
+          placeholder={
+            hasStoredSecret ? t`Stored — type to replace` : t`Not set yet`
+          }
+        />
+        <p className="text-sm text-muted-foreground">
+          {t`An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else.`}
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ses-from">{t`From address`}</Label>
+          <Input
+            id="ses-from"
+            type="email"
+            value={form.from_address}
+            onChange={(event) =>
+              onChange({ from_address: event.target.value })
+            }
+            placeholder="site@example.com"
+          />
+          <p className="text-sm text-muted-foreground">
+            {t`SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive.`}
+          </p>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ses-from-name">{t`From name`}</Label>
+          <Input
+            id="ses-from-name"
+            value={form.from_name}
+            onChange={(event) => onChange({ from_name: event.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ses-reply">{t`Reply-to`}</Label>
+          <Input
+            id="ses-reply"
+            type="email"
+            value={form.reply_to}
+            onChange={(event) => onChange({ reply_to: event.target.value })}
+            placeholder={t`Optional`}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ses-set">{t`Configuration set`}</Label>
+          <Input
+            id="ses-set"
+            value={form.configuration_set}
+            onChange={(event) =>
+              onChange({ configuration_set: event.target.value })
+            }
+            placeholder={t`Optional`}
+          />
+        </div>
       </div>
     </>
   )

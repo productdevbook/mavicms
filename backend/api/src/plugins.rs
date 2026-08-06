@@ -14,6 +14,7 @@ use crate::{
 
 pub const S3_PLUGIN: &str = "s3_storage";
 pub const BACKUP_PLUGIN: &str = "backup";
+pub const EMAIL_PLUGIN: &str = "amazon_ses";
 
 pub struct Stored<T> {
     pub enabled: bool,

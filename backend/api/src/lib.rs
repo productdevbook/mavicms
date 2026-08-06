@@ -9,6 +9,7 @@ pub mod console;
 pub mod crypto;
 pub mod db;
 pub mod dto;
+pub mod email;
 pub mod entities;
 pub mod error;
 pub mod fetch;

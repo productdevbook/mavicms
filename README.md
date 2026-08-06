@@ -187,3 +187,6 @@ OpenAPI document at `/api/api-docs/openapi.json`.
 
 MIT — see [LICENSE](LICENSE). The WordPress plugin is GPL-2.0-or-later, as
 WordPress plugins must be.
+
+Every dependency has been checked against that, and what was deliberately not
+borrowed is written down too: [LICENSES.md](LICENSES.md).

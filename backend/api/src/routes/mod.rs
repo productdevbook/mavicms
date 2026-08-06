@@ -46,6 +46,17 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
             console::request_site_publish
         ))
         .routes(routes!(console::get_site_s3, console::save_site_s3))
+        .routes(routes!(console::get_site_email, console::save_site_email))
+        .routes(routes!(console::test_site_email))
+        .routes(routes!(console::get_site_email_account))
+        .routes(routes!(console::request_site_production_access))
+        .routes(routes!(
+            console::list_site_email_identities,
+            console::add_site_email_identity
+        ))
+        .routes(routes!(console::delete_site_email_identity))
+        .routes(routes!(console::list_site_email_suppressed))
+        .routes(routes!(console::delete_site_email_suppressed))
         .routes(routes!(console::get_site_backup, console::save_site_backup))
         .routes(routes!(console::get_site_development))
         .routes(routes!(console::create_site_development_token))
@@ -109,6 +120,20 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
             plugins::update_s3_settings
         ))
         .routes(routes!(plugins::test_s3_settings))
+        .routes(routes!(
+            plugins::get_email_settings,
+            plugins::update_email_settings
+        ))
+        .routes(routes!(plugins::test_email_settings))
+        .routes(routes!(plugins::get_email_account))
+        .routes(routes!(plugins::request_email_production_access))
+        .routes(routes!(
+            plugins::list_email_identities,
+            plugins::add_email_identity
+        ))
+        .routes(routes!(plugins::delete_email_identity))
+        .routes(routes!(plugins::list_email_suppressed))
+        .routes(routes!(plugins::delete_email_suppressed))
         .routes(routes!(
             plugins::get_backup_settings,
             plugins::update_backup_settings

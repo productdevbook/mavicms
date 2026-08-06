@@ -14,6 +14,8 @@ pub struct Model {
     #[sea_orm(column_type = "Text")]
     pub fields: String,
     pub active: bool,
+    /// Where to tell somebody a submission arrived. Empty means nowhere.
+    pub notify: String,
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: DateTimeWithTimeZone,
 }
