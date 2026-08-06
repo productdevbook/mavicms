@@ -63,6 +63,12 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
             plugins::update_s3_settings
         ))
         .routes(routes!(plugins::test_s3_settings))
+        .routes(routes!(
+            plugins::get_backup_settings,
+            plugins::update_backup_settings
+        ))
+        .routes(routes!(plugins::run_backup))
+        .routes(routes!(plugins::delete_backup))
         .merge(
             OpenApiRouter::new()
                 .routes(routes!(media::list_media, media::upload_media))

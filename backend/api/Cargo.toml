@@ -1,6 +1,6 @@
 [package]
 name = "mavicms-api"
-version = "0.4.0"
+version = "0.5.0"
 edition.workspace = true
 publish = false
 
@@ -30,6 +30,8 @@ rust-s3 = { version = "0.37", default-features = false, features = ["tokio-rustl
 # rustls to match rust-s3 and sea-orm: pulling native-tls would add OpenSSL to the image.
 # SigV4 for object deletion, which rust-s3 signs in a way R2 rejects.
 regex = "1"
+tar = "0.4"
+flate2 = "1"
 slug = "0.1"
 html-escape = "0.2"
 hmac = "0.12"

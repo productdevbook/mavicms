@@ -1,8 +1,11 @@
 use axum::{Json, extract::State, http::StatusCode};
 
 use crate::{
-    dto::plugins::{ConnectionTestResponse, PluginSummary, S3SettingsRequest, S3SettingsResponse},
-    error::AppResult,
+    dto::plugins::{
+        BackupSettingsResponse, ConnectionTestResponse, PluginSummary, S3SettingsRequest,
+        S3SettingsResponse, UpdateBackupRequest,
+    },
+    error::{AppError, AppResult},
     plugins::{S3_PLUGIN, load_s3, save_s3},
     state::AppState,
     storage::S3Config,
@@ -17,16 +20,127 @@ use crate::{
 )]
 pub async fn list_plugins(State(state): State<AppState>) -> AppResult<Json<Vec<PluginSummary>>> {
     let stored = load_s3(state.db(), &state.secrets).await.ok().flatten();
+    let backup = crate::plugins::load::<crate::backup::BackupConfig>(
+        state.db(),
+        &state.secrets,
+        crate::plugins::BACKUP_PLUGIN,
+    )
+    .await
+    .ok()
+    .flatten();
 
-    Ok(Json(vec![PluginSummary {
-        id: S3_PLUGIN.to_string(),
-        name: "S3 compatible storage".to_string(),
-        description:
-            "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
-                .to_string(),
-        enabled: stored.as_ref().is_some_and(|s| s.enabled),
-        configured: stored.is_some(),
-    }]))
+    Ok(Json(vec![
+        PluginSummary {
+            id: S3_PLUGIN.to_string(),
+            name: "S3 compatible storage".to_string(),
+            description:
+                "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
+                    .to_string(),
+            enabled: stored.as_ref().is_some_and(|s| s.enabled),
+            configured: stored.is_some(),
+        },
+        PluginSummary {
+            id: crate::plugins::BACKUP_PLUGIN.to_string(),
+            name: "Backups".to_string(),
+            description:
+                "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
+                    .to_string(),
+            enabled: backup.as_ref().is_some_and(|s| s.enabled),
+            configured: backup.is_some(),
+        },
+    ]))
+}
+
+/// Backup settings, what exists, and whether S3 is available as a destination.
+#[utoipa::path(
+    get,
+    path = "/plugins/backup",
+    tag = "plugins",
+    responses((status = 200, description = "Backup settings", body = BackupSettingsResponse))
+)]
+pub async fn get_backup_settings(
+    State(state): State<AppState>,
+) -> AppResult<Json<BackupSettingsResponse>> {
+    let (enabled, config) = crate::backup::config(&state).await?;
+    let s3 = load_s3(state.db(), &state.secrets).await?;
+
+    Ok(Json(BackupSettingsResponse {
+        backups: crate::backup::list(&state, &config)
+            .await
+            .unwrap_or_default(),
+        // Offered as a destination only once the bucket is set up, so the
+        // choice cannot be made before it can work.
+        s3_available: s3.is_some(),
+        s3_bucket: s3.map(|stored| stored.config.bucket),
+        enabled,
+        config,
+    }))
+}
+
+/// Save the backup settings.
+#[utoipa::path(
+    put,
+    path = "/plugins/backup",
+    tag = "plugins",
+    request_body = UpdateBackupRequest,
+    responses((status = 200, description = "Saved", body = BackupSettingsResponse))
+)]
+pub async fn update_backup_settings(
+    State(state): State<AppState>,
+    Json(payload): Json<UpdateBackupRequest>,
+) -> AppResult<Json<BackupSettingsResponse>> {
+    let (_, existing) = crate::backup::config(&state).await?;
+
+    if matches!(payload.config.destination, crate::backup::Destination::S3)
+        && load_s3(state.db(), &state.secrets).await?.is_none()
+    {
+        return Err(AppError::Validation(
+            "set up the S3 plugin before sending backups there".to_string(),
+        ));
+    }
+
+    let config = crate::backup::BackupConfig {
+        // Not the client's to set: these say what happened, not what should.
+        last_run_at: existing.last_run_at,
+        last_error: existing.last_error,
+        ..payload.config
+    };
+    crate::backup::store(&state, payload.enabled, &config).await?;
+
+    get_backup_settings(State(state)).await
+}
+
+/// Take a backup now.
+#[utoipa::path(
+    post,
+    path = "/plugins/backup/run",
+    tag = "plugins",
+    responses(
+        (status = 200, description = "Backup written", body = crate::backup::BackupFile),
+        (status = 400, description = "The backup could not be written", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn run_backup(
+    State(state): State<AppState>,
+) -> AppResult<Json<crate::backup::BackupFile>> {
+    Ok(Json(crate::backup::run(&state).await?))
+}
+
+/// Delete one archive.
+#[utoipa::path(
+    delete,
+    path = "/plugins/backup/{name}",
+    tag = "plugins",
+    params(("name" = String, Path, description = "Archive file name")),
+    responses((status = 204, description = "Deleted"))
+)]
+pub async fn delete_backup(
+    State(state): State<AppState>,
+    axum::extract::Path(name): axum::extract::Path<String>,
+) -> AppResult<axum::http::StatusCode> {
+    let (_, config) = crate::backup::config(&state).await?;
+    crate::backup::delete(&state, &config, &name).await?;
+    Ok(axum::http::StatusCode::NO_CONTENT)
 }
 
 /// Current S3 settings. The secret access key is never returned.

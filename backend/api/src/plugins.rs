@@ -13,19 +13,27 @@ use crate::{
 };
 
 pub const S3_PLUGIN: &str = "s3_storage";
+pub const BACKUP_PLUGIN: &str = "backup";
 
-pub struct StoredPlugin {
+pub struct Stored<T> {
     pub enabled: bool,
-    pub config: S3Config,
+    pub config: T,
 }
 
-/// Reads and decrypts the S3 plugin row. `None` means it has never been saved.
-pub async fn load_s3(
+pub type StoredPlugin = Stored<S3Config>;
+
+/// Reads and decrypts a plugin row. `None` means it has never been saved.
+///
+/// Every plugin's settings are encrypted, not only the ones holding
+/// credentials: a plugin that stores nothing secret today may tomorrow, and a
+/// single path is one path to get right.
+pub async fn load<T: serde::de::DeserializeOwned>(
     db: &impl ConnectionTrait,
     secrets: &SecretBox,
-) -> AppResult<Option<StoredPlugin>> {
+    plugin: &str,
+) -> AppResult<Option<Stored<T>>> {
     let Some(row) = plugin_setting::Entity::find()
-        .filter(plugin_setting::Column::Plugin.eq(S3_PLUGIN))
+        .filter(plugin_setting::Column::Plugin.eq(plugin))
         .one(db)
         .await?
     else {
@@ -33,21 +41,22 @@ pub async fn load_s3(
     };
 
     let json = secrets.decrypt(&row.config)?;
-    let config: S3Config = serde_json::from_str(&json)
+    let config: T = serde_json::from_str(&json)
         .map_err(|err| crate::error::AppError::Internal(format!("corrupt plugin config: {err}")))?;
 
-    Ok(Some(StoredPlugin {
+    Ok(Some(Stored {
         enabled: row.enabled,
         config,
     }))
 }
 
-/// Encrypts and upserts the S3 plugin row.
-pub async fn save_s3(
+/// Encrypts and upserts a plugin row.
+pub async fn save<T: serde::Serialize>(
     db: &impl ConnectionTrait,
     secrets: &SecretBox,
+    plugin: &str,
     enabled: bool,
-    config: &S3Config,
+    config: &T,
 ) -> AppResult<()> {
     let json = serde_json::to_string(config).map_err(|err| {
         crate::error::AppError::Internal(format!("failed to encode config: {err}"))
@@ -56,7 +65,7 @@ pub async fn save_s3(
     let now = Utc::now().fixed_offset();
 
     match plugin_setting::Entity::find()
-        .filter(plugin_setting::Column::Plugin.eq(S3_PLUGIN))
+        .filter(plugin_setting::Column::Plugin.eq(plugin))
         .one(db)
         .await?
     {
@@ -70,7 +79,7 @@ pub async fn save_s3(
         None => {
             plugin_setting::ActiveModel {
                 id: Set(Uuid::new_v4()),
-                plugin: Set(S3_PLUGIN.to_string()),
+                plugin: Set(plugin.to_string()),
                 enabled: Set(enabled),
                 config: Set(encrypted),
                 updated_at: Set(now),
@@ -81,6 +90,24 @@ pub async fn save_s3(
     }
 
     Ok(())
+}
+
+/// Reads and decrypts the S3 plugin row.
+pub async fn load_s3(
+    db: &impl ConnectionTrait,
+    secrets: &SecretBox,
+) -> AppResult<Option<StoredPlugin>> {
+    load(db, secrets, S3_PLUGIN).await
+}
+
+/// Encrypts and upserts the S3 plugin row.
+pub async fn save_s3(
+    db: &impl ConnectionTrait,
+    secrets: &SecretBox,
+    enabled: bool,
+    config: &S3Config,
+) -> AppResult<()> {
+    save(db, secrets, S3_PLUGIN, enabled, config).await
 }
 
 /// The backend new uploads should go to.

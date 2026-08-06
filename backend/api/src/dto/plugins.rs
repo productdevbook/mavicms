@@ -52,3 +52,20 @@ pub struct ConnectionTestResponse {
     pub ok: bool,
     pub message: String,
 }
+
+/// Everything the backup screen needs in one response: the settings, what has
+/// been written, and whether the bucket is there to be chosen.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct BackupSettingsResponse {
+    pub enabled: bool,
+    pub config: crate::backup::BackupConfig,
+    pub backups: Vec<crate::backup::BackupFile>,
+    pub s3_available: bool,
+    pub s3_bucket: Option<String>,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct UpdateBackupRequest {
+    pub enabled: bool,
+    pub config: crate::backup::BackupConfig,
+}

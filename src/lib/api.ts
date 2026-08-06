@@ -468,3 +468,55 @@ export function testS3Settings(
     body: JSON.stringify(payload),
   })
 }
+
+export type BackupDestination = "local" | "s3"
+export type BackupSchedule = "off" | "hourly" | "daily" | "weekly"
+
+export interface BackupConfig {
+  destination: BackupDestination
+  folder: string
+  include_media: boolean
+  schedule: BackupSchedule
+  keep: number
+  last_run_at: string | null
+  last_error: string | null
+}
+
+export interface BackupFile {
+  name: string
+  size_bytes: number
+  created_at: string
+}
+
+export interface BackupSettings {
+  enabled: boolean
+  config: BackupConfig
+  backups: BackupFile[]
+  /** S3 is only offered as a destination once that plugin is set up. */
+  s3_available: boolean
+  s3_bucket: string | null
+}
+
+export function getBackupSettings(): Promise<BackupSettings> {
+  return request<BackupSettings>("/plugins/backup")
+}
+
+export function saveBackupSettings(
+  enabled: boolean,
+  config: BackupConfig
+): Promise<BackupSettings> {
+  return request<BackupSettings>("/plugins/backup", {
+    method: "PUT",
+    body: JSON.stringify({ enabled, config }),
+  })
+}
+
+export function runBackup(): Promise<BackupFile> {
+  return request<BackupFile>("/plugins/backup/run", { method: "POST" })
+}
+
+export function deleteBackup(name: string): Promise<void> {
+  return request<void>(`/plugins/backup/${encodeURIComponent(name)}`, {
+    method: "DELETE",
+  })
+}

@@ -27,6 +27,10 @@ msgstr "\"{0}\" will be permanently deleted. This cannot be undone."
 msgid "\"{0}\" will be removed from every post that uses it."
 msgstr "\"{0}\" will be removed from every post that uses it."
 
+#: src/routes/dashboard.plugins_.backup.tsx:316
+msgid "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
+msgstr "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
+
 #. placeholder {0}: stats.selected
 #: src/components/editor/status-bar.tsx:55
 msgid "{0, plural, one {# character selected} other {# characters selected}}"
@@ -102,6 +106,14 @@ msgstr "0 results"
 #: src/components/setup/setup-wizard.tsx:691
 msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 characters: letters, numbers, _ or -"
+
+#: src/routes/dashboard.plugins_.backup.tsx:197
+msgid "A folder inside the data directory."
+msgstr "A folder inside the data directory."
+
+#: src/routes/dashboard.plugins_.backup.tsx:196
+msgid "A prefix inside the bucket."
+msgstr "A prefix inside the bucket."
 
 #: src/routes/dashboard.plugins_.s3.tsx:167
 msgid "Access key ID"
@@ -219,6 +231,10 @@ msgstr "Alignment"
 msgid "Alt text"
 msgstr "Alt text"
 
+#: src/routes/dashboard.plugins_.backup.tsx:140
+msgid "An archive holding the database, and the uploaded files if you ask for them."
+msgstr "An archive holding the database, and the uploaded files if you ask for them."
+
 #: src/components/editor/post-settings.tsx:41
 #~ msgid "Announcement"
 #~ msgstr "Announcement"
@@ -228,15 +244,37 @@ msgstr "Alt text"
 msgid "Apply"
 msgstr "Apply"
 
+#: src/routes/dashboard.plugins_.backup.tsx:276
+msgid "Archives"
+msgstr "Archives"
+
 #: src/components/setup/setup-wizard.tsx:545
 #: src/components/setup/setup-wizard.tsx:615
 #: src/components/setup/setup-wizard.tsx:800
 msgid "Back"
 msgstr "Back"
 
-#: src/components/editor/mavi-editor.tsx:520
+#: src/components/editor/mavi-editor.tsx:543
 msgid "Back to editing"
 msgstr "Back to editing"
+
+#: src/routes/dashboard.plugins_.backup.tsx:266
+msgid "Back up now"
+msgstr "Back up now"
+
+#: src/routes/dashboard.plugins_.backup.tsx:79
+msgid "Backup settings saved"
+msgstr "Backup settings saved"
+
+#. placeholder {0}: file.name
+#: src/routes/dashboard.plugins_.backup.tsx:93
+msgid "Backup written: {0}"
+msgstr "Backup written: {0}"
+
+#: src/routes/dashboard.plugins_.backup.tsx:138
+#: src/routes/dashboard.plugins.tsx:30
+msgid "Backups"
+msgstr "Backups"
 
 #: src/components/editor/extensions/slash-command.tsx:57
 #: src/components/editor/extensions/slash-command.tsx:66
@@ -272,7 +310,7 @@ msgstr "Bold"
 msgid "Bucket"
 msgstr "Bucket"
 
-#: src/routes/dashboard.plugins.tsx:42
+#: src/routes/dashboard.plugins.tsx:51
 msgid "Built-in integrations you can switch on and configure."
 msgstr "Built-in integrations you can switch on and configure."
 
@@ -290,6 +328,7 @@ msgstr "Bullet list"
 #: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
+#: src/routes/dashboard.plugins_.backup.tsx:320
 #: src/routes/dashboard.tags.tsx:301
 msgid "Cancel"
 msgstr "Cancel"
@@ -360,7 +399,7 @@ msgstr "Command menu"
 msgid "Comments"
 msgstr "Comments"
 
-#: src/routes/dashboard.plugins.tsx:80
+#: src/routes/dashboard.plugins.tsx:97
 msgid "Configure"
 msgstr "Configure"
 
@@ -444,13 +483,21 @@ msgstr "Could not delete post"
 msgid "Could not delete tag"
 msgstr "Could not delete tag"
 
+#: src/routes/dashboard.plugins_.backup.tsx:111
+msgid "Could not delete the backup"
+msgstr "Could not delete the backup"
+
 #: src/routes/dashboard.tags.tsx:104
 msgid "Could not link tags"
 msgstr "Could not link tags"
 
-#: src/components/editor/mavi-editor.tsx:242
+#: src/components/editor/mavi-editor.tsx:258
 msgid "Could not load post"
 msgstr "Could not load post"
+
+#: src/routes/dashboard.plugins_.backup.tsx:68
+msgid "Could not load the backup settings"
+msgstr "Could not load the backup settings"
 
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
@@ -462,7 +509,7 @@ msgstr "Could not reach the server. Please try again."
 msgid "Could not remove language"
 msgstr "Could not remove language"
 
-#: src/components/editor/mavi-editor.tsx:288
+#: src/components/editor/mavi-editor.tsx:311
 msgid "Could not save post"
 msgstr "Could not save post"
 
@@ -473,6 +520,10 @@ msgstr "Could not save settings"
 #: src/components/editor/post-settings.tsx:110
 msgid "Could not save tag"
 msgstr "Could not save tag"
+
+#: src/routes/dashboard.plugins_.backup.tsx:82
+msgid "Could not save the settings"
+msgstr "Could not save the settings"
 
 #: src/routes/dashboard.tags.tsx:115
 msgid "Could not unlink tag"
@@ -488,8 +539,8 @@ msgstr "Could not update language"
 
 #. placeholder {0}: file.name
 #: src/components/editor/dialogs.tsx:60
-#: src/components/editor/extensions/index.ts:135
-#: src/components/editor/extensions/index.ts:154
+#: src/components/editor/extensions/index.ts:175
+#: src/components/editor/extensions/index.ts:194
 #: src/routes/dashboard.media.tsx:51
 msgid "Could not upload {0}"
 msgstr "Could not upload {0}"
@@ -506,7 +557,7 @@ msgstr "Cover image"
 msgid "Cover preview"
 msgstr "Cover preview"
 
-#: src/components/editor/mavi-editor.tsx:493
+#: src/components/editor/mavi-editor.tsx:516
 msgid "Create"
 msgstr "Create"
 
@@ -534,7 +585,7 @@ msgstr "Custom"
 msgid "Dark"
 msgstr "Dark"
 
-#: src/components/editor/mavi-editor.tsx:436
+#: src/components/editor/mavi-editor.tsx:459
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -569,6 +620,8 @@ msgstr "Default"
 #: src/routes/dashboard.languages.tsx:171
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
+#: src/routes/dashboard.plugins_.backup.tsx:296
+#: src/routes/dashboard.plugins_.backup.tsx:322
 #: src/routes/dashboard.tags.tsx:234
 #: src/routes/dashboard.tags.tsx:303
 msgid "Delete"
@@ -585,6 +638,10 @@ msgstr "Delete row"
 #: src/components/editor/bubble-menus.tsx:487
 msgid "Delete table"
 msgstr "Delete table"
+
+#: src/routes/dashboard.plugins_.backup.tsx:314
+msgid "Delete this backup?"
+msgstr "Delete this backup?"
 
 #: src/routes/dashboard.categories.tsx:335
 msgid "Delete this category?"
@@ -614,7 +671,7 @@ msgstr "Description text shown in search results."
 #~ msgid "Dil"
 #~ msgstr "Dil"
 
-#: src/routes/dashboard.plugins.tsx:67
+#: src/routes/dashboard.plugins.tsx:80
 msgid "Disabled"
 msgstr "Disabled"
 
@@ -631,7 +688,7 @@ msgstr "Download"
 msgid "Draft"
 msgstr "Draft"
 
-#: src/components/editor/mavi-editor.tsx:284
+#: src/components/editor/mavi-editor.tsx:307
 msgid "Draft saved"
 msgstr "Draft saved"
 
@@ -644,7 +701,7 @@ msgid "Each language has its own tags. Link them so a post's tag can point at it
 msgstr "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
 
 #: src/components/editor/bubble-menus.tsx:323
-#: src/components/editor/mavi-editor.tsx:493
+#: src/components/editor/mavi-editor.tsx:516
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.index.tsx:192
 msgid "Edit"
@@ -670,7 +727,8 @@ msgstr "Embed a video"
 msgid "Emoji"
 msgstr "Emoji"
 
-#: src/routes/dashboard.plugins.tsx:65
+#: src/routes/dashboard.plugins_.backup.tsx:147
+#: src/routes/dashboard.plugins.tsx:78
 msgid "Enabled"
 msgstr "Enabled"
 
@@ -689,6 +747,18 @@ msgstr "Enter a valid email address"
 #: src/components/setup/setup-wizard.tsx:403
 msgid "Enter details"
 msgstr "Enter details"
+
+#: src/routes/dashboard.plugins_.backup.tsx:229
+msgid "Every day"
+msgstr "Every day"
+
+#: src/routes/dashboard.plugins_.backup.tsx:228
+msgid "Every hour"
+msgstr "Every hour"
+
+#: src/routes/dashboard.plugins_.backup.tsx:230
+msgid "Every week"
+msgstr "Every week"
 
 #: src/components/editor/post-settings.tsx:265
 msgid "Excerpt"
@@ -709,13 +779,17 @@ msgid "Find…"
 msgstr "Find…"
 
 #: src/components/editor/dialogs.tsx:543
-#: src/components/editor/mavi-editor.tsx:512
+#: src/components/editor/mavi-editor.tsx:535
 msgid "Focus mode"
 msgstr "Focus mode"
 
 #: src/components/editor/extensions/slash-command.tsx:146
 msgid "Foldable details block"
 msgstr "Foldable details block"
+
+#: src/routes/dashboard.plugins_.backup.tsx:187
+msgid "Folder"
+msgstr "Folder"
 
 #: src/components/editor/toolbar.tsx:235
 msgid "Font"
@@ -736,7 +810,7 @@ msgid "Full width"
 msgstr "Full width"
 
 #: src/components/editor/dialogs.tsx:544
-#: src/components/editor/mavi-editor.tsx:527
+#: src/components/editor/mavi-editor.tsx:550
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
@@ -752,7 +826,7 @@ msgstr "Generate from title"
 msgid "Generate password"
 msgstr "Generate password"
 
-#: src/components/editor/mavi-editor.tsx:258
+#: src/components/editor/mavi-editor.tsx:274
 msgid "Give your post a title first"
 msgstr "Give your post a title first"
 
@@ -769,7 +843,7 @@ msgid "Header row"
 msgstr "Header row"
 
 #. placeholder {0}: node.attrs.level
-#: src/components/editor/extensions/index.ts:176
+#: src/components/editor/extensions/index.ts:216
 msgid "Heading {0}"
 msgstr "Heading {0}"
 
@@ -835,6 +909,14 @@ msgstr "Highlighted on the home page"
 msgid "Host"
 msgstr "Host"
 
+#: src/routes/dashboard.plugins_.backup.tsx:236
+msgid "How many to keep"
+msgstr "How many to keep"
+
+#: src/routes/dashboard.plugins_.backup.tsx:216
+msgid "How often"
+msgstr "How often"
+
 #: src/components/editor/toolbar.tsx:592
 msgid "Image"
 msgstr "Image"
@@ -852,13 +934,17 @@ msgid "Import"
 msgstr "Import"
 
 #: src/components/editor/dialogs.tsx:434
-#: src/components/editor/mavi-editor.tsx:535
+#: src/components/editor/mavi-editor.tsx:558
 msgid "Import / export"
 msgstr "Import / export"
 
 #: src/components/editor/types.ts:27
 msgid "In review"
 msgstr "In review"
+
+#: src/routes/dashboard.plugins_.backup.tsx:203
+msgid "Include the uploaded files"
+msgstr "Include the uploaded files"
 
 #: src/components/editor/toolbar.tsx:534
 msgid "Increase indent"
@@ -909,7 +995,7 @@ msgstr "Just another Mavi CMS site"
 msgid "Justify"
 msgstr "Justify"
 
-#: src/components/editor/extensions/index.ts:187
+#: src/components/editor/extensions/index.ts:227
 msgid "Keep going, type “/” to add a block…"
 msgstr "Keep going, type “/” to add a block…"
 
@@ -930,6 +1016,11 @@ msgstr "Languages"
 #: src/components/editor/extensions/slash-command.tsx:65
 msgid "Large section heading"
 msgstr "Large section heading"
+
+#. placeholder {0}: new Date(config.last_run_at).toLocaleString()
+#: src/routes/dashboard.plugins_.backup.tsx:270
+msgid "Last run {0}"
+msgstr "Last run {0}"
 
 #: src/routes/dashboard.plugins_.s3.tsx:147
 msgid "Leave empty for AWS S3"
@@ -976,6 +1067,10 @@ msgstr "Loading…"
 #: src/routes/dashboard.languages.tsx:166
 msgid "Make default"
 msgstr "Make default"
+
+#: src/routes/dashboard.plugins_.backup.tsx:205
+msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
+msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
 #: src/components/editor/extensions/slash-command.tsx:242
 msgid "Mark selection as code"
@@ -1045,6 +1140,10 @@ msgstr "New tag"
 msgid "Next"
 msgstr "Next"
 
+#: src/routes/dashboard.plugins_.backup.tsx:279
+msgid "No backups yet"
+msgstr "No backups yet"
+
 #: src/routes/dashboard.categories.tsx:220
 msgid "No categories yet"
 msgstr "No categories yet"
@@ -1080,7 +1179,7 @@ msgstr "No results found"
 msgid "No tags yet"
 msgstr "No tags yet"
 
-#: src/routes/dashboard.plugins.tsx:68
+#: src/routes/dashboard.plugins.tsx:81
 msgid "Not configured"
 msgstr "Not configured"
 
@@ -1089,6 +1188,18 @@ msgstr "Not configured"
 #: src/components/editor/toolbar.tsx:510
 msgid "Numbered list"
 msgstr "Numbered list"
+
+#: src/routes/dashboard.plugins_.backup.tsx:248
+msgid "Older archives are removed once a new one is written."
+msgstr "Older archives are removed once a new one is written."
+
+#: src/routes/dashboard.plugins_.backup.tsx:167
+msgid "On the server's disk"
+msgstr "On the server's disk"
+
+#: src/routes/dashboard.plugins_.backup.tsx:227
+msgid "Only by hand"
+msgstr "Only by hand"
 
 #: src/components/editor/bubble-menus.tsx:282
 msgid "Open"
@@ -1151,8 +1262,9 @@ msgid "Plain text block"
 msgstr "Plain text block"
 
 #: src/components/dashboard/dashboard-shell.tsx:31
+#: src/routes/dashboard.plugins_.backup.tsx:134
 #: src/routes/dashboard.plugins_.s3.tsx:113
-#: src/routes/dashboard.plugins.tsx:40
+#: src/routes/dashboard.plugins.tsx:49
 msgid "Plugins"
 msgstr "Plugins"
 
@@ -1168,15 +1280,15 @@ msgstr "post"
 msgid "Post deleted"
 msgstr "Post deleted"
 
-#: src/components/editor/mavi-editor.tsx:579
+#: src/components/editor/mavi-editor.tsx:602
 msgid "Post published"
 msgstr "Post published"
 
-#: src/components/editor/mavi-editor.tsx:647
+#: src/components/editor/mavi-editor.tsx:670
 msgid "Post settings"
 msgstr "Post settings"
 
-#: src/components/editor/mavi-editor.tsx:632
+#: src/components/editor/mavi-editor.tsx:655
 #: src/components/editor/post-settings.tsx:405
 msgid "Post title"
 msgstr "Post title"
@@ -1190,7 +1302,7 @@ msgstr "post-url"
 msgid "Posts"
 msgstr "Posts"
 
-#: src/components/editor/mavi-editor.tsx:520
+#: src/components/editor/mavi-editor.tsx:543
 msgid "Preview"
 msgstr "Preview"
 
@@ -1207,7 +1319,7 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
-#: src/components/editor/mavi-editor.tsx:584
+#: src/components/editor/mavi-editor.tsx:607
 msgid "Publish"
 msgstr "Publish"
 
@@ -1293,13 +1405,23 @@ msgstr "Request failed"
 msgid "Row"
 msgstr "Row"
 
+#: src/routes/dashboard.plugins_.backup.tsx:174
+msgid "S3 bucket"
+msgstr "S3 bucket"
+
+#. placeholder {0}: settings.s3_bucket
+#: src/routes/dashboard.plugins_.backup.tsx:173
+msgid "S3 bucket ({0})"
+msgstr "S3 bucket ({0})"
+
 #: src/routes/dashboard.plugins_.s3.tsx:117
 #: src/routes/dashboard.plugins.tsx:26
 msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
-#: src/components/editor/mavi-editor.tsx:573
+#: src/components/editor/mavi-editor.tsx:596
 #: src/routes/dashboard.categories.tsx:290
+#: src/routes/dashboard.plugins_.backup.tsx:262
 #: src/routes/dashboard.plugins_.s3.tsx:238
 msgid "Save"
 msgstr "Save"
@@ -1321,6 +1443,10 @@ msgstr "Saving…"
 msgid "Scheduled"
 msgstr "Scheduled"
 
+#: src/routes/dashboard.plugins_.backup.tsx:149
+msgid "Scheduled backups only run while this is on. You can always back up by hand below."
+msgstr "Scheduled backups only run while this is on. You can always back up by hand below."
+
 #: src/components/editor/post-settings.tsx:361
 msgid "Search engine"
 msgstr "Search engine"
@@ -1329,11 +1455,11 @@ msgstr "Search engine"
 msgid "Secret access key"
 msgstr "Secret access key"
 
-#: src/components/editor/extensions/index.ts:167
+#: src/components/editor/extensions/index.ts:207
 msgid "section"
 msgstr "section"
 
-#: src/components/editor/extensions/index.ts:179
+#: src/components/editor/extensions/index.ts:219
 msgid "Section title"
 msgstr "Section title"
 
@@ -1357,7 +1483,11 @@ msgstr "SEO description"
 msgid "SEO title"
 msgstr "SEO title"
 
-#: src/components/editor/mavi-editor.tsx:548
+#: src/routes/dashboard.plugins_.backup.tsx:181
+msgid "Set up the S3 plugin first if you want backups kept off this machine."
+msgstr "Set up the S3 plugin first if you want backups kept off this machine."
+
+#: src/components/editor/mavi-editor.tsx:571
 msgid "Settings panel"
 msgstr "Settings panel"
 
@@ -1378,7 +1508,7 @@ msgid "Short description shown on listing pages"
 msgstr "Short description shown on listing pages"
 
 #: src/components/editor/dialogs.tsx:545
-#: src/components/editor/mavi-editor.tsx:541
+#: src/components/editor/mavi-editor.tsx:564
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
@@ -1396,7 +1526,7 @@ msgid "Sign in to manage your site."
 msgstr "Sign in to manage your site."
 
 #: src/components/dashboard/dashboard-shell.tsx:76
-#: src/components/editor/mavi-editor.tsx:557
+#: src/components/editor/mavi-editor.tsx:580
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -1412,7 +1542,7 @@ msgstr "Small section heading"
 msgid "Split cell"
 msgstr "Split cell"
 
-#: src/components/editor/extensions/index.ts:185
+#: src/components/editor/extensions/index.ts:225
 msgid "Start writing, or type “/” for commands…"
 msgstr "Start writing, or type “/” for commands…"
 
@@ -1468,8 +1598,8 @@ msgstr "System"
 msgid "Table"
 msgstr "Table"
 
-#: src/components/editor/mavi-editor.tsx:505
-#: src/components/editor/mavi-editor.tsx:600
+#: src/components/editor/mavi-editor.tsx:528
+#: src/components/editor/mavi-editor.tsx:623
 msgid "Table of contents"
 msgstr "Table of contents"
 
@@ -1486,6 +1616,10 @@ msgstr "Tags"
 #: src/routes/dashboard.tags.tsx:101
 msgid "Tags linked"
 msgstr "Tags linked"
+
+#: src/routes/dashboard.plugins.tsx:31
+msgid "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
+msgstr "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 
 #: src/components/editor/dialogs.tsx:523
 #: src/components/editor/extensions/slash-command.tsx:118
@@ -1523,9 +1657,18 @@ msgstr "Text color"
 msgid "Text shown in search results"
 msgstr "Text shown in search results"
 
+#: src/routes/dashboard.plugins_.backup.tsx:97
+msgid "The backup failed"
+msgstr "The backup failed"
+
 #: src/routes/dashboard.languages.tsx:94
 msgid "The languages your content can be written in. This is separate from the language of this admin panel."
 msgstr "The languages your content can be written in. This is separate from the language of this admin panel."
+
+#. placeholder {0}: config.last_error
+#: src/routes/dashboard.plugins_.backup.tsx:255
+msgid "The last backup failed: {0}"
+msgstr "The last backup failed: {0}"
 
 #: src/components/editor/dialogs.tsx:567
 msgid "The most common shortcuts in the editor."
@@ -1539,7 +1682,7 @@ msgstr "The server is taking longer than expected to restart. Reload this page i
 msgid "Theme"
 msgstr "Theme"
 
-#: src/components/editor/mavi-editor.tsx:229
+#: src/components/editor/mavi-editor.tsx:245
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "This post could not be opened, so it has been left untouched."
 
@@ -1547,7 +1690,7 @@ msgstr "This post could not be opened, so it has been left untouched."
 msgid "Today's date"
 msgstr "Today's date"
 
-#: src/components/editor/mavi-editor.tsx:463
+#: src/components/editor/mavi-editor.tsx:486
 msgid "Translations"
 msgstr "Translations"
 
@@ -1586,8 +1729,8 @@ msgstr "Unsaved changes"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/components/editor/mavi-editor.tsx:445
-#: src/components/editor/mavi-editor.tsx:630
+#: src/components/editor/mavi-editor.tsx:468
+#: src/components/editor/mavi-editor.tsx:653
 #: src/routes/dashboard.index.tsx:166
 msgid "Untitled post"
 msgstr "Untitled post"
@@ -1633,6 +1776,10 @@ msgstr "When off, uploads are stored on the server's disk."
 #: src/routes/dashboard.plugins_.s3.tsx:186
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Where readers load the images from (bucket public URL or CDN)"
+
+#: src/routes/dashboard.plugins_.backup.tsx:156
+msgid "Where to keep them"
+msgstr "Where to keep them"
 
 #: src/components/editor/find-replace.tsx:156
 msgid "Whole word"

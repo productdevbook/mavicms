@@ -1,4 +1,5 @@
 mod auth;
+mod backup;
 mod config;
 mod crypto;
 mod db;
@@ -61,6 +62,11 @@ async fn main() {
         media_root: config.media_root.clone(),
         secrets: std::sync::Arc::new(secrets),
     };
+
+    // Started before the state is handed to the router, which consumes it.
+    if state.db.is_some() {
+        backup::spawn_scheduler(state.clone());
+    }
 
     let (router, api) = OpenApiRouter::<AppState>::with_openapi(openapi::ApiDoc::openapi())
         .merge(routes::router(state.clone()))

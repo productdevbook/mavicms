@@ -208,6 +208,29 @@ impl S3Config {
         Ok(())
     }
 
+    /// The objects under a prefix: key, size and when they were last written.
+    /// Used to show what backups exist and to drop the ones past their keep.
+    pub async fn list(
+        &self,
+        prefix: &str,
+    ) -> AppResult<Vec<(String, u64, chrono::DateTime<chrono::FixedOffset>)>> {
+        let bucket = self.bucket()?;
+        let results = bucket
+            .list(self.object_key(prefix), None)
+            .await
+            .map_err(|err| AppError::Validation(format!("could not list the bucket: {err}")))?;
+
+        Ok(results
+            .into_iter()
+            .flat_map(|page| page.contents)
+            .map(|object| {
+                let modified = chrono::DateTime::parse_from_rfc3339(&object.last_modified)
+                    .unwrap_or_else(|_| chrono::Utc::now().fixed_offset());
+                (object.key, object.size, modified)
+            })
+            .collect())
+    }
+
     fn public_url(&self, key: &str) -> String {
         format!(
             "{}/{}",
@@ -280,6 +303,19 @@ impl MediaStorage {
     /// Removes the stored file. A failure here leaves an orphan that nobody
     /// will ever look for again, so it is reported rather than swallowed —
     /// including the case where the bucket cannot even be built.
+    /// Reads a stored file back. `None` when it is not there any more — a
+    /// backup skips what it cannot find rather than failing outright.
+    pub async fn read(&self, key: &str) -> Option<Vec<u8>> {
+        match self {
+            MediaStorage::Local { root } => tokio::fs::read(root.join(key)).await.ok(),
+            MediaStorage::S3(config) => {
+                let bucket = config.bucket().ok()?;
+                let response = bucket.get_object(config.object_key(key)).await.ok()?;
+                (response.status_code() < 300).then(|| response.bytes().to_vec())
+            }
+        }
+    }
+
     pub async fn delete(&self, key: &str) {
         match self {
             MediaStorage::Local { root } => {

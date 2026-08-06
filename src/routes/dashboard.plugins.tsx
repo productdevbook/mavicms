@@ -2,7 +2,7 @@
 import * as React from "react"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useLingui } from "@lingui/react/macro"
-import { HardDrive, Loader2 } from "lucide-react"
+import { Archive, HardDrive, Loader2 } from "lucide-react"
 
 import { getPlugins, type Plugin } from "@/lib/api"
 import { Badge } from "@/components/ui/badge"
@@ -26,6 +26,15 @@ function PluginsRoute() {
       name: t`S3 compatible storage`,
       description: t`Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk.`,
     },
+    backup: {
+      name: t`Backups`,
+      description: t`Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket.`,
+    },
+  }
+
+  const SETTINGS_PATH: Record<string, "/dashboard/plugins/s3" | "/dashboard/plugins/backup"> = {
+    s3_storage: "/dashboard/plugins/s3",
+    backup: "/dashboard/plugins/backup",
   }
 
   React.useEffect(() => {
@@ -53,7 +62,11 @@ function PluginsRoute() {
             <Card key={plugin.id}>
               <CardContent className="flex items-start gap-4 pt-6">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
-                  <HardDrive className="size-5" />
+                  {plugin.id === "backup" ? (
+                    <Archive className="size-5" />
+                  ) : (
+                    <HardDrive className="size-5" />
+                  )}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -75,7 +88,11 @@ function PluginsRoute() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate({ to: "/dashboard/plugins/s3" })}
+                  onClick={() =>
+                    navigate({
+                      to: SETTINGS_PATH[plugin.id] ?? "/dashboard/plugins/s3",
+                    })
+                  }
                 >
                   {t`Configure`}
                 </Button>
