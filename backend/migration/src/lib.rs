@@ -9,6 +9,7 @@ mod m20260106_000001_create_post_taxonomy_tables;
 mod m20260107_000001_create_plugin_settings;
 mod m20260108_000001_add_content_languages;
 mod m20260109_000001_add_content_markdown;
+mod m20260110_000001_create_forms;
 
 pub struct Migrator;
 
@@ -25,6 +26,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260107_000001_create_plugin_settings::Migration),
             Box::new(m20260108_000001_add_content_languages::Migration),
             Box::new(m20260109_000001_add_content_markdown::Migration),
+            Box::new(m20260110_000001_create_forms::Migration),
         ]
     }
 }

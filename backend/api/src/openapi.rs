@@ -12,6 +12,7 @@ use utoipa::OpenApi;
         (name = "posts", description = "Create, read, update and delete blog posts"),
         (name = "taxonomy", description = "Categories and tags"),
         (name = "languages", description = "Content languages"),
+        (name = "forms", description = "Forms, and what visitors send through them"),
         (name = "media", description = "Upload and manage media files"),
         (name = "plugins", description = "Built-in integrations, such as S3 storage"),
         (name = "health", description = "Service health checks"),

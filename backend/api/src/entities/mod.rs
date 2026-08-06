@@ -1,4 +1,6 @@
 pub mod category;
+pub mod form;
+pub mod form_submission;
 pub mod language;
 pub mod media;
 pub mod plugin_setting;

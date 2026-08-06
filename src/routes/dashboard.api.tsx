@@ -98,6 +98,12 @@ function ApiRoute() {
     { method: "GET", path: "/tags", what: t`Tags, per language.` },
     { method: "GET", path: "/languages", what: t`The languages this site writes in.` },
     { method: "GET", path: "/media", what: t`Uploaded files and their addresses.` },
+    { method: "GET", path: "/forms", what: t`The forms this site accepts answers on.` },
+    {
+      method: "GET",
+      path: "/forms/{id}/submissions",
+      what: t`What has come in, newest first.`,
+    },
   ]
 
   const writing: Endpoint[] = [
@@ -108,6 +114,14 @@ function ApiRoute() {
     { method: "POST", path: "/media", what: t`Upload a file (multipart).` },
     { method: "GET", path: "/slug?text=…", what: t`The address a title would get.` },
     { method: "POST", path: "/publish", what: t`Build this site's pages again.` },
+  ]
+
+  const open: Endpoint[] = [
+    {
+      method: "POST",
+      path: "/forms/{slug}/submit",
+      what: t`Send a form's answers. No account needed.`,
+    },
   ]
 
   return (
@@ -160,6 +174,19 @@ curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">{t`Writing`}</h2>
           <Table rows={writing} />
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="text-sm font-medium">{t`Without an account`}</h2>
+          <Table rows={open} />
+          <p className="text-sm text-muted-foreground">
+            {t`This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else.`}
+          </p>
+          <Snippet
+            text={`curl -X POST ${base}/forms/contact/submit \\
+  -H 'content-type: application/json' \\
+  -d '{"name":"…","email":"…","message":"…"}'`}
+          />
         </section>
 
         <section className="flex flex-col gap-2">

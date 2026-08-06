@@ -1,6 +1,7 @@
 pub mod auth;
 pub mod categories;
 pub mod console;
+pub mod forms;
 pub mod health;
 pub mod languages;
 pub mod media;
@@ -49,6 +50,14 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::run_site_backup))
         .routes(routes!(console::restore_site_backup))
         .routes(routes!(console::enter));
+
+    // The one address a site's own pages talk to without an account: the
+    // visitor filling in a contact form has none. Kept to its own router so
+    // the body limit applies to it and nothing else.
+    let open = OpenApiRouter::new()
+        .routes(routes!(forms::submit_form))
+        .layer(DefaultBodyLimit::max(forms::MAX_SUBMISSION_BYTES))
+        .layer(from_fn(require_database));
 
     let needs_db = OpenApiRouter::new()
         .routes(routes!(auth::login))
@@ -106,6 +115,15 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(users::list_users, users::create_user))
         .routes(routes!(users::update_user, users::delete_user))
         .routes(routes!(users::change_own_password))
+        .routes(routes!(forms::list_forms, forms::create_form))
+        .routes(routes!(
+            forms::get_form,
+            forms::update_form,
+            forms::delete_form
+        ))
+        .routes(routes!(forms::list_submissions))
+        .routes(routes!(forms::mark_seen))
+        .routes(routes!(forms::delete_submission))
         .merge(
             OpenApiRouter::new()
                 .routes(routes!(plugins::import_backup))
@@ -128,6 +146,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     // Resolving the site is the outermost thing that happens: everything
     // below it, authentication included, is a question about one site.
     public
+        .merge(open)
         .merge(needs_db)
         .merge(protected)
         .layer(from_fn_with_state(hosting, resolve))

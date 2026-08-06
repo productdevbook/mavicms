@@ -1,4 +1,5 @@
 pub mod auth;
+pub mod forms;
 pub mod languages;
 pub mod media;
 pub mod plugins;
