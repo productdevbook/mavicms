@@ -7,11 +7,16 @@ use axum::{
 };
 use chrono::Utc;
 use sea_orm::{
-    ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, EntityTrait, QueryFilter,
-    QueryOrder, TransactionTrait,
+    ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait,
+    QueryFilter, QueryOrder, QuerySelect, TransactionTrait,
 };
 use serde::Deserialize;
 use uuid::Uuid;
+
+/// How many posts a listing returns when no limit is asked for.
+const DEFAULT_PAGE: u64 = 50;
+/// The most a single page will ever return.
+const MAX_PAGE: u64 = 200;
 
 /// Any `src`, `href` or bare address in post content. Deliberately broad: the
 /// point is to notice that a file is still referenced, and a false positive
@@ -22,7 +27,10 @@ static MEDIA_IN_HTML: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::n
 
 use crate::{
     dto::{
-        post::{CreatePostRequest, PostResponse, PostStatus, PostTranslation, UpdatePostRequest},
+        post::{
+            CreatePostRequest, PostPage, PostResponse, PostStatus, PostSummary, PostTranslation,
+            UpdatePostRequest,
+        },
         taxonomy::LocaleQuery,
     },
     entities::{category, post, post_category, post_tag},
@@ -142,14 +150,22 @@ async fn siblings_of(
     params(
         ("locale" = Option<String>, Query, description = "Comma-separated language codes"),
         ("slug" = Option<String>, Query, description = "Exact address to look for"),
+        ("limit" = Option<u64>, Query, description = "How many posts to return (default 50, max 200)"),
+        ("offset" = Option<u64>, Query, description = "How many to skip"),
     ),
-    responses((status = 200, description = "List of posts", body = Vec<PostResponse>))
+    responses((status = 200, description = "A page of posts", body = PostPage))
 )]
 pub async fn list_posts(
     State(state): State<AppState>,
     Query(query): Query<LocaleQuery>,
-) -> AppResult<Json<Vec<PostResponse>>> {
+) -> AppResult<Json<PostPage>> {
     let db = state.db();
+
+    // A whole archive in one response is a multi-megabyte payload that every
+    // consumer has to hold in memory, so the page is bounded whether or not
+    // one was asked for.
+    let limit = query.limit.unwrap_or(DEFAULT_PAGE).clamp(1, MAX_PAGE);
+    let offset = query.offset.unwrap_or(0);
 
     let mut find = post::Entity::find().order_by_desc(post::Column::CreatedAt);
     if let Some(codes) = query.codes() {
@@ -163,7 +179,8 @@ pub async fn list_posts(
     {
         find = find.filter(post::Column::Slug.eq(slug));
     }
-    let posts = find.all(db).await?;
+    let total = find.clone().count(db).await?;
+    let posts = find.limit(limit).offset(offset).all(db).await?;
 
     // Two grouped queries rather than two per post: this used to issue one
     // category lookup per row, and adding translations would have tripled it.
@@ -206,11 +223,16 @@ pub async fn list_posts(
                 .get(&post.translation_group_id)
                 .cloned()
                 .unwrap_or_default();
-            PostResponse::from_model(post, category_ids, locales, Vec::new())
+            PostSummary::from_model(post, category_ids, locales)
         })
         .collect();
 
-    Ok(Json(responses))
+    Ok(Json(PostPage {
+        items: responses,
+        total,
+        limit,
+        offset,
+    }))
 }
 
 /// Fetch a single post, including its sibling language versions.

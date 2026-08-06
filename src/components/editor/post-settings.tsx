@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { slugify } from "@/lib/editor-utils"
 import {
+  getSlug,
   ApiError,
   createCategory,
   createTag,
@@ -163,7 +164,11 @@ export function PostSettings({
             variant="outline"
             size="icon"
             aria-label={t`Generate from title`}
-            onClick={() => onChange({ slug: slugify(meta.title) })}
+            onClick={() => {
+              void getSlug(meta.title)
+                .then((slug) => onChange({ slug }))
+                .catch(() => onChange({ slug: slugify(meta.title) }))
+            }}
           >
             <Sparkles />
           </Button>

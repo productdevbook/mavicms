@@ -1,46 +1,19 @@
 use uuid::Uuid;
 
-/// Lowercases and hyphenates `input`, collapsing runs of non-alphanumeric
-/// characters into a single `-` (e.g. "Web Dev!!" -> "web-dev").
+/// Turns `input` into a URL-safe slug: entities decoded, letters transliterated
+/// to ASCII, everything else collapsed into single hyphens.
 ///
-/// Letters and digits are kept in **any** script, not just ASCII: this is a
-/// multilingual CMS, and stripping non-ASCII would turn "日本語" or "Привет"
-/// into an empty slug. Modern browsers and search engines handle
-/// percent-encoded UTF-8 paths fine.
+/// `Programlar&amp;Eğitimler` becomes `programlar-egitimler`, not
+/// `programlar-amp-egitimler`: content arriving from another CMS carries HTML
+/// entities, and an undecoded `&amp;` leaves the word "amp" in the address.
 ///
-/// May still return an empty string (e.g. an emoji-only title) — use
-/// [`slugify_or`] where a slug is required.
+/// Transliteration is deliberate. Keeping the original letters produces
+/// addresses that work but percent-encode into unreadable strings and travel
+/// badly through other tools; `İstanbul` becomes `istanbul` and `Привет`
+/// becomes `privet`. Scripts with no ASCII rendering can still slug to nothing
+/// — use [`slugify_or`] where a slug is required.
 pub fn slugify(input: &str) -> String {
-    let mut slug = String::with_capacity(input.len());
-    let mut last_dash = false;
-
-    for c in input.trim().to_lowercase().chars() {
-        if c.is_alphanumeric() {
-            slug.push(c);
-            last_dash = false;
-        } else if is_combining_mark(c) {
-            // Dropped rather than treated as a separator: lowercasing Turkish
-            // "İ" yields "i" followed by a combining dot, which would otherwise
-            // split "İstanbul" into "i-stanbul".
-        } else if !last_dash {
-            slug.push('-');
-            last_dash = true;
-        }
-    }
-
-    slug.trim_matches('-').to_string()
-}
-
-/// Whether the character is a combining mark — an accent or dot that attaches
-/// to the letter before it and carries no width of its own.
-fn is_combining_mark(c: char) -> bool {
-    matches!(c as u32,
-        0x0300..=0x036F   // combining diacritical marks
-        | 0x1AB0..=0x1AFF // ...extended
-        | 0x1DC0..=0x1DFF // ...supplement
-        | 0x20D0..=0x20FF // ...for symbols
-        | 0xFE20..=0xFE2F // half marks
-    )
+    slug::slugify(html_escape::decode_html_entities(input.trim()))
 }
 
 /// [`slugify`], falling back to `{prefix}-{random}` when the input has nothing
@@ -65,38 +38,51 @@ mod tests {
     }
 
     #[test]
-    fn keeps_turkish_dotted_capital_i_whole() {
-        // Lowercasing "İ" produces "i" plus a combining dot; splitting on it
-        // would give "i-stanbul".
+    fn decodes_entities_before_slugging() {
+        // The "amp" from `&amp;` used to end up in the address.
+        assert_eq!(slugify("Programlar&amp;Eğitimler"), "programlar-egitimler");
+        assert_eq!(slugify("Salt &amp; Pepper"), "salt-pepper");
+        assert_eq!(slugify("Caf&eacute;"), "cafe");
+    }
+
+    #[test]
+    fn transliterates_turkish() {
+        assert_eq!(slugify("Yazılarım"), "yazilarim");
         assert_eq!(slugify("İstanbul"), "istanbul");
-        assert_eq!(slugify("DİYET"), "diyet");
-        assert_eq!(slugify("Diyet"), slugify("DİYET"));
+        assert_eq!(
+            slugify("Annem'in Sağlıklı Mutfağı"),
+            "annem-in-saglikli-mutfagi"
+        );
+        // Case must not split what is one word.
+        assert_eq!(slugify("DİYET"), slugify("Diyet"));
     }
 
     #[test]
-    fn preserves_non_latin_scripts() {
-        // Previously every one of these collapsed to "", which made all
-        // Japanese tags collide on the same empty slug.
-        assert_eq!(slugify("日本語のタイトル"), "日本語のタイトル");
-        assert_eq!(slugify("Привет мир"), "привет-мир");
-        assert_eq!(slugify("مرحبا بالعالم"), "مرحبا-بالعالم");
-    }
-
-    #[test]
-    fn preserves_accented_latin() {
-        assert_eq!(slugify("Merhaba Dünya"), "merhaba-dünya");
-        assert_eq!(slugify("Grüße aus Köln"), "grüße-aus-köln");
+    fn transliterates_other_scripts() {
+        assert_eq!(slugify("Привет мир"), "privet-mir");
+        assert_eq!(slugify("Merhaba Dünya"), "merhaba-dunya");
     }
 
     #[test]
     fn distinct_inputs_stay_distinct() {
+        // These collapsed to the same empty slug before, so every one of them
+        // collided with every other.
         assert_ne!(slugify("東京"), slugify("大阪"));
     }
 
     #[test]
+    fn names_emoji_rather_than_dropping_them() {
+        // Worth knowing: emoji transliterate to their names, so a title made
+        // only of them still slugs to something usable.
+        assert_eq!(slugify("🙂"), "slight-smile");
+    }
+
+    #[test]
     fn falls_back_when_nothing_is_sluggable() {
-        let slug = slugify_or("🎉🎉", "post");
-        assert!(slug.starts_with("post-"), "got {slug}");
-        assert_eq!(slug.len(), "post-".len() + 8);
+        assert_eq!(slugify("!!! ???"), "");
+        let generated = slugify_or("!!! ???", "tag");
+        assert!(generated.starts_with("tag-"));
+        assert_eq!(generated.len(), "tag-".len() + 8);
+        assert_eq!(slugify_or("Web Dev", "tag"), "web-dev");
     }
 }

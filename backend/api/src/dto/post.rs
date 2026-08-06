@@ -37,6 +37,62 @@ impl PostStatus {
 
 /// A blog post as stored and returned by the API.
 #[derive(Debug, Serialize, ToSchema)]
+pub struct PostSummary {
+    pub id: Uuid,
+    pub title: String,
+    pub slug: String,
+    pub excerpt: String,
+    pub status: PostStatus,
+    pub publish_at: Option<DateTime<FixedOffset>>,
+    pub author: String,
+    pub category: String,
+    pub category_ids: Vec<Uuid>,
+    pub tags: Vec<String>,
+    pub cover_url: String,
+    pub featured: bool,
+    pub locale: String,
+    pub translation_group_id: Uuid,
+    /// Which languages this post exists in, including its own.
+    pub locales: Vec<String>,
+    pub created_at: DateTime<FixedOffset>,
+    pub updated_at: DateTime<FixedOffset>,
+}
+
+impl PostSummary {
+    pub fn from_model(model: PostModel, category_ids: Vec<Uuid>, locales: Vec<String>) -> Self {
+        Self {
+            id: model.id,
+            title: model.title,
+            slug: model.slug,
+            excerpt: model.excerpt,
+            status: PostStatus::from_str_lenient(&model.status),
+            publish_at: model.publish_at,
+            author: model.author,
+            category: model.category,
+            category_ids,
+            tags: serde_json::from_value(model.tags).unwrap_or_default(),
+            cover_url: model.cover_url,
+            featured: model.featured,
+            locale: model.locale,
+            translation_group_id: model.translation_group_id,
+            locales,
+            created_at: model.created_at,
+            updated_at: model.updated_at,
+        }
+    }
+}
+
+/// A page of posts, with the total so a consumer can page through predictably.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct PostPage {
+    pub items: Vec<PostSummary>,
+    /// How many posts match the filters, ignoring limit and offset.
+    pub total: u64,
+    pub limit: u64,
+    pub offset: u64,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
 pub struct PostResponse {
     pub id: Uuid,
     pub title: String,

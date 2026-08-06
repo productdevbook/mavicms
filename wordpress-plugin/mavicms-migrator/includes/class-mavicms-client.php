@@ -204,7 +204,9 @@ class MaviCMS_Client {
 		if ( is_wp_error( $found ) ) {
 			return $found;
 		}
-		return isset( $found[0] ) ? $found[0] : null;
+		// A listing is a page: `{ items, total, limit, offset }`.
+		$items = isset( $found['items'] ) ? $found['items'] : $found;
+		return isset( $items[0] ) ? $items[0] : null;
 	}
 
 	/**

@@ -6,6 +6,7 @@ pub mod media;
 pub mod plugins;
 pub mod posts;
 pub mod setup;
+pub mod slug;
 pub mod tags;
 
 use axum::{extract::DefaultBodyLimit, middleware::from_fn_with_state};
@@ -45,6 +46,7 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
         .routes(routes!(tags::list_tags, tags::create_tag))
         .routes(routes!(tags::delete_tag))
         .routes(routes!(tags::set_tag_translation_group))
+        .routes(routes!(slug::make_slug))
         .routes(routes!(media::delete_media))
         .routes(routes!(media::import_media))
         .routes(routes!(

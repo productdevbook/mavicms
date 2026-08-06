@@ -100,6 +100,10 @@ pub struct LocaleQuery {
     /// about to send is already here, without fetching the whole archive.
     #[serde(default)]
     pub slug: Option<String>,
+    #[serde(default)]
+    pub limit: Option<u64>,
+    #[serde(default)]
+    pub offset: Option<u64>,
 }
 
 impl LocaleQuery {

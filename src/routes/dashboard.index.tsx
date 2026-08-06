@@ -5,7 +5,13 @@ import { useLingui } from "@lingui/react/macro"
 import { Loader2, Pencil, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
-import { ApiError, deletePost, getPosts, type Post, type PostStatus } from "@/lib/api"
+import {
+  ApiError,
+  deletePost,
+  getPosts,
+  type PostStatus,
+  type PostSummary,
+} from "@/lib/api"
 import { useLanguages } from "@/lib/use-languages"
 import {
   Select,
@@ -37,8 +43,10 @@ function DashboardIndexRoute() {
   const { t } = useLingui()
   const navigate = useNavigate()
   const STATUS_LABELS = useStatusLabels()
-  const [posts, setPosts] = React.useState<Post[] | null>(null)
-  const [pendingDelete, setPendingDelete] = React.useState<Post | null>(null)
+  const [posts, setPosts] = React.useState<PostSummary[] | null>(null)
+  const [pendingDelete, setPendingDelete] = React.useState<PostSummary | null>(
+    null
+  )
   const { languages, defaultCode, label } = useLanguages()
   const [selectedLocale, setSelectedLocale] = React.useState("")
   // Counts and the list are always scoped to one language: totalling every
@@ -50,7 +58,7 @@ function DashboardIndexRoute() {
   const load = React.useCallback(() => {
     if (!locale) return
     getPosts(locale)
-      .then(setPosts)
+      .then((page) => setPosts(page.items))
       .catch(() => setPosts([]))
   }, [locale])
 
@@ -71,10 +79,14 @@ function DashboardIndexRoute() {
     if (!pendingDelete) return
     try {
       await deletePost(pendingDelete.id)
-      setPosts((current) => current?.filter((p) => p.id !== pendingDelete.id) ?? null)
+      setPosts(
+        (current) => current?.filter((p) => p.id !== pendingDelete.id) ?? null
+      )
       toast.success(t`Post deleted`)
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : t`Could not delete post`)
+      toast.error(
+        error instanceof ApiError ? error.message : t`Could not delete post`
+      )
     } finally {
       setPendingDelete(null)
     }
@@ -85,7 +97,10 @@ function DashboardIndexRoute() {
       {languages.length > 1 && (
         <div className="mb-4 flex items-center gap-2">
           <span className="text-sm text-muted-foreground">{t`Language`}</span>
-          <Select value={locale} onValueChange={(value) => setSelectedLocale(value ?? "")}>
+          <Select
+            value={locale}
+            onValueChange={(value) => setSelectedLocale(value ?? "")}
+          >
             <SelectTrigger className="w-52">
               <SelectValue>{(code: string) => label(code)}</SelectValue>
             </SelectTrigger>
@@ -105,7 +120,9 @@ function DashboardIndexRoute() {
           <Card key={status}>
             <CardContent className="pt-6">
               <p className="text-2xl font-semibold">{counts[status]}</p>
-              <p className="text-sm text-muted-foreground">{STATUS_LABELS[status]}</p>
+              <p className="text-sm text-muted-foreground">
+                {STATUS_LABELS[status]}
+              </p>
             </CardContent>
           </Card>
         ))}
@@ -120,7 +137,10 @@ function DashboardIndexRoute() {
           <p className="text-sm text-muted-foreground">{t`No posts yet`}</p>
           <Button
             onClick={() =>
-              navigate({ to: "/editor/new", search: { locale, translationOf: undefined } })
+              navigate({
+                to: "/editor/new",
+                search: { locale, translationOf: undefined },
+              })
             }
           >
             {t`New post`}
@@ -129,10 +149,7 @@ function DashboardIndexRoute() {
       ) : (
         <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
           {posts.map((post) => (
-            <div
-              key={post.id}
-              className="flex items-center gap-3 px-4 py-3"
-            >
+            <div key={post.id} className="flex items-center gap-3 px-4 py-3">
               <div className="min-w-0 flex-1">
                 <Link
                   to="/editor/$postId"
@@ -143,7 +160,9 @@ function DashboardIndexRoute() {
                 </Link>
                 <p className="truncate text-xs text-muted-foreground">
                   {post.category || t`Uncategorized`} ·{" "}
-                  {new Date(post.publish_at ?? post.updated_at).toLocaleString()}
+                  {new Date(
+                    post.publish_at ?? post.updated_at
+                  ).toLocaleString()}
                   {post.locales.length > 1 && (
                     <>
                       {" · "}
@@ -155,7 +174,9 @@ function DashboardIndexRoute() {
                   )}
                 </p>
               </div>
-              <Badge variant={post.status === "published" ? "default" : "secondary"}>
+              <Badge
+                variant={post.status === "published" ? "default" : "secondary"}
+              >
                 {STATUS_LABELS[post.status]}
               </Badge>
               <Button
@@ -163,7 +184,10 @@ function DashboardIndexRoute() {
                 size="icon-sm"
                 aria-label={t`Edit`}
                 onClick={() =>
-                  navigate({ to: "/editor/$postId", params: { postId: post.id } })
+                  navigate({
+                    to: "/editor/$postId",
+                    params: { postId: post.id },
+                  })
                 }
               >
                 <Pencil />

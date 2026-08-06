@@ -276,8 +276,46 @@ export interface PostPayload {
   translation_of?: string
 }
 
-export function getPosts(locale?: string): Promise<Post[]> {
-  return request<Post[]>(`/posts${locale ? `?locale=${locale}` : ""}`)
+/** A listing omits `content_html`; the full body comes from `getPost`. */
+export type PostSummary = Omit<
+  Post,
+  | "content_html"
+  | "translations"
+  | "seo_title"
+  | "seo_description"
+  | "canonical"
+  | "allow_comments"
+>
+
+export interface PostPage {
+  items: PostSummary[]
+  total: number
+  limit: number
+  offset: number
+}
+
+export function getPosts(
+  locale?: string,
+  options: { limit?: number; offset?: number } = {}
+): Promise<PostPage> {
+  const params = new URLSearchParams()
+  if (locale) params.set("locale", locale)
+  if (options.limit !== undefined) params.set("limit", String(options.limit))
+  if (options.offset !== undefined) params.set("offset", String(options.offset))
+  const query = params.toString()
+  return request<PostPage>(`/posts${query ? `?${query}` : ""}`)
+}
+
+/**
+ * Asks the server for the address of a piece of text.
+ *
+ * The server is the only place that decides what a slug looks like, so the
+ * address shown while typing is the one that will actually be stored.
+ */
+export function getSlug(text: string): Promise<string> {
+  return request<{ slug: string }>(
+    `/slug?text=${encodeURIComponent(text)}`
+  ).then((response) => response.slug)
 }
 
 export function getPost(id: string): Promise<Post> {

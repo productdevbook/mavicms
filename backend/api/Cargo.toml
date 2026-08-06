@@ -30,6 +30,8 @@ rust-s3 = { version = "0.37", default-features = false, features = ["tokio-rustl
 # rustls to match rust-s3 and sea-orm: pulling native-tls would add OpenSSL to the image.
 # SigV4 for object deletion, which rust-s3 signs in a way R2 rejects.
 regex = "1"
+slug = "0.1"
+html-escape = "0.2"
 hmac = "0.12"
 sha2 = "0.10"
 hex = "0.4"

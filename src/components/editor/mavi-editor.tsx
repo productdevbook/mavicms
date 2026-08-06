@@ -48,6 +48,7 @@ import {
   ApiError,
   createPost,
   getPost,
+  getSlug,
   logout,
   updatePost,
   type Post,
@@ -224,7 +225,9 @@ export function MaviEditor({
         // refused it. Autosaving from here would write that emptiness over the
         // real thing, so the editor stays shut instead.
         if (post.content_html.trim() !== "" && editor.isEmpty) {
-          toast.error(t`This post could not be opened, so it has been left untouched.`)
+          toast.error(
+            t`This post could not be opened, so it has been left untouched.`
+          )
           navigate({ to: "/dashboard" })
           return
         }
@@ -337,6 +340,30 @@ export function MaviEditor({
     (patch: Partial<PostMeta>) => {
       if (patch.slug !== undefined) autoSlugRef.current = false
       updateMeta(patch)
+    },
+    [updateMeta]
+  )
+
+  // The server decides what a slug looks like, so the address shown while
+  // typing is asked for rather than guessed. Debounced: this follows every
+  // keystroke in the title.
+  const slugTimer = React.useRef<number | undefined>(undefined)
+  const requestSlug = React.useCallback(
+    (title: string) => {
+      if (slugTimer.current) window.clearTimeout(slugTimer.current)
+      if (!title.trim()) {
+        updateMeta({ slug: "" })
+        return
+      }
+      slugTimer.current = window.setTimeout(() => {
+        getSlug(title)
+          .then((slug: string) => {
+            // The title may have moved on, or the user may have taken the slug
+            // over, while the answer was in flight.
+            if (autoSlugRef.current) updateMeta({ slug })
+          })
+          .catch(() => {})
+      }, 400)
     },
     [updateMeta]
   )
@@ -597,11 +624,8 @@ export function MaviEditor({
               value={meta.title}
               onChange={(event) => {
                 const title = event.target.value
-                updateMeta(
-                  autoSlugRef.current
-                    ? { title, slug: slugify(title) }
-                    : { title }
-                )
+                updateMeta({ title })
+                if (autoSlugRef.current) requestSlug(title)
               }}
               placeholder={t`Untitled post`}
               rows={1}

@@ -5,7 +5,11 @@ export function readingTimeMinutes(words: number): number {
 }
 
 /**
- * Mirrors `slugify` in backend/api/src/slug.rs — letters and digits are kept
+ * Only for in-page anchors, where an answer is needed synchronously as the
+ * document changes. Post addresses come from `GET /slug` so that the server
+ * is the single place that decides what a slug looks like.
+ *
+ * Loosely mirrors `slugify` in backend/api/src/slug.rs — letters and digits are kept
  * in any script. Stripping non-ASCII would empty out Japanese or Cyrillic
  * titles, and a hardcoded transliteration map can't be right for every
  * language at once (Turkish wants ü→u, German wants ü→ue).
