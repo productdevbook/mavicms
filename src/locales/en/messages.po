@@ -235,6 +235,10 @@ msgstr "Add table"
 msgid "Address"
 msgstr "Address"
 
+#: src/routes/login.tsx:160
+msgid "Agencies → the console"
+msgstr "Agencies → the console"
+
 #: src/routes/console.register.tsx:96
 msgid "Agency name"
 msgstr "Agency name"
@@ -596,7 +600,7 @@ msgstr "Could not open the site"
 #: src/components/setup/setup-wizard.tsx:348
 #: src/routes/console.login.tsx:38
 #: src/routes/console.register.tsx:51
-#: src/routes/login.tsx:44
+#: src/routes/login.tsx:72
 msgid "Could not reach the server. Please try again."
 msgstr "Could not reach the server. Please try again."
 
@@ -939,6 +943,10 @@ msgstr "Generate password"
 #: src/components/editor/mavi-editor.tsx:274
 msgid "Give your post a title first"
 msgstr "Give your post a title first"
+
+#: src/routes/login.tsx:186
+msgid "Go"
+msgstr "Go"
 
 #: src/components/editor/post-settings.tsx:42
 #~ msgid "Guide"
@@ -1399,7 +1407,7 @@ msgstr "Paragraph"
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console.login.tsx:93
 #: src/routes/console.register.tsx:131
-#: src/routes/login.tsx:98
+#: src/routes/login.tsx:126
 msgid "Password"
 msgstr "Password"
 
@@ -1728,12 +1736,12 @@ msgid "Show password"
 msgstr "Show password"
 
 #: src/routes/console.login.tsx:107
-#: src/routes/login.tsx:71
-#: src/routes/login.tsx:112
+#: src/routes/login.tsx:99
+#: src/routes/login.tsx:140
 msgid "Sign in"
 msgstr "Sign in"
 
-#: src/routes/login.tsx:74
+#: src/routes/login.tsx:102
 msgid "Sign in to manage your site."
 msgstr "Sign in to manage your site."
 
@@ -1926,6 +1934,10 @@ msgstr "Theme"
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "This post could not be opened, so it has been left untouched."
 
+#: src/routes/login.tsx:150
+msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
+msgstr "This signs you in to the server itself. Everyone else signs in somewhere else:"
+
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
 msgstr "Today's date"
@@ -2002,7 +2014,7 @@ msgstr "Use S3 for new uploads"
 
 #: src/components/setup/setup-wizard.tsx:519
 #: src/components/setup/setup-wizard.tsx:680
-#: src/routes/login.tsx:86
+#: src/routes/login.tsx:114
 msgid "Username"
 msgstr "Username"
 
@@ -2029,6 +2041,10 @@ msgstr "Where to keep them"
 #: src/components/editor/find-replace.tsx:156
 msgid "Whole word"
 msgstr "Whole word"
+
+#: src/routes/login.tsx:165
+msgid "Working on a site? Type its address"
+msgstr "Working on a site? Type its address"
 
 #: src/routes/dashboard.plugins_.s3.tsx:119
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."

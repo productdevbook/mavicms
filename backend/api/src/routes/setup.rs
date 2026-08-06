@@ -12,7 +12,7 @@ use tower_cookies::Cookies;
 use uuid::Uuid;
 
 use crate::{
-    tenants::{Operator, Site},
+    tenants::{Operator, Resolved, Site},
     auth::create_session,
     db,
     dto::setup::{
@@ -30,12 +30,18 @@ use crate::{
     tag = "setup",
     responses((status = 200, description = "Setup status", body = SetupStatusResponse))
 )]
-pub async fn setup_status(Site(state): Site) -> AppResult<Json<SetupStatusResponse>> {
+pub async fn setup_status(
+    Site(state): Site,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+) -> AppResult<Json<SetupStatusResponse>> {
+    let server = resolved.is_host();
+
     let Some(db) = state.db.as_ref() else {
         return Ok(Json(SetupStatusResponse {
             database_configured: false,
             installed: false,
             site_title: None,
+            server,
         }));
     };
 
@@ -44,6 +50,7 @@ pub async fn setup_status(Site(state): Site) -> AppResult<Json<SetupStatusRespon
         database_configured: true,
         installed: settings.is_some(),
         site_title: settings.map(|s| s.site_title),
+        server,
     }))
 }
 

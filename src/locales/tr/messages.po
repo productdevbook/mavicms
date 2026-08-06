@@ -235,6 +235,10 @@ msgstr "Tablo ekle"
 msgid "Address"
 msgstr "Adres"
 
+#: src/routes/login.tsx:160
+msgid "Agencies → the console"
+msgstr "İşletmeler → konsol"
+
 #: src/routes/console.register.tsx:96
 msgid "Agency name"
 msgstr "İşletme adı"
@@ -596,7 +600,7 @@ msgstr "Site açılamadı"
 #: src/components/setup/setup-wizard.tsx:348
 #: src/routes/console.login.tsx:38
 #: src/routes/console.register.tsx:51
-#: src/routes/login.tsx:44
+#: src/routes/login.tsx:72
 msgid "Could not reach the server. Please try again."
 msgstr "Sunucuya ulaşılamadı. Lütfen tekrar deneyin."
 
@@ -935,6 +939,10 @@ msgstr "Parola üret"
 #: src/components/editor/mavi-editor.tsx:274
 msgid "Give your post a title first"
 msgstr "Önce yazıya bir başlık verin"
+
+#: src/routes/login.tsx:186
+msgid "Go"
+msgstr "Git"
 
 #: src/components/editor/post-settings.tsx:42
 #~ msgid "Guide"
@@ -1395,7 +1403,7 @@ msgstr "Paragraf"
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console.login.tsx:93
 #: src/routes/console.register.tsx:131
-#: src/routes/login.tsx:98
+#: src/routes/login.tsx:126
 msgid "Password"
 msgstr "Parola"
 
@@ -1724,12 +1732,12 @@ msgid "Show password"
 msgstr "Parolayı göster"
 
 #: src/routes/console.login.tsx:107
-#: src/routes/login.tsx:71
-#: src/routes/login.tsx:112
+#: src/routes/login.tsx:99
+#: src/routes/login.tsx:140
 msgid "Sign in"
 msgstr "Giriş yap"
 
-#: src/routes/login.tsx:74
+#: src/routes/login.tsx:102
 msgid "Sign in to manage your site."
 msgstr "Sitenizi yönetmek için giriş yapın."
 
@@ -1922,6 +1930,10 @@ msgstr "Tema"
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "Bu yazı açılamadı, bu yüzden hiç değiştirilmedi."
 
+#: src/routes/login.tsx:150
+msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
+msgstr "Bu giriş sunucunun kendisine. Diğer herkes başka bir yerden giriyor:"
+
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
 msgstr "Bugünün tarihi"
@@ -1998,7 +2010,7 @@ msgstr "Yeni yüklemelerde S3 kullan"
 
 #: src/components/setup/setup-wizard.tsx:519
 #: src/components/setup/setup-wizard.tsx:680
-#: src/routes/login.tsx:86
+#: src/routes/login.tsx:114
 msgid "Username"
 msgstr "Kullanıcı adı"
 
@@ -2025,6 +2037,10 @@ msgstr "Nerede saklansın"
 #: src/components/editor/find-replace.tsx:156
 msgid "Whole word"
 msgstr "Tam kelime"
+
+#: src/routes/login.tsx:165
+msgid "Working on a site? Type its address"
+msgstr "Bir site üzerinde mi çalışıyorsunuz? Adresini yazın"
 
 #: src/routes/dashboard.plugins_.s3.tsx:119
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."

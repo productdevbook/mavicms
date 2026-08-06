@@ -7,6 +7,10 @@ pub struct SetupStatusResponse {
     pub database_configured: bool,
     pub installed: bool,
     pub site_title: Option<String>,
+    /// Whether this address is the server itself rather than one of the sites
+    /// it hosts — which is what decides whether the sign-in page offers the
+    /// agency console and a way through to somebody else's site.
+    pub server: bool,
 }
 
 /// First-run setup payload: site info plus the initial administrator account.

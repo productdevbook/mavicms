@@ -31,6 +31,8 @@ export interface SetupStatus {
   database_configured: boolean
   installed: boolean
   site_title: string | null
+  /** This address is the server itself, not one of the sites it hosts. */
+  server: boolean
 }
 
 export type DatabaseEngine = "postgres" | "mysql" | "sqlite"
