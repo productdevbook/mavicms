@@ -1,6 +1,6 @@
 use axum::{
     Json,
-    extract::{Path, Query, State},
+    extract::{Path, Query},
     http::StatusCode,
 };
 use chrono::Utc;
@@ -11,13 +11,13 @@ use sea_orm::{
 use serde::Deserialize;
 
 use crate::{
+    tenants::Site,
     dto::languages::{
         CreateLanguageRequest, LanguageResponse, LanguageUsage, UpdateLanguageRequest,
     },
     entities::{category, language, post, tag},
     error::{AppError, AppResult},
     languages::{normalize_code, validate_code, well_known_name},
-    state::AppState,
 };
 
 fn validate_direction(value: &str) -> AppResult<String> {
@@ -37,7 +37,7 @@ fn validate_direction(value: &str) -> AppResult<String> {
     responses((status = 200, description = "Languages", body = Vec<LanguageResponse>))
 )]
 pub async fn list_languages(
-    State(state): State<AppState>,
+    Site(state): Site,
 ) -> AppResult<Json<Vec<LanguageResponse>>> {
     let rows = crate::languages::all(state.db()).await?;
     Ok(Json(rows.into_iter().map(LanguageResponse::from).collect()))
@@ -55,7 +55,7 @@ pub async fn list_languages(
     )
 )]
 pub async fn create_language(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<CreateLanguageRequest>,
 ) -> AppResult<(StatusCode, Json<LanguageResponse>)> {
     let db = state.db();
@@ -113,7 +113,7 @@ pub async fn create_language(
     )
 )]
 pub async fn update_language(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(code): Path<String>,
     Json(payload): Json<UpdateLanguageRequest>,
 ) -> AppResult<Json<LanguageResponse>> {
@@ -198,7 +198,7 @@ pub struct DeleteLanguageQuery {
     )
 )]
 pub async fn delete_language(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(code): Path<String>,
     Query(query): Query<DeleteLanguageQuery>,
 ) -> AppResult<StatusCode> {

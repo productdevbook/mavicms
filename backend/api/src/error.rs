@@ -22,6 +22,8 @@ pub enum AppError {
     Internal(String),
     #[error("{0}")]
     Unauthorized(String),
+    #[error("{0}")]
+    Forbidden(String),
 }
 
 #[derive(Serialize, ToSchema)]
@@ -64,6 +66,7 @@ impl IntoResponse for AppError {
             AppError::Unavailable(_) => StatusCode::SERVICE_UNAVAILABLE,
             AppError::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::Unauthorized(_) => StatusCode::UNAUTHORIZED,
+            AppError::Forbidden(_) => StatusCode::FORBIDDEN,
         };
 
         if let AppError::Database(err) = &self {

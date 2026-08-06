@@ -1,6 +1,6 @@
 use axum::{
     Json,
-    extract::{Path, Query, State},
+    extract::{Path, Query},
     http::StatusCode,
 };
 use chrono::Utc;
@@ -10,13 +10,13 @@ use sea_orm::{
 use uuid::Uuid;
 
 use crate::{
+    tenants::Site,
     dto::taxonomy::{CreateTagRequest, LocaleQuery, TagResponse},
     entities::tag,
     error::{AppError, AppResult},
     languages::resolve,
     routes::posts::TranslationGroupRequest,
     slug::{slugify, slugify_or},
-    state::AppState,
 };
 
 /// Finds a tag by name **within one language**, or creates one. Returns
@@ -84,7 +84,7 @@ pub async fn get_or_create_tag(
     responses((status = 200, description = "List of tags", body = Vec<TagResponse>))
 )]
 pub async fn list_tags(
-    State(state): State<AppState>,
+    Site(state): Site,
     Query(query): Query<LocaleQuery>,
 ) -> AppResult<Json<Vec<TagResponse>>> {
     let mut find = tag::Entity::find();
@@ -107,7 +107,7 @@ pub async fn list_tags(
     )
 )]
 pub async fn create_tag(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<CreateTagRequest>,
 ) -> AppResult<(StatusCode, Json<TagResponse>)> {
     let db = state.db();
@@ -153,7 +153,7 @@ pub async fn create_tag(
     )
 )]
 pub async fn delete_tag(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let result = tag::Entity::delete_by_id(id).exec(state.db()).await?;
@@ -177,7 +177,7 @@ pub async fn delete_tag(
     )
 )]
 pub async fn set_tag_translation_group(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
     Json(payload): Json<TranslationGroupRequest>,
 ) -> AppResult<Json<TagResponse>> {

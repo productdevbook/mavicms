@@ -1,6 +1,6 @@
 use axum::{
     Json,
-    extract::{Path, Query, State},
+    extract::{Path, Query},
     http::StatusCode,
 };
 use chrono::Utc;
@@ -10,12 +10,12 @@ use sea_orm::{
 use uuid::Uuid;
 
 use crate::{
+    tenants::Site,
     dto::taxonomy::{CategoryResponse, CreateCategoryRequest, LocaleQuery, UpdateCategoryRequest},
     entities::category,
     error::{AppError, AppResult},
     languages::resolve,
     slug::slugify_or,
-    state::AppState,
 };
 
 /// Rejects a parent that would create a loop. Walking up from the proposed
@@ -106,7 +106,7 @@ pub async fn resolve_for_locale(
     responses((status = 200, description = "List of categories", body = Vec<CategoryResponse>))
 )]
 pub async fn list_categories(
-    State(state): State<AppState>,
+    Site(state): Site,
     Query(query): Query<LocaleQuery>,
 ) -> AppResult<Json<Vec<CategoryResponse>>> {
     let mut find = category::Entity::find();
@@ -136,7 +136,7 @@ pub async fn list_categories(
     )
 )]
 pub async fn create_category(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<CreateCategoryRequest>,
 ) -> AppResult<(StatusCode, Json<CategoryResponse>)> {
     let db = state.db();
@@ -219,7 +219,7 @@ pub async fn create_category(
     )
 )]
 pub async fn update_category(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
     Json(payload): Json<UpdateCategoryRequest>,
 ) -> AppResult<Json<CategoryResponse>> {
@@ -300,7 +300,7 @@ pub async fn update_category(
     )
 )]
 pub async fn delete_category(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let result = category::Entity::delete_by_id(id).exec(state.db()).await?;

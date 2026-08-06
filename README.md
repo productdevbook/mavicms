@@ -64,6 +64,38 @@ The backend reads these; everything else is configured from the admin panel.
 The frontend is static files behind nginx, which proxies `/api`, `/uploads` and
 `/scalar` to the backend.
 
+## Many sites on one server
+
+A single instance can host hundreds of sites, each answering on its own
+address. Add one from **Sites** in the admin panel, or:
+
+```bash
+curl -X POST https://your-server/api/sites -b cookies.txt \
+  -H 'content-type: application/json' \
+  -d '{"host": "example.com"}'
+```
+
+Point the address at the server and open it — the new site runs the setup
+wizard like any fresh install.
+
+Every site gets its **own database**, its own uploads folder and its own
+encryption key, rather than sharing tables keyed by a site id. Nothing has to
+remember to filter by tenant, a site can be backed up or moved by copying one
+directory, and one site's data cannot leak into another's. A site with no
+`database_url` uses a SQLite file of its own; a busy one can be handed a
+Postgres or MySQL URL instead, with nothing else changing.
+
+Memory is bounded by how many sites are *busy*, not how many exist: databases
+are opened on demand, at most 64 stay open, and one that has served no request
+for ten minutes is closed. Five hundred empty sites measure at about 150 MB
+resident and 79 MB on disk, and stay flat under traffic spread across all of
+them.
+
+Managing sites is the server operator's alone. An administrator of a hosted
+site administers that site: they cannot list the other sites on the machine,
+add sites, or reach the database wizard — which restarts the process, and so
+would take every other site down with it.
+
 ## Migrating from WordPress
 
 Install [the plugin](https://github.com/productdevbook/mavicms/releases/latest)

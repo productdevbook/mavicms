@@ -83,6 +83,8 @@ export interface CurrentUser {
   username: string
   email: string
   role: string
+  /** Administering the server rather than one of the sites on it. */
+  operator: boolean
 }
 
 export function getCurrentUser(): Promise<CurrentUser> {
@@ -518,5 +520,27 @@ export function runBackup(): Promise<BackupFile> {
 export function deleteBackup(name: string): Promise<void> {
   return request<void>(`/plugins/backup/${encodeURIComponent(name)}`, {
     method: "DELETE",
+  })
+}
+
+export interface Site {
+  id: string
+  host: string
+  slug: string
+  database_url: string
+  active: boolean
+}
+
+export function getSites(): Promise<Site[]> {
+  return request<Site[]>("/sites")
+}
+
+export function createSite(
+  host: string,
+  databaseUrl: string
+): Promise<Site> {
+  return request<Site>("/sites", {
+    method: "POST",
+    body: JSON.stringify({ host, database_url: databaseUrl }),
   })
 }

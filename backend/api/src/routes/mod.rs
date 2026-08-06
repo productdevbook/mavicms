@@ -6,15 +6,23 @@ pub mod media;
 pub mod plugins;
 pub mod posts;
 pub mod setup;
+pub mod sites;
 pub mod slug;
 pub mod tags;
 
-use axum::{extract::DefaultBodyLimit, middleware::from_fn_with_state};
+use axum::{
+    extract::DefaultBodyLimit,
+    middleware::{from_fn, from_fn_with_state},
+};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-use crate::{auth::require_auth, middleware::require_database, state::AppState};
+use crate::{
+    auth::require_auth,
+    middleware::require_database,
+    tenants::{Hosting, resolve},
+};
 
-pub fn router(state: AppState) -> OpenApiRouter<AppState> {
+pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     let public = OpenApiRouter::new()
         .routes(routes!(health::health))
         .routes(routes!(setup::setup_status))
@@ -24,7 +32,7 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
 
     let needs_db = OpenApiRouter::new()
         .routes(routes!(auth::login))
-        .layer(from_fn_with_state(state.clone(), require_database));
+        .layer(from_fn(require_database));
 
     let protected = OpenApiRouter::new()
         .routes(routes!(auth::me))
@@ -47,6 +55,7 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
         .routes(routes!(tags::delete_tag))
         .routes(routes!(tags::set_tag_translation_group))
         .routes(routes!(slug::make_slug))
+        .routes(routes!(sites::list_sites, sites::create_site))
         .routes(routes!(media::delete_media))
         .routes(routes!(media::import_media))
         .routes(routes!(
@@ -74,8 +83,13 @@ pub fn router(state: AppState) -> OpenApiRouter<AppState> {
                 .routes(routes!(media::list_media, media::upload_media))
                 .layer(DefaultBodyLimit::max(media::MAX_UPLOAD_BYTES)),
         )
-        .layer(from_fn_with_state(state.clone(), require_auth))
-        .layer(from_fn_with_state(state, require_database));
+        .layer(from_fn(require_auth))
+        .layer(from_fn(require_database));
 
-    public.merge(needs_db).merge(protected)
+    // Resolving the site is the outermost thing that happens: everything
+    // below it, authentication included, is a question about one site.
+    public
+        .merge(needs_db)
+        .merge(protected)
+        .layer(from_fn_with_state(hosting, resolve))
 }

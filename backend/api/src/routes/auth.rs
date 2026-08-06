@@ -1,15 +1,15 @@
 use argon2::{Argon2, password_hash::PasswordVerifier};
-use axum::{Extension, Json, extract::State, http::StatusCode};
+use axum::{Extension, Json, http::StatusCode};
 use password_hash::PasswordHash;
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use tower_cookies::Cookies;
 
 use crate::{
     auth::{clear_session, create_session},
+    tenants::{Resolved, Site},
     dto::auth::{LoginRequest, UserResponse},
     entities::user,
     error::{AppError, AppResult},
-    state::AppState,
 };
 
 /// Sign in with a username and password, setting a session cookie.
@@ -24,7 +24,8 @@ use crate::{
     )
 )]
 pub async fn login(
-    State(state): State<AppState>,
+    Site(state): Site,
+    Extension(resolved): Extension<Resolved>,
     cookies: Cookies,
     Json(payload): Json<LoginRequest>,
 ) -> AppResult<Json<UserResponse>> {
@@ -49,6 +50,7 @@ pub async fn login(
         username: user.username,
         email: user.email,
         role: user.role,
+        operator: resolved.is_host(),
     }))
 }
 
@@ -59,7 +61,7 @@ pub async fn login(
     tag = "auth",
     responses((status = 204, description = "Signed out"))
 )]
-pub async fn logout(State(state): State<AppState>, cookies: Cookies) -> StatusCode {
+pub async fn logout(Site(state): Site, cookies: Cookies) -> StatusCode {
     clear_session(&state, &cookies).await;
     StatusCode::NO_CONTENT
 }
@@ -74,10 +76,14 @@ pub async fn logout(State(state): State<AppState>, cookies: Cookies) -> StatusCo
         (status = 401, description = "Not signed in", body = crate::error::ErrorBody),
     )
 )]
-pub async fn me(Extension(user): Extension<user::Model>) -> Json<UserResponse> {
+pub async fn me(
+    Extension(resolved): Extension<Resolved>,
+    Extension(user): Extension<user::Model>,
+) -> Json<UserResponse> {
     Json(UserResponse {
         username: user.username,
         email: user.email,
         role: user.role,
+        operator: resolved.is_host(),
     })
 }

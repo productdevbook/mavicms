@@ -27,7 +27,7 @@ msgstr "\"{0}\" kalıcı olarak silinecek. Bu işlem geri alınamaz."
 msgid "\"{0}\" will be removed from every post that uses it."
 msgstr "\"{0}\" onu kullanan bütün yazılardan kaldırılacak."
 
-#: src/routes/dashboard.plugins_.backup.tsx:316
+#: src/routes/dashboard.plugins_.backup.tsx:334
 msgid "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
 msgstr "\"{pendingDelete}\" kalıcı olarak silinecek. Bu geri alınamaz."
 
@@ -63,6 +63,11 @@ msgstr "{0, plural, one {kelime} other {kelime}}"
 #: src/components/setup/setup-wizard.tsx:433
 msgid "{0} · {1} · {2} · {3}"
 msgstr "{0} · {1} · {2} · {3}"
+
+#. placeholder {0}: site.host
+#: src/routes/dashboard.sites.tsx:47
+msgid "{0} is ready. Open it to set it up."
+msgstr "{0} hazır. Kurulumu için sitesini açın."
 
 #. placeholder {0}: result.site_title
 #. placeholder {1}: result.admin_username
@@ -107,11 +112,19 @@ msgstr "0 sonuç"
 msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 karakter: harf, rakam, _ veya -"
 
-#: src/routes/dashboard.plugins_.backup.tsx:197
+#: src/routes/dashboard.sites.tsx:100
+msgid "A database file of its own"
+msgstr "Kendi veritabanı dosyası"
+
+#: src/routes/dashboard.sites.tsx:143
+msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
+msgstr "Çoğu site için bir dosya yeter. Yoğun bir siteye bunun yerine Postgres ya da MySQL adresi verilebilir."
+
+#: src/routes/dashboard.plugins_.backup.tsx:212
 msgid "A folder inside the data directory."
 msgstr "Veri dizininin içinde bir klasör."
 
-#: src/routes/dashboard.plugins_.backup.tsx:196
+#: src/routes/dashboard.plugins_.backup.tsx:211
 msgid "A prefix inside the bucket."
 msgstr "Kovanın içinde bir önek."
 
@@ -139,6 +152,10 @@ msgstr "Yatay çizgi ekle"
 #: src/components/editor/dialogs.tsx:296
 msgid "Add a hyperlink to the selected text."
 msgstr "Seçili metne köprü ekle."
+
+#: src/routes/dashboard.sites.tsx:116
+msgid "Add a site"
+msgstr "Site ekle"
 
 #: src/components/editor/post-settings.tsx:228
 msgid "Add a tag and press Enter"
@@ -185,11 +202,17 @@ msgstr "Alta satır ekle"
 msgid "Add row before"
 msgstr "Üste satır ekle"
 
+#: src/routes/dashboard.sites.tsx:75
+#: src/routes/dashboard.sites.tsx:154
+msgid "Add site"
+msgstr "Site ekle"
+
 #: src/components/editor/dialogs.tsx:348
 msgid "Add table"
 msgstr "Tablo ekle"
 
 #: src/components/editor/dialogs.tsx:300
+#: src/routes/dashboard.sites.tsx:124
 msgid "Address"
 msgstr "Adres"
 
@@ -231,7 +254,7 @@ msgstr "Hizalama"
 msgid "Alt text"
 msgstr "Alternatif metin"
 
-#: src/routes/dashboard.plugins_.backup.tsx:140
+#: src/routes/dashboard.plugins_.backup.tsx:147
 msgid "An archive holding the database, and the uploaded files if you ask for them."
 msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
 
@@ -244,7 +267,7 @@ msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
 msgid "Apply"
 msgstr "Uygula"
 
-#: src/routes/dashboard.plugins_.backup.tsx:276
+#: src/routes/dashboard.plugins_.backup.tsx:294
 msgid "Archives"
 msgstr "Arşivler"
 
@@ -258,20 +281,20 @@ msgstr "Geri"
 msgid "Back to editing"
 msgstr "Düzenlemeye dön"
 
-#: src/routes/dashboard.plugins_.backup.tsx:266
+#: src/routes/dashboard.plugins_.backup.tsx:284
 msgid "Back up now"
 msgstr "Şimdi yedek al"
 
-#: src/routes/dashboard.plugins_.backup.tsx:79
+#: src/routes/dashboard.plugins_.backup.tsx:86
 msgid "Backup settings saved"
 msgstr "Yedekleme ayarları kaydedildi"
 
 #. placeholder {0}: file.name
-#: src/routes/dashboard.plugins_.backup.tsx:93
+#: src/routes/dashboard.plugins_.backup.tsx:100
 msgid "Backup written: {0}"
 msgstr "Yedek yazıldı: {0}"
 
-#: src/routes/dashboard.plugins_.backup.tsx:138
+#: src/routes/dashboard.plugins_.backup.tsx:145
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Backups"
 msgstr "Yedekler"
@@ -328,7 +351,8 @@ msgstr "Madde listesi"
 #: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
-#: src/routes/dashboard.plugins_.backup.tsx:320
+#: src/routes/dashboard.plugins_.backup.tsx:338
+#: src/routes/dashboard.sites.tsx:150
 #: src/routes/dashboard.tags.tsx:301
 msgid "Cancel"
 msgstr "Vazgeç"
@@ -341,7 +365,7 @@ msgstr "Canonical URL"
 msgid "Case sensitive"
 msgstr "Büyük/küçük harf duyarlı"
 
-#: src/components/dashboard/dashboard-shell.tsx:28
+#: src/components/dashboard/dashboard-shell.tsx:30
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Kategoriler"
@@ -462,6 +486,10 @@ msgstr "Dil eklenemedi"
 msgid "Could not add tag"
 msgstr "Etiket eklenemedi"
 
+#: src/routes/dashboard.sites.tsx:50
+msgid "Could not add the site"
+msgstr "Site eklenemedi"
+
 #: src/components/editor/post-settings.tsx:91
 #: src/routes/dashboard.categories.tsx:96
 msgid "Could not create category"
@@ -483,7 +511,7 @@ msgstr "Yazı silinemedi"
 msgid "Could not delete tag"
 msgstr "Etiket silinemedi"
 
-#: src/routes/dashboard.plugins_.backup.tsx:111
+#: src/routes/dashboard.plugins_.backup.tsx:118
 msgid "Could not delete the backup"
 msgstr "Yedek silinemedi"
 
@@ -498,6 +526,10 @@ msgstr "Yazı yüklenemedi"
 #: src/routes/dashboard.plugins_.backup.tsx:68
 msgid "Could not load the backup settings"
 msgstr "Yedekleme ayarları yüklenemedi"
+
+#: src/routes/dashboard.sites.tsx:36
+msgid "Could not load the sites"
+msgstr "Siteler yüklenemedi"
 
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
@@ -521,7 +553,7 @@ msgstr "Ayarlar kaydedilemedi"
 msgid "Could not save tag"
 msgstr "Etiket kaydedilemedi"
 
-#: src/routes/dashboard.plugins_.backup.tsx:82
+#: src/routes/dashboard.plugins_.backup.tsx:89
 msgid "Could not save the settings"
 msgstr "Ayarlar kaydedilemedi"
 
@@ -589,6 +621,10 @@ msgstr "Koyu"
 msgid "Dashboard"
 msgstr "Panel"
 
+#: src/routes/dashboard.sites.tsx:135
+msgid "Database"
+msgstr "Veritabanı"
+
 #: src/components/setup/setup-wizard.tsx:469
 msgid "Database file path"
 msgstr "Veritabanı dosya yolu"
@@ -620,8 +656,8 @@ msgstr "Varsayılan"
 #: src/routes/dashboard.languages.tsx:171
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
-#: src/routes/dashboard.plugins_.backup.tsx:296
-#: src/routes/dashboard.plugins_.backup.tsx:322
+#: src/routes/dashboard.plugins_.backup.tsx:314
+#: src/routes/dashboard.plugins_.backup.tsx:340
 #: src/routes/dashboard.tags.tsx:234
 #: src/routes/dashboard.tags.tsx:303
 msgid "Delete"
@@ -639,7 +675,7 @@ msgstr "Satırı sil"
 msgid "Delete table"
 msgstr "Tabloyu sil"
 
-#: src/routes/dashboard.plugins_.backup.tsx:314
+#: src/routes/dashboard.plugins_.backup.tsx:332
 msgid "Delete this backup?"
 msgstr "Bu yedek silinsin mi?"
 
@@ -723,7 +759,7 @@ msgstr "Video gömme ekle"
 msgid "Emoji"
 msgstr "Emoji"
 
-#: src/routes/dashboard.plugins_.backup.tsx:147
+#: src/routes/dashboard.plugins_.backup.tsx:154
 #: src/routes/dashboard.plugins.tsx:78
 msgid "Enabled"
 msgstr "Etkin"
@@ -744,15 +780,15 @@ msgstr "Geçerli bir e-posta adresi girin"
 msgid "Enter details"
 msgstr "Bilgileri gir"
 
-#: src/routes/dashboard.plugins_.backup.tsx:229
+#: src/routes/dashboard.plugins_.backup.tsx:74
 msgid "Every day"
 msgstr "Günde bir"
 
-#: src/routes/dashboard.plugins_.backup.tsx:228
+#: src/routes/dashboard.plugins_.backup.tsx:73
 msgid "Every hour"
 msgstr "Saatte bir"
 
-#: src/routes/dashboard.plugins_.backup.tsx:230
+#: src/routes/dashboard.plugins_.backup.tsx:75
 msgid "Every week"
 msgstr "Haftada bir"
 
@@ -783,7 +819,7 @@ msgstr "Odak modu"
 msgid "Foldable details block"
 msgstr "Katlanabilir detay bloğu"
 
-#: src/routes/dashboard.plugins_.backup.tsx:187
+#: src/routes/dashboard.plugins_.backup.tsx:202
 msgid "Folder"
 msgstr "Klasör"
 
@@ -905,11 +941,11 @@ msgstr "Ana sayfada vitrine alınır"
 msgid "Host"
 msgstr "Sunucu adresi"
 
-#: src/routes/dashboard.plugins_.backup.tsx:236
+#: src/routes/dashboard.plugins_.backup.tsx:254
 msgid "How many to keep"
 msgstr "Kaç tanesi saklansın"
 
-#: src/routes/dashboard.plugins_.backup.tsx:216
+#: src/routes/dashboard.plugins_.backup.tsx:231
 msgid "How often"
 msgstr "Ne sıklıkla"
 
@@ -938,7 +974,7 @@ msgstr "İçe / dışa aktar"
 msgid "In review"
 msgstr "İncelemede"
 
-#: src/routes/dashboard.plugins_.backup.tsx:203
+#: src/routes/dashboard.plugins_.backup.tsx:218
 msgid "Include the uploaded files"
 msgstr "Yüklenen dosyaları da al"
 
@@ -983,6 +1019,10 @@ msgstr "Mavi CMS kuruluyor…"
 msgid "Italic"
 msgstr "İtalik"
 
+#: src/routes/dashboard.sites.tsx:99
+msgid "Its own database server"
+msgstr "Kendi veritabanı sunucusu"
+
 #: src/components/setup/setup-wizard.tsx:609
 msgid "Just another Mavi CMS site"
 msgstr "Sadece bir başka Mavi CMS sitesi"
@@ -1004,7 +1044,7 @@ msgstr "Klavye kısayolları"
 msgid "Language"
 msgstr "Dil"
 
-#: src/components/dashboard/dashboard-shell.tsx:30
+#: src/components/dashboard/dashboard-shell.tsx:32
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Diller"
@@ -1014,9 +1054,13 @@ msgid "Large section heading"
 msgstr "Büyük bölüm başlığı"
 
 #. placeholder {0}: new Date(config.last_run_at).toLocaleString()
-#: src/routes/dashboard.plugins_.backup.tsx:270
+#: src/routes/dashboard.plugins_.backup.tsx:288
 msgid "Last run {0}"
 msgstr "Son çalışma {0}"
+
+#: src/routes/dashboard.sites.tsx:140
+msgid "Leave empty for a file of its own"
+msgstr "Kendi dosyası için boş bırakın"
 
 #: src/routes/dashboard.plugins_.s3.tsx:147
 msgid "Leave empty for AWS S3"
@@ -1064,7 +1108,7 @@ msgstr "Yükleniyor…"
 msgid "Make default"
 msgstr "Varsayılan yap"
 
-#: src/routes/dashboard.plugins_.backup.tsx:205
+#: src/routes/dashboard.plugins_.backup.tsx:220
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Arşivi belirgin biçimde büyütür. Medya bu makinedeyse değer; zaten bir kovadaysa daha az."
 
@@ -1080,7 +1124,7 @@ msgstr "Markdown içeri aktarıldı"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS, sitenizi saklamak için bir veritabanına ihtiyaç duyar."
 
-#: src/components/dashboard/dashboard-shell.tsx:27
+#: src/components/dashboard/dashboard-shell.tsx:29
 msgid "Media"
 msgstr "Medya"
 
@@ -1122,7 +1166,7 @@ msgstr "çeviri bekliyor"
 msgid "New category"
 msgstr "Yeni kategori"
 
-#: src/components/dashboard/dashboard-shell.tsx:69
+#: src/components/dashboard/dashboard-shell.tsx:76
 #: src/routes/dashboard.index.tsx:153
 msgid "New post"
 msgstr "Yeni yazı"
@@ -1136,7 +1180,7 @@ msgstr "Yeni etiket"
 msgid "Next"
 msgstr "Sonraki"
 
-#: src/routes/dashboard.plugins_.backup.tsx:279
+#: src/routes/dashboard.plugins_.backup.tsx:297
 msgid "No backups yet"
 msgstr "Henüz yedek yok"
 
@@ -1152,6 +1196,10 @@ msgstr "Emoji bulunamadı"
 #: src/routes/dashboard.media.tsx:96
 msgid "No media uploaded yet"
 msgstr "Henüz medya yüklenmedi"
+
+#: src/routes/dashboard.sites.tsx:81
+msgid "No other sites yet"
+msgstr "Henüz başka site yok"
 
 #: src/routes/dashboard.categories.tsx:142
 #: src/routes/dashboard.categories.tsx:200
@@ -1185,15 +1233,16 @@ msgstr "Yapılandırılmadı"
 msgid "Numbered list"
 msgstr "Numaralı liste"
 
-#: src/routes/dashboard.plugins_.backup.tsx:248
+#: src/routes/dashboard.plugins_.backup.tsx:266
 msgid "Older archives are removed once a new one is written."
 msgstr "Yeni bir arşiv yazılınca eskiler silinir."
 
-#: src/routes/dashboard.plugins_.backup.tsx:167
+#: src/routes/dashboard.plugins_.backup.tsx:177
+#: src/routes/dashboard.plugins_.backup.tsx:182
 msgid "On the server's disk"
 msgstr "Sunucunun diskinde"
 
-#: src/routes/dashboard.plugins_.backup.tsx:227
+#: src/routes/dashboard.plugins_.backup.tsx:72
 msgid "Only by hand"
 msgstr "Yalnızca elle"
 
@@ -1208,6 +1257,10 @@ msgstr "Yeni sekmede aç"
 #: src/routes/dashboard.plugins_.s3.tsx:194
 msgid "Optional folder inside the bucket"
 msgstr "Bucket içinde isteğe bağlı klasör"
+
+#: src/routes/dashboard.sites.tsx:71
+msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
+msgstr "Bu sunucunun barındırdığı diğer siteler. Her biri kendi içeriğini, hesaplarını ve yüklemelerini ayrı tutar."
 
 #: src/components/editor/dialogs.tsx:520
 #: src/components/editor/extensions/slash-command.tsx:55
@@ -1257,12 +1310,16 @@ msgstr "düz metin"
 msgid "Plain text block"
 msgstr "Düz metin bloğu"
 
-#: src/components/dashboard/dashboard-shell.tsx:31
-#: src/routes/dashboard.plugins_.backup.tsx:134
+#: src/components/dashboard/dashboard-shell.tsx:33
+#: src/routes/dashboard.plugins_.backup.tsx:141
 #: src/routes/dashboard.plugins_.s3.tsx:113
 #: src/routes/dashboard.plugins.tsx:49
 msgid "Plugins"
 msgstr "Eklentiler"
+
+#: src/routes/dashboard.sites.tsx:118
+msgid "Point the address at this server first — the site answers on whichever address you give it here."
+msgstr "Önce adresi bu sunucuya yönlendirin — site burada verdiğiniz adres üzerinden yanıt verir."
 
 #: src/components/setup/setup-wizard.tsx:496
 msgid "Port"
@@ -1294,7 +1351,7 @@ msgstr "Yazı başlığı"
 msgid "post-url"
 msgstr "yazi-adresi"
 
-#: src/components/dashboard/dashboard-shell.tsx:26
+#: src/components/dashboard/dashboard-shell.tsx:28
 msgid "Posts"
 msgstr "Yazılar"
 
@@ -1401,12 +1458,14 @@ msgstr "İstek başarısız oldu"
 msgid "Row"
 msgstr "Satır"
 
-#: src/routes/dashboard.plugins_.backup.tsx:174
+#: src/routes/dashboard.plugins_.backup.tsx:176
+#: src/routes/dashboard.plugins_.backup.tsx:189
 msgid "S3 bucket"
 msgstr "S3 kovası"
 
 #. placeholder {0}: settings.s3_bucket
-#: src/routes/dashboard.plugins_.backup.tsx:173
+#: src/routes/dashboard.plugins_.backup.tsx:175
+#: src/routes/dashboard.plugins_.backup.tsx:188
 msgid "S3 bucket ({0})"
 msgstr "S3 kovası ({0})"
 
@@ -1417,7 +1476,7 @@ msgstr "S3 uyumlu depolama"
 
 #: src/components/editor/mavi-editor.tsx:596
 #: src/routes/dashboard.categories.tsx:290
-#: src/routes/dashboard.plugins_.backup.tsx:262
+#: src/routes/dashboard.plugins_.backup.tsx:280
 #: src/routes/dashboard.plugins_.s3.tsx:238
 msgid "Save"
 msgstr "Kaydet"
@@ -1439,7 +1498,7 @@ msgstr "Kaydediliyor…"
 msgid "Scheduled"
 msgstr "Zamanlanmış"
 
-#: src/routes/dashboard.plugins_.backup.tsx:149
+#: src/routes/dashboard.plugins_.backup.tsx:156
 msgid "Scheduled backups only run while this is on. You can always back up by hand below."
 msgstr "Zamanlanmış yedekler yalnızca bu açıkken çalışır. Aşağıdan her zaman elle yedek alabilirsiniz."
 
@@ -1479,7 +1538,7 @@ msgstr "SEO açıklaması"
 msgid "SEO title"
 msgstr "SEO başlığı"
 
-#: src/routes/dashboard.plugins_.backup.tsx:181
+#: src/routes/dashboard.plugins_.backup.tsx:196
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Yedeklerin bu makinenin dışında durmasını istiyorsanız önce S3 eklentisini kurun."
 
@@ -1521,7 +1580,7 @@ msgstr "Giriş yap"
 msgid "Sign in to manage your site."
 msgstr "Sitenizi yönetmek için giriş yapın."
 
-#: src/components/dashboard/dashboard-shell.tsx:76
+#: src/components/dashboard/dashboard-shell.tsx:83
 #: src/components/editor/mavi-editor.tsx:580
 msgid "Sign out"
 msgstr "Çıkış yap"
@@ -1529,6 +1588,11 @@ msgstr "Çıkış yap"
 #: src/components/setup/setup-wizard.tsx:590
 msgid "Site title"
 msgstr "Site başlığı"
+
+#: src/components/dashboard/dashboard-shell.tsx:37
+#: src/routes/dashboard.sites.tsx:69
+msgid "Sites"
+msgstr "Siteler"
 
 #: src/components/editor/extensions/slash-command.tsx:83
 msgid "Small section heading"
@@ -1581,6 +1645,10 @@ msgstr "Başarılı!"
 msgid "Superscript"
 msgstr "Üst simge"
 
+#: src/routes/dashboard.sites.tsx:105
+msgid "Switched off"
+msgstr "Kapalı"
+
 #: src/components/editor/extensions/slash-command.tsx:137
 msgid "Syntax-highlighted code"
 msgstr "Sözdizimi vurgulu kod"
@@ -1603,7 +1671,7 @@ msgstr "İçindekiler"
 msgid "Tagline"
 msgstr "Slogan"
 
-#: src/components/dashboard/dashboard-shell.tsx:29
+#: src/components/dashboard/dashboard-shell.tsx:31
 #: src/components/editor/post-settings.tsx:222
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -1653,7 +1721,7 @@ msgstr "Metin rengi"
 msgid "Text shown in search results"
 msgstr "Arama sonuçlarında görünecek metin"
 
-#: src/routes/dashboard.plugins_.backup.tsx:97
+#: src/routes/dashboard.plugins_.backup.tsx:104
 msgid "The backup failed"
 msgstr "Yedekleme başarısız oldu"
 
@@ -1662,7 +1730,7 @@ msgid "The languages your content can be written in. This is separate from the l
 msgstr "İçeriğinizin yazılabileceği diller. Bu, yönetim panelinin dilinden bağımsızdır."
 
 #. placeholder {0}: config.last_error
-#: src/routes/dashboard.plugins_.backup.tsx:255
+#: src/routes/dashboard.plugins_.backup.tsx:273
 msgid "The last backup failed: {0}"
 msgstr "Son yedekleme başarısız oldu: {0}"
 
@@ -1773,7 +1841,7 @@ msgstr "Kapalıyken yüklemeler sunucunun diskinde saklanır."
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Okuyucuların görselleri yüklediği adres (bucket genel URL'si veya CDN)"
 
-#: src/routes/dashboard.plugins_.backup.tsx:156
+#: src/routes/dashboard.plugins_.backup.tsx:163
 msgid "Where to keep them"
 msgstr "Nerede saklansın"
 

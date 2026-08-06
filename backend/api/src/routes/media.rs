@@ -1,6 +1,6 @@
 use axum::{
     Json,
-    extract::{Multipart, Path, State},
+    extract::{Multipart, Path},
     http::StatusCode,
 };
 use chrono::Utc;
@@ -11,12 +11,13 @@ use sea_orm::{
 use uuid::Uuid;
 
 use crate::{
+    state::AppState,
+    tenants::Site,
     dto::media::{ImportMediaRequest, MediaResponse},
     entities::{media, post},
     error::{AppError, AppResult},
     fetch::{FetchError, fetch_remote_file},
     plugins::{active_storage, storage_for},
-    state::AppState,
 };
 
 pub const MAX_UPLOAD_BYTES: usize = 10 * 1024 * 1024;
@@ -97,7 +98,7 @@ fn describe(bytes: &[u8]) -> &'static str {
     )
 )]
 pub async fn upload_media(
-    State(state): State<AppState>,
+    Site(state): Site,
     mut multipart: Multipart,
 ) -> AppResult<(StatusCode, Json<MediaResponse>)> {
     let mut file_bytes = None;
@@ -184,7 +185,7 @@ async fn store_image(
     )
 )]
 pub async fn import_media(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<ImportMediaRequest>,
 ) -> AppResult<(StatusCode, Json<MediaResponse>)> {
     let bytes = fetch_remote_file(&payload.url, MAX_UPLOAD_BYTES)
@@ -313,7 +314,7 @@ async fn still_referenced(db: &impl ConnectionTrait, url_path: &str) -> AppResul
     tag = "media",
     responses((status = 200, description = "List of media", body = Vec<MediaResponse>))
 )]
-pub async fn list_media(State(state): State<AppState>) -> AppResult<Json<Vec<MediaResponse>>> {
+pub async fn list_media(Site(state): Site) -> AppResult<Json<Vec<MediaResponse>>> {
     let items = media::Entity::find()
         .order_by_desc(media::Column::UploadedAt)
         .all(state.db())
@@ -333,7 +334,7 @@ pub async fn list_media(State(state): State<AppState>) -> AppResult<Json<Vec<Med
     )
 )]
 pub async fn delete_media(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let db = state.db();

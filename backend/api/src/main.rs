@@ -14,6 +14,7 @@ mod plugins;
 mod routes;
 mod slug;
 mod state;
+mod tenants;
 mod storage;
 
 use axum::{
@@ -68,9 +69,28 @@ async fn main() {
         backup::spawn_scheduler(state.clone());
     }
 
-    let (router, api) = OpenApiRouter::<AppState>::with_openapi(openapi::ApiDoc::openapi())
-        .merge(routes::router(state.clone()))
-        .with_state(state)
+    // The list of sites lives in its own database, beside the folders they
+    // each live in. On a server with one site it stays empty and every request
+    // falls through to the installation that was already there.
+    let control = db::connect_plain(&format!(
+        "sqlite://{}?mode=rwc",
+        config.data_dir.join("control.db").display()
+    ))
+    .await
+    .unwrap_or_else(|err| panic!("failed to open the site registry: {err}"));
+
+    let registry = tenants::Registry::new(control, config.data_dir.join("sites"))
+        .await
+        .unwrap_or_else(|err| panic!("failed to prepare the site registry: {err}"));
+
+    let hosting = tenants::Hosting {
+        registry: std::sync::Arc::new(registry),
+        default_state: state,
+    };
+
+    let (router, api) = OpenApiRouter::<tenants::Hosting>::with_openapi(openapi::ApiDoc::openapi())
+        .merge(routes::router(hosting.clone()))
+        .with_state(hosting)
         .split_for_parts();
 
     let openapi_json = api.clone();

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use axum::{
     Json,
-    extract::{Path, Query, State},
+    extract::{Path, Query},
     http::StatusCode,
 };
 use chrono::Utc;
@@ -29,6 +29,7 @@ static MEDIA_IN_HTML: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::n
 });
 
 use crate::{
+    tenants::Site,
     dto::{
         post::{
             CreatePostRequest, PostPage, PostResponse, PostStatus, PostSummary, PostTranslation,
@@ -40,7 +41,6 @@ use crate::{
     error::{AppError, AppResult},
     languages::resolve,
     routes::{categories::resolve_for_locale, tags::get_or_create_tag},
-    state::AppState,
 };
 
 async fn category_ids_for(db: &impl ConnectionTrait, post_id: Uuid) -> AppResult<Vec<Uuid>> {
@@ -161,7 +161,7 @@ async fn siblings_of(
     responses((status = 200, description = "A page of posts", body = PostPage))
 )]
 pub async fn list_posts(
-    State(state): State<AppState>,
+    Site(state): Site,
     Query(query): Query<LocaleQuery>,
 ) -> AppResult<Json<PostPage>> {
     let db = state.db();
@@ -296,7 +296,7 @@ pub async fn list_posts(
     )
 )]
 pub async fn get_post(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
 ) -> AppResult<Json<PostResponse>> {
     let db = state.db();
@@ -327,7 +327,7 @@ pub async fn get_post(
     responses((status = 201, description = "Post created", body = PostResponse))
 )]
 pub async fn create_post(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<CreatePostRequest>,
 ) -> AppResult<(StatusCode, Json<PostResponse>)> {
     if payload.title.trim().is_empty() {
@@ -438,7 +438,7 @@ pub async fn create_post(
     )
 )]
 pub async fn update_post(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
     Json(payload): Json<UpdatePostRequest>,
 ) -> AppResult<Json<PostResponse>> {
@@ -557,7 +557,7 @@ pub struct TranslationGroupRequest {
     )
 )]
 pub async fn set_translation_group(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
     Json(payload): Json<TranslationGroupRequest>,
 ) -> AppResult<Json<PostResponse>> {
@@ -626,7 +626,7 @@ pub async fn set_translation_group(
     )
 )]
 pub async fn delete_post(
-    State(state): State<AppState>,
+    Site(state): Site,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let db = state.db();

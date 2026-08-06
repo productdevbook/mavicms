@@ -1,5 +1,5 @@
 use axum::{
-    extract::{Request, State},
+    extract::Request,
     middleware::Next,
     response::{IntoResponse, Response},
 };
@@ -9,6 +9,7 @@ use tower_cookies::{Cookie, Cookies, cookie::SameSite};
 use uuid::Uuid;
 
 use crate::{
+    tenants::Site,
     entities::{session, user},
     error::AppError,
     state::AppState,
@@ -63,7 +64,7 @@ pub async fn clear_session(state: &AppState, cookies: &Cookies) {
 /// present, and makes the signed-in user available to handlers via
 /// `Extension<user::Model>`.
 pub async fn require_auth(
-    State(state): State<AppState>,
+    Site(state): Site,
     cookies: Cookies,
     mut request: Request,
     next: Next,

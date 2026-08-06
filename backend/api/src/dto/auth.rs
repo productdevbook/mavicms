@@ -12,4 +12,8 @@ pub struct UserResponse {
     pub username: String,
     pub email: String,
     pub role: String,
+    /// Whether this account is administering the server itself rather than one
+    /// of the sites it hosts — which is what decides whether the panel offers
+    /// to manage sites at all.
+    pub operator: bool,
 }

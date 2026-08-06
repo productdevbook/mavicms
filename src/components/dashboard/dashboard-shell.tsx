@@ -1,9 +1,10 @@
 import * as React from "react"
-import { Link, useNavigate } from "@tanstack/react-router"
+import { Link, useNavigate, useRouteContext } from "@tanstack/react-router"
 import { useLingui } from "@lingui/react/macro"
 import {
   FolderTree,
   Globe,
+  Server,
   Image,
   LayoutDashboard,
   LogOut,
@@ -21,6 +22,7 @@ import { LocaleToggle } from "@/components/locale-toggle"
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { t } = useLingui()
   const navigate = useNavigate()
+  const { user } = useRouteContext({ from: "/dashboard" })
 
   const links = [
     { to: "/dashboard", label: t`Posts`, icon: LayoutDashboard },
@@ -29,6 +31,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     { to: "/dashboard/tags", label: t`Tags`, icon: Tags },
     { to: "/dashboard/languages", label: t`Languages`, icon: Globe },
     { to: "/dashboard/plugins", label: t`Plugins`, icon: Plug },
+    // Whoever administers a hosted site administers that site; the list of
+    // sites belongs to whoever runs the server.
+    ...(user.operator
+      ? ([{ to: "/dashboard/sites", label: t`Sites`, icon: Server }] as const)
+      : []),
   ] as const
 
   return (

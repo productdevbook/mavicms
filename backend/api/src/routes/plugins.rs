@@ -1,13 +1,14 @@
-use axum::{Json, extract::State, http::StatusCode};
+use axum::{Json, http::StatusCode};
 
 use crate::{
+    state::AppState,
+    tenants::Site,
     dto::plugins::{
         BackupSettingsResponse, ConnectionTestResponse, PluginSummary, S3SettingsRequest,
         S3SettingsResponse, UpdateBackupRequest,
     },
     error::{AppError, AppResult},
     plugins::{S3_PLUGIN, load_s3, save_s3},
-    state::AppState,
     storage::S3Config,
 };
 
@@ -18,7 +19,7 @@ use crate::{
     tag = "plugins",
     responses((status = 200, description = "Available plugins", body = Vec<PluginSummary>))
 )]
-pub async fn list_plugins(State(state): State<AppState>) -> AppResult<Json<Vec<PluginSummary>>> {
+pub async fn list_plugins(Site(state): Site) -> AppResult<Json<Vec<PluginSummary>>> {
     let stored = load_s3(state.db(), &state.secrets).await.ok().flatten();
     let backup = crate::plugins::load::<crate::backup::BackupConfig>(
         state.db(),
@@ -59,7 +60,7 @@ pub async fn list_plugins(State(state): State<AppState>) -> AppResult<Json<Vec<P
     responses((status = 200, description = "Backup settings", body = BackupSettingsResponse))
 )]
 pub async fn get_backup_settings(
-    State(state): State<AppState>,
+    Site(state): Site,
 ) -> AppResult<Json<BackupSettingsResponse>> {
     let (enabled, config) = crate::backup::config(&state).await?;
     let s3 = load_s3(state.db(), &state.secrets).await?;
@@ -86,7 +87,7 @@ pub async fn get_backup_settings(
     responses((status = 200, description = "Saved", body = BackupSettingsResponse))
 )]
 pub async fn update_backup_settings(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<UpdateBackupRequest>,
 ) -> AppResult<Json<BackupSettingsResponse>> {
     let (_, existing) = crate::backup::config(&state).await?;
@@ -107,7 +108,7 @@ pub async fn update_backup_settings(
     };
     crate::backup::store(&state, payload.enabled, &config).await?;
 
-    get_backup_settings(State(state)).await
+    get_backup_settings(Site(state)).await
 }
 
 /// Take a backup now.
@@ -121,7 +122,7 @@ pub async fn update_backup_settings(
     )
 )]
 pub async fn run_backup(
-    State(state): State<AppState>,
+    Site(state): Site,
 ) -> AppResult<Json<crate::backup::BackupFile>> {
     Ok(Json(crate::backup::run(&state).await?))
 }
@@ -135,7 +136,7 @@ pub async fn run_backup(
     responses((status = 204, description = "Deleted"))
 )]
 pub async fn delete_backup(
-    State(state): State<AppState>,
+    Site(state): Site,
     axum::extract::Path(name): axum::extract::Path<String>,
 ) -> AppResult<axum::http::StatusCode> {
     let (_, config) = crate::backup::config(&state).await?;
@@ -150,7 +151,7 @@ pub async fn delete_backup(
     tag = "plugins",
     responses((status = 200, description = "S3 settings", body = S3SettingsResponse))
 )]
-pub async fn get_s3_settings(State(state): State<AppState>) -> AppResult<Json<S3SettingsResponse>> {
+pub async fn get_s3_settings(Site(state): Site) -> AppResult<Json<S3SettingsResponse>> {
     let stored = load_s3(state.db(), &state.secrets).await?;
 
     let response = match stored {
@@ -213,7 +214,7 @@ async fn resolve_config(state: &AppState, payload: &S3SettingsRequest) -> AppRes
     )
 )]
 pub async fn update_s3_settings(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<S3SettingsRequest>,
 ) -> AppResult<Json<S3SettingsResponse>> {
     let config = resolve_config(&state, &payload).await?;
@@ -222,7 +223,7 @@ pub async fn update_s3_settings(
     }
 
     save_s3(state.db(), &state.secrets, payload.enabled, &config).await?;
-    get_s3_settings(State(state)).await
+    get_s3_settings(Site(state)).await
 }
 
 /// Try the given (or stored) credentials by writing and deleting a small
@@ -235,7 +236,7 @@ pub async fn update_s3_settings(
     responses((status = 200, description = "Test result", body = ConnectionTestResponse))
 )]
 pub async fn test_s3_settings(
-    State(state): State<AppState>,
+    Site(state): Site,
     Json(payload): Json<S3SettingsRequest>,
 ) -> AppResult<(StatusCode, Json<ConnectionTestResponse>)> {
     let config = resolve_config(&state, &payload).await?;

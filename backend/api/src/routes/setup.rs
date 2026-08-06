@@ -4,7 +4,7 @@ use argon2::{
     Argon2,
     password_hash::{PasswordHasher, SaltString, rand_core::OsRng},
 };
-use axum::{Json, extract::State, http::StatusCode};
+use axum::{Json, http::StatusCode};
 use chrono::Utc;
 use percent_encoding::{NON_ALPHANUMERIC, utf8_percent_encode};
 use sea_orm::{ActiveModelTrait, ActiveValue::Set, EntityTrait, TransactionTrait};
@@ -12,6 +12,7 @@ use tower_cookies::Cookies;
 use uuid::Uuid;
 
 use crate::{
+    tenants::{Operator, Site},
     auth::create_session,
     db,
     dto::setup::{
@@ -20,7 +21,6 @@ use crate::{
     },
     entities::{site_settings, user},
     error::{AppError, AppResult},
-    state::AppState,
 };
 
 /// Report whether the site has completed first-run setup.
@@ -30,7 +30,7 @@ use crate::{
     tag = "setup",
     responses((status = 200, description = "Setup status", body = SetupStatusResponse))
 )]
-pub async fn setup_status(State(state): State<AppState>) -> AppResult<Json<SetupStatusResponse>> {
+pub async fn setup_status(Site(state): Site) -> AppResult<Json<SetupStatusResponse>> {
     let Some(db) = state.db.as_ref() else {
         return Ok(Json(SetupStatusResponse {
             database_configured: false,
@@ -51,6 +51,10 @@ pub async fn setup_status(State(state): State<AppState>) -> AppResult<Json<Setup
 /// migrations against it) before persisting anything, then restarts the
 /// process so the next boot picks up the newly configured `DATABASE_URL`
 /// from disk — the container/pod's restart policy brings it back up.
+///
+/// Restarting is why this is the server operator's alone. A hosted site
+/// reaching it would take every other site on the machine down with it, and it
+/// has no reason to: a hosted site is given its database when it is created.
 #[utoipa::path(
     post,
     path = "/setup/database",
@@ -59,11 +63,13 @@ pub async fn setup_status(State(state): State<AppState>) -> AppResult<Json<Setup
     responses(
         (status = 200, description = "Database configured, server is restarting", body = SetupDatabaseResponse),
         (status = 400, description = "Invalid or unreachable database", body = crate::error::ErrorBody),
+        (status = 403, description = "Not the server's own address", body = crate::error::ErrorBody),
         (status = 409, description = "Database is already configured", body = crate::error::ErrorBody),
     )
 )]
 pub async fn configure_database(
-    State(state): State<AppState>,
+    _operator: Operator,
+    Site(state): Site,
     Json(payload): Json<SetupDatabaseRequest>,
 ) -> AppResult<Json<SetupDatabaseResponse>> {
     if state.db.is_some() {
@@ -145,7 +151,7 @@ fn require_field<'a>(value: &'a Option<String>, name: &str) -> AppResult<&'a str
     )
 )]
 pub async fn run_setup(
-    State(state): State<AppState>,
+    Site(state): Site,
     cookies: Cookies,
     Json(payload): Json<SetupRequest>,
 ) -> AppResult<(StatusCode, Json<SetupResponse>)> {
