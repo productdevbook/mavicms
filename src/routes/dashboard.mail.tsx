@@ -7,6 +7,7 @@ import {
   Download,
   Loader2,
   Plus,
+  MailWarning,
   Trash2,
   Upload,
   XCircle,
@@ -21,6 +22,7 @@ import {
   deleteSubscriber,
   getCampaigns,
   getMailLists,
+  getMailEvents,
   getMailLog,
   getMailTemplates,
   getSubscribers,
@@ -32,6 +34,7 @@ import {
   subscriberExportUrl,
   type Campaign,
   type MailList,
+  type MailEventSummary,
   type MailLogEntry,
   type MailTemplate,
   type Subscriber,
@@ -54,7 +57,7 @@ export const Route = createFileRoute("/dashboard/mail")({
   component: MailRoute,
 })
 
-type Tab = "campaigns" | "lists" | "people" | "templates" | "log"
+type Tab = "campaigns" | "lists" | "people" | "templates" | "log" | "events"
 
 function MailRoute() {
   const { t } = useLingui()
@@ -77,6 +80,7 @@ function MailRoute() {
             ["people", t`People`],
             ["templates", t`Templates`],
             ["log", t`Sent`],
+            ["events", t`What Amazon said`],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -100,6 +104,7 @@ function MailRoute() {
       {tab === "people" && <People />}
       {tab === "templates" && <Templates />}
       {tab === "log" && <Log />}
+      {tab === "events" && <Events />}
     </>
   )
 }
@@ -784,6 +789,94 @@ function Log() {
           </div>
         </div>
       ))}
+    </div>
+  )
+}
+
+/**
+ * Every event Amazon has posted back, with the address it is about.
+ *
+ * The tab beside it counts what this site tried to send; this counts what
+ * became of it. They disagree on purpose — a message can be sent from here and
+ * still bounce an hour later, and only the second of those is a reason to stop
+ * writing to somebody.
+ */
+function Events() {
+  const { t } = useLingui()
+  const [summary, setSummary] = React.useState<MailEventSummary | null>(null)
+  const [problem, setProblem] = React.useState(false)
+
+  React.useEffect(() => {
+    getMailEvents().then(setSummary).catch(() => setProblem(true))
+  }, [])
+
+  if (problem)
+    return <Empty>{t`Could not load what Amazon said`}</Empty>
+  if (!summary) return <Spinner />
+
+  const named: Record<string, string> = {
+    delivery: t`arrived`,
+    bounce: t`did not arrive`,
+    complaint: t`reported as spam`,
+    open: t`opened`,
+    click: t`clicked`,
+    reject: t`refused before sending`,
+    send: t`sent`,
+  }
+
+  if (summary.recent.length === 0)
+    return (
+      <div className="flex flex-col gap-2">
+        <Empty>{t`Amazon has not said anything yet`}</Empty>
+        <p className="text-sm text-muted-foreground">
+          {t`Events arrive once the pipeline is wired up, under the mail plugin's settings. Until then a bounce is only discovered by the next campaign running into it.`}
+        </p>
+      </div>
+    )
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap gap-2">
+        {Object.entries(summary.counts).map(([kind, count]) => (
+          <span
+            key={kind}
+            className="rounded-full border border-border px-3 py-1 text-xs"
+          >
+            {named[kind] ?? kind} · {count}
+          </span>
+        ))}
+      </div>
+
+      <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
+        {summary.recent.map((event) => {
+          const bad = event.kind === "bounce" || event.kind === "complaint"
+          return (
+            <div key={event.id} className="flex items-start gap-3 px-4 py-2.5">
+              {bad ? (
+                <MailWarning className="mt-0.5 size-4 shrink-0 text-destructive" />
+              ) : (
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600" />
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm">{event.address}</p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {named[event.kind] ?? event.kind} ·{" "}
+                  {new Date(event.created_at).toLocaleString()}
+                </p>
+                {event.detail && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {event.detail}
+                  </p>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <p className="text-sm text-muted-foreground">
+        {t`An address that goes for good, or reports the mail as spam, stops being written to the moment this arrives.`}
+      </p>
     </div>
   )
 }

@@ -1301,6 +1301,7 @@ pub async fn test_campaign(
             html: Some(&message.html),
             from: None,
             unsubscribe_url: None,
+            tags: &[],
         },
     )
     .await;
@@ -1460,6 +1461,7 @@ pub async fn subscribe(
                     html: Some(&html),
                     from: None,
                     unsubscribe_url: None,
+                    tags: &[],
                 },
             )
             .await;
@@ -1585,6 +1587,83 @@ pub async fn unsubscribe(Site(state): Site, Path(token): Path<String>) -> AppRes
         "Unsubscribed",
         "<p>Done. You will not hear from this list again.</p>",
     ))
+}
+
+/// Where Amazon posts everything it knows.
+///
+/// Open, because SNS has no account here and never will. What stands in for
+/// one is the address itself: the token in the path is made from the site's
+/// own key and cannot be guessed, which is the same thing the unsubscribe
+/// links rely on. The topic is checked as well, so a token that did leak is
+/// still only good for the topic this site made.
+///
+/// Full SNS signature verification would be stronger and is the reason to
+/// come back here: it needs the certificate fetched, cached and checked, and
+/// the two cheap checks below already mean an attacker has to know a secret
+/// this site never publishes.
+#[utoipa::path(post, path = "/mail/events/{token}", tag = "mail",
+    params(("token" = String, Path, description = "From the plugin settings")),
+    responses((status = 204, description = "Taken")))]
+pub async fn receive_events(
+    Site(state): Site,
+    Path(token): Path<String>,
+    body: String,
+) -> AppResult<StatusCode> {
+    let db = state.db_or_unavailable()?;
+
+    // Anything at all wrong looks the same from outside: a wrong token must
+    // not be distinguishable from a well-formed message about another site.
+    let refused = || AppError::NotFound("that address".to_string());
+
+    let settings = crate::plugins::load::<crate::email::EmailConfig>(
+        db,
+        &state.secrets,
+        crate::plugins::EMAIL_PLUGIN,
+    )
+    .await?
+    .ok_or_else(refused)?;
+
+    if settings.config.events_token.is_empty() || settings.config.events_token != token {
+        return Err(refused());
+    }
+
+    let envelope: mailing::SnsEnvelope = serde_json::from_str(&body).map_err(|_| refused())?;
+
+    // Once a topic is known, every message has to name it — including one that
+    // names no topic at all, which would otherwise be the way around this.
+    if !settings.config.events_topic_arn.is_empty()
+        && envelope.topic_arn != settings.config.events_topic_arn
+    {
+        return Err(refused());
+    }
+
+    match envelope.kind.as_str() {
+        // SNS proves a subscription by posting a link here and waiting for it
+        // to be fetched. Fetching it is the confirmation.
+        // Only a real SNS address is fetched. Answering whatever URL a
+        // request hands over would make this endpoint a way to have the
+        // server fetch anything, from inside the cluster.
+        "SubscriptionConfirmation" if mailing::is_an_sns_url(&envelope.subscribe_url) => {
+            // Redirects are refused as well: the address checked above is only
+            // the first one, and following a hop chosen by whoever answers
+            // would hand the check straight back.
+            let client = reqwest::Client::builder()
+                .redirect(reqwest::redirect::Policy::none())
+                .timeout(std::time::Duration::from_secs(10))
+                .build()
+                .map_err(|_| refused())?;
+            let _ = client.get(&envelope.subscribe_url).send().await;
+            tracing::info!("confirmed an SNS subscription");
+        }
+        "Notification" => {
+            mailing::record_ses_event(db, &envelope.message).await?;
+        }
+        // UnsubscribeConfirmation and anything else: nothing to do, and
+        // answering anyway keeps SNS from retrying.
+        _ => {}
+    }
+
+    Ok(StatusCode::NO_CONTENT)
 }
 
 /// The pixel at the bottom of a message.
@@ -1717,4 +1796,60 @@ mod csv_tests {
         assert_eq!(csv_row("'Tis")[0], "'Tis");
         assert_eq!(csv_row("O'Brien")[0], "O'Brien");
     }
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct EventEntry {
+    pub id: String,
+    pub kind: String,
+    pub address: String,
+    pub campaign_id: Option<String>,
+    pub detail: String,
+    pub created_at: String,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct EventSummary {
+    /// One count per kind, over the window asked for.
+    pub counts: std::collections::BTreeMap<String, u64>,
+    pub recent: Vec<EventEntry>,
+}
+
+/// What Amazon has said about this site's mail.
+///
+/// Beside the deliverability figures rather than instead of them: those are
+/// Amazon's own aggregate, and these are the individual events, with the
+/// address each one is about. When somebody says "my colleague did not get
+/// it", this is the page that answers.
+#[utoipa::path(get, path = "/mail/events", tag = "mail",
+    responses((status = 200, description = "Events and their counts", body = EventSummary)))]
+pub async fn list_events(Site(state): Site) -> AppResult<Json<EventSummary>> {
+    use crate::entities::mail_event;
+
+    let db = state.db();
+    let rows = mail_event::Entity::find()
+        .order_by(mail_event::Column::CreatedAt, Order::Desc)
+        .limit(PAGE)
+        .all(db)
+        .await?;
+
+    let mut counts: std::collections::BTreeMap<String, u64> = Default::default();
+    for row in mail_event::Entity::find().all(db).await? {
+        *counts.entry(row.kind).or_default() += 1;
+    }
+
+    Ok(Json(EventSummary {
+        counts,
+        recent: rows
+            .into_iter()
+            .map(|row| EventEntry {
+                id: row.id.to_string(),
+                kind: row.kind,
+                address: row.address,
+                campaign_id: row.campaign_id.map(|id| id.to_string()),
+                detail: row.detail,
+                created_at: row.created_at.to_rfc3339(),
+            })
+            .collect(),
+    }))
 }

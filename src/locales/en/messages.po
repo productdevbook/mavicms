@@ -31,7 +31,7 @@ msgstr "\"{0}\" will be removed from every post that uses it."
 msgid "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
 msgstr "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
 
-#: src/routes/dashboard.mail.tsx:726
+#: src/routes/dashboard.mail.tsx:731
 msgid "{{ content }} is where the campaign goes. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them."
 msgstr "{{ content }} is where the campaign goes. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them."
 
@@ -76,7 +76,7 @@ msgstr "{0} (the usual one)"
 #. placeholder {0}: done.added
 #. placeholder {1}: done.updated
 #. placeholder {2}: done.skipped.length
-#: src/routes/dashboard.mail.tsx:442
+#: src/routes/dashboard.mail.tsx:447
 msgid "{0} added, {1} updated, {2} skipped"
 msgstr "{0} added, {1} updated, {2} skipped"
 
@@ -88,19 +88,19 @@ msgstr "{0} and the {1} answers it holds go with it. Switching it off instead ke
 
 #. placeholder {0}: health.delivery_attempts
 #. placeholder {1}: health.rejects
-#: src/components/ses-health.tsx:198
+#: src/components/ses-health.tsx:201
 msgid "{0} attempted, {1} refused before sending."
 msgstr "{0} attempted, {1} refused before sending."
 
 #. placeholder {0}: row.clicked
-#: src/routes/dashboard.mail.tsx:197
+#: src/routes/dashboard.mail.tsx:202
 msgid "{0} clicked"
 msgstr "{0} clicked"
 
 #. placeholder {0}: list.confirmed
 #. placeholder {0}: row.confirmed
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:245
-#: src/routes/dashboard.mail.tsx:298
+#: src/routes/dashboard.mail.tsx:303
 msgid "{0} confirmed"
 msgstr "{0} confirmed"
 
@@ -121,7 +121,7 @@ msgid "{0} is ready. You're signed in as <0>{1}</0>."
 msgstr "{0} is ready. You're signed in as <0>{1}</0>."
 
 #. placeholder {0}: row.unsubscribed
-#: src/routes/dashboard.mail.tsx:300
+#: src/routes/dashboard.mail.tsx:305
 msgid "{0} left"
 msgstr "{0} left"
 
@@ -142,7 +142,7 @@ msgstr "{0} looks after how this site is built. Publishing puts what you have wr
 
 #. placeholder {0}: row.sent
 #. placeholder {1}: row.to_send
-#: src/routes/dashboard.mail.tsx:195
+#: src/routes/dashboard.mail.tsx:200
 msgid "{0} of {1} sent"
 msgstr "{0} of {1} sent"
 
@@ -162,7 +162,7 @@ msgid "{0} of {1} used."
 msgstr "{0} of {1} used."
 
 #. placeholder {0}: row.opened
-#: src/routes/dashboard.mail.tsx:196
+#: src/routes/dashboard.mail.tsx:201
 msgid "{0} opened"
 msgstr "{0} opened"
 
@@ -189,7 +189,7 @@ msgid "{0} sites"
 msgstr "{0} sites"
 
 #. placeholder {0}: row.unconfirmed
-#: src/routes/dashboard.mail.tsx:299
+#: src/routes/dashboard.mail.tsx:304
 msgid "{0} waiting"
 msgstr "{0} waiting"
 
@@ -213,7 +213,7 @@ msgstr "{0}–{1} of {2}"
 #. placeholder {0}: day.day
 #. placeholder {1}: day.delivery_attempts
 #. placeholder {2}: day.bounces
-#: src/components/ses-health.tsx:220
+#: src/components/ses-health.tsx:223
 msgid "{0}: {1} sent, {2} did not arrive"
 msgstr "{0}: {1} sent, {2} did not arrive"
 
@@ -222,7 +222,7 @@ msgstr "{0}: {1} sent, {2} did not arrive"
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. This is the account that opens and manages your sites."
 
-#: src/components/ses-health.tsx:82
+#: src/components/ses-health.tsx:83
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 
@@ -332,7 +332,7 @@ msgstr "Active"
 #: src/components/editor/dialogs.tsx:200
 #: src/components/plugin-forms.tsx:423
 #: src/components/publish-panel.tsx:165
-#: src/routes/dashboard.mail.tsx:595
+#: src/routes/dashboard.mail.tsx:600
 #: src/routes/dashboard.tags.tsx:174
 #: src/routes/dashboard.users.tsx:303
 msgid "Add"
@@ -411,8 +411,8 @@ msgstr "Add row before"
 msgid "Add site"
 msgstr "Add site"
 
-#: src/routes/dashboard.mail.tsx:495
-#: src/routes/dashboard.mail.tsx:541
+#: src/routes/dashboard.mail.tsx:500
+#: src/routes/dashboard.mail.tsx:546
 #: src/routes/dashboard.users.tsx:156
 #: src/routes/dashboard.users.tsx:255
 msgid "Add someone"
@@ -422,7 +422,7 @@ msgstr "Add someone"
 msgid "Add table"
 msgstr "Add table"
 
-#: src/routes/dashboard.mail.tsx:586
+#: src/routes/dashboard.mail.tsx:591
 msgid "Added here counts as confirmed — say so only if they asked to be on it."
 msgstr "Added here counts as confirmed — say so only if they asked to be on it."
 
@@ -504,6 +504,10 @@ msgstr "Amazon could not find it"
 msgid "Amazon does not check this one"
 msgstr "Amazon does not check this one"
 
+#: src/routes/dashboard.mail.tsx:830
+msgid "Amazon has not said anything yet"
+msgstr "Amazon has not said anything yet"
+
 #. placeholder {0}: account.enforcement_status
 #: src/components/ses-account.tsx:217
 #~ msgid "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
@@ -517,6 +521,14 @@ msgstr "Amazon SES"
 #: src/components/ses-setup.tsx:186
 msgid "Amazon's own pages"
 msgstr "Amazon's own pages"
+
+#: src/components/ses-analytics.tsx:155
+msgid "An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out."
+msgstr "An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out."
+
+#: src/routes/dashboard.mail.tsx:878
+msgid "An address that goes for good, or reports the mail as spam, stops being written to the moment this arrives."
+msgstr "An address that goes for good, or reports the mail as spam, stops being written to the moment this arrives."
 
 #: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
@@ -562,11 +574,16 @@ msgstr "Apply"
 msgid "Archives"
 msgstr "Archives"
 
-#: src/components/ses-health.tsx:317
+#: src/components/ses-analytics.tsx:131
+#: src/routes/dashboard.mail.tsx:818
+msgid "arrived"
+msgstr "arrived"
+
+#: src/components/ses-health.tsx:320
 msgid "Ask for it"
 msgstr "Ask for it"
 
-#: src/routes/dashboard.mail.tsx:367
+#: src/routes/dashboard.mail.tsx:372
 msgid "Ask people to confirm by email"
 msgstr "Ask people to confirm by email"
 
@@ -586,7 +603,7 @@ msgstr "Asked for whatever you are changing — a session left open somewhere sh
 msgid "Asked SES to verify it"
 msgstr "Asked SES to verify it"
 
-#: src/components/ses-health.tsx:141
+#: src/components/ses-health.tsx:142
 msgid "Asked. Amazon usually answers within a day or two."
 msgstr "Asked. Amazon usually answers within a day or two."
 
@@ -594,7 +611,7 @@ msgstr "Asked. Amazon usually answers within a day or two."
 msgid "Asked. Amazon usually answers within a day."
 msgstr "Asked. Amazon usually answers within a day."
 
-#: src/components/ses-health.tsx:247
+#: src/components/ses-health.tsx:250
 msgid "Asking for a bigger quota"
 msgstr "Asking for a bigger quota"
 
@@ -653,7 +670,7 @@ msgstr "Block"
 msgid "Block menu"
 msgstr "Block menu"
 
-#: src/routes/dashboard.mail.tsx:517
+#: src/routes/dashboard.mail.tsx:522
 msgid "blocked"
 msgstr "blocked"
 
@@ -714,7 +731,7 @@ msgstr "Built-in integrations you can switch on and configure."
 msgid "Bullet list"
 msgstr "Bullet list"
 
-#: src/routes/dashboard.mail.tsx:75
+#: src/routes/dashboard.mail.tsx:78
 msgid "Campaigns"
 msgstr "Campaigns"
 
@@ -728,10 +745,10 @@ msgstr "Campaigns"
 #: src/routes/dashboard.forms.tsx:349
 #: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
-#: src/routes/dashboard.mail.tsx:233
-#: src/routes/dashboard.mail.tsx:382
-#: src/routes/dashboard.mail.tsx:592
-#: src/routes/dashboard.mail.tsx:742
+#: src/routes/dashboard.mail.tsx:238
+#: src/routes/dashboard.mail.tsx:387
+#: src/routes/dashboard.mail.tsx:597
+#: src/routes/dashboard.mail.tsx:747
 #: src/routes/dashboard.media.tsx:144
 #: src/routes/dashboard.plugins_.backup.tsx:422
 #: src/routes/dashboard.plugins_.backup.tsx:442
@@ -745,7 +762,7 @@ msgstr "Campaigns"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/routes/dashboard.mail.tsx:165
+#: src/routes/dashboard.mail.tsx:170
 msgid "Cancelled"
 msgstr "Cancelled"
 
@@ -798,11 +815,11 @@ msgstr "Choices"
 msgid "Choose a file"
 msgstr "Choose a file"
 
-#: src/routes/dashboard.mail.tsx:435
+#: src/routes/dashboard.mail.tsx:440
 msgid "Choose a list first"
 msgstr "Choose a list first"
 
-#: src/components/ses-health.tsx:205
+#: src/components/ses-health.tsx:208
 msgid "Clean the list before sending again: take off the addresses that bounced, and stop writing to anybody who has not opened anything in a year."
 msgstr "Clean the list before sending again: take off the addresses that bounced, and stop writing to anybody who has not opened anything in a year."
 
@@ -810,6 +827,11 @@ msgstr "Clean the list before sending again: take off the addresses that bounced
 #: src/components/editor/toolbar.tsx:452
 msgid "Clear formatting"
 msgstr "Clear formatting"
+
+#: src/components/ses-analytics.tsx:141
+#: src/routes/dashboard.mail.tsx:822
+msgid "clicked"
+msgstr "clicked"
 
 #: src/components/editor/find-replace.tsx:75
 msgid "Close"
@@ -957,20 +979,22 @@ msgstr "Could not add the account"
 msgid "Could not add the site"
 msgstr "Could not add the site"
 
-#: src/routes/dashboard.mail.tsx:428
+#: src/routes/dashboard.mail.tsx:433
 msgid "Could not add them"
 msgstr "Could not add them"
 
 #: src/components/ses-account.tsx:122
-#: src/components/ses-health.tsx:144
+#: src/components/ses-health.tsx:145
 msgid "Could not ask"
 msgstr "Could not ask"
 
 #: src/components/ses-account.tsx:100
 #: src/components/ses-account.tsx:165
-#: src/components/ses-health.tsx:114
-#: src/components/ses-health.tsx:130
-#: src/components/ses-health.tsx:170
+#: src/components/ses-analytics.tsx:69
+#: src/components/ses-analytics.tsx:116
+#: src/components/ses-health.tsx:115
+#: src/components/ses-health.tsx:131
+#: src/components/ses-health.tsx:173
 msgid "Could not ask Amazon"
 msgstr "Could not ask Amazon"
 
@@ -1043,7 +1067,7 @@ msgstr "Could not load the backup settings"
 msgid "Could not load the campaign"
 msgstr "Could not load the campaign"
 
-#: src/routes/dashboard.mail.tsx:132
+#: src/routes/dashboard.mail.tsx:137
 msgid "Could not load the campaigns"
 msgstr "Could not load the campaigns"
 
@@ -1055,7 +1079,7 @@ msgstr "Could not load the form"
 msgid "Could not load the forms"
 msgstr "Could not load the forms"
 
-#: src/routes/dashboard.mail.tsx:253
+#: src/routes/dashboard.mail.tsx:258
 msgid "Could not load the lists"
 msgstr "Could not load the lists"
 
@@ -1068,7 +1092,7 @@ msgstr "Could not load the local settings"
 msgid "Could not load the mail settings"
 msgstr "Could not load the mail settings"
 
-#: src/routes/dashboard.mail.tsx:407
+#: src/routes/dashboard.mail.tsx:412
 msgid "Could not load the people"
 msgstr "Could not load the people"
 
@@ -1085,7 +1109,7 @@ msgstr "Could not load the sites"
 msgid "Could not load the storage settings"
 msgstr "Could not load the storage settings"
 
-#: src/routes/dashboard.mail.tsx:620
+#: src/routes/dashboard.mail.tsx:625
 msgid "Could not load the templates"
 msgstr "Could not load the templates"
 
@@ -1093,7 +1117,11 @@ msgstr "Could not load the templates"
 msgid "Could not load the tokens"
 msgstr "Could not load the tokens"
 
-#: src/routes/dashboard.mail.tsx:761
+#: src/routes/dashboard.mail.tsx:814
+msgid "Could not load what Amazon said"
+msgstr "Could not load what Amazon said"
+
+#: src/routes/dashboard.mail.tsx:766
 msgid "Could not load what was sent"
 msgstr "Could not load what was sent"
 
@@ -1106,7 +1134,7 @@ msgstr "Could not load your sites"
 msgid "Could not make a token"
 msgstr "Could not make a token"
 
-#: src/routes/dashboard.mail.tsx:153
+#: src/routes/dashboard.mail.tsx:158
 msgid "Could not make it"
 msgstr "Could not make it"
 
@@ -1123,16 +1151,16 @@ msgstr "Could not open the site"
 msgid "Could not reach the server. Please try again."
 msgstr "Could not reach the server. Please try again."
 
-#: src/routes/dashboard.mail.tsx:447
+#: src/routes/dashboard.mail.tsx:452
 msgid "Could not read the file"
 msgstr "Could not read the file"
 
 #: src/components/ses-account.tsx:393
 #: src/routes/dashboard.forms_.$formId.tsx:103
 #: src/routes/dashboard.forms.tsx:127
-#: src/routes/dashboard.mail.tsx:207
-#: src/routes/dashboard.mail.tsx:315
-#: src/routes/dashboard.mail.tsx:682
+#: src/routes/dashboard.mail.tsx:212
+#: src/routes/dashboard.mail.tsx:320
+#: src/routes/dashboard.mail.tsx:687
 #: src/routes/dashboard.sites.tsx:100
 #: src/routes/dashboard.users.tsx:122
 msgid "Could not remove it"
@@ -1142,14 +1170,14 @@ msgstr "Could not remove it"
 msgid "Could not remove language"
 msgstr "Could not remove language"
 
-#: src/routes/dashboard.mail.tsx:528
+#: src/routes/dashboard.mail.tsx:533
 msgid "Could not remove them"
 msgstr "Could not remove them"
 
 #: src/components/site-mail.tsx:81
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:89
-#: src/routes/dashboard.mail.tsx:274
-#: src/routes/dashboard.mail.tsx:641
+#: src/routes/dashboard.mail.tsx:279
+#: src/routes/dashboard.mail.tsx:646
 #: src/routes/dashboard.plugins_.email.tsx:81
 msgid "Could not save it"
 msgstr "Could not save it"
@@ -1186,6 +1214,10 @@ msgstr "Could not send it"
 #: src/components/ses-account.tsx:595
 msgid "Could not set it"
 msgstr "Could not set it"
+
+#: src/components/ses-analytics.tsx:87
+msgid "Could not set it up"
+msgstr "Could not set it up"
 
 #: src/routes/console.sites.$siteId.tsx:184
 #: src/routes/dashboard.publish.tsx:97
@@ -1298,7 +1330,7 @@ msgstr "Date"
 msgid "Decrease indent"
 msgstr "Decrease indent"
 
-#: src/routes/dashboard.mail.tsx:667
+#: src/routes/dashboard.mail.tsx:672
 msgid "default"
 msgstr "default"
 
@@ -1372,8 +1404,12 @@ msgstr "Description text shown in search results."
 #~ msgid "Design"
 #~ msgstr "Design"
 
+#: src/routes/dashboard.mail.tsx:819
+msgid "did not arrive"
+msgstr "did not arrive"
+
 #: src/components/ses-account.tsx:437
-#: src/components/ses-health.tsx:180
+#: src/components/ses-health.tsx:183
 msgid "Did not arrive"
 msgstr "Did not arrive"
 
@@ -1395,7 +1431,7 @@ msgid "Download"
 msgstr "Download"
 
 #: src/components/editor/types.ts:26
-#: src/routes/dashboard.mail.tsx:160
+#: src/routes/dashboard.mail.tsx:165
 msgid "Draft"
 msgstr "Draft"
 
@@ -1416,8 +1452,8 @@ msgstr "Each language has its own tags. Link them so a post's tag can point at i
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.index.tsx:192
-#: src/routes/dashboard.mail.tsx:306
-#: src/routes/dashboard.mail.tsx:673
+#: src/routes/dashboard.mail.tsx:311
+#: src/routes/dashboard.mail.tsx:678
 msgid "Edit"
 msgstr "Edit"
 
@@ -1425,11 +1461,11 @@ msgstr "Edit"
 msgid "Edit the form"
 msgstr "Edit the form"
 
-#: src/routes/dashboard.mail.tsx:331
+#: src/routes/dashboard.mail.tsx:336
 msgid "Edit the list"
 msgstr "Edit the list"
 
-#: src/routes/dashboard.mail.tsx:699
+#: src/routes/dashboard.mail.tsx:704
 msgid "Edit the template"
 msgstr "Edit the template"
 
@@ -1442,7 +1478,7 @@ msgstr "Editing"
 #: src/routes/console.account.tsx:98
 #: src/routes/console.login.tsx:80
 #: src/routes/console.register.tsx:119
-#: src/routes/dashboard.mail.tsx:545
+#: src/routes/dashboard.mail.tsx:550
 #: src/routes/dashboard.users.tsx:271
 msgid "Email"
 msgstr "Email"
@@ -1481,6 +1517,10 @@ msgstr "Enter a valid email address"
 msgid "Enter details"
 msgstr "Enter details"
 
+#: src/routes/dashboard.mail.tsx:832
+msgid "Events arrive once the pipeline is wired up, under the mail plugin's settings. Until then a bounce is only discovered by the next campaign running into it."
+msgstr "Events arrive once the pipeline is wired up, under the mail plugin's settings. Until then a bounce is only discovered by the next campaign running into it."
+
 #: src/components/plugin-forms.tsx:163
 #: src/routes/dashboard.plugins_.backup.tsx:90
 msgid "Every day"
@@ -1491,7 +1531,7 @@ msgstr "Every day"
 msgid "Every hour"
 msgstr "Every hour"
 
-#: src/routes/dashboard.mail.tsx:467
+#: src/routes/dashboard.mail.tsx:472
 msgid "Every list"
 msgstr "Every list"
 
@@ -1529,9 +1569,13 @@ msgstr "Everything in this panel is this API. It is what your pages are built fr
 msgid "Excerpt"
 msgstr "Excerpt"
 
-#: src/routes/dashboard.mail.tsx:492
+#: src/routes/dashboard.mail.tsx:497
 msgid "Export"
 msgstr "Export"
+
+#: src/components/ses-analytics.tsx:149
+msgid "failed for now"
+msgstr "failed for now"
 
 #: src/components/editor/post-settings.tsx:345
 msgid "Featured"
@@ -1634,9 +1678,13 @@ msgstr "Give your post a title first"
 msgid "Go"
 msgstr "Go"
 
-#: src/routes/dashboard.mail.tsx:162
+#: src/routes/dashboard.mail.tsx:167
 msgid "Going out"
 msgstr "Going out"
+
+#: src/components/ses-analytics.tsx:148
+msgid "gone for good"
+msgstr "gone for good"
 
 #: src/components/editor/post-settings.tsx:42
 #~ msgid "Guide"
@@ -1731,7 +1779,7 @@ msgstr "How many to keep"
 msgid "How often"
 msgstr "How often"
 
-#: src/components/ses-health.tsx:162
+#: src/components/ses-health.tsx:165
 msgid "How the sending is going"
 msgstr "How the sending is going"
 
@@ -1777,7 +1825,7 @@ msgstr "Import / export"
 msgid "Import an archive"
 msgstr "Import an archive"
 
-#: src/routes/dashboard.mail.tsx:484
+#: src/routes/dashboard.mail.tsx:489
 msgid "Import CSV"
 msgstr "Import CSV"
 
@@ -1931,7 +1979,7 @@ msgstr "Leave it empty to send when you press the button. With a time, pressing 
 msgid "Leaving the sandbox"
 msgstr "Leaving the sandbox"
 
-#: src/components/ses-health.tsx:249
+#: src/components/ses-health.tsx:252
 msgid "Leaving the sandbox is the first increase. This is the one after it — Amazon treats it as a support request, and this opens one in the same words its console would."
 msgstr "Leaving the sandbox is the first increase. This is the one after it — Amazon treats it as a support request, and this opens one in the same words its console would."
 
@@ -1979,8 +2027,8 @@ msgstr "Link translation"
 #: src/components/editor/extensions/slash-command.tsx:102
 #: src/components/editor/extensions/slash-command.tsx:111
 #: src/components/editor/extensions/slash-command.tsx:120
-#: src/routes/dashboard.mail.tsx:76
-#: src/routes/dashboard.mail.tsx:567
+#: src/routes/dashboard.mail.tsx:79
+#: src/routes/dashboard.mail.tsx:572
 msgid "Lists"
 msgstr "Lists"
 
@@ -2005,7 +2053,7 @@ msgstr "Made {0}"
 #: src/components/dashboard/dashboard-shell.tsx:78
 #: src/routes/console.sites.$siteId.tsx:310
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
-#: src/routes/dashboard.mail.tsx:66
+#: src/routes/dashboard.mail.tsx:69
 msgid "Mail"
 msgstr "Mail"
 
@@ -2030,7 +2078,7 @@ msgstr "Make an IAM user in the AWS account that owns the sending domain."
 msgid "Make default"
 msgstr "Make default"
 
-#: src/routes/dashboard.mail.tsx:236
+#: src/routes/dashboard.mail.tsx:241
 msgid "Make it"
 msgstr "Make it"
 
@@ -2093,11 +2141,11 @@ msgstr "Merge cells"
 msgid "messages a day"
 msgstr "messages a day"
 
-#: src/components/ses-health.tsx:256
+#: src/components/ses-health.tsx:259
 msgid "Messages a day"
 msgstr "Messages a day"
 
-#: src/components/ses-health.tsx:268
+#: src/components/ses-health.tsx:271
 msgid "Messages a second"
 msgstr "Messages a second"
 
@@ -2120,10 +2168,10 @@ msgstr "My Mavi CMS Site"
 #: src/routes/dashboard.forms.tsx:160
 #: src/routes/dashboard.forms.tsx:238
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:198
-#: src/routes/dashboard.mail.tsx:223
-#: src/routes/dashboard.mail.tsx:336
-#: src/routes/dashboard.mail.tsx:557
-#: src/routes/dashboard.mail.tsx:705
+#: src/routes/dashboard.mail.tsx:228
+#: src/routes/dashboard.mail.tsx:341
+#: src/routes/dashboard.mail.tsx:562
+#: src/routes/dashboard.mail.tsx:710
 msgid "Name"
 msgstr "Name"
 
@@ -2139,8 +2187,8 @@ msgstr "Name shown"
 msgid "needs translation"
 msgstr "needs translation"
 
-#: src/routes/dashboard.mail.tsx:174
-#: src/routes/dashboard.mail.tsx:220
+#: src/routes/dashboard.mail.tsx:179
+#: src/routes/dashboard.mail.tsx:225
 msgid "New campaign"
 msgstr "New campaign"
 
@@ -2154,8 +2202,8 @@ msgstr "New category"
 msgid "New form"
 msgstr "New form"
 
-#: src/routes/dashboard.mail.tsx:285
-#: src/routes/dashboard.mail.tsx:331
+#: src/routes/dashboard.mail.tsx:290
+#: src/routes/dashboard.mail.tsx:336
 msgid "New list"
 msgstr "New list"
 
@@ -2174,8 +2222,8 @@ msgstr "New post"
 msgid "New tag"
 msgstr "New tag"
 
-#: src/routes/dashboard.mail.tsx:652
-#: src/routes/dashboard.mail.tsx:699
+#: src/routes/dashboard.mail.tsx:657
+#: src/routes/dashboard.mail.tsx:704
 msgid "New template"
 msgstr "New template"
 
@@ -2194,7 +2242,7 @@ msgstr "Next"
 msgid "No backups yet"
 msgstr "No backups yet"
 
-#: src/routes/dashboard.mail.tsx:179
+#: src/routes/dashboard.mail.tsx:184
 msgid "No campaigns yet"
 msgstr "No campaigns yet"
 
@@ -2214,7 +2262,7 @@ msgstr "No forms yet"
 msgid "no limit"
 msgstr "no limit"
 
-#: src/routes/dashboard.mail.tsx:290
+#: src/routes/dashboard.mail.tsx:295
 msgid "No lists yet"
 msgstr "No lists yet"
 
@@ -2257,7 +2305,7 @@ msgstr "No sites yet"
 msgid "No tags yet"
 msgstr "No tags yet"
 
-#: src/routes/dashboard.mail.tsx:657
+#: src/routes/dashboard.mail.tsx:662
 msgid "No templates yet — a campaign without one sends just its own body"
 msgstr "No templates yet — a campaign without one sends just its own body"
 
@@ -2266,7 +2314,7 @@ msgstr "No templates yet — a campaign without one sends just its own body"
 msgid "No tokens yet"
 msgstr "No tokens yet"
 
-#: src/routes/dashboard.mail.tsx:508
+#: src/routes/dashboard.mail.tsx:513
 msgid "Nobody here yet"
 msgstr "Nobody here yet"
 
@@ -2294,7 +2342,7 @@ msgstr "Not set yet"
 msgid "Note"
 msgstr "Note"
 
-#: src/components/ses-health.tsx:332
+#: src/components/ses-health.tsx:335
 msgid "Nothing asked for yet"
 msgstr "Nothing asked for yet"
 
@@ -2306,11 +2354,15 @@ msgstr "Nothing has come in yet"
 msgid "Nothing published yet"
 msgstr "Nothing published yet"
 
-#: src/components/ses-health.tsx:174
+#: src/components/ses-analytics.tsx:124
+msgid "Nothing sent in the last thirty days"
+msgstr "Nothing sent in the last thirty days"
+
+#: src/components/ses-health.tsx:177
 msgid "Nothing sent in the last two weeks"
 msgstr "Nothing sent in the last two weeks"
 
-#: src/routes/dashboard.mail.tsx:765
+#: src/routes/dashboard.mail.tsx:770
 msgid "Nothing sent yet"
 msgstr "Nothing sent yet"
 
@@ -2349,7 +2401,7 @@ msgid "On"
 msgstr "On"
 
 #. placeholder {0}: row.lists.filter((l) => l.status === "confirmed").length
-#: src/routes/dashboard.mail.tsx:518
+#: src/routes/dashboard.mail.tsx:523
 msgid "on {0} lists"
 msgstr "on {0} lists"
 
@@ -2421,6 +2473,11 @@ msgstr "Open in new tab"
 #: src/routes/dashboard.api.tsx:322
 msgid "OpenAPI document"
 msgstr "OpenAPI document"
+
+#: src/components/ses-analytics.tsx:136
+#: src/routes/dashboard.mail.tsx:821
+msgid "opened"
+msgstr "opened"
 
 #: src/components/plugin-forms.tsx:439
 #: src/components/plugin-forms.tsx:450
@@ -2494,17 +2551,17 @@ msgstr "Path prefix"
 msgid "Pause"
 msgstr "Pause"
 
-#: src/routes/dashboard.mail.tsx:163
+#: src/routes/dashboard.mail.tsx:168
 msgid "Paused"
 msgstr "Paused"
 
 #: src/components/dashboard/dashboard-shell.tsx:86
-#: src/routes/dashboard.mail.tsx:77
+#: src/routes/dashboard.mail.tsx:80
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
 msgstr "People"
 
-#: src/routes/dashboard.mail.tsx:376
+#: src/routes/dashboard.mail.tsx:381
 msgid "People may join it from the site"
 msgstr "People may join it from the site"
 
@@ -2690,6 +2747,10 @@ msgstr "Redo"
 msgid "Refresh"
 msgstr "Refresh"
 
+#: src/routes/dashboard.mail.tsx:823
+msgid "refused before sending"
+msgstr "refused before sending"
+
 #: src/components/plugin-forms.tsx:98
 #: src/components/plugin-forms.tsx:307
 msgid "Region"
@@ -2710,10 +2771,10 @@ msgstr "Regular expression"
 #: src/routes/dashboard.forms.tsx:211
 #: src/routes/dashboard.forms.tsx:351
 #: src/routes/dashboard.languages.tsx:196
-#: src/routes/dashboard.mail.tsx:203
-#: src/routes/dashboard.mail.tsx:311
-#: src/routes/dashboard.mail.tsx:524
-#: src/routes/dashboard.mail.tsx:678
+#: src/routes/dashboard.mail.tsx:208
+#: src/routes/dashboard.mail.tsx:316
+#: src/routes/dashboard.mail.tsx:529
+#: src/routes/dashboard.mail.tsx:683
 #: src/routes/dashboard.sites.tsx:177
 #: src/routes/dashboard.sites.tsx:334
 #: src/routes/dashboard.users.tsx:201
@@ -2773,7 +2834,12 @@ msgstr "Replace…"
 msgid "Reply-to"
 msgstr "Reply-to"
 
-#: src/components/ses-health.tsx:188
+#: src/components/ses-analytics.tsx:150
+#: src/routes/dashboard.mail.tsx:820
+msgid "reported as spam"
+msgstr "reported as spam"
+
+#: src/components/ses-health.tsx:191
 msgid "Reported as spam"
 msgstr "Reported as spam"
 
@@ -2846,8 +2912,8 @@ msgstr "Sandbox"
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.forms.tsx:331
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:349
-#: src/routes/dashboard.mail.tsx:385
-#: src/routes/dashboard.mail.tsx:745
+#: src/routes/dashboard.mail.tsx:390
+#: src/routes/dashboard.mail.tsx:750
 #: src/routes/dashboard.plugins_.backup.tsx:333
 #: src/routes/dashboard.plugins_.email.tsx:150
 #: src/routes/dashboard.plugins_.s3.tsx:172
@@ -2881,7 +2947,7 @@ msgid "Schedule it"
 msgstr "Schedule it"
 
 #: src/components/editor/types.ts:28
-#: src/routes/dashboard.mail.tsx:161
+#: src/routes/dashboard.mail.tsx:166
 msgid "Scheduled"
 msgstr "Scheduled"
 
@@ -2895,7 +2961,7 @@ msgstr "Scheduled backups only run while this is on. You can always back up by h
 msgid "Schema {0}"
 msgstr "Schema {0}"
 
-#: src/routes/dashboard.mail.tsx:459
+#: src/routes/dashboard.mail.tsx:464
 msgid "Search an address or a name"
 msgstr "Search an address or a name"
 
@@ -2989,8 +3055,13 @@ msgstr "Sending stopped"
 msgid "Sends bounces back to you"
 msgstr "Sends bounces back to you"
 
-#: src/routes/dashboard.mail.tsx:79
-#: src/routes/dashboard.mail.tsx:164
+#: src/components/ses-analytics.tsx:129
+#: src/routes/dashboard.mail.tsx:824
+msgid "sent"
+msgstr "sent"
+
+#: src/routes/dashboard.mail.tsx:82
+#: src/routes/dashboard.mail.tsx:169
 msgid "Sent"
 msgstr "Sent"
 
@@ -3297,7 +3368,7 @@ msgstr "Tell somebody"
 msgid "Tell us about your site"
 msgstr "Tell us about your site"
 
-#: src/routes/dashboard.mail.tsx:78
+#: src/routes/dashboard.mail.tsx:81
 msgid "Templates"
 msgstr "Templates"
 
@@ -3366,7 +3437,11 @@ msgstr "The languages your content can be written in. This is separate from the 
 msgid "The last backup failed: {0}"
 msgstr "The last backup failed: {0}"
 
-#: src/components/ses-health.tsx:164
+#: src/components/ses-analytics.tsx:100
+msgid "The last thirty days, from SES itself. Delivered, bounced and reported are things only Amazon knows — a pixel in the letter cannot tell you any of them."
+msgstr "The last thirty days, from SES itself. Delivered, bounced and reported are things only Amazon knows — a pixel in the letter cannot tell you any of them."
+
+#: src/components/ses-health.tsx:167
 msgid "The last two weeks, which is as far back as Amazon keeps it. These two numbers are what an account gets suspended over."
 msgstr "The last two weeks, which is as far back as Amazon keeps it. These two numbers are what an account gets suspended over."
 
@@ -3374,7 +3449,7 @@ msgstr "The last two weeks, which is as far back as Amazon keeps it. These two n
 msgid "The letter"
 msgstr "The letter"
 
-#: src/routes/dashboard.mail.tsx:715
+#: src/routes/dashboard.mail.tsx:720
 msgid "The letterhead"
 msgstr "The letterhead"
 
@@ -3424,6 +3499,10 @@ msgstr "Theme"
 #: src/routes/dashboard.api.tsx:257
 msgid "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
 msgstr "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
+
+#: src/components/ses-analytics.tsx:119
+msgid "These figures come from Amazon's deliverability manager, which has to be switched on for the account. \"Wire up the events\" does that, along with everything else that has to exist before an event can reach this site."
+msgstr "These figures come from Amazon's deliverability manager, which has to be switched on for the account. \"Wire up the events\" does that, along with everything else that has to exist before an event can reach this site."
 
 #: src/routes/dashboard.users.tsx:257
 msgid "They can write, publish and manage this site."
@@ -3548,7 +3627,7 @@ msgstr "URL"
 msgid "Use S3 for new uploads"
 msgstr "Use S3 for new uploads"
 
-#: src/routes/dashboard.mail.tsx:736
+#: src/routes/dashboard.mail.tsx:741
 msgid "Use this one by default"
 msgstr "Use this one by default"
 
@@ -3604,7 +3683,7 @@ msgid "Weak"
 msgstr "Weak"
 
 #: src/components/ses-account.tsx:296
-#: src/components/ses-health.tsx:282
+#: src/components/ses-health.tsx:285
 msgid "Website"
 msgstr "Website"
 
@@ -3620,6 +3699,14 @@ msgstr "What Amazon allows"
 msgid "What Amazon does about bounces and complaints"
 msgstr "What Amazon does about bounces and complaints"
 
+#: src/routes/dashboard.mail.tsx:83
+msgid "What Amazon said"
+msgstr "What Amazon said"
+
+#: src/components/ses-analytics.tsx:98
+msgid "What Amazon saw"
+msgstr "What Amazon saw"
+
 #: src/routes/dashboard.forms.tsx:231
 msgid "What comes in is kept as it was sent, so changing the fields later never rewrites it."
 msgstr "What comes in is kept as it was sent, so changing the fields later never rewrites it."
@@ -3632,7 +3719,7 @@ msgstr "What Gmail and Yahoo ask for"
 msgid "What has come in, newest first."
 msgstr "What has come in, newest first."
 
-#: src/routes/dashboard.mail.tsx:347
+#: src/routes/dashboard.mail.tsx:352
 msgid "What it is"
 msgstr "What it is"
 
@@ -3648,7 +3735,7 @@ msgstr "What this form is for — only you see this"
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 
-#: src/components/ses-health.tsx:324
+#: src/components/ses-health.tsx:327
 msgid "What you have asked for"
 msgstr "What you have asked for"
 
@@ -3699,7 +3786,7 @@ msgstr "Who gets it"
 msgid "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 msgstr "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 
-#: src/components/ses-health.tsx:302
+#: src/components/ses-health.tsx:305
 msgid "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 msgstr "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 
@@ -3707,7 +3794,7 @@ msgstr "Who receives the mail, how they came to be on the list, how they stop it
 msgid "Who you may send as"
 msgstr "Who you may send as"
 
-#: src/routes/dashboard.mail.tsx:68
+#: src/routes/dashboard.mail.tsx:71
 msgid "Who you write to, and what you send them. Sending goes through the Amazon SES plugin."
 msgstr "Who you write to, and what you send them. Sending goes through the Amazon SES plugin."
 
@@ -3715,13 +3802,22 @@ msgstr "Who you write to, and what you send them. Sending goes through the Amazo
 msgid "Whole word"
 msgstr "Whole word"
 
-#: src/components/ses-health.tsx:294
+#: src/components/ses-health.tsx:297
 msgid "Why you need it"
 msgstr "Why you need it"
 
 #: src/components/ses-account.tsx:308
 msgid "Why you send"
 msgstr "Why you send"
+
+#: src/components/ses-analytics.tsx:105
+msgid "Wire up the events"
+msgstr "Wire up the events"
+
+#. placeholder {0}: built.configuration_set
+#: src/components/ses-analytics.tsx:82
+msgid "Wired up. Events go to {0} and arrive here."
+msgstr "Wired up. Events go to {0} and arrive here."
 
 #: src/routes/dashboard.api.tsx:254
 msgid "Without an account"

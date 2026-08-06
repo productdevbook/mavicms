@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { SesAnalyticsPanel } from "@/components/ses-analytics"
 
 /**
  * How the account has been behaving, and what to do when it needs to send
@@ -157,6 +158,8 @@ export function SesHealthPanel({ siteId }: { siteId?: string }) {
 
   return (
     <div className="flex flex-col gap-8">
+      <SesAnalyticsPanel siteId={siteId} />
+
       <section className="flex flex-col gap-3">
         <div>
           <h2 className="text-sm font-medium">{t`How the sending is going`}</h2>

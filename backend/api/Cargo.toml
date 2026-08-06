@@ -57,6 +57,11 @@ aws-sdk-ses = { version = "1", default-features = false, features = ["rt-tokio",
 # And Support, for asking to be given a bigger quota once the sandbox is
 # behind you. That request is a support case; there is no other API for it.
 aws-sdk-support = { version = "1", default-features = false, features = ["rt-tokio", "rustls", "behavior-version-latest"] }
+# SNS, because an SES event destination needs a topic to publish to and a
+# topic needs somebody to create it. Wiring it up by hand in the AWS console
+# is the one step this panel exists to remove.
+aws-smithy-types = "1"
+aws-sdk-sns = { version = "1", default-features = false, features = ["rt-tokio", "rustls", "behavior-version-latest"] }
 hmac = "0.12"
 sha2 = "0.10"
 hex = "0.4"

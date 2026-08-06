@@ -67,6 +67,8 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::list_site_email_requests))
         .routes(routes!(console::set_site_email_mail_from))
         .routes(routes!(console::create_site_email_configuration_set))
+        .routes(routes!(console::setup_site_email_events))
+        .routes(routes!(console::get_site_email_deliverability))
         .routes(routes!(console::get_site_backup, console::save_site_backup))
         .routes(routes!(console::get_site_development))
         .routes(routes!(console::create_site_development_token))
@@ -87,6 +89,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(mailing::unsubscribe_page, mailing::unsubscribe))
         .routes(routes!(mailing::open_pixel))
         .routes(routes!(mailing::click))
+        .routes(routes!(mailing::receive_events))
         .layer(DefaultBodyLimit::max(forms::MAX_SUBMISSION_BYTES))
         .layer(from_fn(require_database));
 
@@ -159,6 +162,8 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(plugins::list_email_requests))
         .routes(routes!(plugins::set_email_mail_from))
         .routes(routes!(plugins::create_email_configuration_set))
+        .routes(routes!(plugins::setup_email_events))
+        .routes(routes!(plugins::get_email_deliverability))
         .routes(routes!(
             plugins::get_backup_settings,
             plugins::update_backup_settings
@@ -202,6 +207,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(mailing::cancel_campaign))
         .routes(routes!(mailing::test_campaign))
         .routes(routes!(mailing::list_log))
+        .routes(routes!(mailing::list_events))
         .merge(
             OpenApiRouter::new()
                 .routes(routes!(mailing::import_subscribers))

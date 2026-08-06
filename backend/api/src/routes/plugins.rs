@@ -384,6 +384,7 @@ pub async fn email_settings_of(state: &AppState) -> AppResult<crate::email::Emai
             configuration_set: stored.config.configuration_set,
             has_secret_access_key: !stored.config.secret_access_key.is_empty(),
             senders: stored.config.senders,
+            events_token: stored.config.events_token,
         },
         None => crate::email::EmailSettingsResponse {
             enabled: false,
@@ -395,6 +396,7 @@ pub async fn email_settings_of(state: &AppState) -> AppResult<crate::email::Emai
             configuration_set: String::new(),
             has_secret_access_key: false,
             senders: Vec::new(),
+            events_token: String::new(),
         },
     })
 }
@@ -449,6 +451,19 @@ async fn resolve_email(
             .filter(|sender| crate::email::looks_like_an_address(&sender.address))
             .cloned()
             .collect(),
+        // Never from the panel, and made the first time settings are saved
+        // rather than when the pipeline is built: the address Amazon posts to
+        // should not depend on whether a call to SNS succeeded, and somebody
+        // wiring the topic up by hand needs it before anything else exists.
+        events_token: stored
+            .as_ref()
+            .map(|stored| stored.config.events_token.clone())
+            .filter(|token| !token.is_empty())
+            .unwrap_or_else(|| uuid::Uuid::now_v7().simple().to_string()),
+        events_topic_arn: stored
+            .as_ref()
+            .map(|stored| stored.config.events_topic_arn.clone())
+            .unwrap_or_default(),
     })
 }
 
@@ -552,6 +567,7 @@ pub async fn test_email_of(
             html: None,
             from: None,
             unsubscribe_url: None,
+            tags: &[],
         },
     )
     .await;
@@ -871,4 +887,116 @@ pub async fn create_email_configuration_set(
 
 pub async fn create_configuration_set_of(state: &AppState, name: &str) -> AppResult<()> {
     crate::email::create_configuration_set(&email_config_of(state).await?, name).await
+}
+
+#[derive(Debug, serde::Serialize, utoipa::ToSchema)]
+pub struct PipelineResponse {
+    pub configuration_set: String,
+    pub topic_arn: String,
+    pub endpoint: String,
+    pub confirmed: bool,
+}
+
+/// Build the whole path an event travels, in one press.
+///
+/// A configuration set, Amazon's deliverability manager on it, a topic, a
+/// subscription pointing back here, and the event destination joining them.
+/// Every one is a screen in the AWS console and the order matters.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/events/setup",
+    tag = "plugins",
+    responses((status = 200, description = "What was built", body = PipelineResponse))
+)]
+pub async fn setup_email_events(
+    _admin: crate::auth::Administrator,
+    axum::Extension(resolved): axum::Extension<crate::tenants::Resolved>,
+    Site(state): Site,
+) -> AppResult<Json<PipelineResponse>> {
+    let host = match &resolved {
+        crate::tenants::Resolved::Tenant(tenant) => tenant.host.clone(),
+        crate::tenants::Resolved::Host => {
+            return Err(AppError::Validation(
+                "events belong to a hosted site".to_string(),
+            ));
+        }
+    };
+
+    Ok(Json(setup_events_of(&state, &host).await?))
+}
+
+pub async fn setup_events_of(state: &AppState, host: &str) -> AppResult<PipelineResponse> {
+    let stored = crate::plugins::load::<crate::email::EmailConfig>(
+        state.db(),
+        &state.secrets,
+        crate::plugins::EMAIL_PLUGIN,
+    )
+    .await?
+    .ok_or_else(|| AppError::Validation("mail is not set up yet".to_string()))?;
+
+    let mut config = stored.config;
+
+    // Made once and kept: the address Amazon posts to must not change every
+    // time this is run, or a subscription made last week stops working.
+    if config.events_token.is_empty() {
+        config.events_token = uuid::Uuid::now_v7().simple().to_string();
+    }
+    let set_name = if config.configuration_set.trim().is_empty() {
+        format!("mavicms-{}", crate::slug::slugify_or(host, "site"))
+    } else {
+        config.configuration_set.trim().to_string()
+    };
+
+    let endpoint = format!("https://{host}/api/mail/events/{}", config.events_token);
+    let built = crate::email::build_event_pipeline(&config, &set_name, &endpoint).await?;
+
+    // Every send from now on carries the configuration set, which is what
+    // makes the events arrive at all.
+    config.configuration_set = built.configuration_set.clone();
+    config.events_topic_arn = built.topic_arn.clone();
+
+    crate::plugins::save(
+        state.db(),
+        &state.secrets,
+        crate::plugins::EMAIL_PLUGIN,
+        stored.enabled,
+        &config,
+    )
+    .await?;
+
+    Ok(PipelineResponse {
+        configuration_set: built.configuration_set,
+        topic_arn: built.topic_arn,
+        endpoint: built.endpoint,
+        confirmed: built.confirmed,
+    })
+}
+
+#[derive(Debug, serde::Deserialize, utoipa::IntoParams)]
+pub struct DaysQuery {
+    pub days: Option<i64>,
+}
+
+/// Amazon's own figures on how the mail is doing.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/deliverability",
+    tag = "plugins",
+    params(DaysQuery),
+    responses((status = 200, description = "Deliverability", body = crate::email::Deliverability))
+)]
+pub async fn get_email_deliverability(
+    Site(state): Site,
+    axum::extract::Query(query): axum::extract::Query<DaysQuery>,
+) -> AppResult<Json<crate::email::Deliverability>> {
+    Ok(Json(
+        deliverability_of(&state, query.days.unwrap_or(30)).await?,
+    ))
+}
+
+pub async fn deliverability_of(
+    state: &AppState,
+    days: i64,
+) -> AppResult<crate::email::Deliverability> {
+    crate::email::deliverability(&email_config_of(state).await?, days).await
 }

@@ -574,6 +574,7 @@ async fn notify(state: &crate::state::AppState, form: &form::Model, data: &serde
             html: None,
             from: None,
             unsubscribe_url: None,
+            tags: &[],
         },
     )
     .await

@@ -6,6 +6,7 @@ pub mod email_log;
 pub mod form;
 pub mod form_submission;
 pub mod language;
+pub mod mail_event;
 pub mod mail_list;
 pub mod mail_template;
 pub mod media;

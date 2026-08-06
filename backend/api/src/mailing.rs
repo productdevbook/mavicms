@@ -160,11 +160,6 @@ pub fn wrap(template: Option<&str>, body: &str) -> String {
     }
 }
 
-/// A readable plain-text part from the HTML one.
-///
-/// Every message carries both. One with only HTML scores worse with several
-/// filters that count parts, and a reader whose client shows text gets a wall
-/// of markup instead of a letter.
 /// True when `haystack` begins with `needle`, ignoring case.
 ///
 /// Tag names are ASCII, so this compares ASCII-insensitively and never builds
@@ -187,6 +182,11 @@ fn find_ci(haystack: &str, needle: &str) -> Option<usize> {
         .map(|(at, _)| at)
 }
 
+/// A readable plain-text part from the HTML one.
+///
+/// Every message carries both. One with only HTML scores worse with several
+/// filters that count parts, and a reader whose client shows text gets a wall
+/// of markup instead of a letter.
 pub fn as_text(html: &str) -> String {
     let mut out = String::with_capacity(html.len());
     let mut in_tag = false;
@@ -824,6 +824,7 @@ pub async fn send_batch(
                 // newsletter without this lands in spam whatever else is
                 // right about it.
                 unsubscribe_url: Some(&message.unsubscribe_url),
+                tags: &[],
             },
         )
         .await;
@@ -1145,7 +1146,372 @@ mod tests {
     }
 
     #[test]
+    fn a_permanent_bounce_names_only_who_bounced_and_blocks_them() {
+        // The message went to two people; one of them bounced. Blocking the
+        // destination list would take the other one off as well.
+        let event = read_event(
+            r#"{"eventType":"Bounce",
+                "bounce":{"bounceType":"Permanent","bounceSubType":"General",
+                          "bouncedRecipients":[{"emailAddress":"Gone@Example.com"}]},
+                "mail":{"messageId":"abc","destination":["gone@example.com","fine@example.com"]}}"#,
+        )
+        .unwrap();
+
+        assert_eq!(event.recipients, vec!["gone@example.com"]);
+        assert!(event.blocks);
+        assert_eq!(event.detail, "Permanent / General");
+    }
+
+    #[test]
+    fn a_transient_bounce_blocks_nobody() {
+        // A full mailbox on a Tuesday is not a reason to lose a reader.
+        let event = read_event(
+            r#"{"eventType":"Bounce",
+                "bounce":{"bounceType":"Transient","bounceSubType":"MailboxFull",
+                          "bouncedRecipients":[{"emailAddress":"busy@example.com"}]},
+                "mail":{"messageId":"abc"}}"#,
+        )
+        .unwrap();
+
+        assert!(!event.blocks);
+    }
+
+    #[test]
+    fn a_complaint_blocks() {
+        let event = read_event(
+            r#"{"eventType":"Complaint",
+                "complaint":{"complainedRecipients":[{"emailAddress":"cross@example.com"}]},
+                "mail":{"messageId":"abc"}}"#,
+        )
+        .unwrap();
+
+        assert_eq!(event.recipients, vec!["cross@example.com"]);
+        assert!(event.blocks);
+    }
+
+    #[test]
+    fn the_tags_say_which_campaign_and_who() {
+        let campaign = uuid::Uuid::now_v7();
+        let who = uuid::Uuid::now_v7();
+        let body = format!(
+            r#"{{"eventType":"Delivery",
+                 "mail":{{"messageId":"abc","destination":["a@example.com"],
+                          "tags":{{"campaign":["{campaign}"],"subscriber":["{who}"]}}}}}}"#
+        );
+
+        let event = read_event(&body).unwrap();
+        assert_eq!(event.campaign_id, Some(campaign));
+        assert_eq!(event.subscriber_id, Some(who));
+        assert!(!event.blocks);
+    }
+
+    #[test]
+    fn the_older_notification_shape_is_read_too() {
+        // A topic somebody wired up by hand sends notificationType instead.
+        let event = read_event(
+            r#"{"notificationType":"Delivery",
+                "mail":{"messageId":"abc","destination":["a@example.com"]}}"#,
+        )
+        .unwrap();
+
+        assert_eq!(event.kind, "delivery");
+    }
+
+    #[test]
+    fn a_click_keeps_where_it_went() {
+        let event = read_event(
+            r#"{"eventType":"Click","click":{"link":"https://example.com/x"},
+                "mail":{"messageId":"abc","destination":["a@example.com"]}}"#,
+        )
+        .unwrap();
+
+        assert_eq!(event.detail, "https://example.com/x");
+    }
+
+    #[test]
+    fn anything_that_is_not_an_event_is_refused_rather_than_guessed_at() {
+        assert!(read_event("not json").is_none());
+        assert!(read_event("{}").is_none());
+        assert!(read_event(r#"{"eventType":""}"#).is_none());
+    }
+
+    #[test]
     fn the_pixel_is_a_gif() {
         assert_eq!(&PIXEL[..6], b"GIF89a");
     }
+
+    #[test]
+    fn an_event_names_its_own_recipients_not_the_whole_letter() {
+        let three = r#"["one@example.com","two@example.com","three@example.com"]"#;
+
+        // Delivered to one of the three so far. Counting all three would say
+        // two letters arrived that have not.
+        let delivered = read_event(&format!(
+            r#"{{"eventType":"Delivery",
+                 "delivery":{{"recipients":["one@example.com"]}},
+                 "mail":{{"messageId":"m","destination":{three}}}}}"#
+        ))
+        .expect("a delivery");
+        assert_eq!(delivered.recipients, vec!["one@example.com"]);
+        assert!(!delivered.blocks);
+
+        // Delayed for one. Not a reason to stop writing to anybody.
+        let delayed = read_event(&format!(
+            r#"{{"eventType":"DeliveryDelay",
+                 "deliveryDelay":{{"delayedRecipients":[{{"emailAddress":"TWO@example.com"}}]}},
+                 "mail":{{"messageId":"m","destination":{three}}}}}"#
+        ))
+        .expect("a delay");
+        assert_eq!(delayed.recipients, vec!["two@example.com"]);
+        assert!(!delayed.blocks);
+
+        // Nothing named: the letter's own addresses are all there is to go on.
+        let sent = read_event(&format!(
+            r#"{{"eventType":"Send","mail":{{"messageId":"m","destination":{three}}}}}"#
+        ))
+        .expect("a send");
+        assert_eq!(sent.recipients.len(), 3);
+    }
+
+    #[test]
+    fn only_amazon_subscribe_urls_are_followed() {
+        assert!(is_an_sns_url(
+            "https://sns.eu-central-1.amazonaws.com/?Action=ConfirmSubscription"
+        ));
+
+        // The ways past a check written against the front of the string.
+        assert!(!is_an_sns_url("https://sns.made-up.test/.amazonaws.com/"));
+        assert!(!is_an_sns_url("https://sns.x@127.0.0.1/.amazonaws.com/"));
+        assert!(!is_an_sns_url(
+            "https://sns.x@169.254.169.254/latest/meta-data/.amazonaws.com/"
+        ));
+        assert!(!is_an_sns_url(
+            "https://sns.made-up.test/?x=.amazonaws.com/"
+        ));
+        assert!(!is_an_sns_url("https://SNS.MADE-UP.TEST/.amazonaws.com/"));
+
+        // And the ordinary refusals.
+        assert!(!is_an_sns_url("http://sns.eu-central-1.amazonaws.com/"));
+        assert!(!is_an_sns_url("https://sns.amazonaws.com.made-up.test/"));
+        assert!(!is_an_sns_url("https://queue.eu-central-1.amazonaws.com/"));
+        assert!(!is_an_sns_url("http://169.254.169.254/latest/meta-data/"));
+        assert!(!is_an_sns_url(""));
+        assert!(!is_an_sns_url("file:///etc/passwd"));
+    }
+}
+
+// ---------------------------------------------------------------------------
+// What Amazon sends back
+// ---------------------------------------------------------------------------
+
+use crate::entities::mail_event;
+
+/// One notification from SNS, in the shape SNS posts it.
+#[derive(Debug, serde::Deserialize)]
+pub struct SnsEnvelope {
+    #[serde(rename = "Type")]
+    pub kind: String,
+    #[serde(rename = "TopicArn", default)]
+    pub topic_arn: String,
+    #[serde(rename = "Message", default)]
+    pub message: String,
+    #[serde(rename = "SubscribeURL", default)]
+    pub subscribe_url: String,
+}
+
+/// Whether a subscribe URL is one of Amazon's, and so safe to fetch.
+///
+/// The host is taken from a parsed URL rather than from the front of the
+/// string: `https://sns.somewhere-else/…@127.0.0.1/` starts the same way and
+/// ends up somewhere else entirely, and a server that fetches it is a way to
+/// reach inside the cluster from outside.
+pub fn is_an_sns_url(value: &str) -> bool {
+    let Ok(parsed) = reqwest::Url::parse(value) else {
+        return false;
+    };
+    let host = parsed.host_str().unwrap_or_default().to_ascii_lowercase();
+    parsed.scheme() == "https" && host.starts_with("sns.") && host.ends_with(".amazonaws.com")
+}
+
+/// One thing Amazon said happened, read out of the JSON it posts.
+#[derive(Debug, PartialEq)]
+pub struct SesEvent {
+    pub kind: String,
+    pub message_id: String,
+    pub campaign_id: Option<uuid::Uuid>,
+    pub subscriber_id: Option<uuid::Uuid>,
+    pub recipients: Vec<String>,
+    pub detail: String,
+    /// Whether this is a reason to stop writing to them. A permanent bounce
+    /// or a complaint; never a transient bounce, which is a full mailbox or a
+    /// server having a bad afternoon.
+    pub blocks: bool,
+}
+
+/// Reads one. `None` for anything that is not an SES event.
+///
+/// Pure, because this is where a misread field turns into somebody being
+/// blocked who should not have been, and that is worth testing without a
+/// database.
+pub fn read_event(body: &str) -> Option<SesEvent> {
+    let parsed: serde_json::Value = serde_json::from_str(body).ok()?;
+
+    // SES writes eventType on the v2 event stream and notificationType on the
+    // older one. Taking either means a topic wired up by hand still works.
+    let kind = parsed
+        .get("eventType")
+        .or_else(|| parsed.get("notificationType"))
+        .and_then(|v| v.as_str())?
+        .to_lowercase();
+    if kind.is_empty() {
+        return None;
+    }
+
+    let mail = parsed.get("mail");
+
+    // The tags this program put on the send come back untouched, as arrays.
+    let tag = |name: &str| -> Option<uuid::Uuid> {
+        mail.and_then(|m| m.get("tags"))
+            .and_then(|t| t.get(name))
+            .and_then(|v| v.as_array())
+            .and_then(|values| values.first())
+            .and_then(|v| v.as_str())
+            .and_then(|v| uuid::Uuid::parse_str(v).ok())
+    };
+
+    // Most events name their own recipients, which is not always everybody the
+    // message went to: a bounce names the one address that failed, and a
+    // delivery names the ones that arrived on this attempt rather than all
+    // three the letter was addressed to. Falling back to the destination list
+    // would block a whole list over one bad address, and would count two
+    // deliveries that have not happened yet.
+    let named = |section: &str, field: &str| -> Option<Vec<String>> {
+        parsed.get(section)?.get(field)?.as_array().map(|list| {
+            list.iter()
+                .filter_map(|r| r.get("emailAddress").and_then(|v| v.as_str()))
+                .map(str::to_lowercase)
+                .collect()
+        })
+    };
+
+    // Delivery says the same thing as a bare list of addresses.
+    let listed = |section: &str, field: &str| -> Option<Vec<String>> {
+        parsed.get(section)?.get(field)?.as_array().map(|list| {
+            list.iter()
+                .filter_map(|v| v.as_str())
+                .map(str::to_lowercase)
+                .collect()
+        })
+    };
+
+    let recipients = named("bounce", "bouncedRecipients")
+        .or_else(|| named("complaint", "complainedRecipients"))
+        .or_else(|| named("deliveryDelay", "delayedRecipients"))
+        .or_else(|| listed("delivery", "recipients"))
+        .filter(|found: &Vec<String>| !found.is_empty())
+        .unwrap_or_else(|| {
+            mail.and_then(|m| m.get("destination"))
+                .and_then(|v| v.as_array())
+                .map(|list| {
+                    list.iter()
+                        .filter_map(|v| v.as_str())
+                        .map(str::to_lowercase)
+                        .collect()
+                })
+                .unwrap_or_default()
+        });
+
+    let detail = match kind.as_str() {
+        "bounce" => parsed
+            .get("bounce")
+            .map(|b| {
+                format!(
+                    "{} / {}",
+                    b.get("bounceType").and_then(|v| v.as_str()).unwrap_or("?"),
+                    b.get("bounceSubType")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("?")
+                )
+            })
+            .unwrap_or_default(),
+        "click" => parsed
+            .get("click")
+            .and_then(|c| c.get("link"))
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string(),
+        "deliverydelay" | "delivery_delay" => parsed
+            .get("deliveryDelay")
+            .and_then(|d| d.get("delayType"))
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string(),
+        _ => String::new(),
+    };
+
+    let permanent = kind == "bounce"
+        && parsed
+            .get("bounce")
+            .and_then(|b| b.get("bounceType"))
+            .and_then(|v| v.as_str())
+            == Some("Permanent");
+
+    Some(SesEvent {
+        message_id: mail
+            .and_then(|m| m.get("messageId"))
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string(),
+        campaign_id: tag("campaign"),
+        subscriber_id: tag("subscriber"),
+        blocks: permanent || kind == "complaint",
+        kind,
+        recipients,
+        detail,
+    })
+}
+
+/// Records what Amazon says happened, and acts on it.
+///
+/// A permanent bounce or a complaint blocks the address here as well: SES was
+/// going to refuse it anyway, and the point of hearing about it is not having
+/// to find out again on the next campaign.
+///
+/// Returns how many events were taken.
+pub async fn record_ses_event(db: &DatabaseConnection, body: &str) -> AppResult<u64> {
+    let Some(event) = read_event(body) else {
+        return Ok(0);
+    };
+
+    let mut taken = 0;
+    for address in &event.recipients {
+        mail_event::ActiveModel {
+            id: Set(uuid::Uuid::now_v7()),
+            kind: Set(event.kind.clone()),
+            address: Set(address.chars().take(320).collect()),
+            message_id: Set(event.message_id.chars().take(120).collect()),
+            campaign_id: Set(event.campaign_id),
+            subscriber_id: Set(event.subscriber_id),
+            detail: Set(event.detail.chars().take(2000).collect()),
+            created_at: Set(chrono::Utc::now().fixed_offset()),
+        }
+        .insert(db)
+        .await?;
+        taken += 1;
+
+        if event.blocks
+            && let Some(person) = subscriber::Entity::find()
+                .filter(subscriber::Column::Email.eq(address))
+                .one(db)
+                .await?
+            && person.status == ENABLED
+        {
+            let mut changed: subscriber::ActiveModel = person.into();
+            changed.status = Set(BLOCKED.to_string());
+            changed.update(db).await?;
+            tracing::info!(kind = %event.kind, "blocked an address Amazon told us about");
+        }
+    }
+
+    Ok(taken)
 }

@@ -1065,6 +1065,8 @@ export interface EmailSettings {
   has_secret_access_key: boolean
   /** The addresses beyond the default one. */
   senders: Sender[]
+  /** The unguessable part of the address Amazon posts events to. */
+  events_token: string
 }
 
 export interface EmailSettingsPayload {
@@ -1526,4 +1528,57 @@ export function requestQuotaIncrease(
 
 export function getSesRequests(siteId?: string): Promise<SesRequest[]> {
   return request<SesRequest[]>(`${mailBase(siteId)}/requests`)
+}
+
+export interface SesPipeline {
+  configuration_set: string
+  topic_arn: string
+  endpoint: string
+  confirmed: boolean
+}
+
+export interface SesDeliverability {
+  sent: number
+  delivered: number
+  opened: number
+  clicked: number
+  permanent_bounces: number
+  transient_bounces: number
+  complaints: number
+  delivery_rate: number
+  open_rate: number
+  click_rate: number
+}
+
+export interface MailEvent {
+  id: string
+  kind: string
+  address: string
+  campaign_id: string | null
+  detail: string
+  created_at: string
+}
+
+export interface MailEventSummary {
+  counts: Record<string, number>
+  recent: MailEvent[]
+}
+
+export function setupSesEvents(siteId?: string): Promise<SesPipeline> {
+  return request<SesPipeline>(`${mailBase(siteId)}/events/setup`, {
+    method: "POST",
+  })
+}
+
+export function getSesDeliverability(
+  siteId?: string,
+  days = 30
+): Promise<SesDeliverability> {
+  return request<SesDeliverability>(
+    `${mailBase(siteId)}/deliverability${siteId ? "" : `?days=${days}`}`
+  )
+}
+
+export function getMailEvents(): Promise<MailEventSummary> {
+  return request<MailEventSummary>("/mail/events")
 }
