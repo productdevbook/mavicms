@@ -37,9 +37,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Bun, because that is what these projects are built with. Installed as the
 # user that will run it, so a build never needs to be root for anything.
+#
+# The canary rather than the latest release: bun writes a lockfile its own
+# version can read and older ones refuse, and projects are already pinning
+# versions that live only in the canary. An image a release behind cannot read
+# their lockfiles, ignores them, and resolves every dependency afresh — which
+# is how two publishes of one commit ship different code.
+#
+# The cost is that this line means something different on every rebuild. Each
+# build prints the version it actually ran with, so the log says which one.
 USER mavicms
 ENV BUN_INSTALL=/home/mavicms/.bun
-RUN curl -fsSL https://bun.sh/install | bash
+RUN curl -fsSL https://bun.sh/install | bash -s canary
 ENV PATH="/home/mavicms/.bun/bin:${PATH}"
 
 COPY --from=builder /app/target/release/mavicms-builder /usr/local/bin/mavicms-builder

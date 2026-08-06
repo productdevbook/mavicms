@@ -561,26 +561,45 @@ pub async fn claim(db: &DatabaseConnection) -> AppResult<Option<(String, Uuid)>>
     Ok(Some((id, tenant_id)))
 }
 
-/// The last `LOG_LIMIT` bytes, cut on a character boundary.
+/// How much of the beginning is kept when a log is too long.
 ///
-/// This used to search `char_indices().rev()` for the first index within the
-/// limit, which is the index nearest the end — so every log over the limit was
-/// stored as its final character. Successful builds print more than 64 KiB
-/// installing dependencies, so in practice a build only kept its output when
-/// it failed early enough to have produced almost none.
-fn tail_of(log: &str) -> &str {
+/// The beginning is where a build says what it is building *with* — which
+/// toolchain it found, which one the project asked for, whether it could
+/// fetch it. Keeping only the end threw all of that away, and left an
+/// operator reading "Ignoring lockfile" with no way to learn why. The middle
+/// is the thousand lines of dependency resolution nobody reads.
+const LOG_HEAD: usize = 8 * 1024;
+
+/// The log as it is kept: the whole of it, or its beginning and its end.
+///
+/// Used both while a build runs, to bound what is held in memory, and again
+/// when it is stored. One function because two of them disagreed: the builder
+/// dropped the oldest lines as it went, so by the time the writer tried to
+/// keep the beginning there was none left to keep.
+pub fn trimmed(log: &str) -> std::borrow::Cow<'_, str> {
     if log.len() <= LOG_LIMIT {
-        return log;
+        return std::borrow::Cow::Borrowed(log);
     }
 
-    // Forward to a boundary rather than back: a byte-wise cut through UTF-8
-    // makes a string the database will not take, and taking slightly less than
-    // the limit is the harmless direction to be wrong in.
-    let mut start = log.len() - LOG_LIMIT;
-    while !log.is_char_boundary(start) {
-        start += 1;
+    // Both cuts move outwards to a character boundary. A byte-wise cut through
+    // UTF-8 makes a string the database will not take, and keeping slightly
+    // less than the limit is the harmless direction to be wrong in.
+    let mut head = LOG_HEAD;
+    while !log.is_char_boundary(head) {
+        head -= 1;
     }
-    &log[start..]
+    let mut tail = log.len() - (LOG_LIMIT - LOG_HEAD);
+    while !log.is_char_boundary(tail) {
+        tail += 1;
+    }
+
+    // No byte count: this runs repeatedly as a build talks, and a number
+    // from the last pass alone would understate what has gone altogether.
+    std::borrow::Cow::Owned(format!(
+        "{}\n\n… the middle of this build's output is not kept …\n\n{}",
+        &log[..head],
+        &log[tail..]
+    ))
 }
 
 pub async fn finish(
@@ -591,7 +610,7 @@ pub async fn finish(
 ) -> AppResult<()> {
     let backend = db.get_database_backend();
 
-    let tail = tail_of(log);
+    let tail = trimmed(log);
 
     db.execute_raw(Statement::from_sql_and_values(
         backend,
@@ -604,7 +623,7 @@ pub async fn finish(
         ),
         [
             if succeeded { SUCCEEDED } else { FAILED }.into(),
-            tail.into(),
+            tail.as_ref().into(),
             Utc::now().to_rfc3339().into(),
             id.into(),
         ],
@@ -638,30 +657,41 @@ mod tests {
 
 #[cfg(test)]
 mod log_tests {
-    use super::{LOG_LIMIT, tail_of};
+    use super::{LOG_LIMIT, trimmed};
 
     #[test]
     fn a_short_log_is_kept_whole() {
-        assert_eq!(tail_of("$ bun run build\nok\n"), "$ bun run build\nok\n");
+        assert_eq!(trimmed("$ bun run build\nok\n"), "$ bun run build\nok\n");
     }
 
     #[test]
-    fn a_long_log_keeps_its_end_not_its_last_character() {
-        let log = format!("{}the reason it failed", "noise\n".repeat(LOG_LIMIT));
-        let kept = tail_of(&log);
+    fn a_long_log_keeps_both_ends() {
+        let log = format!(
+            "bun 1.4.0 in the image\n{}the reason it failed",
+            "noise\n".repeat(LOG_LIMIT)
+        );
+        let kept = trimmed(&log);
 
+        // The beginning says what it built with, the end says how it went.
+        assert!(kept.starts_with("bun 1.4.0 in the image"));
         assert!(kept.ends_with("the reason it failed"));
-        assert!(kept.len() > LOG_LIMIT - 8, "kept only {} bytes", kept.len());
-        assert!(kept.len() <= LOG_LIMIT);
+        assert!(kept.contains("not kept"));
+    }
+
+    #[test]
+    fn what_was_dropped_is_not_passed_off_as_the_whole_log() {
+        let log = "noise\n".repeat(LOG_LIMIT);
+        assert!(trimmed(&log).contains("not kept"));
+        assert!(!trimmed("short").contains("not kept"));
     }
 
     #[test]
     fn a_cut_through_a_character_is_not_made() {
-        // Every character three bytes, so a naive cut would land inside one.
-        let log = "ş".repeat(LOG_LIMIT);
-        let kept = tail_of(&log);
+        // Every character two bytes, so a naive cut would land inside one.
+        let log = format!("{}son", "ş".repeat(LOG_LIMIT));
+        let kept = trimmed(&log);
 
-        assert!(kept.chars().all(|c| c == 'ş'));
-        assert!(kept.len() <= LOG_LIMIT);
+        assert!(kept.ends_with("son"));
+        assert!(kept.starts_with('ş'));
     }
 }

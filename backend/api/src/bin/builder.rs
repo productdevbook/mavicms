@@ -310,6 +310,20 @@ impl Builder {
             return Ok(None);
         };
 
+        // Every build says which bun it ran with, because the image's is a
+        // moving target and "it worked last week" is otherwise unanswerable.
+        let present = bun_in_path().await;
+        log.push_str(&format!(
+            "\nbun {} in the image, {version} asked for\n",
+            present.as_deref().unwrap_or("?")
+        ));
+
+        // Already the one asked for: downloading a second copy of it would
+        // only be a slower way to run the same binary.
+        if present.as_deref() == Some(version.as_str()) {
+            return Ok(None);
+        }
+
         let root = self.workspace.join(".bun").join(&version);
         let binary = root.join("bin").join("bun");
         if binary.is_file() {
@@ -331,6 +345,16 @@ impl Builder {
         if let Err(err) = run(command, log, "installing bun").await {
             log.push_str(&format!(
                 "\ncould not install bun {version} ({err}); using the one in the image\n"
+            ));
+            return Ok(None);
+        }
+
+        // The install script makes its bin directory before it downloads, so a
+        // run that ends without the binary leaves an empty one behind. Putting
+        // that on PATH would shadow nothing and find nothing.
+        if !binary.is_file() {
+            log.push_str(&format!(
+                "\nbun {version} installed nothing; using the one in the image\n"
             ));
             return Ok(None);
         }
@@ -558,17 +582,16 @@ async fn run(mut command: tokio::process::Command, log: &mut String, what: &str)
     Ok(())
 }
 
-/// Adds to the log, dropping the oldest once it is long enough that nobody
-/// would read further anyway.
+/// Adds to the log, and keeps it to a size somebody might read.
+///
+/// This used to drop the oldest lines, which are the ones saying what the
+/// build was run with — the toolchain found, the one the project asked for,
+/// whether it could be fetched. A build that then ignored a lockfile looked
+/// unexplained. `publish::trimmed` keeps both ends.
 fn push_bounded(log: &mut String, addition: &str) {
     log.push_str(addition);
     if log.len() > LOG_LIMIT {
-        let keep = log
-            .char_indices()
-            .map(|(index, _)| index)
-            .find(|index| log.len() - index <= LOG_LIMIT)
-            .unwrap_or(0);
-        *log = log[keep..].to_string();
+        *log = publish::trimmed(log).into_owned();
     }
 }
 
@@ -622,6 +645,13 @@ fn bun_version(manifest: &str) -> Option<String> {
             .chars()
             .all(|c| c.is_ascii_digit() || c == '.' || c.is_ascii_alphanumeric() || c == '-');
     usable.then(|| version.to_string())
+}
+
+/// What `bun --version` says, if there is a bun to ask.
+async fn bun_in_path() -> Option<String> {
+    let output = Command::new("bun").arg("--version").output().await.ok()?;
+    let version = String::from_utf8(output.stdout).ok()?.trim().to_string();
+    (!version.is_empty()).then_some(version)
 }
 
 /// The account a build reads as, made on first use.
