@@ -54,6 +54,163 @@ pub struct Operator {
     pub name: String,
 }
 
+/// How long a token an agency hands to an assistant lasts.
+///
+/// Longer than a session, because it is pasted into a program's settings
+/// rather than re-fetched by a build, and a credential that stops working
+/// every month is one that gets replaced by a longer-lived one somewhere
+/// worse. Short enough that a laptop that leaves the agency stops working.
+const TOKEN_DAYS: i64 = 90;
+
+/// Hands out a token for a program acting for this agency. Shown once.
+pub async fn mint_token(db: &DatabaseConnection, operator_id: Uuid) -> AppResult<(Uuid, String)> {
+    let backend = db.get_database_backend();
+    let id = Uuid::now_v7();
+    let expires_at = (Utc::now() + Duration::days(TOKEN_DAYS)).to_rfc3339();
+
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "INSERT INTO operator_tokens (id, operator_id, created_at, expires_at) VALUES ({})",
+            parameters(backend, 4)
+        ),
+        [
+            id.to_string().into(),
+            operator_id.to_string().into(),
+            Utc::now().to_rfc3339().into(),
+            expires_at.clone().into(),
+        ],
+    ))
+    .await?;
+
+    Ok((id, expires_at))
+}
+
+/// The tokens this agency has out. Newest first.
+pub async fn tokens(
+    db: &DatabaseConnection,
+    operator_id: Uuid,
+) -> AppResult<Vec<(String, String, String)>> {
+    let backend = db.get_database_backend();
+    let rows = db
+        .query_all_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "SELECT id, created_at, expires_at FROM operator_tokens WHERE operator_id = {} \
+                 ORDER BY created_at DESC",
+                parameter(backend, 1)
+            ),
+            [operator_id.to_string().into()],
+        ))
+        .await?;
+
+    rows.iter()
+        .map(|row| {
+            Ok((
+                row.try_get::<String>("", "id")?,
+                row.try_get::<String>("", "created_at")?,
+                row.try_get::<String>("", "expires_at")?,
+            ))
+        })
+        .collect()
+}
+
+/// Takes one back. Only this agency's own, so a token id from somewhere else
+/// is a miss rather than a deletion.
+pub async fn revoke_token(
+    db: &DatabaseConnection,
+    operator_id: Uuid,
+    token_id: Uuid,
+) -> AppResult<bool> {
+    let backend = db.get_database_backend();
+    let result = db
+        .execute_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "DELETE FROM operator_tokens WHERE id = {} AND operator_id = {}",
+                parameter(backend, 1),
+                parameter(backend, 2)
+            ),
+            [token_id.to_string().into(), operator_id.to_string().into()],
+        ))
+        .await?;
+
+    Ok(result.rows_affected() > 0)
+}
+
+/// The agency behind a token, if it is still good.
+pub async fn token_operator(
+    db: &DatabaseConnection,
+    token_id: Uuid,
+) -> AppResult<Option<Operator>> {
+    let backend = db.get_database_backend();
+    let row = db
+        .query_one_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "SELECT o.id, o.organization_id, o.email, o.name, t.expires_at, o.active \
+                 FROM operator_tokens t JOIN operators o ON o.id = t.operator_id \
+                 WHERE t.id = {}",
+                parameter(backend, 1)
+            ),
+            [token_id.to_string().into()],
+        ))
+        .await?;
+
+    let Some(row) = row else { return Ok(None) };
+    if parse_time(&row.try_get::<String>("", "expires_at")?)? < Utc::now() {
+        return Ok(None);
+    }
+    if row.try_get::<i32>("", "active")? == 0 {
+        return Ok(None);
+    }
+
+    Ok(Some(Operator {
+        id: Uuid::parse_str(&row.try_get::<String>("", "id")?)
+            .map_err(|err| AppError::Internal(err.to_string()))?,
+        organization_id: Uuid::parse_str(&row.try_get::<String>("", "organization_id")?)
+            .map_err(|err| AppError::Internal(err.to_string()))?,
+        email: row.try_get("", "email")?,
+        name: row.try_get("", "name")?,
+    }))
+}
+
+/// Adds a site to an agency's account, up to what the agency is allowed.
+///
+/// The limit is checked here rather than at the endpoint because there is now
+/// more than one door: the console screen and an assistant holding a token
+/// both come through this.
+pub async fn add_site(
+    hosting: &crate::tenants::Hosting,
+    operator: &Operator,
+    host: &str,
+) -> AppResult<crate::tenants::Tenant> {
+    let registry = hosting.registry()?;
+    let control = registry.control();
+
+    let organization = organization(control, operator.organization_id)
+        .await?
+        .ok_or_else(|| AppError::Internal("the agency behind this account is gone".to_string()))?;
+
+    let held = registry
+        .all()
+        .await?
+        .into_iter()
+        .filter(|tenant| tenant.organization_id == Some(operator.organization_id))
+        .count();
+    if held >= organization.site_limit.max(0) as usize {
+        return Err(AppError::Forbidden(format!(
+            "{} already has its {} sites",
+            organization.name, organization.site_limit
+        )));
+    }
+
+    let slug = host.replace('.', "-");
+    registry
+        .create(host, &slug, "", Some(operator.organization_id))
+        .await
+}
+
 /// Creates the control-plane tables. Hand-written for the same reason the
 /// tenant table is: the migrator builds a site's schema, and none of this
 /// belongs to a site.
@@ -78,6 +235,16 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
         "CREATE TABLE IF NOT EXISTS operator_sessions (
             id TEXT PRIMARY KEY,
             operator_id TEXT NOT NULL,
+            expires_at TEXT NOT NULL
+        )",
+        // Not a row in operator_sessions: a session is a browser being signed
+        // in, and these are handed to a program. Keeping them apart is what
+        // stops a list of tokens from showing somebody's own login, and stops
+        // revoking a token from signing a colleague out.
+        "CREATE TABLE IF NOT EXISTS operator_tokens (
+            id TEXT PRIMARY KEY,
+            operator_id TEXT NOT NULL,
+            created_at TEXT NOT NULL,
             expires_at TEXT NOT NULL
         )",
         "CREATE TABLE IF NOT EXISTS site_entries (

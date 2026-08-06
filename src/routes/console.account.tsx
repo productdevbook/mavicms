@@ -12,6 +12,7 @@ import {
   type ConsoleAccount,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { ConsoleTokens } from "@/components/console-tokens"
 import { applySurface } from "@/lib/surface"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -144,6 +145,10 @@ function ConsoleAccountRoute() {
               {t`Save`}
             </Button>
           </div>
+        </div>
+
+        <div className="mt-10 border-t border-border pt-8">
+          <ConsoleTokens />
         </div>
       </main>
     </div>

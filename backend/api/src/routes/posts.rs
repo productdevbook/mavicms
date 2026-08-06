@@ -57,6 +57,18 @@ fn scheduled_needs_a_time(status: &str, has_time: bool) -> AppResult<()> {
     Ok(())
 }
 
+/// The HTML a post is stored with.
+///
+/// The editor sends both forms and its own wins. Markdown on its own — from an
+/// importer, or from an assistant — used to be stored with an empty body,
+/// which read correctly in the editor and blank on the site.
+fn rendered(markdown: &Option<String>, html: String) -> String {
+    match markdown {
+        Some(markdown) if html.trim().is_empty() => crate::markdown::to_html(markdown),
+        _ => html,
+    }
+}
+
 async fn category_ids_for(db: &impl ConnectionTrait, post_id: Uuid) -> AppResult<Vec<Uuid>> {
     let rows = post_category::Entity::find()
         .filter(post_category::Column::PostId.eq(post_id))
@@ -183,8 +195,15 @@ pub async fn list_posts(
     Query(query): Query<LocaleQuery>,
     headers: axum::http::HeaderMap,
 ) -> AppResult<axum::response::Response> {
-    let db = state.db();
+    crate::etag::conditional(&headers, &page(state.db(), &query).await?)
+}
 
+/// A page of posts, as the listing computes it.
+///
+/// Separate from the handler because the same question is asked over MCP,
+/// and a second implementation of "which posts, in what order, with what
+/// counted" is how the two answers start disagreeing.
+pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppResult<PostPage> {
     // A whole archive in one response is a multi-megabyte payload that every
     // consumer has to hold in memory, so the page is bounded whether or not
     // one was asked for.
@@ -305,16 +324,13 @@ pub async fn list_posts(
         })
         .collect();
 
-    crate::etag::conditional(
-        &headers,
-        &PostPage {
-            items: responses,
-            total,
-            limit,
-            offset,
-            counts,
-        },
-    )
+    Ok(PostPage {
+        items: responses,
+        total,
+        limit,
+        offset,
+        counts,
+    })
 }
 
 /// Fetch a single post, including its sibling language versions.
@@ -360,6 +376,18 @@ pub async fn create_post(
     Site(state): Site,
     Json(payload): Json<CreatePostRequest>,
 ) -> AppResult<(StatusCode, Json<PostResponse>)> {
+    Ok((
+        StatusCode::CREATED,
+        Json(create(state.db(), payload).await?),
+    ))
+}
+
+/// Writing a post, as the endpoint does it. See [`page`] for why this is not
+/// inside the handler.
+pub async fn create(
+    db: &sea_orm::DatabaseConnection,
+    payload: CreatePostRequest,
+) -> AppResult<PostResponse> {
     if payload.title.trim().is_empty() {
         return Err(AppError::Validation("title must not be empty".to_string()));
     }
@@ -367,7 +395,6 @@ pub async fn create_post(
         return Err(AppError::Validation("slug must not be empty".to_string()));
     }
 
-    let db = state.db();
     let locale = resolve(db, payload.locale.as_deref()).await?;
 
     let mut translation_group_id = Uuid::now_v7();
@@ -429,7 +456,7 @@ pub async fn create_post(
         canonical: Set(payload.canonical),
         featured: Set(payload.featured),
         allow_comments: Set(payload.allow_comments),
-        content_html: Set(payload.content_html),
+        content_html: Set(rendered(&payload.content_markdown, payload.content_html)),
         content_markdown: Set(payload.content_markdown),
         locale: Set(locale.clone()),
         translation_group_id: Set(translation_group_id),
@@ -446,14 +473,11 @@ pub async fn create_post(
     let mut locales: Vec<String> = translations.iter().map(|t| t.locale.clone()).collect();
     locales.push(saved.locale.clone());
 
-    Ok((
-        StatusCode::CREATED,
-        Json(PostResponse::from_model(
-            saved,
-            category_ids,
-            locales,
-            translations,
-        )),
+    Ok(PostResponse::from_model(
+        saved,
+        category_ids,
+        locales,
+        translations,
     ))
 }
 
@@ -474,7 +498,15 @@ pub async fn update_post(
     Path(id): Path<Uuid>,
     Json(payload): Json<UpdatePostRequest>,
 ) -> AppResult<Json<PostResponse>> {
-    let db = state.db();
+    Ok(Json(update(state.db(), id, payload).await?))
+}
+
+/// Changing a post, as the endpoint does it. See [`page`].
+pub async fn update(
+    db: &sea_orm::DatabaseConnection,
+    id: Uuid,
+    payload: UpdatePostRequest,
+) -> AppResult<PostResponse> {
     let existing = post::Entity::find_by_id(id)
         .one(db)
         .await?
@@ -534,8 +566,12 @@ pub async fn update_post(
     if let Some(allow_comments) = payload.allow_comments {
         model.allow_comments = Set(allow_comments);
     }
-    if let Some(content_html) = payload.content_html {
-        model.content_html = Set(content_html);
+    // Markdown is the canonical form, so a change to it that arrives without
+    // the HTML renders one rather than leaving the old body on the page.
+    match (payload.content_html, &payload.content_markdown) {
+        (Some(html), _) => model.content_html = Set(html),
+        (None, Some(markdown)) => model.content_html = Set(crate::markdown::to_html(markdown)),
+        (None, None) => {}
     }
     if let Some(content_markdown) = payload.content_markdown {
         model.content_markdown = Set(Some(content_markdown));
@@ -563,12 +599,12 @@ pub async fn update_post(
     let mut locales: Vec<String> = translations.iter().map(|t| t.locale.clone()).collect();
     locales.push(saved.locale.clone());
 
-    Ok(Json(PostResponse::from_model(
+    Ok(PostResponse::from_model(
         saved,
         category_ids,
         locales,
         translations,
-    )))
+    ))
 }
 
 #[derive(Debug, Deserialize, utoipa::ToSchema)]

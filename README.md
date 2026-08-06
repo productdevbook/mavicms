@@ -17,6 +17,9 @@ database — Postgres, MySQL or SQLite — and your own object storage, or none.
   encrypted at rest.
 - **Editor** — Tiptap 3 with slash commands, tables, code blocks, find and
   replace, a table of contents, autosave and Markdown import/export.
+- **[Assistants](#assistants)** — every site, and every agency console, answers
+  the Model Context Protocol. Point an assistant at it and ask it to do the
+  work rather than tell it how.
 - **[Front ends](#connecting-a-front-end)** — every site publishes an
   `llms.txt` describing its own API, with a working Astro connection in it,
   and posts carry a digest so a build only rebuilds what changed.
@@ -162,6 +165,42 @@ A post given a status of **scheduled** and a date is published when that date
 arrives — the server checks every minute — and the site is asked to build, so
 a post written on Friday for Monday morning is on the site on Monday morning.
 A build does not have to do anything for this; it will be asked to run.
+
+## Assistants
+
+Every site answers the [Model Context Protocol](https://modelcontextprotocol.io)
+at `https://your-site/api/mcp`, and so does an agency console at the server's
+own address. Which of the two you get is decided by the address you reach and
+the token you send, the same way everything else here is.
+
+```bash
+claude mcp add --transport http mavicms https://your-site/api/mcp \
+  --header "Authorization: Bearer $CMS_TOKEN"
+```
+
+A site offers finding and reading posts, writing and correcting them, its
+categories, languages and uploaded files, what has come in through its forms,
+and building its pages. A console offers the questions an agency has about
+fifty sites at once: which built, which did not, what the failing one said,
+and adding a new site.
+
+Two rules make it safe to leave connected:
+
+- **The token decides the tools.** A build token can read a site and change
+  nothing, so it is offered only the tools that read — fewer tools rather than
+  tools that refuse, because a tool an assistant cannot use is one it should
+  not have been told about. An agency's token acts for the agency and is not a
+  way into any site's content.
+- **Nothing deletes.** An assistant that misreads an instruction and writes a
+  bad paragraph has done something a person can read and undo. One that
+  misreads it and removes an archive has not.
+
+Tokens are made in **API** on a site, and on **your account** in the console.
+Both are shown once and can be taken back.
+
+The protocol is spoken at revision `2026-07-28`, which is stateless — no
+handshake, no session. Clients that still open with `initialize` are answered
+in the revision they ask for.
 
 ## Migrating from WordPress
 

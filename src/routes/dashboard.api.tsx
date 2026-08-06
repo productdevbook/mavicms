@@ -7,6 +7,7 @@ import { toast } from "sonner"
 
 import { getLlmsText } from "@/lib/api"
 import { BuildTokens } from "@/components/build-tokens"
+import { McpConnection } from "@/components/mcp-connection"
 import { Button } from "@/components/ui/button"
 
 export const Route = createFileRoute("/dashboard/api")({
@@ -236,6 +237,12 @@ curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
         </section>
 
         <BuildTokens />
+
+        <McpConnection origin={window.location.origin} name="mavicms">
+          <p className="text-sm text-muted-foreground">
+            {t`It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads.`}
+          </p>
+        </McpConnection>
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">{t`Reading`}</h2>

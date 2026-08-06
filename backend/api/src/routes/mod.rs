@@ -75,11 +75,26 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::delete_site_development_token))
         .routes(routes!(console::run_site_backup))
         .routes(routes!(console::restore_site_backup))
+        .routes(routes!(console::list_tokens, console::create_token))
+        .routes(routes!(console::delete_token))
         .routes(routes!(console::enter));
 
     // The one address a site's own pages talk to without an account: the
     // visitor filling in a contact form has none. Kept to its own router so
     // the body limit applies to it and nothing else.
+    // Its own router: it does its own authentication, because a refusal has
+    // to be a JSON-RPC message rather than this application's error body, and
+    // because which tools a caller is offered depends on the credential.
+    let mcp = OpenApiRouter::new()
+        .route(
+            "/mcp",
+            axum::routing::post(crate::mcp::endpoint)
+                .get(crate::mcp::gone)
+                .delete(crate::mcp::gone),
+        )
+        .layer(DefaultBodyLimit::max(crate::mcp::MAX_MESSAGE_BYTES))
+        .layer(from_fn(require_database));
+
     let open = OpenApiRouter::new()
         .routes(routes!(llms::llms_txt))
         .routes(routes!(forms::form_schema))
@@ -236,6 +251,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     // Resolving the site is the outermost thing that happens: everything
     // below it, authentication included, is a question about one site.
     public
+        .merge(mcp)
         .merge(open)
         .merge(needs_db)
         .merge(protected)
