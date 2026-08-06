@@ -104,6 +104,12 @@ pub struct LocaleQuery {
     pub limit: Option<u64>,
     #[serde(default)]
     pub offset: Option<u64>,
+    /// Comma-separated extras to include; `content` adds the post body.
+    #[serde(default)]
+    pub include: Option<String>,
+    /// Free text to search for in the title, excerpt and body.
+    #[serde(default)]
+    pub q: Option<String>,
 }
 
 impl LocaleQuery {

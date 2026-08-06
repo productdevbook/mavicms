@@ -7,8 +7,11 @@ use axum::{
 };
 use chrono::Utc;
 use sea_orm::{
-    ActiveModelTrait, ActiveValue::Set, ColumnTrait, ConnectionTrait, EntityTrait, PaginatorTrait,
-    QueryFilter, QueryOrder, QuerySelect, TransactionTrait,
+    ActiveModelTrait,
+    ActiveValue::Set,
+    ColumnTrait, Condition, ConnectionTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
+    QuerySelect, TransactionTrait,
+    sea_query::{Expr, ExprTrait, Func, LikeExpr},
 };
 use serde::Deserialize;
 use uuid::Uuid;
@@ -152,6 +155,8 @@ async fn siblings_of(
         ("slug" = Option<String>, Query, description = "Exact address to look for"),
         ("limit" = Option<u64>, Query, description = "How many posts to return (default 50, max 200)"),
         ("offset" = Option<u64>, Query, description = "How many to skip"),
+        ("include" = Option<String>, Query, description = "Comma-separated extras; `content` adds content_html to each item"),
+        ("q" = Option<String>, Query, description = "Free text to search for in the title, excerpt and body"),
     ),
     responses((status = 200, description = "A page of posts", body = PostPage))
 )]
@@ -166,6 +171,10 @@ pub async fn list_posts(
     // one was asked for.
     let limit = query.limit.unwrap_or(DEFAULT_PAGE).clamp(1, MAX_PAGE);
     let offset = query.offset.unwrap_or(0);
+    let with_content = query
+        .include
+        .as_deref()
+        .is_some_and(|value| value.split(',').any(|part| part.trim() == "content"));
 
     let mut find = post::Entity::find().order_by_desc(post::Column::CreatedAt);
     if let Some(codes) = query.codes() {
@@ -178,6 +187,29 @@ pub async fn list_posts(
         .filter(|s| !s.is_empty())
     {
         find = find.filter(post::Column::Slug.eq(slug));
+    }
+    if let Some(term) = query.q.as_deref().map(str::trim).filter(|s| !s.is_empty()) {
+        // `%` and `_` are wildcards in LIKE; someone searching for "100%"
+        // means the character, not "anything".
+        let escaped = term
+            .replace('\\', "\\\\")
+            .replace('%', "\\%")
+            .replace('_', "\\_");
+        let pattern = format!("%{}%", escaped.to_lowercase());
+        // Lowercased on both sides so the match does not depend on how the
+        // author capitalised the word. Databases fold ASCII for free but not
+        // every alphabet, so an all-caps Turkish word can still be missed.
+        // The escape character has to be declared, or the backslashes above
+        // are matched literally and a search for "100%" finds nothing.
+        let matches = |column| {
+            Expr::expr(Func::lower(Expr::col(column))).like(LikeExpr::new(&pattern).escape('\\'))
+        };
+        find = find.filter(
+            Condition::any()
+                .add(matches(post::Column::Title))
+                .add(matches(post::Column::Excerpt))
+                .add(matches(post::Column::ContentHtml)),
+        );
     }
     let total = find.clone().count(db).await?;
 
@@ -194,7 +226,7 @@ pub async fn list_posts(
         .all(db)
         .await?
     {
-        counts.add(&status, n.max(0) as u64);
+        counts.add(&status, Ord::max(n, 0) as u64);
     }
     let posts = find.limit(limit).offset(offset).all(db).await?;
 
@@ -239,7 +271,7 @@ pub async fn list_posts(
                 .get(&post.translation_group_id)
                 .cloned()
                 .unwrap_or_default();
-            PostSummary::from_model(post, category_ids, locales)
+            PostSummary::from_model(post, category_ids, locales, with_content)
         })
         .collect();
 

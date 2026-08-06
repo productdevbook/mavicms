@@ -39,6 +39,11 @@ impl PostStatus {
 #[derive(Debug, Serialize, ToSchema)]
 pub struct PostSummary {
     pub id: Uuid,
+    /// Only present when the listing was asked for it with `include=content`.
+    /// A site generator building every page needs every body, and one request
+    /// carrying them beats nine hundred that each fetch one.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content_html: Option<String>,
     pub title: String,
     pub slug: String,
     pub excerpt: String,
@@ -59,9 +64,15 @@ pub struct PostSummary {
 }
 
 impl PostSummary {
-    pub fn from_model(model: PostModel, category_ids: Vec<Uuid>, locales: Vec<String>) -> Self {
+    pub fn from_model(
+        model: PostModel,
+        category_ids: Vec<Uuid>,
+        locales: Vec<String>,
+        with_content: bool,
+    ) -> Self {
         Self {
             id: model.id,
+            content_html: with_content.then_some(model.content_html),
             title: model.title,
             slug: model.slug,
             excerpt: model.excerpt,
