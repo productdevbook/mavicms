@@ -84,7 +84,7 @@ pub async fn resolve_for_locale(
     };
 
     let stub = category::ActiveModel {
-        id: Set(Uuid::new_v4()),
+        id: Set(Uuid::now_v7()),
         name: Set(category.name.clone()),
         slug: Set(slugify_or(&category.name, "category")),
         parent_id: Set(parent_id),
@@ -147,7 +147,7 @@ pub async fn create_category(
 
     let locale = resolve(db, payload.locale.as_deref()).await?;
 
-    let mut translation_group_id = Uuid::new_v4();
+    let mut translation_group_id = Uuid::now_v7();
     if let Some(sibling_id) = payload.translation_of {
         let sibling = category::Entity::find_by_id(sibling_id)
             .one(db)
@@ -191,7 +191,7 @@ pub async fn create_category(
     }
 
     let model = category::ActiveModel {
-        id: Set(Uuid::new_v4()),
+        id: Set(Uuid::now_v7()),
         name: Set(name.to_string()),
         slug: Set(slug),
         parent_id: Set(payload.parent_id),

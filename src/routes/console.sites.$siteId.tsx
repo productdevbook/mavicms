@@ -29,6 +29,7 @@ import {
   type SavePublish,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { applySurface } from "@/lib/surface"
 import { cn } from "@/lib/utils"
 import {
   BuildHistory,
@@ -91,6 +92,10 @@ function ConsoleSiteRoute() {
     null
   )
   const [backupEnabled, setBackupEnabled] = React.useState(false)
+
+  React.useEffect(() => {
+    applySurface({ kind: "console", name: site.host })
+  }, [site.host])
 
   const apply = React.useCallback((next: PublishStatus) => {
     setStatus(next)
@@ -255,7 +260,7 @@ function ConsoleSiteRoute() {
   }
 
   return (
-    <div className="min-h-svh bg-background">
+    <div className="surface-bar min-h-svh bg-background">
       <main className="mx-auto w-full max-w-3xl px-6 py-8">
         <Button
           variant="ghost"

@@ -190,7 +190,7 @@ impl Registry {
         }
 
         let tenant = Tenant {
-            id: Uuid::new_v4(),
+            id: Uuid::now_v7(),
             host,
             slug,
             schema,

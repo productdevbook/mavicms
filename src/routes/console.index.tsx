@@ -16,6 +16,7 @@ import {
   type ConsoleSite,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { applySurface } from "@/lib/surface"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -92,13 +93,17 @@ function ConsoleRoute() {
     await navigate({ to: "/console/login" })
   }
 
+  React.useEffect(() => {
+    applySurface({ kind: "console", name: account.organization_name })
+  }, [account.organization_name])
+
   const atLimit = (sites?.length ?? 0) >= account.site_limit
 
   return (
-    <div className="min-h-svh bg-background">
+    <div className="surface-bar min-h-svh bg-background">
       <header className="flex items-center gap-3 border-b border-border px-4 py-2">
-        <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-          M
+        <span className="surface-mark flex size-7 items-center justify-center rounded-lg text-sm font-bold text-white">
+          K
         </span>
         <span className="text-sm font-semibold">{account.organization_name}</span>
         <div className="flex-1" />

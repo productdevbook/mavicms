@@ -78,7 +78,7 @@ pub async fn save<T: serde::Serialize>(
         }
         None => {
             plugin_setting::ActiveModel {
-                id: Set(Uuid::new_v4()),
+                id: Set(Uuid::now_v7()),
                 plugin: Set(plugin.to_string()),
                 enabled: Set(enabled),
                 config: Set(encrypted),

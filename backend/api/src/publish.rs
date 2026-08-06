@@ -464,7 +464,7 @@ pub async fn request(db: &DatabaseConnection, tenant_id: Uuid) -> AppResult<Buil
     }
 
     let build = Build {
-        id: Uuid::new_v4().to_string(),
+        id: Uuid::now_v7().to_string(),
         status: QUEUED.to_string(),
         log: String::new(),
         requested_at: Utc::now().to_rfc3339(),

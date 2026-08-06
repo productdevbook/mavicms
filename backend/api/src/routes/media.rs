@@ -151,7 +151,7 @@ async fn store_image(
     })?;
 
     let now = Utc::now();
-    let id = Uuid::new_v4();
+    let id = Uuid::now_v7();
     let key = format!("{}/{}/{id}.{extension}", now.format("%Y"), now.format("%m"));
 
     let storage = active_storage(state).await?;

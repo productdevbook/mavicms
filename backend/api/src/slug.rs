@@ -21,7 +21,7 @@ pub fn slugify(input: &str) -> String {
 pub fn slugify_or(input: &str, prefix: &str) -> String {
     let slug = slugify(input);
     if slug.is_empty() {
-        format!("{prefix}-{}", &Uuid::new_v4().simple().to_string()[..8])
+        format!("{prefix}-{}", &Uuid::now_v7().simple().to_string()[..8])
     } else {
         slug
     }

@@ -542,7 +542,7 @@ async fn agency_user(db: &sea_orm::DatabaseConnection, operator: &Operator) -> A
         .await?
         .is_none();
 
-    let id = Uuid::new_v4();
+    let id = Uuid::now_v7();
     user::ActiveModel {
         id: Set(id),
         username: Set(username.clone()),

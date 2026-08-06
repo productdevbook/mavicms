@@ -142,7 +142,7 @@ pub async fn create_user(
     }
 
     let created = user::ActiveModel {
-        id: Set(Uuid::new_v4()),
+        id: Set(Uuid::now_v7()),
         username: Set(username),
         email: Set(email),
         password_hash: Set(password_hash),

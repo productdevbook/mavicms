@@ -28,7 +28,7 @@ pub async fn create_session(
     user_id: Uuid,
 ) -> Result<(), AppError> {
     let now = Utc::now().fixed_offset();
-    let id = Uuid::new_v4();
+    let id = Uuid::now_v7();
 
     let record = session::ActiveModel {
         id: Set(id),

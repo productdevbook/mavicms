@@ -345,7 +345,7 @@ pub async fn create_post(
     let db = state.db();
     let locale = resolve(db, payload.locale.as_deref()).await?;
 
-    let mut translation_group_id = Uuid::new_v4();
+    let mut translation_group_id = Uuid::now_v7();
     if let Some(sibling_id) = payload.translation_of {
         let sibling = post::Entity::find_by_id(sibling_id)
             .one(db)
@@ -384,7 +384,7 @@ pub async fn create_post(
 
     let txn = db.begin().await?;
     let now = Utc::now().fixed_offset();
-    let id = Uuid::new_v4();
+    let id = Uuid::now_v7();
 
     let model = post::ActiveModel {
         id: Set(id),
@@ -594,7 +594,7 @@ pub async fn set_translation_group(
             }
             target.translation_group_id
         }
-        (None, true) => Uuid::new_v4(),
+        (None, true) => Uuid::now_v7(),
         (None, false) => {
             return Err(AppError::Validation(
                 "provide either join or detach".to_string(),

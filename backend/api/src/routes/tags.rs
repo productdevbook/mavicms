@@ -58,7 +58,7 @@ pub async fn get_or_create_tag(
         return Ok((existing, false));
     }
 
-    let id = Uuid::new_v4();
+    let id = Uuid::now_v7();
     let model = tag::ActiveModel {
         id: Set(id),
         name: Set(name.to_string()),
@@ -206,7 +206,7 @@ pub async fn set_tag_translation_group(
             }
             target.translation_group_id
         }
-        (None, true) => Uuid::new_v4(),
+        (None, true) => Uuid::now_v7(),
         (None, false) => {
             return Err(AppError::Validation(
                 "provide either join or detach".to_string(),

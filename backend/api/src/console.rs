@@ -158,7 +158,7 @@ pub async fn register(
     }
 
     let organization = Organization {
-        id: Uuid::new_v4(),
+        id: Uuid::now_v7(),
         name: organization_name.to_string(),
         site_limit: DEFAULT_SITE_LIMIT,
         active: true,
@@ -180,7 +180,7 @@ pub async fn register(
     .await?;
 
     let operator = Operator {
-        id: Uuid::new_v4(),
+        id: Uuid::now_v7(),
         organization_id: organization.id,
         email,
         name: if name.is_empty() {
@@ -280,7 +280,7 @@ pub async fn authenticate(
 
 pub async fn create_session(db: &DatabaseConnection, operator_id: Uuid) -> AppResult<Uuid> {
     let backend = db.get_database_backend();
-    let id = Uuid::new_v4();
+    let id = Uuid::now_v7();
     db.execute_raw(Statement::from_sql_and_values(
         backend,
         format!(
@@ -382,7 +382,7 @@ pub async fn create_entry(
     operator_id: Uuid,
 ) -> AppResult<String> {
     let backend = db.get_database_backend();
-    let token = Uuid::new_v4().to_string();
+    let token = Uuid::now_v7().to_string();
     db.execute_raw(Statement::from_sql_and_values(
         backend,
         format!(

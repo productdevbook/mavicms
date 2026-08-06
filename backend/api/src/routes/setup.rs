@@ -172,7 +172,7 @@ pub async fn run_setup(
 
     let password_hash = hash_password(&payload.admin_password)?;
     let now = Utc::now().fixed_offset();
-    let admin_id = Uuid::new_v4();
+    let admin_id = Uuid::now_v7();
     let txn = db.begin().await?;
 
     let admin = user::ActiveModel {
@@ -186,7 +186,7 @@ pub async fn run_setup(
     admin.insert(&txn).await?;
 
     let settings = site_settings::ActiveModel {
-        id: Set(Uuid::new_v4()),
+        id: Set(Uuid::now_v7()),
         site_title: Set(payload.site_title.clone()),
         tagline: Set(payload.tagline.clone()),
         locale: Set(payload.locale.clone()),
@@ -293,7 +293,7 @@ mod tests {
 
     #[tokio::test]
     async fn database_url_is_only_readable_by_its_owner() {
-        let dir = std::env::temp_dir().join(format!("mavicms-{}", uuid::Uuid::new_v4()));
+        let dir = std::env::temp_dir().join(format!("mavicms-{}", uuid::Uuid::now_v7()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join("database_url");
 

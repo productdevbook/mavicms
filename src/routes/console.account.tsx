@@ -12,6 +12,7 @@ import {
   type ConsoleAccount,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { applySurface } from "@/lib/surface"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
@@ -38,6 +39,10 @@ function ConsoleAccountRoute() {
   const [next, setNext] = React.useState("")
   const [saving, setSaving] = React.useState(false)
 
+  React.useEffect(() => {
+    applySurface({ kind: "console", name: account.organization_name })
+  }, [account.organization_name])
+
   const save = async () => {
     setSaving(true)
     try {
@@ -61,7 +66,7 @@ function ConsoleAccountRoute() {
   }
 
   return (
-    <div className="min-h-svh bg-background">
+    <div className="surface-bar min-h-svh bg-background">
       <main className="mx-auto w-full max-w-2xl px-6 py-8">
         <Button
           variant="ghost"

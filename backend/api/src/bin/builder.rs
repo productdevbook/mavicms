@@ -364,7 +364,7 @@ impl Builder {
         };
 
         let user = reader_account(&db).await?;
-        let token = Uuid::new_v4();
+        let token = Uuid::now_v7();
 
         db.execute_raw(Statement::from_sql_and_values(
             db.get_database_backend(),
@@ -638,11 +638,13 @@ async fn reader_account(db: &sea_orm::DatabaseConnection) -> AppResult<Uuid> {
         .await?;
 
     if let Some(row) = existing {
-        return Uuid::parse_str(&row.try_get::<String>("", "id")?)
-            .map_err(|err| AppError::Internal(format!("bad user id: {err}")));
+        // A uuid, not a string of one: this is a site's own table, built by the
+        // migrator, and its ids are the database's own type — unlike the
+        // control plane's, which are text.
+        return Ok(row.try_get::<Uuid>("", "id")?);
     }
 
-    let id = Uuid::new_v4();
+    let id = Uuid::now_v7();
     db.execute_raw(Statement::from_sql_and_values(
         db.get_database_backend(),
         "INSERT INTO users (id, username, email, password_hash, role, created_at) \

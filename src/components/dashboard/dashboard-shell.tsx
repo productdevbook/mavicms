@@ -17,6 +17,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { logout } from "@/lib/api"
+import { applySurface, surfaceLabel } from "@/lib/surface"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -25,7 +26,15 @@ import { LocaleToggle } from "@/components/locale-toggle"
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { t } = useLingui()
   const navigate = useNavigate()
-  const { user } = useRouteContext({ from: "/dashboard" })
+  const { user, site } = useRouteContext({ from: "/dashboard" })
+
+  // The server's own installation and a hosted site are the same panel; which
+  // one this is decides the colour, the icon and what the tab is called.
+  const kind = user.operator ? "server" : "site"
+  const name = site ?? undefined
+  React.useEffect(() => {
+    applySurface({ kind, name })
+  }, [kind, name])
 
   const links = [
     { to: "/dashboard", label: t`Posts`, icon: LayoutDashboard },
@@ -47,13 +56,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   ] as const
 
   return (
-    <div className="flex min-h-svh flex-col bg-background">
+    <div className="surface-bar flex min-h-svh flex-col bg-background">
       <header className="flex items-center gap-3 border-b border-border px-4 py-2">
         <div className="flex items-center gap-2">
-          <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-            M
+          <span className="surface-mark flex size-7 items-center justify-center rounded-lg text-sm font-bold text-white">
+            {kind === "server" ? "S" : "M"}
           </span>
-          <span className="text-sm font-semibold">Mavi CMS</span>
+          <span className="text-sm font-semibold">{name ?? "Mavi CMS"}</span>
+          <span className="rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+            {surfaceLabel(kind)}
+          </span>
         </div>
 
         <Separator orientation="vertical" className="h-5" />
