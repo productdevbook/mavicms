@@ -9,6 +9,7 @@ import {
   ApiError,
   deletePost,
   getPosts,
+  type PostPage,
   type PostStatus,
   type PostSummary,
 } from "@/lib/api"
@@ -43,7 +44,9 @@ function DashboardIndexRoute() {
   const { t } = useLingui()
   const navigate = useNavigate()
   const STATUS_LABELS = useStatusLabels()
-  const [posts, setPosts] = React.useState<PostSummary[] | null>(null)
+  const [page, setPage] = React.useState<PostPage | null>(null)
+  const [offset, setOffset] = React.useState(0)
+  const posts = page?.items ?? null
   const [pendingDelete, setPendingDelete] = React.useState<PostSummary | null>(
     null
   )
@@ -57,13 +60,15 @@ function DashboardIndexRoute() {
 
   const load = React.useCallback(() => {
     if (!locale) return
-    getPosts(locale)
-      .then((page) => setPosts(page.items))
-      .catch(() => setPosts([]))
-  }, [locale])
+    getPosts(locale, { offset })
+      .then(setPage)
+      .catch(() => setPage(null))
+  }, [locale, offset])
 
   React.useEffect(() => load(), [load])
 
+  // Straight from the server: counting the rows on screen would report the
+  // size of the page rather than the archive.
   const counts = React.useMemo(() => {
     const base: Record<PostStatus, number> = {
       draft: 0,
@@ -71,17 +76,16 @@ function DashboardIndexRoute() {
       scheduled: 0,
       published: 0,
     }
-    for (const post of posts ?? []) base[post.status] += 1
-    return base
-  }, [posts])
+    return page?.counts ?? base
+  }, [page])
 
   const confirmDelete = async () => {
     if (!pendingDelete) return
     try {
       await deletePost(pendingDelete.id)
-      setPosts(
-        (current) => current?.filter((p) => p.id !== pendingDelete.id) ?? null
-      )
+      // Reloaded rather than filtered out: the counts and the page below it
+      // both move when a post goes.
+      load()
       toast.success(t`Post deleted`)
     } catch (error) {
       toast.error(
@@ -99,7 +103,10 @@ function DashboardIndexRoute() {
           <span className="text-sm text-muted-foreground">{t`Language`}</span>
           <Select
             value={locale}
-            onValueChange={(value) => setSelectedLocale(value ?? "")}
+            onValueChange={(value) => {
+              setSelectedLocale(value ?? "")
+              setOffset(0)
+            }}
           >
             <SelectTrigger className="w-52">
               <SelectValue>{(code: string) => label(code)}</SelectValue>
@@ -202,6 +209,32 @@ function DashboardIndexRoute() {
               </Button>
             </div>
           ))}
+        </div>
+      )}
+
+      {page && page.total > page.limit && (
+        <div className="mt-4 flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">
+            {t`${page.offset + 1}–${Math.min(page.offset + page.limit, page.total)} of ${page.total}`}
+          </span>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page.offset === 0}
+              onClick={() => setOffset(Math.max(0, page.offset - page.limit))}
+            >
+              {t`Previous`}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page.offset + page.limit >= page.total}
+              onClick={() => setOffset(page.offset + page.limit)}
+            >
+              {t`Next`}
+            </Button>
+          </div>
         </div>
       )}
 

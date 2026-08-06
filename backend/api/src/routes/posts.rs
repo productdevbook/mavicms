@@ -29,7 +29,7 @@ use crate::{
     dto::{
         post::{
             CreatePostRequest, PostPage, PostResponse, PostStatus, PostSummary, PostTranslation,
-            UpdatePostRequest,
+            StatusCounts, UpdatePostRequest,
         },
         taxonomy::LocaleQuery,
     },
@@ -180,6 +180,22 @@ pub async fn list_posts(
         find = find.filter(post::Column::Slug.eq(slug));
     }
     let total = find.clone().count(db).await?;
+
+    // Counted in the database rather than from the page: a dashboard tallying
+    // the rows it received would report the size of the page, not the archive.
+    let mut counts = StatusCounts::default();
+    for (status, n) in find
+        .clone()
+        .select_only()
+        .column(post::Column::Status)
+        .column_as(post::Column::Id.count(), "n")
+        .group_by(post::Column::Status)
+        .into_tuple::<(String, i64)>()
+        .all(db)
+        .await?
+    {
+        counts.add(&status, n.max(0) as u64);
+    }
     let posts = find.limit(limit).offset(offset).all(db).await?;
 
     // Two grouped queries rather than two per post: this used to issue one
@@ -232,6 +248,7 @@ pub async fn list_posts(
         total,
         limit,
         offset,
+        counts,
     }))
 }
 

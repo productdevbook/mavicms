@@ -90,6 +90,28 @@ pub struct PostPage {
     pub total: u64,
     pub limit: u64,
     pub offset: u64,
+    /// How many posts are in each status, across every page. A dashboard
+    /// counting the rows it was handed would report the size of the page.
+    pub counts: StatusCounts,
+}
+
+#[derive(Debug, Default, Serialize, ToSchema)]
+pub struct StatusCounts {
+    pub draft: u64,
+    pub review: u64,
+    pub scheduled: u64,
+    pub published: u64,
+}
+
+impl StatusCounts {
+    pub fn add(&mut self, status: &str, n: u64) {
+        match PostStatus::from_str_lenient(status) {
+            PostStatus::Draft => self.draft += n,
+            PostStatus::Review => self.review += n,
+            PostStatus::Scheduled => self.scheduled += n,
+            PostStatus::Published => self.published += n,
+        }
+    }
 }
 
 #[derive(Debug, Serialize, ToSchema)]

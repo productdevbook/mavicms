@@ -17,7 +17,7 @@ msgstr ""
 #. placeholder {0}: pendingDelete?.name
 #. placeholder {0}: pendingDelete?.title
 #: src/routes/dashboard.categories.tsx:337
-#: src/routes/dashboard.index.tsx:192
+#: src/routes/dashboard.index.tsx:249
 #: src/routes/dashboard.media.tsx:140
 msgid "\"{0}\" will be permanently deleted. This cannot be undone."
 msgstr "\"{0}\" will be permanently deleted. This cannot be undone."
@@ -72,6 +72,13 @@ msgstr "{0} is ready. You're signed in as <0>{1}</0>."
 msgid "{0} rows × {1} columns"
 msgstr "{0} rows × {1} columns"
 
+#. placeholder {0}: page.offset + 1
+#. placeholder {1}: Math.min(page.offset + page.limit, page.total)
+#. placeholder {2}: page.total
+#: src/routes/dashboard.index.tsx:218
+msgid "{0}–{1} of {2}"
+msgstr "{0}–{1} of {2}"
+
 #: src/components/editor/status-bar.tsx:63
 msgid "{minutes, plural, one {# min read} other {# min read}}"
 msgstr "{minutes, plural, one {# min read} other {# min read}}"
@@ -121,7 +128,7 @@ msgstr "Add a horizontal rule"
 msgid "Add a hyperlink to the selected text."
 msgstr "Add a hyperlink to the selected text."
 
-#: src/components/editor/post-settings.tsx:223
+#: src/components/editor/post-settings.tsx:228
 msgid "Add a tag and press Enter"
 msgstr "Add a tag and press Enter"
 
@@ -129,7 +136,7 @@ msgstr "Add a tag and press Enter"
 msgid "Add an image from a link"
 msgstr "Add an image from a link"
 
-#: src/components/editor/post-settings.tsx:209
+#: src/components/editor/post-settings.tsx:214
 #: src/routes/dashboard.categories.tsx:210
 msgid "Add category"
 msgstr "Add category"
@@ -227,7 +234,7 @@ msgstr "Apply"
 msgid "Back"
 msgstr "Back"
 
-#: src/components/editor/mavi-editor.tsx:493
+#: src/components/editor/mavi-editor.tsx:520
 msgid "Back to editing"
 msgstr "Back to editing"
 
@@ -280,14 +287,14 @@ msgstr "Bullet list"
 #: src/components/editor/dialogs.tsx:324
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
-#: src/routes/dashboard.index.tsx:196
+#: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
 #: src/routes/dashboard.tags.tsx:301
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/editor/post-settings.tsx:386
+#: src/components/editor/post-settings.tsx:391
 msgid "Canonical URL"
 msgstr "Canonical URL"
 
@@ -300,7 +307,7 @@ msgstr "Case sensitive"
 msgid "Categories"
 msgstr "Categories"
 
-#: src/components/editor/post-settings.tsx:173
+#: src/components/editor/post-settings.tsx:178
 msgid "Category"
 msgstr "Category"
 
@@ -349,7 +356,7 @@ msgstr "Column"
 msgid "Command menu"
 msgstr "Command menu"
 
-#: src/components/editor/post-settings.tsx:347
+#: src/components/editor/post-settings.tsx:352
 msgid "Comments"
 msgstr "Comments"
 
@@ -416,7 +423,7 @@ msgstr "Could not add language"
 msgid "Could not add tag"
 msgstr "Could not add tag"
 
-#: src/components/editor/post-settings.tsx:90
+#: src/components/editor/post-settings.tsx:91
 #: src/routes/dashboard.categories.tsx:96
 msgid "Could not create category"
 msgstr "Could not create category"
@@ -429,7 +436,7 @@ msgstr "Could not delete category"
 msgid "Could not delete media"
 msgstr "Could not delete media"
 
-#: src/routes/dashboard.index.tsx:77
+#: src/routes/dashboard.index.tsx:92
 msgid "Could not delete post"
 msgstr "Could not delete post"
 
@@ -441,7 +448,7 @@ msgstr "Could not delete tag"
 msgid "Could not link tags"
 msgstr "Could not link tags"
 
-#: src/components/editor/mavi-editor.tsx:239
+#: src/components/editor/mavi-editor.tsx:242
 msgid "Could not load post"
 msgstr "Could not load post"
 
@@ -455,7 +462,7 @@ msgstr "Could not reach the server. Please try again."
 msgid "Could not remove language"
 msgstr "Could not remove language"
 
-#: src/components/editor/mavi-editor.tsx:285
+#: src/components/editor/mavi-editor.tsx:288
 msgid "Could not save post"
 msgstr "Could not save post"
 
@@ -463,7 +470,7 @@ msgstr "Could not save post"
 msgid "Could not save settings"
 msgstr "Could not save settings"
 
-#: src/components/editor/post-settings.tsx:109
+#: src/components/editor/post-settings.tsx:110
 msgid "Could not save tag"
 msgstr "Could not save tag"
 
@@ -487,19 +494,19 @@ msgstr "Could not update language"
 msgid "Could not upload {0}"
 msgstr "Could not upload {0}"
 
-#: src/components/editor/post-settings.tsx:318
+#: src/components/editor/post-settings.tsx:323
 msgid "Could not upload cover image"
 msgstr "Could not upload cover image"
 
-#: src/components/editor/post-settings.tsx:285
+#: src/components/editor/post-settings.tsx:290
 msgid "Cover image"
 msgstr "Cover image"
 
-#: src/components/editor/post-settings.tsx:328
+#: src/components/editor/post-settings.tsx:333
 msgid "Cover preview"
 msgstr "Cover preview"
 
-#: src/components/editor/mavi-editor.tsx:466
+#: src/components/editor/mavi-editor.tsx:493
 msgid "Create"
 msgstr "Create"
 
@@ -527,7 +534,7 @@ msgstr "Custom"
 msgid "Dark"
 msgstr "Dark"
 
-#: src/components/editor/mavi-editor.tsx:409
+#: src/components/editor/mavi-editor.tsx:436
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -557,8 +564,8 @@ msgstr "Default"
 #: src/components/editor/bubble-menus.tsx:395
 #: src/routes/dashboard.categories.tsx:317
 #: src/routes/dashboard.categories.tsx:343
-#: src/routes/dashboard.index.tsx:174
-#: src/routes/dashboard.index.tsx:198
+#: src/routes/dashboard.index.tsx:205
+#: src/routes/dashboard.index.tsx:255
 #: src/routes/dashboard.languages.tsx:171
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
@@ -587,7 +594,7 @@ msgstr "Delete this category?"
 msgid "Delete this media?"
 msgstr "Delete this media?"
 
-#: src/routes/dashboard.index.tsx:190
+#: src/routes/dashboard.index.tsx:247
 msgid "Delete this post?"
 msgstr "Delete this post?"
 
@@ -595,7 +602,7 @@ msgstr "Delete this post?"
 msgid "Delete this tag?"
 msgstr "Delete this tag?"
 
-#: src/components/editor/post-settings.tsx:403
+#: src/components/editor/post-settings.tsx:408
 msgid "Description text shown in search results."
 msgstr "Description text shown in search results."
 
@@ -624,7 +631,7 @@ msgstr "Download"
 msgid "Draft"
 msgstr "Draft"
 
-#: src/components/editor/mavi-editor.tsx:281
+#: src/components/editor/mavi-editor.tsx:284
 msgid "Draft saved"
 msgstr "Draft saved"
 
@@ -637,9 +644,9 @@ msgid "Each language has its own tags. Link them so a post's tag can point at it
 msgstr "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
 
 #: src/components/editor/bubble-menus.tsx:323
-#: src/components/editor/mavi-editor.tsx:466
+#: src/components/editor/mavi-editor.tsx:493
 #: src/routes/dashboard.categories.tsx:309
-#: src/routes/dashboard.index.tsx:164
+#: src/routes/dashboard.index.tsx:192
 msgid "Edit"
 msgstr "Edit"
 
@@ -683,11 +690,11 @@ msgstr "Enter a valid email address"
 msgid "Enter details"
 msgstr "Enter details"
 
-#: src/components/editor/post-settings.tsx:260
+#: src/components/editor/post-settings.tsx:265
 msgid "Excerpt"
 msgstr "Excerpt"
 
-#: src/components/editor/post-settings.tsx:340
+#: src/components/editor/post-settings.tsx:345
 msgid "Featured"
 msgstr "Featured"
 
@@ -702,7 +709,7 @@ msgid "Find…"
 msgstr "Find…"
 
 #: src/components/editor/dialogs.tsx:543
-#: src/components/editor/mavi-editor.tsx:485
+#: src/components/editor/mavi-editor.tsx:512
 msgid "Focus mode"
 msgstr "Focus mode"
 
@@ -729,15 +736,15 @@ msgid "Full width"
 msgstr "Full width"
 
 #: src/components/editor/dialogs.tsx:544
-#: src/components/editor/mavi-editor.tsx:500
+#: src/components/editor/mavi-editor.tsx:527
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
-#: src/components/editor/post-settings.tsx:281
+#: src/components/editor/post-settings.tsx:286
 msgid "Generate from post"
 msgstr "Generate from post"
 
-#: src/components/editor/post-settings.tsx:165
+#: src/components/editor/post-settings.tsx:166
 msgid "Generate from title"
 msgstr "Generate from title"
 
@@ -745,7 +752,7 @@ msgstr "Generate from title"
 msgid "Generate password"
 msgstr "Generate password"
 
-#: src/components/editor/mavi-editor.tsx:255
+#: src/components/editor/mavi-editor.tsx:258
 msgid "Give your post a title first"
 msgstr "Give your post a title first"
 
@@ -820,7 +827,7 @@ msgstr "Highlight color"
 msgid "Highlight text with color"
 msgstr "Highlight text with color"
 
-#: src/components/editor/post-settings.tsx:341
+#: src/components/editor/post-settings.tsx:346
 msgid "Highlighted on the home page"
 msgstr "Highlighted on the home page"
 
@@ -845,7 +852,7 @@ msgid "Import"
 msgstr "Import"
 
 #: src/components/editor/dialogs.tsx:434
-#: src/components/editor/mavi-editor.tsx:508
+#: src/components/editor/mavi-editor.tsx:535
 msgid "Import / export"
 msgstr "Import / export"
 
@@ -911,7 +918,7 @@ msgid "Keyboard shortcuts"
 msgstr "Keyboard shortcuts"
 
 #: src/components/locale-toggle.tsx:23
-#: src/routes/dashboard.index.tsx:87
+#: src/routes/dashboard.index.tsx:103
 msgid "Language"
 msgstr "Language"
 
@@ -1019,13 +1026,13 @@ msgstr "Name (optional)"
 msgid "needs translation"
 msgstr "needs translation"
 
-#: src/components/editor/post-settings.tsx:196
+#: src/components/editor/post-settings.tsx:201
 #: src/routes/dashboard.categories.tsx:187
 msgid "New category"
 msgstr "New category"
 
 #: src/components/dashboard/dashboard-shell.tsx:69
-#: src/routes/dashboard.index.tsx:126
+#: src/routes/dashboard.index.tsx:153
 msgid "New post"
 msgstr "New post"
 
@@ -1034,6 +1041,7 @@ msgid "New tag"
 msgstr "New tag"
 
 #: src/components/editor/find-replace.tsx:112
+#: src/routes/dashboard.index.tsx:235
 msgid "Next"
 msgstr "Next"
 
@@ -1060,7 +1068,7 @@ msgstr "No parent (top level)"
 msgid "No people found"
 msgstr "No people found"
 
-#: src/routes/dashboard.index.tsx:120
+#: src/routes/dashboard.index.tsx:144
 msgid "No posts yet"
 msgstr "No posts yet"
 
@@ -1122,7 +1130,7 @@ msgstr "Paste the video link."
 msgid "Path prefix"
 msgstr "Path prefix"
 
-#: src/components/editor/post-settings.tsx:151
+#: src/components/editor/post-settings.tsx:152
 msgid "Permalink"
 msgstr "Permalink"
 
@@ -1152,29 +1160,29 @@ msgstr "Plugins"
 msgid "Port"
 msgstr "Port"
 
-#: src/components/editor/post-settings.tsx:397
+#: src/components/editor/post-settings.tsx:402
 msgid "post"
 msgstr "post"
 
-#: src/routes/dashboard.index.tsx:75
+#: src/routes/dashboard.index.tsx:89
 msgid "Post deleted"
 msgstr "Post deleted"
 
-#: src/components/editor/mavi-editor.tsx:552
+#: src/components/editor/mavi-editor.tsx:579
 msgid "Post published"
 msgstr "Post published"
 
-#: src/components/editor/mavi-editor.tsx:623
+#: src/components/editor/mavi-editor.tsx:647
 msgid "Post settings"
 msgstr "Post settings"
 
-#: src/components/editor/mavi-editor.tsx:608
-#: src/components/editor/post-settings.tsx:400
+#: src/components/editor/mavi-editor.tsx:632
+#: src/components/editor/post-settings.tsx:405
 msgid "Post title"
 msgstr "Post title"
 
-#: src/components/editor/post-settings.tsx:153
-#: src/components/editor/post-settings.tsx:160
+#: src/components/editor/post-settings.tsx:154
+#: src/components/editor/post-settings.tsx:161
 msgid "post-url"
 msgstr "post-url"
 
@@ -1182,11 +1190,12 @@ msgstr "post-url"
 msgid "Posts"
 msgstr "Posts"
 
-#: src/components/editor/mavi-editor.tsx:493
+#: src/components/editor/mavi-editor.tsx:520
 msgid "Preview"
 msgstr "Preview"
 
 #: src/components/editor/find-replace.tsx:104
+#: src/routes/dashboard.index.tsx:227
 msgid "Previous"
 msgstr "Previous"
 
@@ -1198,11 +1207,11 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
-#: src/components/editor/mavi-editor.tsx:557
+#: src/components/editor/mavi-editor.tsx:584
 msgid "Publish"
 msgstr "Publish"
 
-#: src/components/editor/post-settings.tsx:141
+#: src/components/editor/post-settings.tsx:142
 msgid "Publish date"
 msgstr "Publish date"
 
@@ -1221,7 +1230,7 @@ msgstr "Quote"
 msgid "Raise text above the line"
 msgstr "Raise text above the line"
 
-#: src/components/editor/post-settings.tsx:348
+#: src/components/editor/post-settings.tsx:353
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
 
@@ -1244,7 +1253,7 @@ msgstr "Regular expression"
 msgid "Remove"
 msgstr "Remove"
 
-#: src/components/editor/post-settings.tsx:245
+#: src/components/editor/post-settings.tsx:250
 msgid "Remove {tag} tag"
 msgstr "Remove {tag} tag"
 
@@ -1289,7 +1298,7 @@ msgstr "Row"
 msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
-#: src/components/editor/mavi-editor.tsx:546
+#: src/components/editor/mavi-editor.tsx:573
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.plugins_.s3.tsx:238
 msgid "Save"
@@ -1312,7 +1321,7 @@ msgstr "Saving…"
 msgid "Scheduled"
 msgstr "Scheduled"
 
-#: src/components/editor/post-settings.tsx:356
+#: src/components/editor/post-settings.tsx:361
 msgid "Search engine"
 msgstr "Search engine"
 
@@ -1328,7 +1337,7 @@ msgstr "section"
 msgid "Section title"
 msgstr "Section title"
 
-#: src/components/editor/post-settings.tsx:127
+#: src/components/editor/post-settings.tsx:128
 msgid "Select"
 msgstr "Select"
 
@@ -1340,15 +1349,15 @@ msgstr "Select all"
 msgid "Select your language"
 msgstr "Select your language"
 
-#: src/components/editor/post-settings.tsx:371
+#: src/components/editor/post-settings.tsx:376
 msgid "SEO description"
 msgstr "SEO description"
 
-#: src/components/editor/post-settings.tsx:359
+#: src/components/editor/post-settings.tsx:364
 msgid "SEO title"
 msgstr "SEO title"
 
-#: src/components/editor/mavi-editor.tsx:521
+#: src/components/editor/mavi-editor.tsx:548
 msgid "Settings panel"
 msgstr "Settings panel"
 
@@ -1364,12 +1373,12 @@ msgstr "Setup failed"
 msgid "Short description of the image"
 msgstr "Short description of the image"
 
-#: src/components/editor/post-settings.tsx:269
+#: src/components/editor/post-settings.tsx:274
 msgid "Short description shown on listing pages"
 msgstr "Short description shown on listing pages"
 
 #: src/components/editor/dialogs.tsx:545
-#: src/components/editor/mavi-editor.tsx:514
+#: src/components/editor/mavi-editor.tsx:541
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
@@ -1387,7 +1396,7 @@ msgid "Sign in to manage your site."
 msgstr "Sign in to manage your site."
 
 #: src/components/dashboard/dashboard-shell.tsx:76
-#: src/components/editor/mavi-editor.tsx:530
+#: src/components/editor/mavi-editor.tsx:557
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -1407,7 +1416,7 @@ msgstr "Split cell"
 msgid "Start writing, or type “/” for commands…"
 msgstr "Start writing, or type “/” for commands…"
 
-#: src/components/editor/post-settings.tsx:119
+#: src/components/editor/post-settings.tsx:120
 msgid "Status"
 msgstr "Status"
 
@@ -1459,8 +1468,8 @@ msgstr "System"
 msgid "Table"
 msgstr "Table"
 
-#: src/components/editor/mavi-editor.tsx:478
-#: src/components/editor/mavi-editor.tsx:573
+#: src/components/editor/mavi-editor.tsx:505
+#: src/components/editor/mavi-editor.tsx:600
 msgid "Table of contents"
 msgstr "Table of contents"
 
@@ -1469,7 +1478,7 @@ msgid "Tagline"
 msgstr "Tagline"
 
 #: src/components/dashboard/dashboard-shell.tsx:29
-#: src/components/editor/post-settings.tsx:217
+#: src/components/editor/post-settings.tsx:222
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
 msgstr "Tags"
@@ -1510,7 +1519,7 @@ msgstr "Text"
 msgid "Text color"
 msgstr "Text color"
 
-#: src/components/editor/post-settings.tsx:379
+#: src/components/editor/post-settings.tsx:384
 msgid "Text shown in search results"
 msgstr "Text shown in search results"
 
@@ -1530,7 +1539,7 @@ msgstr "The server is taking longer than expected to restart. Reload this page i
 msgid "Theme"
 msgstr "Theme"
 
-#: src/components/editor/mavi-editor.tsx:227
+#: src/components/editor/mavi-editor.tsx:229
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "This post could not be opened, so it has been left untouched."
 
@@ -1538,7 +1547,7 @@ msgstr "This post could not be opened, so it has been left untouched."
 msgid "Today's date"
 msgstr "Today's date"
 
-#: src/components/editor/mavi-editor.tsx:436
+#: src/components/editor/mavi-editor.tsx:463
 msgid "Translations"
 msgstr "Translations"
 
@@ -1550,7 +1559,7 @@ msgstr "Try again"
 msgid "Turn into"
 msgstr "Turn into"
 
-#: src/routes/dashboard.index.tsx:145
+#: src/routes/dashboard.index.tsx:169
 msgid "Uncategorized"
 msgstr "Uncategorized"
 
@@ -1577,9 +1586,9 @@ msgstr "Unsaved changes"
 msgid "Untitled"
 msgstr "Untitled"
 
-#: src/components/editor/mavi-editor.tsx:418
-#: src/components/editor/mavi-editor.tsx:606
-#: src/routes/dashboard.index.tsx:142
+#: src/components/editor/mavi-editor.tsx:445
+#: src/components/editor/mavi-editor.tsx:630
+#: src/routes/dashboard.index.tsx:166
 msgid "Untitled post"
 msgstr "Untitled post"
 
@@ -1587,7 +1596,7 @@ msgstr "Untitled post"
 msgid "Upload"
 msgstr "Upload"
 
-#: src/components/editor/post-settings.tsx:297
+#: src/components/editor/post-settings.tsx:302
 msgid "Upload cover image"
 msgstr "Upload cover image"
 

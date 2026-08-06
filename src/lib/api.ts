@@ -292,6 +292,8 @@ export interface PostPage {
   total: number
   limit: number
   offset: number
+  /** Counts across every page, not just this one. */
+  counts: Record<PostStatus, number>
 }
 
 export function getPosts(
