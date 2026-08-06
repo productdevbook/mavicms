@@ -68,7 +68,7 @@ function SitesRoute() {
         <div>
           <h1 className="text-lg font-semibold">{t`Sites`}</h1>
           <p className="text-sm text-muted-foreground">
-            {t`Other sites this server hosts. Each keeps its own content, accounts and uploads.`}
+            {t`Other sites this server hosts. Each gets its own database schema, accounts and uploads.`}
           </p>
         </div>
         <Button onClick={() => setAdding(true)}>
@@ -97,7 +97,7 @@ function SitesRoute() {
                 <p className="truncate text-xs text-muted-foreground">
                   {site.database_url
                     ? t`Its own database server`
-                    : t`A database file of its own`}
+                    : t`Schema ${site.schema}`}
                 </p>
               </div>
               {!site.active && (
@@ -137,10 +137,10 @@ function SitesRoute() {
                 id="database"
                 value={databaseUrl}
                 onChange={(event) => setDatabaseUrl(event.target.value)}
-                placeholder={t`Leave empty for a file of its own`}
+                placeholder={t`Leave empty to use this server's database`}
               />
               <p className="text-sm text-muted-foreground">
-                {t`A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead.`}
+                {t`The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here.`}
               </p>
             </div>
           </div>

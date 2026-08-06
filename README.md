@@ -17,6 +17,8 @@ database — Postgres, MySQL or SQLite — and your own object storage, or none.
   replace, a table of contents, autosave and Markdown import/export.
 - **Moving from WordPress** — a [plugin](#migrating-from-wordpress) that sends
   your posts, taxonomies and images across, keeping dates and permalinks.
+- **[Many sites on one server](#many-sites-on-one-server)** — each on its own
+  address, in its own Postgres schema, from a single instance.
 
 ## Quick start
 
@@ -78,18 +80,21 @@ curl -X POST https://your-server/api/sites -b cookies.txt \
 Point the address at the server and open it — the new site runs the setup
 wizard like any fresh install.
 
-Every site gets its **own database**, its own uploads folder and its own
-encryption key, rather than sharing tables keyed by a site id. Nothing has to
-remember to filter by tenant, a site can be backed up or moved by copying one
-directory, and one site's data cannot leak into another's. A site with no
-`database_url` uses a SQLite file of its own; a busy one can be handed a
-Postgres or MySQL URL instead, with nothing else changing.
+Hosting more than one site needs Postgres. Every site gets a **schema of its
+own** — its tables, its accounts, its own migration history — rather than
+sharing tables keyed by a site id. Nothing has to remember to filter by tenant,
+and a site's connection cannot see another site's tables: the search path holds
+only its own schema, so a missing table is an error rather than a quiet read of
+someone else's. Uploads and the encryption key sit beside it in
+`MAVICMS_DATA_DIR/sites/<name>/`. A site that outgrows the shared server can be
+given a `database_url` of its own, with nothing else changing.
 
-Memory is bounded by how many sites are *busy*, not how many exist: databases
-are opened on demand, at most 64 stay open, and one that has served no request
-for ten minutes is closed. Five hundred empty sites measure at about 150 MB
-resident and 79 MB on disk, and stay flat under traffic spread across all of
-them.
+Memory is bounded by how many sites are *busy*, not how many exist. Sites open
+on demand, at most 32 stay open, one that has served no request for ten minutes
+is closed, and each holds at most two connections. Four hundred sites measure
+at 98 MB resident — unchanged from two hundred — and never hold more than 67
+Postgres connections, however the traffic is spread. Empty sites cost about
+400 KB each in the database.
 
 Managing sites is the server operator's alone. An administrator of a hosted
 site administers that site: they cannot list the other sites on the machine,

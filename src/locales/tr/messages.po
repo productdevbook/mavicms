@@ -113,12 +113,12 @@ msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 karakter: harf, rakam, _ veya -"
 
 #: src/routes/dashboard.sites.tsx:100
-msgid "A database file of its own"
-msgstr "Kendi veritabanı dosyası"
+#~ msgid "A database file of its own"
+#~ msgstr "Kendi veritabanı dosyası"
 
 #: src/routes/dashboard.sites.tsx:143
-msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
-msgstr "Çoğu site için bir dosya yeter. Yoğun bir siteye bunun yerine Postgres ya da MySQL adresi verilebilir."
+#~ msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
+#~ msgstr "Çoğu site için bir dosya yeter. Yoğun bir siteye bunun yerine Postgres ya da MySQL adresi verilebilir."
 
 #: src/routes/dashboard.plugins_.backup.tsx:212
 msgid "A folder inside the data directory."
@@ -1059,12 +1059,16 @@ msgid "Last run {0}"
 msgstr "Son çalışma {0}"
 
 #: src/routes/dashboard.sites.tsx:140
-msgid "Leave empty for a file of its own"
-msgstr "Kendi dosyası için boş bırakın"
+#~ msgid "Leave empty for a file of its own"
+#~ msgstr "Kendi dosyası için boş bırakın"
 
 #: src/routes/dashboard.plugins_.s3.tsx:147
 msgid "Leave empty for AWS S3"
 msgstr "AWS S3 için boş bırakın"
+
+#: src/routes/dashboard.sites.tsx:140
+msgid "Leave empty to use this server's database"
+msgstr "Bu sunucunun veritabanını kullanmak için boş bırakın"
 
 #: src/components/mode-toggle.tsx:37
 msgid "Light"
@@ -1259,8 +1263,12 @@ msgid "Optional folder inside the bucket"
 msgstr "Bucket içinde isteğe bağlı klasör"
 
 #: src/routes/dashboard.sites.tsx:71
-msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
-msgstr "Bu sunucunun barındırdığı diğer siteler. Her biri kendi içeriğini, hesaplarını ve yüklemelerini ayrı tutar."
+msgid "Other sites this server hosts. Each gets its own database schema, accounts and uploads."
+msgstr "Bu sunucunun barındırdığı diğer siteler. Her birine kendi veritabanı şeması, hesapları ve yüklemeleri verilir."
+
+#: src/routes/dashboard.sites.tsx:71
+#~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
+#~ msgstr "Bu sunucunun barındırdığı diğer siteler. Her biri kendi içeriğini, hesaplarını ve yüklemelerini ayrı tutar."
 
 #: src/components/editor/dialogs.tsx:520
 #: src/components/editor/extensions/slash-command.tsx:55
@@ -1502,6 +1510,11 @@ msgstr "Zamanlanmış"
 msgid "Scheduled backups only run while this is on. You can always back up by hand below."
 msgstr "Zamanlanmış yedekler yalnızca bu açıkken çalışır. Aşağıdan her zaman elle yedek alabilirsiniz."
 
+#. placeholder {0}: site.schema
+#: src/routes/dashboard.sites.tsx:100
+msgid "Schema {0}"
+msgstr "Şema {0}"
+
 #: src/components/editor/post-settings.tsx:361
 msgid "Search engine"
 msgstr "Arama motoru"
@@ -1741,6 +1754,10 @@ msgstr "Editörde en sık kullanılan kısayollar."
 #: src/components/setup/setup-wizard.tsx:322
 msgid "The server is taking longer than expected to restart. Reload this page in a moment."
 msgstr "Sunucunun yeniden başlaması beklenenden uzun sürüyor. Bir süre sonra bu sayfayı yenileyin."
+
+#: src/routes/dashboard.sites.tsx:143
+msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
+msgstr "Site, bu sunucunun veritabanında kendi şemasını alır. Buraya sığmayan bir siteye burada kendi adresi verilebilir."
 
 #: src/components/mode-toggle.tsx:24
 msgid "Theme"

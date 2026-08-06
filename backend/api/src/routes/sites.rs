@@ -12,7 +12,10 @@ pub struct SiteResponse {
     pub id: String,
     pub host: String,
     pub slug: String,
-    /// Empty when the site uses the SQLite file in its own folder.
+    /// The Postgres schema its tables live in.
+    pub schema: String,
+    /// Empty when the site lives on the server's own database, which is the
+    /// normal case.
     pub database_url: String,
     pub active: bool,
 }
@@ -23,6 +26,7 @@ impl From<Tenant> for SiteResponse {
             id: tenant.id.to_string(),
             host: tenant.host,
             slug: tenant.slug,
+            schema: tenant.schema,
             database_url: tenant.database_url,
             active: tenant.active,
         }
@@ -37,9 +41,9 @@ pub struct CreateSiteRequest {
     /// out, which is usually what someone would have typed anyway.
     #[serde(default)]
     pub slug: Option<String>,
-    /// Where its database should live. Empty means a SQLite file of its own,
-    /// which is what a small site wants; a busy one can be given a Postgres
-    /// URL here and nothing else changes.
+    /// A database server of its own. Empty — the normal case — puts the site
+    /// in its own schema on the server's database; a site that outgrows that
+    /// can be given an address here and nothing else changes.
     #[serde(default)]
     pub database_url: Option<String>,
 }
@@ -60,7 +64,7 @@ pub async fn list_sites(
 ) -> AppResult<Json<Vec<SiteResponse>>> {
     Ok(Json(
         hosting
-            .registry
+            .registry()?
             .all()
             .await?
             .into_iter()
@@ -92,7 +96,7 @@ pub async fn create_site(
         .unwrap_or_else(|| payload.host.replace('.', "-"));
 
     let tenant = hosting
-        .registry
+        .registry()?
         .create(
             &payload.host,
             &slug,

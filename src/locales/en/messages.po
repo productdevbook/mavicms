@@ -113,12 +113,12 @@ msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 characters: letters, numbers, _ or -"
 
 #: src/routes/dashboard.sites.tsx:100
-msgid "A database file of its own"
-msgstr "A database file of its own"
+#~ msgid "A database file of its own"
+#~ msgstr "A database file of its own"
 
 #: src/routes/dashboard.sites.tsx:143
-msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
-msgstr "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
+#~ msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
+#~ msgstr "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 
 #: src/routes/dashboard.plugins_.backup.tsx:212
 msgid "A folder inside the data directory."
@@ -1063,12 +1063,16 @@ msgid "Last run {0}"
 msgstr "Last run {0}"
 
 #: src/routes/dashboard.sites.tsx:140
-msgid "Leave empty for a file of its own"
-msgstr "Leave empty for a file of its own"
+#~ msgid "Leave empty for a file of its own"
+#~ msgstr "Leave empty for a file of its own"
 
 #: src/routes/dashboard.plugins_.s3.tsx:147
 msgid "Leave empty for AWS S3"
 msgstr "Leave empty for AWS S3"
+
+#: src/routes/dashboard.sites.tsx:140
+msgid "Leave empty to use this server's database"
+msgstr "Leave empty to use this server's database"
 
 #: src/components/mode-toggle.tsx:37
 msgid "Light"
@@ -1263,8 +1267,12 @@ msgid "Optional folder inside the bucket"
 msgstr "Optional folder inside the bucket"
 
 #: src/routes/dashboard.sites.tsx:71
-msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
-msgstr "Other sites this server hosts. Each keeps its own content, accounts and uploads."
+msgid "Other sites this server hosts. Each gets its own database schema, accounts and uploads."
+msgstr "Other sites this server hosts. Each gets its own database schema, accounts and uploads."
+
+#: src/routes/dashboard.sites.tsx:71
+#~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
+#~ msgstr "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 
 #: src/components/editor/dialogs.tsx:520
 #: src/components/editor/extensions/slash-command.tsx:55
@@ -1506,6 +1514,11 @@ msgstr "Scheduled"
 msgid "Scheduled backups only run while this is on. You can always back up by hand below."
 msgstr "Scheduled backups only run while this is on. You can always back up by hand below."
 
+#. placeholder {0}: site.schema
+#: src/routes/dashboard.sites.tsx:100
+msgid "Schema {0}"
+msgstr "Schema {0}"
+
 #: src/components/editor/post-settings.tsx:361
 msgid "Search engine"
 msgstr "Search engine"
@@ -1745,6 +1758,10 @@ msgstr "The most common shortcuts in the editor."
 #: src/components/setup/setup-wizard.tsx:322
 msgid "The server is taking longer than expected to restart. Reload this page in a moment."
 msgstr "The server is taking longer than expected to restart. Reload this page in a moment."
+
+#: src/routes/dashboard.sites.tsx:143
+msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
+msgstr "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 
 #: src/components/mode-toggle.tsx:24
 msgid "Theme"

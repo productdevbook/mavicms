@@ -1,15 +1,15 @@
 //! Many sites on one server.
 //!
-//! Each site gets its own database, its own media folder and its own master
-//! key. That is a deliberate choice over a shared set of tables keyed by a
-//! site id: every one of this codebase's queries would then have to filter by
-//! that key, and the day one of them does not is the day one customer reads
-//! another's posts. A separate database cannot leak that way, and it makes a
-//! site something you can back up, move or delete by handling one directory.
+//! Each site gets a Postgres schema of its own, its own media folder and its
+//! own master key. That is a deliberate choice over a shared set of tables
+//! keyed by a site id: every one of this codebase's queries would then have to
+//! filter by that key, and the day one of them does not is the day one
+//! customer reads another's posts. A schema cannot leak that way — the tables
+//! a site's connection can see are only its own — and it costs nothing to
+//! operate, because it is still one database server to run, back up and watch.
 //!
-//! Where that database lives is data, not a compile-time choice. A small blog
-//! runs happily on a SQLite file; a busy one can be handed a Postgres URL
-//! without anything else changing.
+//! A site can also be handed a database URL of its own, which is how one that
+//! outgrows the shared server moves off it without anything else changing.
 
 use std::{
     path::PathBuf,
@@ -17,7 +17,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use sea_orm::{ConnectionTrait, DatabaseConnection, Statement};
+use sea_orm::{ConnectionTrait, DatabaseBackend, DatabaseConnection, Statement};
 use tokio::sync::Mutex;
 use uuid::Uuid;
 
@@ -27,21 +27,24 @@ use crate::{
     state::AppState,
 };
 
-/// How many sites may have their database open at once.
+/// How many sites may have their database connection open at once.
 ///
 /// Sites are opened when they are first asked for, and the least recently used
-/// is closed once this many are open. Together with the connection limits in
-/// [`crate::db`] this is what keeps the memory a server uses a function of how
-/// many sites are *busy* rather than how many exist.
-const MAX_OPEN: usize = 64;
+/// is closed once this many are open. With the per-site connection limit in
+/// [`crate::db`] this bounds how many Postgres backends the whole server can
+/// hold, which matters because Postgres accepts a hundred of them by default.
+const MAX_OPEN: usize = 32;
 
 /// How long a site is kept open after its last request.
 ///
-/// The cap above only reclaims memory once sixty-four sites are open, which on
-/// a server running eighty quiet sites never happens. This closes a site that
+/// The cap above only reclaims anything once thirty-two sites are open, which
+/// on a server running eighty quiet sites never happens. This closes a site
 /// nobody has visited for a while whether or not there is pressure, so the
 /// steady cost is the sites people are actually reading.
 const IDLE_FOR: Duration = Duration::from_secs(10 * 60);
+
+/// Schema names Postgres has already given a meaning.
+const RESERVED_SCHEMAS: [&str; 2] = ["public", "information_schema"];
 
 /// A site.
 #[derive(Debug, Clone)]
@@ -49,9 +52,12 @@ pub struct Tenant {
     pub id: Uuid,
     /// The host this site answers on. One host, one site.
     pub host: String,
-    /// A short name used for its folder on disk.
+    /// A short name used for its folder on disk and its schema.
     pub slug: String,
-    /// Where its database lives. Empty means the SQLite file in its folder.
+    /// The Postgres schema holding its tables.
+    pub schema: String,
+    /// A database server of its own. Empty — which is the normal case — means
+    /// its schema on the server's own database.
     pub database_url: String,
     pub active: bool,
 }
@@ -60,14 +66,6 @@ impl Tenant {
     pub fn root(&self, sites_dir: &std::path::Path) -> PathBuf {
         sites_dir.join(&self.slug)
     }
-
-    fn resolved_database_url(&self, sites_dir: &std::path::Path) -> String {
-        if !self.database_url.trim().is_empty() {
-            return self.database_url.clone();
-        }
-        let path = self.root(sites_dir).join("data.db");
-        format!("sqlite://{}?mode=rwc", path.display())
-    }
 }
 
 struct Open {
@@ -75,20 +73,29 @@ struct Open {
     used_at: Instant,
 }
 
-/// Holds the list of sites and the databases currently open.
+/// Holds the list of sites and the connections currently open.
 pub struct Registry {
-    /// Where the list of sites is kept — its own database, so that losing or
-    /// moving one site's data says nothing about the others.
+    /// The server's own database, which is also where the list of sites is
+    /// kept — in `public`, beside the server's own tables, so that the list
+    /// lives and is backed up with everything else rather than in a file
+    /// somewhere that has to be remembered separately.
     control: DatabaseConnection,
+    /// The address of that database, used to reach each site's schema.
+    base_url: String,
     sites_dir: PathBuf,
     open: Mutex<Vec<(Uuid, Open)>>,
 }
 
 impl Registry {
-    pub async fn new(control: DatabaseConnection, sites_dir: PathBuf) -> AppResult<Self> {
+    pub async fn new(
+        control: DatabaseConnection,
+        base_url: String,
+        sites_dir: PathBuf,
+    ) -> AppResult<Self> {
         create_table(&control).await?;
         Ok(Self {
             control,
+            base_url,
             sites_dir,
             open: Mutex::new(Vec::new()),
         })
@@ -108,7 +115,11 @@ impl Registry {
             .control
             .query_one_raw(Statement::from_sql_and_values(
                 self.control.get_database_backend(),
-                "SELECT id, host, slug, database_url, active FROM tenants WHERE host = ?",
+                format!(
+                    "SELECT id, host, slug, schema_name, database_url, active \
+                     FROM tenants WHERE host = {}",
+                    placeholder(self.control.get_database_backend(), 1)
+                ),
                 [host.into()],
             ))
             .await?;
@@ -121,18 +132,35 @@ impl Registry {
             .control
             .query_all_raw(Statement::from_string(
                 self.control.get_database_backend(),
-                "SELECT id, host, slug, database_url, active FROM tenants ORDER BY host",
+                "SELECT id, host, slug, schema_name, database_url, active FROM tenants ORDER BY host",
             ))
             .await?;
 
         rows.iter().map(tenant_from_row).collect()
     }
 
-    /// Adds a site: its row, its folder, and its database with the schema in
-    /// place, so that the first request it serves finds a working site.
+    /// Adds a site: its schema with the tables already in it, its folder, and
+    /// the host it answers on — so the first request it serves finds a site
+    /// that works.
+    ///
+    /// Anything this creates before something fails is taken back out again. A
+    /// half-made site is worse than none: it holds a name nobody can use and
+    /// looks like a site that is merely broken.
     pub async fn create(&self, host: &str, slug: &str, database_url: &str) -> AppResult<Tenant> {
+        if self.control.get_database_backend() != DatabaseBackend::Postgres {
+            return Err(AppError::Validation(
+                "hosting more than one site needs Postgres — point DATABASE_URL at one".to_string(),
+            ));
+        }
+
         let host = host.split(':').next().unwrap_or(host).trim().to_lowercase();
+        if host.is_empty() {
+            return Err(AppError::Validation(
+                "the site needs an address to answer on".to_string(),
+            ));
+        }
         let slug = clean_slug(slug)?;
+        let schema = schema_name(&slug)?;
 
         if self.find_by_host(&host).await?.is_some() {
             return Err(AppError::Conflict(format!(
@@ -147,10 +175,34 @@ impl Registry {
             id: Uuid::new_v4(),
             host,
             slug,
+            schema,
             database_url: database_url.trim().to_string(),
             active: true,
         };
 
+        // Not `IF NOT EXISTS`: a schema already standing under this name
+        // belongs to something else, and adopting it would put a new site's
+        // tables in with whatever is already there.
+        self.control
+            .execute_raw(Statement::from_string(
+                DatabaseBackend::Postgres,
+                format!(r#"CREATE SCHEMA "{}""#, tenant.schema),
+            ))
+            .await
+            .map_err(|err| {
+                AppError::Conflict(format!("could not make room for the site: {err}"))
+            })?;
+
+        match self.finish_creating(&tenant).await {
+            Ok(()) => Ok(tenant),
+            Err(err) => {
+                self.drop_schema(&tenant.schema).await;
+                Err(err)
+            }
+        }
+    }
+
+    async fn finish_creating(&self, tenant: &Tenant) -> AppResult<()> {
         tokio::fs::create_dir_all(tenant.root(&self.sites_dir).join("media"))
             .await
             .map_err(|err| AppError::Internal(format!("could not create the site folder: {err}")))?;
@@ -158,11 +210,20 @@ impl Registry {
         self.control
             .execute_raw(Statement::from_sql_and_values(
                 self.control.get_database_backend(),
-                "INSERT INTO tenants (id, host, slug, database_url, active, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                format!(
+                    "INSERT INTO tenants \
+                     (id, host, slug, schema_name, database_url, active, created_at) \
+                     VALUES ({})",
+                    (1..=7)
+                        .map(|n| placeholder(self.control.get_database_backend(), n))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
                 [
                     tenant.id.to_string().into(),
                     tenant.host.clone().into(),
                     tenant.slug.clone().into(),
+                    tenant.schema.clone().into(),
                     tenant.database_url.clone().into(),
                     1.into(),
                     chrono::Utc::now().to_rfc3339().into(),
@@ -170,15 +231,24 @@ impl Registry {
             ))
             .await?;
 
-        // Opening runs the migrations, so a failure here is visible now rather
-        // than to whoever first visits the site.
-        self.state_for(&tenant).await?;
-
-        Ok(tenant)
+        // Opening runs the migrations, so a schema that will not take them is
+        // a failure now rather than one for whoever first visits the site.
+        self.state_for(tenant).await?;
+        Ok(())
     }
 
-    /// The state a request against this site should run with, opening the
-    /// database if it is not already open.
+    async fn drop_schema(&self, schema: &str) {
+        let statement = Statement::from_string(
+            DatabaseBackend::Postgres,
+            format!(r#"DROP SCHEMA IF EXISTS "{schema}" CASCADE"#),
+        );
+        if let Err(err) = self.control.execute_raw(statement).await {
+            tracing::error!(schema, error = %err, "could not clean up a half-made site");
+        }
+    }
+
+    /// The state a request against this site should run with, opening its
+    /// connection if it is not already open.
     pub async fn state_for(&self, tenant: &Tenant) -> AppResult<AppState> {
         let mut open = self.open.lock().await;
 
@@ -197,7 +267,12 @@ impl Registry {
             .await
             .map_err(|err| AppError::Internal(format!("could not create the site folder: {err}")))?;
 
-        let db = crate::db::connect(&tenant.resolved_database_url(&self.sites_dir))
+        let url = if tenant.database_url.trim().is_empty() {
+            &self.base_url
+        } else {
+            &tenant.database_url
+        };
+        let db = crate::db::connect_in_schema(url, &tenant.schema)
             .await
             .map_err(|err| {
                 AppError::Internal(format!("could not open the site's database: {err}"))
@@ -228,7 +303,14 @@ impl Registry {
 
         Ok(state)
     }
+}
 
+/// A bound parameter, written the way this database spells them.
+fn placeholder(backend: DatabaseBackend, position: u8) -> String {
+    match backend {
+        DatabaseBackend::Postgres => format!("${position}"),
+        _ => "?".to_string(),
+    }
 }
 
 fn tenant_from_row(row: &sea_orm::QueryResult) -> AppResult<Tenant> {
@@ -237,6 +319,7 @@ fn tenant_from_row(row: &sea_orm::QueryResult) -> AppResult<Tenant> {
             .map_err(|err| AppError::Internal(format!("bad tenant id: {err}")))?,
         host: row.try_get("", "host")?,
         slug: row.try_get("", "slug")?,
+        schema: row.try_get("", "schema_name")?,
         database_url: row.try_get("", "database_url")?,
         active: row.try_get::<i32>("", "active")? != 0,
     })
@@ -266,16 +349,39 @@ fn clean_slug(slug: &str) -> AppResult<String> {
     Ok(cleaned)
 }
 
+/// The schema a site's tables go in.
+///
+/// This ends up inside a quoted identifier in `CREATE SCHEMA`, so it is built
+/// from a name that has already been reduced to letters, digits, dashes and
+/// underscores rather than trusted — a quote in a schema name would end the
+/// identifier and start SQL.
+fn schema_name(slug: &str) -> AppResult<String> {
+    let name = format!("site_{}", slug.replace('-', "_"));
+
+    if name.len() > 63 {
+        return Err(AppError::Validation(
+            "the site's name is too long — Postgres allows 58 characters".to_string(),
+        ));
+    }
+    if RESERVED_SCHEMAS.contains(&name.as_str()) {
+        return Err(AppError::Validation(
+            "that name is reserved by the database".to_string(),
+        ));
+    }
+    Ok(name)
+}
+
 async fn create_table(db: &DatabaseConnection) -> AppResult<()> {
-    // Written by hand rather than through the migrator: the migrator belongs
-    // to a site's schema, and this table is the thing that knows what sites
-    // there are.
+    // Written by hand rather than through the migrator: the migrator builds a
+    // site's tables, and this is the table that knows what sites there are.
+    // `schema` is a reserved word in enough places to be worth avoiding.
     db.execute_raw(Statement::from_string(
         db.get_database_backend(),
         "CREATE TABLE IF NOT EXISTS tenants (
             id TEXT PRIMARY KEY,
             host TEXT NOT NULL UNIQUE,
             slug TEXT NOT NULL UNIQUE,
+            schema_name TEXT NOT NULL,
             database_url TEXT NOT NULL,
             active INTEGER NOT NULL,
             created_at TEXT NOT NULL
@@ -285,14 +391,15 @@ async fn create_table(db: &DatabaseConnection) -> AppResult<()> {
     Ok(())
 }
 
-/// What the router is built with once the server serves more than one site:
-/// the registry, and the state to fall back on.
+/// What the router is built with: the registry, and the state to fall back on.
 #[derive(Clone)]
 pub struct Hosting {
-    pub registry: Arc<Registry>,
+    /// Absent until the server has a database of its own, since that database
+    /// is where the list of sites lives.
+    pub registry: Option<Arc<Registry>>,
     /// The site a request that matches no host is served with. This is the
-    /// installation that existed before there were tenants — keeping it means
-    /// turning multi-tenancy on changes nothing for a server hosting one site.
+    /// installation that was already there — keeping it means a server hosting
+    /// one site behaves exactly as it did before it could host more.
     pub default_state: AppState,
 }
 
@@ -306,15 +413,15 @@ pub enum Resolved {
 }
 
 impl Resolved {
-    /// What to call this site in the log. With one site the logs are obviously
-    /// about that site; with two hundred, a line that does not say which site
-    /// it came from is close to useless.
     /// Whether this is the server's own installation rather than a site it is
     /// hosting.
     pub fn is_host(&self) -> bool {
         matches!(self, Resolved::Host)
     }
 
+    /// What to call this site in the log. With one site the logs are obviously
+    /// about that site; with two hundred, a line that does not say which site
+    /// it came from is close to useless.
     pub fn name(&self) -> &str {
         match self {
             Resolved::Host => "host",
@@ -324,14 +431,24 @@ impl Resolved {
 }
 
 impl Hosting {
+    /// The site the registry is needed for, or a plain explanation of why
+    /// there is no registry to ask.
+    pub fn registry(&self) -> AppResult<&Registry> {
+        self.registry.as_deref().ok_or_else(|| {
+            AppError::Unavailable(
+                "the server has no database yet, so it cannot host sites".to_string(),
+            )
+        })
+    }
+
     /// The state a request should run with, chosen by the host it asked for.
     pub async fn resolve_host(&self, host: Option<&str>) -> AppResult<(AppState, Resolved)> {
-        let Some(host) = host else {
+        let (Some(host), Some(registry)) = (host, self.registry.as_deref()) else {
             return Ok((self.default_state.clone(), Resolved::Host));
         };
-        match self.registry.find_by_host(host).await? {
+        match registry.find_by_host(host).await? {
             Some(tenant) if tenant.active => Ok((
-                self.registry.state_for(&tenant).await?,
+                registry.state_for(&tenant).await?,
                 Resolved::Tenant(Box::new(tenant)),
             )),
             Some(_) => Err(AppError::Unavailable(
@@ -422,7 +539,7 @@ impl<S: Send + Sync> axum::extract::FromRequestParts<S> for Operator {
 
 #[cfg(test)]
 mod tests {
-    use super::clean_slug;
+    use super::{clean_slug, schema_name};
 
     #[test]
     fn keeps_an_ordinary_name() {
@@ -448,5 +565,28 @@ mod tests {
         assert!(clean_slug("..").is_err());
         assert!(clean_slug("/").is_err());
         assert!(clean_slug("   ").is_err());
+    }
+
+    #[test]
+    fn a_schema_name_cannot_carry_sql() {
+        // The name goes inside a quoted identifier, so what matters is that a
+        // quote never survives to close it.
+        let name = schema_name(&clean_slug(r#"a"; DROP SCHEMA public CASCADE; --"#).unwrap());
+        assert_eq!(name.unwrap(), "site_adropschemapubliccascade__");
+    }
+
+    #[test]
+    fn a_schema_name_is_prefixed_and_underscored() {
+        assert_eq!(schema_name("example-com").unwrap(), "site_example_com");
+        // The prefix is also what keeps a site off a name Postgres owns.
+        assert_eq!(schema_name("public").unwrap(), "site_public");
+    }
+
+    #[test]
+    fn a_schema_name_postgres_would_truncate_is_refused() {
+        // Postgres silently cuts identifiers at 63 bytes, which would let two
+        // long names land on the same schema.
+        assert!(schema_name(&"a".repeat(58)).unwrap().len() == 63);
+        assert!(schema_name(&"a".repeat(59)).is_err());
     }
 }

@@ -527,6 +527,7 @@ export interface Site {
   id: string
   host: string
   slug: string
+  schema: string
   database_url: string
   active: boolean
 }

@@ -176,7 +176,7 @@ pub async fn list_posts(
         .as_deref()
         .is_some_and(|value| value.split(',').any(|part| part.trim() == "content"));
 
-    let mut find = post::Entity::find().order_by_desc(post::Column::CreatedAt);
+    let mut find = post::Entity::find();
     if let Some(codes) = query.codes() {
         find = find.filter(post::Column::Locale.is_in(codes));
     }
@@ -228,7 +228,15 @@ pub async fn list_posts(
     {
         counts.add(&status, Ord::max(n, 0) as u64);
     }
-    let posts = find.limit(limit).offset(offset).all(db).await?;
+    // Ordered here rather than where the filters are built: an ORDER BY that
+    // travels into the grouped count above is a column Postgres will not let
+    // out of a GROUP BY, and the count does not care what order it counts in.
+    let posts = find
+        .order_by_desc(post::Column::CreatedAt)
+        .limit(limit)
+        .offset(offset)
+        .all(db)
+        .await?;
 
     // Two grouped queries rather than two per post: this used to issue one
     // category lookup per row, and adding translations would have tripled it.

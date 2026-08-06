@@ -69,22 +69,21 @@ async fn main() {
         backup::spawn_scheduler(state.clone());
     }
 
-    // The list of sites lives in its own database, beside the folders they
-    // each live in. On a server with one site it stays empty and every request
-    // falls through to the installation that was already there.
-    let control = db::connect_plain(&format!(
-        "sqlite://{}?mode=rwc",
-        config.data_dir.join("control.db").display()
-    ))
-    .await
-    .unwrap_or_else(|err| panic!("failed to open the site registry: {err}"));
-
-    let registry = tenants::Registry::new(control, config.data_dir.join("sites"))
-        .await
-        .unwrap_or_else(|err| panic!("failed to prepare the site registry: {err}"));
+    // The list of sites lives in the server's own database, so it is backed up
+    // and restored with everything else rather than in a file of its own that
+    // has to be remembered separately. On a server hosting one site it stays
+    // empty and every request falls through to the installation already there.
+    let registry = match (&state.db, &config.database_url) {
+        (Some(db), Some(url)) => Some(std::sync::Arc::new(
+            tenants::Registry::new(db.clone(), url.clone(), config.data_dir.join("sites"))
+                .await
+                .unwrap_or_else(|err| panic!("failed to prepare the site registry: {err}")),
+        )),
+        _ => None,
+    };
 
     let hosting = tenants::Hosting {
-        registry: std::sync::Arc::new(registry),
+        registry,
         default_state: state,
     };
 
