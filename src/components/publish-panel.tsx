@@ -38,15 +38,11 @@ export function BuildHistory({ builds }: { builds: Build[] }) {
 
   return (
     <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
-      {builds.map((build) => (
-        <div key={build.id} className="flex flex-col">
-          <button
-            type="button"
-            className="flex items-center gap-3 px-4 py-2.5 text-left hover:bg-muted/50"
-            onClick={() =>
-              setOpen((current) => (current === build.id ? null : build.id))
-            }
-          >
+      {builds.map((build) => {
+        // A site whose agency looks after the build is not sent the log, so
+        // there is nothing to open and the row must not look as if there is.
+        const row = (
+          <>
             <StatusIcon status={build.status} />
             <div className="min-w-0 flex-1">
               <p className="text-sm">
@@ -65,14 +61,32 @@ export function BuildHistory({ builds }: { builds: Build[] }) {
                 </p>
               )}
             </div>
-          </button>
+          </>
+        )
+
+        return (
+        <div key={build.id} className="flex flex-col">
+          {build.log ? (
+            <button
+              type="button"
+              className="flex items-center gap-3 px-4 py-2.5 text-left hover:bg-muted/50"
+              onClick={() =>
+                setOpen((current) => (current === build.id ? null : build.id))
+              }
+            >
+              {row}
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 px-4 py-2.5">{row}</div>
+          )}
           {open === build.id && build.log && (
             <pre className="max-h-96 overflow-auto border-t border-border bg-muted/40 px-4 py-3 text-xs">
               {build.log}
             </pre>
           )}
         </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
@@ -267,7 +281,7 @@ export function ManagedSummary({ status }: { status: PublishStatus }) {
   return (
     <div className="rounded-xl border border-border px-4 py-3 text-sm">
       <p className="text-muted-foreground">
-        {t`${status.managed_by} looks after how this site is built. Publishing puts what you have written online.`}
+        {t`${status.managed_by} looks after how this site is built. Publishing puts what you have written online; if a build fails, they are the ones who can see why.`}
       </p>
     </div>
   )

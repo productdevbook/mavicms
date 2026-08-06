@@ -28,14 +28,30 @@ pub struct PublishStatus {
 impl PublishStatus {
     /// The same, with the agency's working details left out.
     ///
-    /// A site whose agency wires it up needs to publish and to see how the
-    /// last builds went; the repository address, the build command and the
+    /// A site whose agency wires it up needs to publish and to see whether the
+    /// last builds worked; the repository address, the build command and the
     /// names of the build's variables are not its business. Leaving them out
     /// of the answer rather than out of the page is what actually keeps them
     /// off a screen somebody is reading over a shoulder.
+    ///
+    /// The logs go too, and they are the reason this is not just `config:
+    /// None`: the first line of a build log is `git fetch <repository>`, so
+    /// withholding the settings while sending the output of using them would
+    /// have been a wall with a window in it. What a build log holds beyond
+    /// that — paths, package names, whatever an error prints — is the
+    /// agency's as well. The site is left with whether it worked and how long
+    /// it took, and the agency reads the rest in the console.
     fn withheld(self) -> Self {
         Self {
             config: None,
+            builds: self
+                .builds
+                .into_iter()
+                .map(|build| Build {
+                    log: String::new(),
+                    ..build
+                })
+                .collect(),
             ..self
         }
     }

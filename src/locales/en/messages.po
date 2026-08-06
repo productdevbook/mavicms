@@ -92,9 +92,14 @@ msgstr "{0} is ready. You're signed in as <0>{1}</0>."
 #~ msgstr "{0} looks after how this site is built."
 
 #. placeholder {0}: status.managed_by
+#: src/components/publish-panel.tsx:284
+msgid "{0} looks after how this site is built. Publishing puts what you have written online; if a build fails, they are the ones who can see why."
+msgstr "{0} looks after how this site is built. Publishing puts what you have written online; if a build fails, they are the ones who can see why."
+
+#. placeholder {0}: status.managed_by
 #: src/components/publish-panel.tsx:270
-msgid "{0} looks after how this site is built. Publishing puts what you have written online."
-msgstr "{0} looks after how this site is built. Publishing puts what you have written online."
+#~ msgid "{0} looks after how this site is built. Publishing puts what you have written online."
+#~ msgstr "{0} looks after how this site is built. Publishing puts what you have written online."
 
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
@@ -216,7 +221,7 @@ msgstr "Accepts"
 msgid "Access key ID"
 msgstr "Access key ID"
 
-#: src/components/publish-panel.tsx:226
+#: src/components/publish-panel.tsx:240
 msgid "Access token"
 msgstr "Access token"
 
@@ -229,7 +234,7 @@ msgid "Active"
 msgstr "Active"
 
 #: src/components/editor/dialogs.tsx:200
-#: src/components/publish-panel.tsx:151
+#: src/components/publish-panel.tsx:165
 #: src/routes/dashboard.tags.tsx:174
 #: src/routes/dashboard.users.tsx:303
 msgid "Add"
@@ -488,7 +493,7 @@ msgstr "Blocks"
 msgid "Bold"
 msgstr "Bold"
 
-#: src/components/publish-panel.tsx:196
+#: src/components/publish-panel.tsx:210
 msgid "Branch"
 msgstr "Branch"
 
@@ -496,7 +501,7 @@ msgstr "Branch"
 msgid "Bucket"
 msgstr "Bucket"
 
-#: src/components/publish-panel.tsx:214
+#: src/components/publish-panel.tsx:228
 msgid "Build command"
 msgstr "Build command"
 
@@ -504,7 +509,7 @@ msgstr "Build command"
 msgid "Build this site's pages again."
 msgstr "Build this site's pages again."
 
-#: src/components/publish-panel.tsx:111
+#: src/components/publish-panel.tsx:125
 msgid "Build variables"
 msgstr "Build variables"
 
@@ -1388,7 +1393,7 @@ msgstr "Installing Mavi CMS…"
 msgid "Interactive docs"
 msgstr "Interactive docs"
 
-#: src/components/publish-panel.tsx:221
+#: src/components/publish-panel.tsx:235
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "It runs with CMS_API_URL and SITE_URL set to this site's address."
 
@@ -1759,7 +1764,7 @@ msgstr "One post, with its other languages."
 msgid "Only by hand"
 msgstr "Only by hand"
 
-#: src/components/publish-panel.tsx:235
+#: src/components/publish-panel.tsx:249
 msgid "Only for a private repository"
 msgstr "Only for a private repository"
 
@@ -1792,7 +1797,7 @@ msgstr "Other sites this server hosts. Each gets its own database schema, accoun
 #~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 #~ msgstr "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 
-#: src/components/publish-panel.tsx:204
+#: src/components/publish-panel.tsx:218
 msgid "Output folder"
 msgstr "Output folder"
 
@@ -1937,7 +1942,7 @@ msgstr "Public base URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:90
 #: src/components/editor/mavi-editor.tsx:607
-#: src/components/publish-panel.tsx:292
+#: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:306
 #: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
@@ -1956,7 +1961,7 @@ msgstr "Published"
 msgid "Publishing — this takes a minute or two"
 msgstr "Publishing — this takes a minute or two"
 
-#: src/components/publish-panel.tsx:292
+#: src/components/publish-panel.tsx:306
 msgid "Publishing…"
 msgstr "Publishing…"
 
@@ -2008,7 +2013,7 @@ msgstr "Regular expression"
 #: src/components/editor/bubble-menus.tsx:193
 #: src/components/editor/bubble-menus.tsx:274
 #: src/components/form-fields-editor.tsx:175
-#: src/components/publish-panel.tsx:122
+#: src/components/publish-panel.tsx:136
 #: src/routes/dashboard.forms_.$formId.tsx:224
 #: src/routes/dashboard.forms.tsx:207
 #: src/routes/dashboard.forms.tsx:331
@@ -2064,7 +2069,7 @@ msgstr "Replace content"
 msgid "Replace…"
 msgstr "Replace…"
 
-#: src/components/publish-panel.tsx:185
+#: src/components/publish-panel.tsx:199
 msgid "Repository"
 msgstr "Repository"
 
@@ -2113,7 +2118,7 @@ msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
 #: src/components/editor/mavi-editor.tsx:596
-#: src/components/publish-panel.tsx:250
+#: src/components/publish-panel.tsx:264
 #: src/routes/console.account.tsx:144
 #: src/routes/console.sites.$siteId.tsx:377
 #: src/routes/console.sites.$siteId.tsx:405
@@ -2329,7 +2334,7 @@ msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, Digi
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
-#: src/components/publish-panel.tsx:234
+#: src/components/publish-panel.tsx:248
 msgid "Stored — type to replace"
 msgstr "Stored — type to replace"
 
@@ -2467,7 +2472,7 @@ msgstr "the agency's, not this site's"
 msgid "The backup failed"
 msgstr "The backup failed"
 
-#: src/components/publish-panel.tsx:155
+#: src/components/publish-panel.tsx:169
 msgid "The build runs with these. A name already here is replaced; the others are left alone."
 msgstr "The build runs with these. A name already here is replaced; the others are left alone."
 
@@ -2547,7 +2552,7 @@ msgid "Today's date"
 msgstr "Today's date"
 
 #. placeholder {0}: Math.max( 1, Math.round( (new Date(build.finished_at).getTime() - new Date(build.started_at).getTime()) / 1000 ) )
-#: src/components/publish-panel.tsx:57
+#: src/components/publish-panel.tsx:53
 msgid "took {0} seconds"
 msgstr "took {0} seconds"
 
@@ -2631,7 +2636,7 @@ msgstr "Use S3 for new uploads"
 msgid "Username"
 msgstr "Username"
 
-#: src/components/publish-panel.tsx:144
+#: src/components/publish-panel.tsx:158
 msgid "value"
 msgstr "value"
 

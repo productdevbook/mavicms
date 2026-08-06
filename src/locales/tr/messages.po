@@ -92,9 +92,14 @@ msgstr "{0} hazır! <0>{1}</0> olarak oturum açtınız."
 #~ msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor."
 
 #. placeholder {0}: status.managed_by
+#: src/components/publish-panel.tsx:284
+msgid "{0} looks after how this site is built. Publishing puts what you have written online; if a build fails, they are the ones who can see why."
+msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıklarınızı siteye çıkarır; bir derleme başarısız olursa nedenini onlar görebilir."
+
+#. placeholder {0}: status.managed_by
 #: src/components/publish-panel.tsx:270
-msgid "{0} looks after how this site is built. Publishing puts what you have written online."
-msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıklarınızı siteye çıkarır."
+#~ msgid "{0} looks after how this site is built. Publishing puts what you have written online."
+#~ msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıklarınızı siteye çıkarır."
 
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
@@ -216,7 +221,7 @@ msgstr "Kabul ettiği"
 msgid "Access key ID"
 msgstr "Erişim anahtarı (Access key ID)"
 
-#: src/components/publish-panel.tsx:226
+#: src/components/publish-panel.tsx:240
 msgid "Access token"
 msgstr "Erişim jetonu"
 
@@ -229,7 +234,7 @@ msgid "Active"
 msgstr "Etkin"
 
 #: src/components/editor/dialogs.tsx:200
-#: src/components/publish-panel.tsx:151
+#: src/components/publish-panel.tsx:165
 #: src/routes/dashboard.tags.tsx:174
 #: src/routes/dashboard.users.tsx:303
 msgid "Add"
@@ -488,7 +493,7 @@ msgstr "Bloklar"
 msgid "Bold"
 msgstr "Kalın"
 
-#: src/components/publish-panel.tsx:196
+#: src/components/publish-panel.tsx:210
 msgid "Branch"
 msgstr "Dal"
 
@@ -496,7 +501,7 @@ msgstr "Dal"
 msgid "Bucket"
 msgstr "Bucket"
 
-#: src/components/publish-panel.tsx:214
+#: src/components/publish-panel.tsx:228
 msgid "Build command"
 msgstr "Derleme komutu"
 
@@ -504,7 +509,7 @@ msgstr "Derleme komutu"
 msgid "Build this site's pages again."
 msgstr "Bu sitenin sayfalarını yeniden derler."
 
-#: src/components/publish-panel.tsx:111
+#: src/components/publish-panel.tsx:125
 msgid "Build variables"
 msgstr "Derleme değişkenleri"
 
@@ -1384,7 +1389,7 @@ msgstr "Mavi CMS kuruluyor…"
 msgid "Interactive docs"
 msgstr "Etkileşimli belgeler"
 
-#: src/components/publish-panel.tsx:221
+#: src/components/publish-panel.tsx:235
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "CMS_API_URL ve SITE_URL bu sitenin adresine ayarlı olarak çalışır."
 
@@ -1755,7 +1760,7 @@ msgstr "Tek yazı, diğer dilleriyle birlikte."
 msgid "Only by hand"
 msgstr "Yalnızca elle"
 
-#: src/components/publish-panel.tsx:235
+#: src/components/publish-panel.tsx:249
 msgid "Only for a private repository"
 msgstr "Yalnızca özel depolar için"
 
@@ -1788,7 +1793,7 @@ msgstr "Bu sunucunun barındırdığı diğer siteler. Her birine kendi veritaba
 #~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 #~ msgstr "Bu sunucunun barındırdığı diğer siteler. Her biri kendi içeriğini, hesaplarını ve yüklemelerini ayrı tutar."
 
-#: src/components/publish-panel.tsx:204
+#: src/components/publish-panel.tsx:218
 msgid "Output folder"
 msgstr "Çıktı klasörü"
 
@@ -1933,7 +1938,7 @@ msgstr "Genel URL tabanı"
 
 #: src/components/dashboard/dashboard-shell.tsx:90
 #: src/components/editor/mavi-editor.tsx:607
-#: src/components/publish-panel.tsx:292
+#: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:306
 #: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
@@ -1952,7 +1957,7 @@ msgstr "Yayında"
 msgid "Publishing — this takes a minute or two"
 msgstr "Yayınlanıyor — bir iki dakika sürer"
 
-#: src/components/publish-panel.tsx:292
+#: src/components/publish-panel.tsx:306
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
 
@@ -2004,7 +2009,7 @@ msgstr "Düzenli ifade"
 #: src/components/editor/bubble-menus.tsx:193
 #: src/components/editor/bubble-menus.tsx:274
 #: src/components/form-fields-editor.tsx:175
-#: src/components/publish-panel.tsx:122
+#: src/components/publish-panel.tsx:136
 #: src/routes/dashboard.forms_.$formId.tsx:224
 #: src/routes/dashboard.forms.tsx:207
 #: src/routes/dashboard.forms.tsx:331
@@ -2060,7 +2065,7 @@ msgstr "İçeriği değiştir"
 msgid "Replace…"
 msgstr "Değiştir…"
 
-#: src/components/publish-panel.tsx:185
+#: src/components/publish-panel.tsx:199
 msgid "Repository"
 msgstr "Depo"
 
@@ -2109,7 +2114,7 @@ msgid "S3 compatible storage"
 msgstr "S3 uyumlu depolama"
 
 #: src/components/editor/mavi-editor.tsx:596
-#: src/components/publish-panel.tsx:250
+#: src/components/publish-panel.tsx:264
 #: src/routes/console.account.tsx:144
 #: src/routes/console.sites.$siteId.tsx:377
 #: src/routes/console.sites.$siteId.tsx:405
@@ -2325,7 +2330,7 @@ msgstr "Yüklenen medyayı yerel disk yerine bir S3 bucket'ında saklar (AWS S3,
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Kayıtlı — değiştirmemek için boş bırakın"
 
-#: src/components/publish-panel.tsx:234
+#: src/components/publish-panel.tsx:248
 msgid "Stored — type to replace"
 msgstr "Kayıtlı — değiştirmek için yazın"
 
@@ -2463,7 +2468,7 @@ msgstr "ajansın, bu sitenin değil"
 msgid "The backup failed"
 msgstr "Yedekleme başarısız oldu"
 
-#: src/components/publish-panel.tsx:155
+#: src/components/publish-panel.tsx:169
 msgid "The build runs with these. A name already here is replaced; the others are left alone."
 msgstr "Derleme bunlarla çalışır. Aynı isim varsa üzerine yazılır, diğerlerine dokunulmaz."
 
@@ -2543,7 +2548,7 @@ msgid "Today's date"
 msgstr "Bugünün tarihi"
 
 #. placeholder {0}: Math.max( 1, Math.round( (new Date(build.finished_at).getTime() - new Date(build.started_at).getTime()) / 1000 ) )
-#: src/components/publish-panel.tsx:57
+#: src/components/publish-panel.tsx:53
 msgid "took {0} seconds"
 msgstr "{0} saniye sürdü"
 
@@ -2627,7 +2632,7 @@ msgstr "Yeni yüklemelerde S3 kullan"
 msgid "Username"
 msgstr "Kullanıcı adı"
 
-#: src/components/publish-panel.tsx:144
+#: src/components/publish-panel.tsx:158
 msgid "value"
 msgstr "değer"
 
