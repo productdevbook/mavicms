@@ -514,8 +514,18 @@ async fn agency_user(db: &sea_orm::DatabaseConnection, operator: &Operator) -> A
 
     if let Some(found) = existing {
         // The email follows the console account, so a change there shows here
-        // too — but only on an account this agency already owns.
-        if found.email != operator.email {
+        // too — but only onto a row this agency already owns, and only when
+        // nobody on this site is already using that address. A site's emails
+        // are unique, and this is a label on an account whose identity is the
+        // name above; failing the sign-in over it would be trading the whole
+        // feature for a cosmetic detail.
+        let taken = user::Entity::find()
+            .filter(user::Column::Email.eq(operator.email.clone()))
+            .one(db)
+            .await?
+            .is_some_and(|other| other.id != found.id);
+
+        if found.email != operator.email && !taken {
             let mut changed: user::ActiveModel = found.clone().into();
             changed.email = Set(operator.email.clone());
             changed.update(db).await?;
@@ -523,11 +533,24 @@ async fn agency_user(db: &sea_orm::DatabaseConnection, operator: &Operator) -> A
         return Ok(found.id);
     }
 
+    // Same reason as above, on the way in: an agency whose address is already
+    // somebody's here gets one that cannot be anybody's, rather than a failed
+    // sign-in.
+    let free = user::Entity::find()
+        .filter(user::Column::Email.eq(operator.email.clone()))
+        .one(db)
+        .await?
+        .is_none();
+
     let id = Uuid::new_v4();
     user::ActiveModel {
         id: Set(id),
-        username: Set(username),
-        email: Set(operator.email.clone()),
+        username: Set(username.clone()),
+        email: Set(if free {
+            operator.email.clone()
+        } else {
+            format!("{username}@localhost")
+        }),
         // Not a hash of anything: argon2 will not verify it, so no password
         // reaches this account.
         password_hash: Set(String::new()),
