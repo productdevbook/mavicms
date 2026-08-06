@@ -224,7 +224,9 @@ impl Registry {
     async fn finish_creating(&self, tenant: &Tenant) -> AppResult<()> {
         tokio::fs::create_dir_all(tenant.root(&self.sites_dir).join("media"))
             .await
-            .map_err(|err| AppError::Internal(format!("could not create the site folder: {err}")))?;
+            .map_err(|err| {
+                AppError::Internal(format!("could not create the site folder: {err}"))
+            })?;
 
         self.control
             .execute_raw(Statement::from_sql_and_values(
@@ -285,7 +287,9 @@ impl Registry {
         let root = tenant.root(&self.sites_dir);
         tokio::fs::create_dir_all(root.join("media"))
             .await
-            .map_err(|err| AppError::Internal(format!("could not create the site folder: {err}")))?;
+            .map_err(|err| {
+                AppError::Internal(format!("could not create the site folder: {err}"))
+            })?;
 
         let url = if tenant.database_url.trim().is_empty() {
             &self.base_url

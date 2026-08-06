@@ -1,15 +1,15 @@
 use axum::{Json, http::StatusCode};
 
 use crate::{
-    state::AppState,
-    tenants::Site,
     dto::plugins::{
         BackupSettingsResponse, ConnectionTestResponse, PluginSummary, S3SettingsRequest,
         S3SettingsResponse, UpdateBackupRequest,
     },
     error::{AppError, AppResult},
     plugins::{S3_PLUGIN, load_s3, save_s3},
+    state::AppState,
     storage::S3Config,
+    tenants::Site,
 };
 
 /// List the built-in integrations and whether each is switched on.
@@ -59,9 +59,7 @@ pub async fn list_plugins(Site(state): Site) -> AppResult<Json<Vec<PluginSummary
     tag = "plugins",
     responses((status = 200, description = "Backup settings", body = BackupSettingsResponse))
 )]
-pub async fn get_backup_settings(
-    Site(state): Site,
-) -> AppResult<Json<BackupSettingsResponse>> {
+pub async fn get_backup_settings(Site(state): Site) -> AppResult<Json<BackupSettingsResponse>> {
     let (enabled, config) = crate::backup::config(&state).await?;
     let s3 = load_s3(state.db(), &state.secrets).await?;
 
@@ -121,9 +119,7 @@ pub async fn update_backup_settings(
         (status = 400, description = "The backup could not be written", body = crate::error::ErrorBody),
     )
 )]
-pub async fn run_backup(
-    Site(state): Site,
-) -> AppResult<Json<crate::backup::BackupFile>> {
+pub async fn run_backup(Site(state): Site) -> AppResult<Json<crate::backup::BackupFile>> {
     Ok(Json(crate::backup::run(&state).await?))
 }
 

@@ -130,11 +130,8 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
         )",
         "CREATE INDEX IF NOT EXISTS idx_builds_tenant ON builds (tenant_id, requested_at)",
     ] {
-        db.execute_raw(Statement::from_string(
-            db.get_database_backend(),
-            statement,
-        ))
-        .await?;
+        db.execute_raw(Statement::from_string(db.get_database_backend(), statement))
+            .await?;
     }
     Ok(())
 }
@@ -261,9 +258,7 @@ fn store_environment(
     }
     for name in values.keys() {
         let usable = !name.is_empty()
-            && name
-                .chars()
-                .all(|c| c.is_ascii_alphanumeric() || c == '_')
+            && name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
             && !name.starts_with(|c: char| c.is_ascii_digit());
         if !usable {
             return Err(AppError::Validation(format!(
@@ -457,11 +452,7 @@ pub async fn request(db: &DatabaseConnection, tenant_id: Uuid) -> AppResult<Buil
     Ok(build)
 }
 
-pub async fn latest(
-    db: &DatabaseConnection,
-    tenant_id: Uuid,
-    limit: u8,
-) -> AppResult<Vec<Build>> {
+pub async fn latest(db: &DatabaseConnection, tenant_id: Uuid, limit: u8) -> AppResult<Vec<Build>> {
     let backend = db.get_database_backend();
     let rows = db
         .query_all_raw(Statement::from_sql_and_values(

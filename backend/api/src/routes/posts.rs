@@ -29,7 +29,6 @@ static MEDIA_IN_HTML: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::n
 });
 
 use crate::{
-    tenants::Site,
     dto::{
         post::{
             CreatePostRequest, PostPage, PostResponse, PostStatus, PostSummary, PostTranslation,
@@ -41,6 +40,7 @@ use crate::{
     error::{AppError, AppResult},
     languages::resolve,
     routes::{categories::resolve_for_locale, tags::get_or_create_tag},
+    tenants::Site,
 };
 
 async fn category_ids_for(db: &impl ConnectionTrait, post_id: Uuid) -> AppResult<Vec<Uuid>> {
@@ -303,10 +303,7 @@ pub async fn list_posts(
         (status = 404, description = "Post not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn get_post(
-    Site(state): Site,
-    Path(id): Path<Uuid>,
-) -> AppResult<Json<PostResponse>> {
+pub async fn get_post(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<Json<PostResponse>> {
     let db = state.db();
     let post = post::Entity::find_by_id(id)
         .one(db)
@@ -633,10 +630,7 @@ pub async fn set_translation_group(
         (status = 404, description = "Post not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_post(
-    Site(state): Site,
-    Path(id): Path<Uuid>,
-) -> AppResult<StatusCode> {
+pub async fn delete_post(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
     let db = state.db();
     let existing = post::Entity::find_by_id(id)
         .one(db)

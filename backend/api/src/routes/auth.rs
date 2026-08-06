@@ -6,10 +6,10 @@ use tower_cookies::Cookies;
 
 use crate::{
     auth::{clear_session, create_session},
-    tenants::{Resolved, Site},
     dto::auth::{LoginRequest, UserResponse},
     entities::user,
     error::{AppError, AppResult},
+    tenants::{Resolved, Site},
 };
 
 /// Sign in with a username and password, setting a session cookie.

@@ -88,11 +88,8 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
             used INTEGER NOT NULL
         )",
     ] {
-        db.execute_raw(Statement::from_string(
-            db.get_database_backend(),
-            statement,
-        ))
-        .await?;
+        db.execute_raw(Statement::from_string(db.get_database_backend(), statement))
+            .await?;
     }
     Ok(())
 }
@@ -142,9 +139,7 @@ pub async fn register(
     let email = email.trim().to_lowercase();
 
     if organization_name.is_empty() {
-        return Err(AppError::Validation(
-            "the agency needs a name".to_string(),
-        ));
+        return Err(AppError::Validation("the agency needs a name".to_string()));
     }
     if !email.contains('@') || email.len() < 3 {
         return Err(AppError::Validation(
@@ -355,10 +350,7 @@ pub async fn session_operator(
     }))
 }
 
-pub async fn organization(
-    db: &DatabaseConnection,
-    id: Uuid,
-) -> AppResult<Option<Organization>> {
+pub async fn organization(db: &DatabaseConnection, id: Uuid) -> AppResult<Option<Organization>> {
     let backend = db.get_database_backend();
     let row = db
         .query_one_raw(Statement::from_sql_and_values(

@@ -162,7 +162,11 @@ fn candidates(path: &str) -> Vec<String> {
         return vec!["index.html".to_string()];
     }
     // A request that already names a file is not also a folder.
-    if trimmed.rsplit('/').next().is_some_and(|last| last.contains('.')) {
+    if trimmed
+        .rsplit('/')
+        .next()
+        .is_some_and(|last| last.contains('.'))
+    {
         return vec![trimmed.to_string()];
     }
     vec![
@@ -337,7 +341,11 @@ mod tests {
         );
         assert_eq!(
             candidates("/yazi/merhaba/"),
-            ["yazi/merhaba/index.html", "yazi/merhaba.html", "yazi/merhaba"]
+            [
+                "yazi/merhaba/index.html",
+                "yazi/merhaba.html",
+                "yazi/merhaba"
+            ]
         );
     }
 

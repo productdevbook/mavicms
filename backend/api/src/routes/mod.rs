@@ -1,13 +1,13 @@
 pub mod auth;
 pub mod categories;
+pub mod console;
 pub mod health;
 pub mod languages;
 pub mod media;
 pub mod plugins;
 pub mod posts;
-pub mod setup;
-pub mod console;
 pub mod publish;
+pub mod setup;
 pub mod sites;
 pub mod slug;
 pub mod tags;

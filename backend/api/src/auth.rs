@@ -9,10 +9,10 @@ use tower_cookies::{Cookie, Cookies, cookie::SameSite};
 use uuid::Uuid;
 
 use crate::{
-    tenants::Site,
     entities::{session, user},
     error::AppError,
     state::AppState,
+    tenants::Site,
 };
 
 pub const SESSION_COOKIE: &str = "mavicms_session";

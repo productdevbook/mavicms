@@ -12,7 +12,6 @@ use tower_cookies::Cookies;
 use uuid::Uuid;
 
 use crate::{
-    tenants::{Operator, Resolved, Site},
     auth::create_session,
     db,
     dto::setup::{
@@ -21,6 +20,7 @@ use crate::{
     },
     entities::{site_settings, user},
     error::{AppError, AppResult},
+    tenants::{Operator, Resolved, Site},
 };
 
 /// Report whether the site has completed first-run setup.

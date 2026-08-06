@@ -10,12 +10,12 @@ use sea_orm::{
 use uuid::Uuid;
 
 use crate::{
-    tenants::Site,
     dto::taxonomy::{CategoryResponse, CreateCategoryRequest, LocaleQuery, UpdateCategoryRequest},
     entities::category,
     error::{AppError, AppResult},
     languages::resolve,
     slug::slugify_or,
+    tenants::Site,
 };
 
 /// Rejects a parent that would create a loop. Walking up from the proposed
@@ -299,10 +299,7 @@ pub async fn update_category(
         (status = 404, description = "Category not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_category(
-    Site(state): Site,
-    Path(id): Path<Uuid>,
-) -> AppResult<StatusCode> {
+pub async fn delete_category(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
     let result = category::Entity::delete_by_id(id).exec(state.db()).await?;
     if result.rows_affected == 0 {
         return Err(AppError::NotFound(format!("category {id}")));

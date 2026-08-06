@@ -11,13 +11,13 @@ use sea_orm::{
 use serde::Deserialize;
 
 use crate::{
-    tenants::Site,
     dto::languages::{
         CreateLanguageRequest, LanguageResponse, LanguageUsage, UpdateLanguageRequest,
     },
     entities::{category, language, post, tag},
     error::{AppError, AppResult},
     languages::{normalize_code, validate_code, well_known_name},
+    tenants::Site,
 };
 
 fn validate_direction(value: &str) -> AppResult<String> {
@@ -36,9 +36,7 @@ fn validate_direction(value: &str) -> AppResult<String> {
     tag = "languages",
     responses((status = 200, description = "Languages", body = Vec<LanguageResponse>))
 )]
-pub async fn list_languages(
-    Site(state): Site,
-) -> AppResult<Json<Vec<LanguageResponse>>> {
+pub async fn list_languages(Site(state): Site) -> AppResult<Json<Vec<LanguageResponse>>> {
     let rows = crate::languages::all(state.db()).await?;
     Ok(Json(rows.into_iter().map(LanguageResponse::from).collect()))
 }

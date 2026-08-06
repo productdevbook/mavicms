@@ -11,13 +11,13 @@ use sea_orm::{
 use uuid::Uuid;
 
 use crate::{
-    state::AppState,
-    tenants::Site,
     dto::media::{ImportMediaRequest, MediaResponse},
     entities::{media, post},
     error::{AppError, AppResult},
     fetch::{FetchError, fetch_remote_file},
     plugins::{active_storage, storage_for},
+    state::AppState,
+    tenants::Site,
 };
 
 pub const MAX_UPLOAD_BYTES: usize = 10 * 1024 * 1024;
@@ -333,10 +333,7 @@ pub async fn list_media(Site(state): Site) -> AppResult<Json<Vec<MediaResponse>>
         (status = 404, description = "Media not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_media(
-    Site(state): Site,
-    Path(id): Path<Uuid>,
-) -> AppResult<StatusCode> {
+pub async fn delete_media(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
     let db = state.db();
     let existing = media::Entity::find_by_id(id)
         .one(db)

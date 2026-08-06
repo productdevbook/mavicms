@@ -366,9 +366,7 @@ async fn owned_site(
         .all()
         .await?
         .into_iter()
-        .find(|tenant| {
-            tenant.id == id && tenant.organization_id == Some(operator.organization_id)
-        })
+        .find(|tenant| tenant.id == id && tenant.organization_id == Some(operator.organization_id))
         .ok_or_else(|| AppError::NotFound("site".to_string()))
 }
 
@@ -486,10 +484,7 @@ pub async fn enter(
 /// carries no usable password: the only way in is through a fresh entry
 /// token, so revoking the agency's console account closes every site with it
 /// rather than leaving a working login behind on fifty of them.
-async fn agency_user(
-    db: &sea_orm::DatabaseConnection,
-    operator: &Operator,
-) -> AppResult<Uuid> {
+async fn agency_user(db: &sea_orm::DatabaseConnection, operator: &Operator) -> AppResult<Uuid> {
     use sea_orm::{ActiveModelTrait, ActiveValue::Set, ColumnTrait, EntityTrait, QueryFilter};
 
     use crate::entities::user;
@@ -525,7 +520,11 @@ async fn unique_username(db: &sea_orm::DatabaseConnection, email: &str) -> AppRe
     use crate::entities::user;
 
     let base = crate::slug::slugify(email.split('@').next().unwrap_or("agency"));
-    let base = if base.is_empty() { "agency".to_string() } else { base };
+    let base = if base.is_empty() {
+        "agency".to_string()
+    } else {
+        base
+    };
 
     for attempt in 0..50 {
         let candidate = if attempt == 0 {

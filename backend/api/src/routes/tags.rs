@@ -10,13 +10,13 @@ use sea_orm::{
 use uuid::Uuid;
 
 use crate::{
-    tenants::Site,
     dto::taxonomy::{CreateTagRequest, LocaleQuery, TagResponse},
     entities::tag,
     error::{AppError, AppResult},
     languages::resolve,
     routes::posts::TranslationGroupRequest,
     slug::{slugify, slugify_or},
+    tenants::Site,
 };
 
 /// Finds a tag by name **within one language**, or creates one. Returns
@@ -152,10 +152,7 @@ pub async fn create_tag(
         (status = 404, description = "Tag not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_tag(
-    Site(state): Site,
-    Path(id): Path<Uuid>,
-) -> AppResult<StatusCode> {
+pub async fn delete_tag(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
     let result = tag::Entity::delete_by_id(id).exec(state.db()).await?;
     if result.rows_affected == 0 {
         return Err(AppError::NotFound(format!("tag {id}")));

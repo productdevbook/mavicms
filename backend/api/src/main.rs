@@ -56,9 +56,13 @@ async fn main() {
     // empty and every request falls through to the installation already there.
     let registry = match (&state.db, &config.database_url) {
         (Some(db), Some(url)) => Some(std::sync::Arc::new(
-            mavicms_api::tenants::Registry::new(db.clone(), url.clone(), config.data_dir.join("sites"))
-                .await
-                .unwrap_or_else(|err| panic!("failed to prepare the site registry: {err}")),
+            mavicms_api::tenants::Registry::new(
+                db.clone(),
+                url.clone(),
+                config.data_dir.join("sites"),
+            )
+            .await
+            .unwrap_or_else(|err| panic!("failed to prepare the site registry: {err}")),
         )),
         _ => None,
     };
@@ -68,10 +72,12 @@ async fn main() {
         default_state: state,
     };
 
-    let (router, api) = OpenApiRouter::<mavicms_api::tenants::Hosting>::with_openapi(mavicms_api::openapi::ApiDoc::openapi())
-        .merge(mavicms_api::routes::router(hosting.clone()))
-        .with_state(hosting)
-        .split_for_parts();
+    let (router, api) = OpenApiRouter::<mavicms_api::tenants::Hosting>::with_openapi(
+        mavicms_api::openapi::ApiDoc::openapi(),
+    )
+    .merge(mavicms_api::routes::router(hosting.clone()))
+    .with_state(hosting)
+    .split_for_parts();
 
     let openapi_json = api.clone();
 

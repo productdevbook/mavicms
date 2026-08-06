@@ -167,8 +167,7 @@ impl Builder {
             .await?
             .ok_or_else(|| AppError::Validation("the site has no project".to_string()))?;
         let token = publish::token(&self.control, &self.secrets, tenant.id).await?;
-        let environment =
-            publish::environment(&self.control, &self.secrets, tenant.id).await?;
+        let environment = publish::environment(&self.control, &self.secrets, tenant.id).await?;
 
         let checkout = self.workspace.join(&tenant.slug);
         self.fetch(&checkout, &config.repository, &config.branch, &token, log)
@@ -219,8 +218,12 @@ impl Builder {
 
         if checkout.join(".git").is_dir() {
             log.push_str(&format!("$ git fetch {repository}\n"));
-            self.git(checkout, &["remote", "set-url", "origin", &authenticated], log)
-                .await?;
+            self.git(
+                checkout,
+                &["remote", "set-url", "origin", &authenticated],
+                log,
+            )
+            .await?;
             self.git(checkout, &["fetch", "--depth", "1", "origin", branch], log)
                 .await?;
             self.git(checkout, &["reset", "--hard", "FETCH_HEAD"], log)
@@ -234,7 +237,15 @@ impl Builder {
             })?;
             self.git(
                 checkout,
-                &["clone", "--depth", "1", "--branch", branch, &authenticated, "."],
+                &[
+                    "clone",
+                    "--depth",
+                    "1",
+                    "--branch",
+                    branch,
+                    &authenticated,
+                    ".",
+                ],
                 log,
             )
             .await?;
@@ -316,7 +327,10 @@ impl Builder {
                 "CMS_API_URL",
                 format!("{}://{}/api", self.site_scheme, tenant.host),
             )
-            .env("SITE_URL", format!("{}://{}", self.site_scheme, tenant.host))
+            .env(
+                "SITE_URL",
+                format!("{}://{}", self.site_scheme, tenant.host),
+            )
             .env("CI", "true");
 
         // In front of the image's own bun, so the version the project asked
@@ -380,7 +394,9 @@ async fn collect(root: &Path, directory: &Path, into: &mut Vec<String>) -> AppRe
             }
         }
 
-        let Some(next) = pending.pop() else { return Ok(()) };
+        let Some(next) = pending.pop() else {
+            return Ok(());
+        };
         entries = tokio::fs::read_dir(&next)
             .await
             .map_err(|err| AppError::Internal(format!("could not read a folder: {err}")))?;
@@ -416,7 +432,10 @@ fn mime_of(path: &str) -> &'static str {
 /// Output goes in as it arrives rather than being collected at the end, so a
 /// build that times out still shows how far it got.
 async fn run(mut command: tokio::process::Command, log: &mut String, what: &str) -> AppResult<()> {
-    command.stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+    command
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
 
     let mut child = command
         .spawn()
@@ -436,10 +455,9 @@ async fn run(mut command: tokio::process::Command, log: &mut String, what: &str)
         String::from_utf8_lossy(&buffer).into_owned()
     };
 
-    let (status, output) = tokio::time::timeout(
-        BUILD_TIMEOUT,
-        async { tokio::join!(child.wait(), collect_output) },
-    )
+    let (status, output) = tokio::time::timeout(BUILD_TIMEOUT, async {
+        tokio::join!(child.wait(), collect_output)
+    })
     .await
     .map_err(|_| AppError::Validation(format!("{what} took too long and was stopped")))?;
 
@@ -485,17 +503,14 @@ fn published_storage() -> AppResult<MediaStorage> {
     };
 
     let Some(bucket) = read("PUBLISH_S3_BUCKET") else {
-        let root = PathBuf::from(
-            read("PUBLISH_DIR").unwrap_or_else(|| "/published".to_string()),
-        );
+        let root = PathBuf::from(read("PUBLISH_DIR").unwrap_or_else(|| "/published".to_string()));
         std::fs::create_dir_all(&root)
             .map_err(|err| AppError::Internal(format!("could not make {root:?}: {err}")))?;
         return Ok(MediaStorage::Local { root });
     };
 
-    let required = |name: &str| {
-        read(name).ok_or_else(|| AppError::Internal(format!("{name} is not set")))
-    };
+    let required =
+        |name: &str| read(name).ok_or_else(|| AppError::Internal(format!("{name} is not set")));
     let config = S3Config {
         endpoint: required("PUBLISH_S3_ENDPOINT")?,
         region: read("PUBLISH_S3_REGION").unwrap_or_else(|| "auto".to_string()),
