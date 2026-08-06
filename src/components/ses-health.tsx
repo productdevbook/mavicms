@@ -8,7 +8,6 @@ import {
   getSesHealth,
   getSesRequests,
   requestQuotaIncrease,
-  setSesSending,
   type SesHealth,
   type SesRequest,
 } from "@/lib/api"
@@ -86,15 +85,7 @@ function Rate({
   )
 }
 
-export function SesHealthPanel({
-  siteId,
-  sendingEnabled,
-  onSendingChanged,
-}: {
-  siteId?: string
-  sendingEnabled: boolean
-  onSendingChanged: () => void
-}) {
+export function SesHealthPanel({ siteId }: { siteId?: string }) {
   const { t } = useLingui()
 
   const [health, setHealth] = React.useState<SesHealth | null>(null)
@@ -142,21 +133,6 @@ export function SesHealthPanel({
   }, [siteId, t])
 
   React.useEffect(load, [load])
-
-  const toggleSending = async () => {
-    setBusy(true)
-    try {
-      await setSesSending(!sendingEnabled, siteId)
-      onSendingChanged()
-      toast.success(sendingEnabled ? t`Sending stopped` : t`Sending resumed`)
-    } catch (error) {
-      toast.error(
-        error instanceof ApiError ? error.message : t`Could not do it`
-      )
-    } finally {
-      setBusy(false)
-    }
-  }
 
   const askForMore = async () => {
     setBusy(true)
@@ -264,15 +240,6 @@ export function SesHealthPanel({
           </>
         )}
 
-        <div>
-          <Button
-            variant={sendingEnabled ? "outline" : "default"}
-            onClick={() => void toggleSending()}
-            disabled={busy}
-          >
-            {sendingEnabled ? t`Stop all sending` : t`Resume sending`}
-          </Button>
-        </div>
       </section>
 
       <section className="flex flex-col gap-3">

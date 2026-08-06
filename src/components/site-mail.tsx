@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { EmailFields } from "@/components/plugin-forms"
 import { SesAccountPanel } from "@/components/ses-account"
+import { SesHealthPanel } from "@/components/ses-health"
 
 /**
  * One site's mail settings, from the agency's side.
@@ -173,8 +174,14 @@ export function SiteMail({ siteId }: { siteId: string }) {
         )}
       </div>
 
-      <div className="border-t border-border pt-6">
-        <SesAccountPanel siteId={siteId} />
+      <div className="flex flex-col gap-8 border-t border-border pt-6">
+        <SesAccountPanel
+          siteId={siteId}
+          ready={Boolean(form.region.trim() && hasStoredSecret)}
+        />
+        {form.region.trim() && hasStoredSecret && (
+          <SesHealthPanel siteId={siteId} />
+        )}
       </div>
     </div>
   )

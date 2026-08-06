@@ -19,13 +19,13 @@ import {
   getSesIdentities,
   getSesSuppressed,
   requestProductionAccess,
+  setSesSending,
   unsuppressSesAddress,
   type SesAccount,
   type SesIdentity,
   type SesSuppressed,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
-import { SesHealthPanel } from "@/components/ses-health"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -49,14 +49,23 @@ import {
  * Given a `siteId` it speaks for that site through the console; without one,
  * for the site whose panel this is.
  */
-export function SesAccountPanel({ siteId }: { siteId?: string }) {
+export function SesAccountPanel({
+  siteId,
+  ready,
+}: {
+  siteId?: string
+  /** Whether there are settings to ask Amazon with. */
+  ready: boolean
+}) {
   const { t } = useLingui()
 
   const [account, setAccount] = React.useState<SesAccount | null>(null)
   const [identities, setIdentities] = React.useState<SesIdentity[]>([])
   const [suppressed, setSuppressed] = React.useState<SesSuppressed[]>([])
   const [problem, setProblem] = React.useState<string | null>(null)
-  const [loading, setLoading] = React.useState(true)
+  // Only loading when there is something to load; with no settings the
+  // panel has nothing to ask and nothing to wait for.
+  const [loading, setLoading] = React.useState(ready)
   const [busy, setBusy] = React.useState(false)
   const [newIdentity, setNewIdentity] = React.useState("")
   const [copied, setCopied] = React.useState<string | null>(null)
@@ -71,6 +80,9 @@ export function SesAccountPanel({ siteId }: { siteId?: string }) {
   // initial state already is loading, and from the handlers below, where the
   // button is what says something is happening.
   const load = React.useCallback(() => {
+    if (!ready) {
+      return
+    }
     getSesAccount(siteId)
       .then((found) => {
         setAccount(found)
@@ -92,7 +104,7 @@ export function SesAccountPanel({ siteId }: { siteId?: string }) {
 
     getSesIdentities(siteId).then(setIdentities).catch(() => setIdentities([]))
     getSesSuppressed(siteId).then(setSuppressed).catch(() => setSuppressed([]))
-  }, [siteId, t])
+  }, [siteId, ready, t])
 
   React.useEffect(load, [load])
 
@@ -148,6 +160,14 @@ export function SesAccountPanel({ siteId }: { siteId?: string }) {
     )
   }
 
+  if (!ready) {
+    return (
+      <p className="rounded-xl border border-dashed border-border px-4 py-6 text-sm text-muted-foreground">
+        {t`Fill in the region and the keys above and save them. Everything Amazon knows about this account then appears here: how much sending is left today, whether it is still in the sandbox, which senders are verified, and how the last two weeks went.`}
+      </p>
+    )
+  }
+
   if (problem || !account) {
     return (
       <p className="rounded-xl border border-dashed border-border px-4 py-6 text-sm text-muted-foreground">
@@ -194,16 +214,37 @@ export function SesAccountPanel({ siteId }: { siteId?: string }) {
         {!account.sending_enabled && (
           <p className="flex items-start gap-2 text-sm text-destructive">
             <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-            {t`Amazon has paused sending on this account (${account.enforcement_status}). Nothing will go out until that is resolved with them.`}
+            {t`Sending is off on this account (${account.enforcement_status}). Nothing goes out until it is on again — Amazon switches it off itself when an account is in trouble.`}
           </p>
         )}
-      </section>
 
-      <SesHealthPanel
-        siteId={siteId}
-        sendingEnabled={account.sending_enabled}
-        onSendingChanged={load}
-      />
+        <div>
+          <Button
+            variant={account.sending_enabled ? "outline" : "default"}
+            onClick={() => {
+              setBusy(true)
+              void setSesSending(!account.sending_enabled, siteId)
+                .then(() => {
+                  toast.success(
+                    account.sending_enabled
+                      ? t`Sending stopped`
+                      : t`Sending resumed`
+                  )
+                  load()
+                })
+                .catch((error) =>
+                  toast.error(
+                    error instanceof ApiError ? error.message : t`Could not do it`
+                  )
+                )
+                .finally(() => setBusy(false))
+            }}
+            disabled={busy}
+          >
+            {account.sending_enabled ? t`Stop all sending` : t`Resume sending`}
+          </Button>
+        </div>
+      </section>
 
       <section className="flex flex-col gap-3">
         <div>

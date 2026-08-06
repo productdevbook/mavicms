@@ -10,7 +10,11 @@ use utoipa::ToSchema;
 pub enum AppError {
     #[error("{0} not found")]
     NotFound(String),
-    #[error("validation error: {0}")]
+    // No prefix: the sentence is written to be read by whoever is looking at
+    // the panel, and "validation error: that is not an email address" is two
+    // sentences where one was meant. The status code already says which kind
+    // of refusal it is.
+    #[error("{0}")]
     Validation(String),
     #[error("{0}")]
     Conflict(String),

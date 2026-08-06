@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { EmailFields } from "@/components/plugin-forms"
 import { SesAccountPanel } from "@/components/ses-account"
+import { SesHealthPanel } from "@/components/ses-health"
 
 export const Route = createFileRoute("/dashboard/plugins_/email")({
   component: EmailSettingsRoute,
@@ -190,8 +191,11 @@ function EmailSettingsRoute() {
           )}
         </div>
 
-        <div className="border-t border-border pt-6">
-          <SesAccountPanel />
+        <div className="flex flex-col gap-8 border-t border-border pt-6">
+          <SesAccountPanel
+            ready={Boolean(form.region.trim() && hasStoredSecret)}
+          />
+          {form.region.trim() && hasStoredSecret && <SesHealthPanel />}
         </div>
       </div>
     </>
