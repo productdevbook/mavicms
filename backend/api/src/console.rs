@@ -41,6 +41,18 @@ const DEFAULT_SITE_LIMIT: i32 = 10;
 /// How long an invitation stands if nobody says otherwise.
 pub const INVITE_TTL_DAYS: i64 = 14;
 
+/// Whether anybody at all may open an agency here.
+///
+/// Off, and an environment variable rather than a setting in the panel: a
+/// server that lets strangers take a database schema is a decision about the
+/// machine, made by whoever runs it, and not something a signed-in account
+/// should be able to change. Somebody running this as a public service turns
+/// it on deliberately; nobody turns it on by clicking through a screen.
+pub fn registration_is_open() -> bool {
+    std::env::var("MAVICMS_OPEN_REGISTRATION")
+        .is_ok_and(|value| matches!(value.trim(), "1" | "true" | "yes"))
+}
+
 /// An invitation to open an agency on this server.
 ///
 /// There is no other way in. Registration used to be open, which on a server
@@ -340,7 +352,11 @@ pub async fn register(
     }
 
     let transaction = db.begin().await?;
-    let site_limit = claim_invite(&transaction, invite.trim()).await?;
+    let site_limit = if registration_is_open() && invite.trim().is_empty() {
+        DEFAULT_SITE_LIMIT
+    } else {
+        claim_invite(&transaction, invite.trim()).await?
+    };
 
     let organization = Organization {
         id: Uuid::now_v7(),

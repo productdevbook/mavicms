@@ -594,6 +594,10 @@ export interface ConsoleSite {
   active: boolean
 }
 
+export function registrationIsOpen(): Promise<{ open: boolean }> {
+  return request<{ open: boolean }>("/console/registration")
+}
+
 export function consoleRegister(payload: {
   organization_name: string
   name: string

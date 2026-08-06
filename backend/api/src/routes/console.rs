@@ -790,6 +790,27 @@ fn shown(invite: console::Invite, agencies: &[console::Organization]) -> InviteR
     }
 }
 
+/// Whether this server takes registrations without an invitation.
+///
+/// Asked before the form is drawn: a page that collects a name, an address and
+/// a password and then says "by invitation only" wasted somebody's time.
+#[utoipa::path(
+    get,
+    path = "/console/registration",
+    tag = "console",
+    responses((status = 200, description = "Whether anybody may sign up", body = RegistrationResponse))
+)]
+pub async fn registration() -> Json<RegistrationResponse> {
+    Json(RegistrationResponse {
+        open: console::registration_is_open(),
+    })
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct RegistrationResponse {
+    pub open: bool,
+}
+
 /// Every agency on this server. The operator's view.
 #[utoipa::path(
     get,

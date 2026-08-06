@@ -456,11 +456,11 @@ msgstr "Agencies"
 msgid "Agencies → the console"
 msgstr "Agencies → the console"
 
-#: src/routes/console.register.tsx:79
+#: src/routes/console.register.tsx:96
 msgid "Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address."
 msgstr "Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address."
 
-#: src/routes/console.register.tsx:130
+#: src/routes/console.register.tsx:147
 msgid "Agency name"
 msgstr "Agency name"
 
@@ -500,7 +500,7 @@ msgstr "Align right"
 msgid "Alignment"
 msgstr "Alignment"
 
-#: src/routes/console.register.tsx:188
+#: src/routes/console.register.tsx:205
 msgid "Already have an account? Sign in"
 msgstr "Already have an account? Sign in"
 
@@ -641,7 +641,7 @@ msgstr "Asked. Amazon usually answers within a day."
 msgid "Asking for a bigger quota"
 msgstr "Asking for a bigger quota"
 
-#: src/routes/console.register.tsx:174
+#: src/routes/console.register.tsx:191
 msgid "At least {MINIMUM_PASSWORD} characters."
 msgstr "At least {MINIMUM_PASSWORD} characters."
 
@@ -1194,7 +1194,7 @@ msgstr "Could not open the site"
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
 #: src/routes/console.login.tsx:38
-#: src/routes/console.register.tsx:56
+#: src/routes/console.register.tsx:65
 #: src/routes/login.tsx:72
 msgid "Could not reach the server. Please try again."
 msgstr "Could not reach the server. Please try again."
@@ -1326,7 +1326,7 @@ msgstr "Create an ordered list"
 msgid "Create an unordered list"
 msgstr "Create an unordered list"
 
-#: src/routes/console.register.tsx:182
+#: src/routes/console.register.tsx:199
 msgid "Create the account"
 msgstr "Create the account"
 
@@ -1534,7 +1534,7 @@ msgstr "Editing"
 #: src/components/setup/setup-wizard.tsx:698
 #: src/routes/console.account.tsx:98
 #: src/routes/console.login.tsx:80
-#: src/routes/console.register.tsx:153
+#: src/routes/console.register.tsx:170
 #: src/routes/dashboard.mail.tsx:550
 #: src/routes/dashboard.users.tsx:271
 msgid "Email"
@@ -1861,7 +1861,7 @@ msgstr "How to send to it"
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 
-#: src/routes/console.register.tsx:82
+#: src/routes/console.register.tsx:99
 msgid "I already have an account"
 msgstr "I already have an account"
 
@@ -2512,7 +2512,7 @@ msgstr "on {0} lists"
 msgid "On the server's disk"
 msgstr "On the server's disk"
 
-#: src/routes/console.register.tsx:115
+#: src/routes/console.register.tsx:132
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "One account for every site you run. Each site keeps its own content and its own people."
 
@@ -2565,7 +2565,7 @@ msgstr "Open"
 msgid "Open a case at AWS"
 msgstr "Open a case at AWS"
 
-#: src/routes/console.register.tsx:112
+#: src/routes/console.register.tsx:129
 msgid "Open an agency account"
 msgstr "Open an agency account"
 
@@ -2628,7 +2628,7 @@ msgstr "Paragraph"
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console.login.tsx:93
-#: src/routes/console.register.tsx:165
+#: src/routes/console.register.tsx:182
 #: src/routes/dashboard.users.tsx:280
 #: src/routes/login.tsx:126
 msgid "Password"
@@ -3670,7 +3670,7 @@ msgstr "This is what you sign in with."
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "This post could not be opened, so it has been left untouched."
 
-#: src/routes/console.register.tsx:77
+#: src/routes/console.register.tsx:94
 msgid "This server is by invitation"
 msgstr "This server is by invitation"
 
@@ -4033,7 +4033,7 @@ msgid "Your account"
 msgstr "Your account"
 
 #: src/routes/console.account.tsx:89
-#: src/routes/console.register.tsx:142
+#: src/routes/console.register.tsx:159
 msgid "Your name"
 msgstr "Your name"
 

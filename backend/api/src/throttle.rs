@@ -111,17 +111,48 @@ pub fn right(key: &str) {
 
 /// The address a request came from, as well as it can be known.
 ///
-/// Behind a proxy the socket is the proxy, so the forwarded header is what
-/// says who asked — and the *last* entry of it, not the first: the proxy
-/// appends the address it saw, so anything before that is whatever the client
-/// chose to claim.
+/// Read from the right, and the first entry that could be a client on the
+/// internet wins. Neither end of the header is the answer on its own: the
+/// left is whatever the caller chose to write there, and the right is the
+/// last proxy to append — which here is the ingress, seen from the panel's
+/// nginx, and is the same for everybody. Keying on that would let one wrong
+/// password pause everybody's sign-in.
+///
+/// Every hop of ours is inside the cluster and so has a private address,
+/// which is what makes scanning from the right work without a list of proxies
+/// to keep up to date. A forged entry cannot win either: it can only be added
+/// to the left of the real one, and the real one is found first.
+/// Whether an address is a hop of ours rather than somebody arriving.
+///
+/// A narrower question than the one the fetch guard asks. That one refuses
+/// everything not worth reaching, documentation ranges included; this only
+/// wants to know whether an entry in the header is one of our own proxies.
+fn is_one_of_ours(ip: std::net::IpAddr) -> bool {
+    use std::net::IpAddr;
+    if ip.is_unspecified() {
+        return true;
+    }
+    match ip {
+        IpAddr::V4(ip) => ip.is_loopback() || ip.is_private() || ip.is_link_local(),
+        IpAddr::V6(ip) => {
+            ip.is_loopback() || (ip.segments()[0] & 0xfe00) == 0xfc00 || ip.is_unicast_link_local()
+        }
+    }
+}
+
 pub fn caller(headers: &axum::http::HeaderMap) -> String {
     headers
         .get("x-forwarded-for")
         .and_then(|value| value.to_str().ok())
-        .and_then(|value| value.rsplit(',').next())
-        .map(|value| value.trim().to_string())
-        .filter(|value| !value.is_empty())
+        .into_iter()
+        .flat_map(|value| value.rsplit(','))
+        .map(str::trim)
+        .find(|entry| {
+            entry
+                .parse::<std::net::IpAddr>()
+                .is_ok_and(|ip| !is_one_of_ours(ip))
+        })
+        .map(str::to_string)
         .unwrap_or_else(|| "unknown".to_string())
 }
 
@@ -157,12 +188,27 @@ mod tests {
         right(key);
     }
 
-    #[test]
-    fn the_caller_is_the_address_the_proxy_saw_not_the_one_it_was_told() {
+    fn from(forwarded: &str) -> String {
         let mut headers = axum::http::HeaderMap::new();
-        headers.insert("x-forwarded-for", "10.9.9.9, 203.0.113.7".parse().unwrap());
-        assert_eq!(caller(&headers), "203.0.113.7");
+        headers.insert("x-forwarded-for", forwarded.parse().unwrap());
+        caller(&headers)
+    }
 
+    #[test]
+    fn the_caller_is_found_past_our_own_hops() {
+        // What this deployment actually sends: the client, then the ingress as
+        // the panel's nginx saw it. Taking the last entry would key every
+        // sign-in on the same address.
+        assert_eq!(from("203.0.113.7, 10.42.0.3"), "203.0.113.7");
+        assert_eq!(from("203.0.113.7"), "203.0.113.7");
+
+        // A caller writing their own header cannot displace the real one:
+        // theirs can only be to the left of it.
+        assert_eq!(from("198.51.100.1, 203.0.113.7, 10.42.0.3"), "203.0.113.7");
+
+        // Nothing usable rather than a wrong answer.
+        assert_eq!(from("10.42.0.3, 127.0.0.1"), "unknown");
+        assert_eq!(from("not-an-address"), "unknown");
         assert_eq!(caller(&axum::http::HeaderMap::new()), "unknown");
     }
 }

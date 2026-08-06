@@ -37,22 +37,52 @@ fn origin(headers: &HeaderMap) -> String {
         .and_then(|value| value.to_str().ok())
         .unwrap_or("localhost");
 
-    let scheme = headers
+    let forwarded = headers
         .get("x-forwarded-proto")
         .and_then(|value| value.to_str().ok())
-        .map(|value| value.split(',').next().unwrap_or(value).trim())
-        // Behind an ingress that does not say, https is the safer guess: an
-        // http address in this file would be pasted into a build and the build
-        // would be redirected, or worse, not.
-        .unwrap_or_else(|| {
-            if host.starts_with("localhost") || host.starts_with("127.0.0.1") {
-                "http"
-            } else {
-                "https"
-            }
-        });
+        .map(|value| value.split(',').next().unwrap_or(value).trim());
 
-    format!("{scheme}://{host}")
+    format!("{}://{host}", scheme_for(forwarded, host))
+}
+
+/// Which scheme the addresses in this file should carry.
+///
+/// The addresses here are copied into builds verbatim, on purpose, so getting
+/// this wrong does not produce a redirect — it produces a 404 that reads as
+/// "the CMS has no posts", and every cover image on the generated site points
+/// at one.
+///
+/// A forwarded `https` is taken at its word. A forwarded `http` is not, unless
+/// the host looks like somebody's own machine: the header only carries the
+/// last hop's scheme, so a proxy in front of a proxy reports plaintext for a
+/// site that is only ever reached over TLS. Anything this image serves on a
+/// real hostname sends HSTS, which settles what the transport was meant to be.
+fn scheme_for(forwarded: Option<&str>, host: &str) -> &'static str {
+    if forwarded.is_some_and(|scheme| scheme.eq_ignore_ascii_case("https")) {
+        return "https";
+    }
+    if is_somebodys_own_machine(host) {
+        "http"
+    } else {
+        "https"
+    }
+}
+
+fn is_somebodys_own_machine(host: &str) -> bool {
+    let name = host.split(':').next().unwrap_or(host);
+
+    // A bare name with no dot in it is a container or a machine on a desk,
+    // never a site somebody visits.
+    if name == "localhost" || name.ends_with(".localhost") || !name.contains('.') {
+        return true;
+    }
+    name.trim_start_matches('[')
+        .trim_end_matches(']')
+        .parse::<std::net::IpAddr>()
+        .is_ok_and(|ip| match ip {
+            std::net::IpAddr::V4(ip) => ip.is_loopback() || ip.is_private(),
+            std::net::IpAddr::V6(ip) => ip.is_loopback(),
+        })
 }
 
 /// How to build pages from this site.
@@ -167,7 +197,7 @@ async fn this_site(db: &sea_orm::DatabaseConnection) -> AppResult<String> {
 mod tests {
     use axum::http::{HeaderMap, header};
 
-    use super::origin;
+    use super::{origin, scheme_for};
 
     #[test]
     fn the_address_is_the_one_the_caller_used() {
@@ -178,12 +208,16 @@ mod tests {
     }
 
     #[test]
-    fn an_ingress_that_says_http_is_believed() {
+    fn an_ingress_saying_http_about_a_real_hostname_is_not_believed() {
+        // It used to be. The header carries the last hop's scheme, and behind
+        // a proxy in front of a proxy that hop is plaintext for a site only
+        // ever reached over TLS — so this said http:// about an address that
+        // answers 404, in the one file builds are told to copy verbatim.
         let mut headers = HeaderMap::new();
         headers.insert(header::HOST, "example.test".parse().unwrap());
         headers.insert("x-forwarded-proto", "http".parse().unwrap());
 
-        assert_eq!(origin(&headers), "http://example.test");
+        assert_eq!(origin(&headers), "https://example.test");
     }
 
     /// Proxies chain the header rather than replacing it; the first hop is the
@@ -203,5 +237,29 @@ mod tests {
         headers.insert(header::HOST, "localhost:5173".parse().unwrap());
 
         assert_eq!(origin(&headers), "http://localhost:5173");
+    }
+
+    #[test]
+    fn a_site_behind_a_proxy_in_front_of_a_proxy_is_still_https() {
+        // What the shipped nginx used to report for a TLS-terminated site.
+        assert_eq!(scheme_for(Some("http"), "example.com"), "https");
+        assert_eq!(scheme_for(Some("https"), "example.com"), "https");
+        assert_eq!(scheme_for(Some("HTTPS"), "example.com"), "https");
+        assert_eq!(scheme_for(None, "example.com"), "https");
+    }
+
+    #[test]
+    fn somebody_running_it_on_their_own_machine_keeps_http() {
+        for host in [
+            "localhost",
+            "localhost:5173",
+            "site.localhost",
+            "127.0.0.1:8080",
+            "[::1]:8080",
+            "192.168.1.5:8080",
+            "mavicms",
+        ] {
+            assert_eq!(scheme_for(Some("http"), host), "http", "{host}");
+        }
     }
 }

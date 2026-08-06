@@ -37,6 +37,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(setup::configure_database))
         .routes(routes!(auth::logout))
         .routes(routes!(console::register))
+        .routes(routes!(console::registration))
         .routes(routes!(console::login))
         .routes(routes!(console::logout))
         .routes(routes!(console::me))

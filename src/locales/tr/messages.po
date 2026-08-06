@@ -456,11 +456,11 @@ msgstr "İşletmeler"
 msgid "Agencies → the console"
 msgstr "İşletmeler → konsol"
 
-#: src/routes/console.register.tsx:79
+#: src/routes/console.register.tsx:96
 msgid "Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address."
 msgstr "Ajanslar, bu sunucuyu işletenin gönderdiği bir bağlantıyla açılır. Size bir bağlantı geldiyse onu izleyin — davet adresin içinde taşınır."
 
-#: src/routes/console.register.tsx:130
+#: src/routes/console.register.tsx:147
 msgid "Agency name"
 msgstr "İşletme adı"
 
@@ -500,7 +500,7 @@ msgstr "Sağa hizala"
 msgid "Alignment"
 msgstr "Hizalama"
 
-#: src/routes/console.register.tsx:188
+#: src/routes/console.register.tsx:205
 msgid "Already have an account? Sign in"
 msgstr "Hesabınız var mı? Giriş yapın"
 
@@ -641,7 +641,7 @@ msgstr "İstendi. Amazon genellikle bir gün içinde yanıtlar."
 msgid "Asking for a bigger quota"
 msgstr "Daha yüksek kota istemek"
 
-#: src/routes/console.register.tsx:174
+#: src/routes/console.register.tsx:191
 msgid "At least {MINIMUM_PASSWORD} characters."
 msgstr "En az {MINIMUM_PASSWORD} karakter."
 
@@ -1194,7 +1194,7 @@ msgstr "Site açılamadı"
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
 #: src/routes/console.login.tsx:38
-#: src/routes/console.register.tsx:56
+#: src/routes/console.register.tsx:65
 #: src/routes/login.tsx:72
 msgid "Could not reach the server. Please try again."
 msgstr "Sunucuya ulaşılamadı. Lütfen tekrar deneyin."
@@ -1326,7 +1326,7 @@ msgstr "Sıralı liste oluştur"
 msgid "Create an unordered list"
 msgstr "Sırasız liste oluştur"
 
-#: src/routes/console.register.tsx:182
+#: src/routes/console.register.tsx:199
 msgid "Create the account"
 msgstr "Hesabı oluştur"
 
@@ -1530,7 +1530,7 @@ msgstr "Düzenleme"
 #: src/components/setup/setup-wizard.tsx:698
 #: src/routes/console.account.tsx:98
 #: src/routes/console.login.tsx:80
-#: src/routes/console.register.tsx:153
+#: src/routes/console.register.tsx:170
 #: src/routes/dashboard.mail.tsx:550
 #: src/routes/dashboard.users.tsx:271
 msgid "Email"
@@ -1857,7 +1857,7 @@ msgstr "Buraya nasıl gönderilir"
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} ve {{ unsubscribe_url }} her kişi için doldurulur; kişi hakkında tuttuğunuz diğer alanlar da öyle. Düz metin bölümü bundan kendiliğinden üretilir."
 
-#: src/routes/console.register.tsx:82
+#: src/routes/console.register.tsx:99
 msgid "I already have an account"
 msgstr "Zaten hesabım var"
 
@@ -2508,7 +2508,7 @@ msgstr "{0} listede"
 msgid "On the server's disk"
 msgstr "Sunucunun diskinde"
 
-#: src/routes/console.register.tsx:115
+#: src/routes/console.register.tsx:132
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "Yürüttüğünüz bütün siteler için tek hesap. Her site kendi içeriğini ve kendi ekibini ayrı tutar."
 
@@ -2561,7 +2561,7 @@ msgstr "Aç"
 msgid "Open a case at AWS"
 msgstr "AWS'de talep aç"
 
-#: src/routes/console.register.tsx:112
+#: src/routes/console.register.tsx:129
 msgid "Open an agency account"
 msgstr "İşletme hesabı aç"
 
@@ -2624,7 +2624,7 @@ msgstr "Paragraf"
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console.login.tsx:93
-#: src/routes/console.register.tsx:165
+#: src/routes/console.register.tsx:182
 #: src/routes/dashboard.users.tsx:280
 #: src/routes/login.tsx:126
 msgid "Password"
@@ -3666,7 +3666,7 @@ msgstr "Giriş yaparken bunu kullanırsınız."
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "Bu yazı açılamadı, bu yüzden hiç değiştirilmedi."
 
-#: src/routes/console.register.tsx:77
+#: src/routes/console.register.tsx:94
 msgid "This server is by invitation"
 msgstr "Bu sunucuya davetle girilir"
 
@@ -4029,7 +4029,7 @@ msgid "Your account"
 msgstr "Hesabınız"
 
 #: src/routes/console.account.tsx:89
-#: src/routes/console.register.tsx:142
+#: src/routes/console.register.tsx:159
 msgid "Your name"
 msgstr "Adınız"
 

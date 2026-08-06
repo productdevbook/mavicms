@@ -4,7 +4,7 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router"
 import { Trans, useLingui } from "@lingui/react/macro"
 import { Loader2 } from "lucide-react"
 
-import { ApiError, consoleRegister } from "@/lib/api"
+import { ApiError, consoleRegister, registrationIsOpen } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -23,6 +23,15 @@ function ConsoleRegisterRoute() {
   const { t } = useLingui()
   const navigate = useNavigate()
   const { invite } = Route.useSearch()
+
+  // Asked rather than assumed: a server run as a public service can be set to
+  // take anybody, and then there is no link to wait for.
+  const [open, setOpen] = React.useState<boolean | null>(null)
+  React.useEffect(() => {
+    registrationIsOpen()
+      .then((answer) => setOpen(answer.open))
+      .catch(() => setOpen(false))
+  }, [])
 
   const [organizationName, setOrganizationName] = React.useState("")
   const [name, setName] = React.useState("")
@@ -59,9 +68,17 @@ function ConsoleRegisterRoute() {
     }
   }
 
+  if (open === null) {
+    return (
+      <div className="flex min-h-svh items-center justify-center">
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
   // Without a link there is nothing to fill in. Saying so is kinder than a
   // form that takes everything and then refuses at the end.
-  if (!invite) {
+  if (!invite && !open) {
     return (
       <div className="flex min-h-svh items-center justify-center bg-muted/40 p-4">
         <div className="w-full max-w-sm">
