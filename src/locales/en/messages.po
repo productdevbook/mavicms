@@ -175,7 +175,7 @@ msgstr "0 results"
 msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 characters: letters, numbers, _ or -"
 
-#: src/routes/dashboard.api.tsx:158
+#: src/routes/dashboard.api.tsx:163
 msgid "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
 msgstr "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
 
@@ -196,11 +196,11 @@ msgstr "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as
 msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
 
-#: src/routes/dashboard.api.tsx:170
+#: src/routes/dashboard.api.tsx:175
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 
-#: src/routes/dashboard.api.tsx:195
+#: src/routes/dashboard.api.tsx:202
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 
@@ -324,7 +324,7 @@ msgstr "Add table"
 
 #: src/components/editor/dialogs.tsx:300
 #: src/routes/console.index.tsx:197
-#: src/routes/dashboard.api.tsx:138
+#: src/routes/dashboard.api.tsx:143
 #: src/routes/dashboard.forms.tsx:260
 #: src/routes/dashboard.sites.tsx:257
 msgid "Address"
@@ -406,7 +406,7 @@ msgid "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever a
 msgstr "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 
 #: src/components/dashboard/dashboard-shell.tsx:85
-#: src/routes/dashboard.api.tsx:130
+#: src/routes/dashboard.api.tsx:135
 msgid "API"
 msgstr "API"
 
@@ -654,7 +654,7 @@ msgid "Connection URL"
 msgstr "Connection URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:70
-#: src/routes/dashboard.api.tsx:193
+#: src/routes/dashboard.api.tsx:200
 msgid "Content"
 msgstr "Content"
 
@@ -1124,7 +1124,7 @@ msgstr "Every post, category, tag and account this site has now is replaced by w
 msgid "Every post, category, tag and account this site has now is replaced by what \"{pendingRestore}\" holds. This cannot be undone."
 msgstr "Every post, category, tag and account this site has now is replaced by what \"{pendingRestore}\" holds. This cannot be undone."
 
-#: src/routes/dashboard.api.tsx:141
+#: src/routes/dashboard.api.tsx:146
 msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 msgstr "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 
@@ -1133,7 +1133,7 @@ msgstr "Every site has its own, on its own address. The same server answers all 
 msgid "Every week"
 msgstr "Every week"
 
-#: src/routes/dashboard.api.tsx:132
+#: src/routes/dashboard.api.tsx:137
 msgid "Everything in this panel is this API. It is what your pages are built from, and what anything else you write can read."
 msgstr "Everything in this panel is this API. It is what your pages are built from, and what anything else you write can read."
 
@@ -1389,7 +1389,7 @@ msgstr "Install Mavi CMS"
 msgid "Installing Mavi CMS…"
 msgstr "Installing Mavi CMS…"
 
-#: src/routes/dashboard.api.tsx:221
+#: src/routes/dashboard.api.tsx:228
 msgid "Interactive docs"
 msgstr "Interactive docs"
 
@@ -1781,7 +1781,7 @@ msgstr "Open an agency account"
 msgid "Open in new tab"
 msgstr "Open in new tab"
 
-#: src/routes/dashboard.api.tsx:230
+#: src/routes/dashboard.api.tsx:237
 msgid "OpenAPI document"
 msgstr "OpenAPI document"
 
@@ -1980,11 +1980,11 @@ msgstr "Raise text above the line"
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
 
-#: src/routes/dashboard.api.tsx:167
+#: src/routes/dashboard.api.tsx:172
 msgid "Reading"
 msgstr "Reading"
 
-#: src/routes/dashboard.api.tsx:148
+#: src/routes/dashboard.api.tsx:153
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 
@@ -2194,7 +2194,7 @@ msgstr "Select all"
 msgid "Select your language"
 msgstr "Select your language"
 
-#: src/routes/dashboard.api.tsx:123
+#: src/routes/dashboard.api.tsx:128
 msgid "Send a form's answers. No account needed."
 msgstr "Send a form's answers. No account needed."
 
@@ -2277,7 +2277,7 @@ msgstr "Sign in; sets the session cookie."
 msgid "Sign out"
 msgstr "Sign out"
 
-#: src/routes/dashboard.api.tsx:146
+#: src/routes/dashboard.api.tsx:151
 msgid "Signing in"
 msgstr "Signing in"
 
@@ -2515,7 +2515,7 @@ msgstr "The server is taking longer than expected to restart. Reload this page i
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 
-#: src/routes/dashboard.api.tsx:214
+#: src/routes/dashboard.api.tsx:221
 msgid "The whole of it"
 msgstr "The whole of it"
 
@@ -2523,13 +2523,17 @@ msgstr "The whole of it"
 msgid "Theme"
 msgstr "Theme"
 
+#: src/routes/dashboard.api.tsx:188
+msgid "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
+msgstr "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
+
 #: src/routes/dashboard.users.tsx:257
 msgid "They can write, publish and manage this site."
 msgstr "They can write, publish and manage this site."
 
 #: src/routes/dashboard.api.tsx:183
-msgid "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
-msgstr "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
+#~ msgid "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
+#~ msgstr "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
 
 #: src/routes/console.account.tsx:106
 msgid "This is what you sign in with."
@@ -2681,6 +2685,10 @@ msgstr "Where this site's pages come from, and how the last builds went."
 msgid "Where to keep them"
 msgstr "Where to keep them"
 
+#: src/routes/dashboard.api.tsx:123
+msgid "Which fields a form takes, and which are required."
+msgstr "Which fields a form takes, and which are required."
+
 #: src/routes/dashboard.users.tsx:152
 msgid "Who can sign in to this site and write on it."
 msgstr "Who can sign in to this site and write on it."
@@ -2689,7 +2697,7 @@ msgstr "Who can sign in to this site and write on it."
 msgid "Whole word"
 msgstr "Whole word"
 
-#: src/routes/dashboard.api.tsx:180
+#: src/routes/dashboard.api.tsx:185
 msgid "Without an account"
 msgstr "Without an account"
 
@@ -2705,7 +2713,7 @@ msgstr "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existin
 msgid "Write a post."
 msgstr "Write a post."
 
-#: src/routes/dashboard.api.tsx:175
+#: src/routes/dashboard.api.tsx:180
 msgid "Writing"
 msgstr "Writing"
 

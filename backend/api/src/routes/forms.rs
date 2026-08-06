@@ -23,8 +23,8 @@ use uuid::Uuid;
 use crate::{
     auth::Administrator,
     dto::forms::{
-        FormField, FormResponse, SaveFormRequest, SubmissionRequest, SubmissionResponse,
-        clean_fields, clean_submission,
+        FormField, FormResponse, FormSchema, SaveFormRequest, SubmissionRequest,
+        SubmissionResponse, clean_fields, clean_submission,
     },
     entities::{form, form_submission},
     error::{AppError, AppResult},
@@ -426,11 +426,56 @@ pub async fn delete_submission(
     Ok(StatusCode::NO_CONTENT)
 }
 
+/// What a form accepts.
+///
+/// The companion to the address below, and the reason it can be used without
+/// being told anything else: which fields a form takes is not something an
+/// API description can hold, because a form is made in the panel long after
+/// the description was written. So the address describes itself. Ask this,
+/// get the field names, their types and whether they are required, then post
+/// to `/forms/{slug}/submit`.
+#[utoipa::path(
+    get,
+    path = "/forms/{slug}/schema",
+    tag = "forms",
+    params(("slug" = String, Path, description = "The form's address")),
+    responses(
+        (status = 200, description = "The fields this form accepts", body = FormSchema),
+        (status = 404, description = "No form answers there", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn form_schema(
+    Site(state): Site,
+    Path(slug): Path<String>,
+) -> AppResult<Json<FormSchema>> {
+    let db = state.db_or_unavailable()?;
+    let form = active_form(db, &slug).await?;
+
+    Ok(Json(FormSchema {
+        fields: fields_of(&form)?,
+        name: form.name,
+        slug: form.slug,
+    }))
+}
+
+/// The form answering at an address, if one is taking answers.
+///
+/// A switched-off form is missing rather than refused: whether one exists is
+/// not something an open address should tell people.
+async fn active_form(db: &sea_orm::DatabaseConnection, slug: &str) -> AppResult<form::Model> {
+    form::Entity::find()
+        .filter(form::Column::Slug.eq(slug))
+        .filter(form::Column::Active.eq(true))
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("form {slug}")))
+}
+
 /// Send something through a form.
 ///
-/// This one is open: it is the address the site's own pages post to, and a
-/// visitor filling in a contact form has no account here. The form's fields
-/// are the whole of what it accepts — see `dto::forms::clean_submission`.
+/// Open, because the visitor filling in a contact form has no account here.
+/// What it accepts is exactly what `/forms/{slug}/schema` lists and nothing
+/// else — a key the form does not define is refused rather than kept.
 #[utoipa::path(
     post,
     path = "/forms/{slug}/submit",
@@ -449,15 +494,7 @@ pub async fn submit_form(
     Json(payload): Json<SubmissionRequest>,
 ) -> AppResult<StatusCode> {
     let db = state.db_or_unavailable()?;
-
-    let form = form::Entity::find()
-        .filter(form::Column::Slug.eq(&slug))
-        // A switched-off form is missing rather than refused: whether one
-        // exists is not something an open address should tell people.
-        .filter(form::Column::Active.eq(true))
-        .one(db)
-        .await?
-        .ok_or_else(|| AppError::NotFound(format!("form {slug}")))?;
+    let form = active_form(db, &slug).await?;
 
     let data = clean_submission(&fields_of(&form)?, payload.0)?;
 

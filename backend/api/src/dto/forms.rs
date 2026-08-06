@@ -282,6 +282,20 @@ pub struct FormResponse {
 #[schema(value_type = Object)]
 pub struct SubmissionRequest(pub Map<String, Value>);
 
+/// What a form accepts, for whatever is going to fill it in.
+///
+/// No account, because the thing that needs this is the page the form is
+/// drawn on, and that page is read by people who have none. Nothing here is
+/// private: these are the labels and the choices a visitor is already looking
+/// at. The form's internal note is deliberately not among them — the panel
+/// says that only its owner sees it.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct FormSchema {
+    pub name: String,
+    pub slug: String,
+    pub fields: Vec<FormField>,
+}
+
 #[derive(Debug, Serialize, ToSchema)]
 pub struct SubmissionResponse {
     pub id: String,

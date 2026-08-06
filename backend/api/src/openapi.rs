@@ -12,7 +12,7 @@ use utoipa::OpenApi;
         (name = "posts", description = "Create, read, update and delete blog posts"),
         (name = "taxonomy", description = "Categories and tags"),
         (name = "languages", description = "Content languages"),
-        (name = "forms", description = "Forms, and what visitors send through them"),
+        (name = "forms", description = "Forms, and what visitors send through them. A form is made in the panel, so which fields it takes cannot be written down here: ask GET /forms/{slug}/schema, then POST to /forms/{slug}/submit. Both work without an account."),
         (name = "media", description = "Upload and manage media files"),
         (name = "plugins", description = "Built-in integrations, such as S3 storage"),
         (name = "health", description = "Service health checks"),

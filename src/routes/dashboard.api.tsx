@@ -118,6 +118,11 @@ function ApiRoute() {
 
   const open: Endpoint[] = [
     {
+      method: "GET",
+      path: "/forms/{slug}/schema",
+      what: t`Which fields a form takes, and which are required.`,
+    },
+    {
       method: "POST",
       path: "/forms/{slug}/submit",
       what: t`Send a form's answers. No account needed.`,
@@ -180,10 +185,12 @@ curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
           <h2 className="text-sm font-medium">{t`Without an account`}</h2>
           <Table rows={open} />
           <p className="text-sm text-muted-foreground">
-            {t`This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else.`}
+            {t`These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants.`}
           </p>
           <Snippet
-            text={`curl -X POST ${base}/forms/contact/submit \\
+            text={`curl ${base}/forms/contact/schema
+
+curl -X POST ${base}/forms/contact/submit \\
   -H 'content-type: application/json' \\
   -d '{"name":"…","email":"…","message":"…"}'`}
           />

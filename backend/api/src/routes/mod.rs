@@ -55,6 +55,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     // visitor filling in a contact form has none. Kept to its own router so
     // the body limit applies to it and nothing else.
     let open = OpenApiRouter::new()
+        .routes(routes!(forms::form_schema))
         .routes(routes!(forms::submit_form))
         .layer(DefaultBodyLimit::max(forms::MAX_SUBMISSION_BYTES))
         .layer(from_fn(require_database));
