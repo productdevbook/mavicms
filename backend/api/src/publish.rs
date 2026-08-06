@@ -332,11 +332,32 @@ pub async fn save_config(
         }
     };
 
+    // A field left out keeps what is stored, the way the token and the
+    // variables do. Falling back to the default instead means adding one
+    // variable silently rewrites the build command — which is how this site's
+    // publishing stopped working once already.
+    let current = config(db, tenant_id).await?;
+    let kept = |value: Option<String>, stored: Option<&String>, fallback: &str| {
+        non_empty(value, stored.map(String::as_str).unwrap_or(fallback))
+    };
+
     let config = BuildConfig {
         repository,
-        branch: non_empty(payload.branch, DEFAULT_BRANCH),
-        build_command: non_empty(payload.build_command, DEFAULT_COMMAND),
-        output_dir: clean_output(payload.output_dir)?,
+        branch: kept(
+            payload.branch,
+            current.as_ref().map(|c| &c.branch),
+            DEFAULT_BRANCH,
+        ),
+        build_command: kept(
+            payload.build_command,
+            current.as_ref().map(|c| &c.build_command),
+            DEFAULT_COMMAND,
+        ),
+        output_dir: clean_output(Some(kept(
+            payload.output_dir,
+            current.as_ref().map(|c| &c.output_dir),
+            DEFAULT_OUTPUT,
+        )))?,
         has_token: !stored_token.is_empty(),
         environment_keys: keys_of(&stored_environment),
     };
