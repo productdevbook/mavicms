@@ -1,0 +1,275 @@
+import { useLingui } from "@lingui/react/macro"
+
+import type { BackupConfig, BackupSettings, S3SettingsPayload } from "@/lib/api"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+/**
+ * The plugin settings, from either side of them.
+ *
+ * A site sets its own from its panel; an agency sets its sites' from the
+ * console without signing in to each. One form so the two cannot drift into
+ * offering different things.
+ */
+
+function Field({
+  id,
+  label,
+  hint,
+  value,
+  placeholder,
+  type,
+  onChange,
+}: {
+  id: string
+  label: string
+  hint?: string
+  value: string
+  placeholder?: string
+  type?: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <Input
+        id={id}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
+    </div>
+  )
+}
+
+export function S3Fields({
+  form,
+  hasStoredSecret,
+  onChange,
+}: {
+  form: S3SettingsPayload
+  hasStoredSecret: boolean
+  onChange: (values: Partial<S3SettingsPayload>) => void
+}) {
+  const { t } = useLingui()
+
+  return (
+    <>
+      <div className="flex items-start justify-between gap-3 rounded-xl border border-border p-3">
+        <div className="flex flex-col">
+          <Label htmlFor="s3-enabled">{t`Use S3 for new uploads`}</Label>
+          <span className="text-xs text-muted-foreground">
+            {t`When off, uploads are stored on the server's disk.`}
+          </span>
+        </div>
+        <Switch
+          id="s3-enabled"
+          checked={form.enabled}
+          onCheckedChange={(value) => onChange({ enabled: value })}
+        />
+      </div>
+
+      <Field
+        id="s3-endpoint"
+        label={t`Endpoint`}
+        hint={t`Leave empty for AWS S3`}
+        value={form.endpoint}
+        placeholder="https://<account>.r2.cloudflarestorage.com"
+        onChange={(value) => onChange({ endpoint: value })}
+      />
+      <Field
+        id="s3-region"
+        label={t`Region`}
+        value={form.region}
+        placeholder="auto"
+        onChange={(value) => onChange({ region: value })}
+      />
+      <Field
+        id="s3-bucket"
+        label={t`Bucket`}
+        value={form.bucket}
+        onChange={(value) => onChange({ bucket: value })}
+      />
+      <Field
+        id="s3-access-key"
+        label={t`Access key ID`}
+        value={form.access_key_id}
+        onChange={(value) => onChange({ access_key_id: value })}
+      />
+      <Field
+        id="s3-secret"
+        label={t`Secret access key`}
+        type="password"
+        hint={
+          hasStoredSecret ? t`Stored — leave empty to keep it unchanged` : undefined
+        }
+        value={form.secret_access_key ?? ""}
+        onChange={(value) => onChange({ secret_access_key: value })}
+      />
+      <Field
+        id="s3-public-url"
+        label={t`Public base URL`}
+        hint={t`Where readers load the images from (bucket public URL or CDN)`}
+        value={form.public_base_url}
+        placeholder="https://cdn.example.com"
+        onChange={(value) => onChange({ public_base_url: value })}
+      />
+      <Field
+        id="s3-prefix"
+        label={t`Path prefix`}
+        hint={t`Optional folder inside the bucket`}
+        value={form.path_prefix}
+        placeholder="media"
+        onChange={(value) => onChange({ path_prefix: value })}
+      />
+    </>
+  )
+}
+
+export function BackupFields({
+  settings,
+  config,
+  enabled,
+  onEnabledChange,
+  onChange,
+}: {
+  settings: BackupSettings
+  config: BackupConfig
+  enabled: boolean
+  onEnabledChange: (value: boolean) => void
+  onChange: (values: Partial<BackupConfig>) => void
+}) {
+  const { t } = useLingui()
+
+  const SCHEDULE_LABELS: Record<string, string> = {
+    off: t`Only by hand`,
+    hourly: t`Every hour`,
+    daily: t`Every day`,
+    weekly: t`Every week`,
+  }
+
+  return (
+    <>
+      <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
+        <div>
+          <p className="text-sm font-medium">{t`Enabled`}</p>
+          <p className="text-sm text-muted-foreground">
+            {t`Scheduled backups only run while this is on. You can always back up by hand below.`}
+          </p>
+        </div>
+        <Switch checked={enabled} onCheckedChange={onEnabledChange} />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="destination">{t`Where to keep them`}</Label>
+        <Select
+          value={config.destination}
+          onValueChange={(value) =>
+            onChange({
+              destination: (value as BackupConfig["destination"]) ?? "local",
+            })
+          }
+        >
+          <SelectTrigger id="destination">
+            <SelectValue>
+              {(value: string) =>
+                value === "s3"
+                  ? settings.s3_bucket
+                    ? t`S3 bucket (${settings.s3_bucket})`
+                    : t`S3 bucket`
+                  : t`On the server's disk`
+              }
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="local">{t`On the server's disk`}</SelectItem>
+            {/* Offered only once the bucket is set up, so the choice cannot
+                be made before it can work. */}
+            {settings.s3_available && (
+              <SelectItem value="s3">
+                {settings.s3_bucket
+                  ? t`S3 bucket (${settings.s3_bucket})`
+                  : t`S3 bucket`}
+              </SelectItem>
+            )}
+          </SelectContent>
+        </Select>
+        {!settings.s3_available && (
+          <p className="text-sm text-muted-foreground">
+            {t`Set up the S3 plugin first if you want backups kept off this machine.`}
+          </p>
+        )}
+      </div>
+
+      <Field
+        id="folder"
+        label={t`Folder`}
+        hint={
+          config.destination === "s3"
+            ? t`A prefix inside the bucket.`
+            : t`A folder inside the data directory.`
+        }
+        value={config.folder}
+        placeholder="backups"
+        onChange={(value) => onChange({ folder: value })}
+      />
+
+      <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
+        <div>
+          <p className="text-sm font-medium">{t`Include the uploaded files`}</p>
+          <p className="text-sm text-muted-foreground">
+            {t`Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket.`}
+          </p>
+        </div>
+        <Switch
+          checked={config.include_media}
+          onCheckedChange={(checked) => onChange({ include_media: checked })}
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="schedule">{t`How often`}</Label>
+          <Select
+            value={config.schedule}
+            onValueChange={(value) =>
+              onChange({ schedule: (value as BackupConfig["schedule"]) ?? "off" })
+            }
+          >
+            <SelectTrigger id="schedule">
+              <SelectValue>
+                {(value: string) => SCHEDULE_LABELS[value] ?? value}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(SCHEDULE_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Field
+          id="keep"
+          label={t`How many to keep`}
+          hint={t`Older archives are removed once a new one is written.`}
+          value={String(config.keep)}
+          type="number"
+          onChange={(value) => onChange({ keep: Math.max(1, Number(value) || 1) })}
+        />
+      </div>
+    </>
+  )
+}

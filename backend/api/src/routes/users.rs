@@ -108,7 +108,7 @@ fn row(model: user::Model) -> UserRow {
     tag = "users",
     responses((status = 200, description = "The site's people", body = Vec<UserRow>))
 )]
-pub async fn list_users(Site(state): Site) -> AppResult<Json<Vec<UserRow>>> {
+pub async fn list_users(_admin: Administrator, Site(state): Site) -> AppResult<Json<Vec<UserRow>>> {
     let people = user::Entity::find().all(state.db_or_unavailable()?).await?;
 
     Ok(Json(people.into_iter().map(row).collect()))

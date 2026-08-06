@@ -60,10 +60,17 @@ pub async fn list_plugins(Site(state): Site) -> AppResult<Json<Vec<PluginSummary
     responses((status = 200, description = "Backup settings", body = BackupSettingsResponse))
 )]
 pub async fn get_backup_settings(Site(state): Site) -> AppResult<Json<BackupSettingsResponse>> {
+    Ok(Json(backup_settings_of(&state).await?))
+}
+
+/// The same, for whoever has the site's state rather than the request that
+/// resolved it — which is how the console reaches a site it owns.
+pub async fn backup_settings_of(state: &AppState) -> AppResult<BackupSettingsResponse> {
+    let state = state.clone();
     let (enabled, config) = crate::backup::config(&state).await?;
     let s3 = load_s3(state.db(), &state.secrets).await?;
 
-    Ok(Json(BackupSettingsResponse {
+    Ok(BackupSettingsResponse {
         backups: crate::backup::list(&state, &config)
             .await
             .unwrap_or_default(),
@@ -73,7 +80,7 @@ pub async fn get_backup_settings(Site(state): Site) -> AppResult<Json<BackupSett
         s3_bucket: s3.map(|stored| stored.config.bucket),
         enabled,
         config,
-    }))
+    })
 }
 
 /// Save the backup settings.
@@ -88,6 +95,14 @@ pub async fn update_backup_settings(
     Site(state): Site,
     Json(payload): Json<UpdateBackupRequest>,
 ) -> AppResult<Json<BackupSettingsResponse>> {
+    Ok(Json(save_backup_of(&state, payload).await?))
+}
+
+pub async fn save_backup_of(
+    state: &AppState,
+    payload: UpdateBackupRequest,
+) -> AppResult<BackupSettingsResponse> {
+    let state = state.clone();
     let (_, existing) = crate::backup::config(&state).await?;
 
     if matches!(payload.config.destination, crate::backup::Destination::S3)
@@ -106,7 +121,7 @@ pub async fn update_backup_settings(
     };
     crate::backup::store(&state, payload.enabled, &config).await?;
 
-    get_backup_settings(Site(state)).await
+    backup_settings_of(&state).await
 }
 
 /// Take a backup now.
@@ -148,6 +163,13 @@ pub async fn delete_backup(
     responses((status = 200, description = "S3 settings", body = S3SettingsResponse))
 )]
 pub async fn get_s3_settings(Site(state): Site) -> AppResult<Json<S3SettingsResponse>> {
+    Ok(Json(s3_settings_of(&state).await?))
+}
+
+/// The same, for whoever has the site's state rather than the request that
+/// resolved it.
+pub async fn s3_settings_of(state: &AppState) -> AppResult<S3SettingsResponse> {
+    let state = state.clone();
     let stored = load_s3(state.db(), &state.secrets).await?;
 
     let response = match stored {
@@ -173,7 +195,7 @@ pub async fn get_s3_settings(Site(state): Site) -> AppResult<Json<S3SettingsResp
         },
     };
 
-    Ok(Json(response))
+    Ok(response)
 }
 
 /// Merges the request over the stored config, keeping the existing secret when
@@ -213,13 +235,20 @@ pub async fn update_s3_settings(
     Site(state): Site,
     Json(payload): Json<S3SettingsRequest>,
 ) -> AppResult<Json<S3SettingsResponse>> {
-    let config = resolve_config(&state, &payload).await?;
+    Ok(Json(save_s3_of(&state, payload).await?))
+}
+
+pub async fn save_s3_of(
+    state: &AppState,
+    payload: S3SettingsRequest,
+) -> AppResult<S3SettingsResponse> {
+    let config = resolve_config(state, &payload).await?;
     if payload.enabled {
         config.validate()?;
     }
 
     save_s3(state.db(), &state.secrets, payload.enabled, &config).await?;
-    get_s3_settings(Site(state)).await
+    s3_settings_of(state).await
 }
 
 /// Try the given (or stored) credentials by writing and deleting a small

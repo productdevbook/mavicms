@@ -44,6 +44,10 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
             console::save_site_publish,
             console::request_site_publish
         ))
+        .routes(routes!(console::get_site_s3, console::save_site_s3))
+        .routes(routes!(console::get_site_backup, console::save_site_backup))
+        .routes(routes!(console::run_site_backup))
+        .routes(routes!(console::restore_site_backup))
         .routes(routes!(console::enter));
 
     let needs_db = OpenApiRouter::new()

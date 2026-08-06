@@ -160,6 +160,7 @@ msgstr "A build gets these from its build variables, which the site's agency set
 #~ msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 #~ msgstr "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 
+#: src/components/plugin-forms.tsx:220
 #: src/routes/dashboard.plugins_.backup.tsx:265
 msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
@@ -172,11 +173,12 @@ msgstr "A listing leaves the bodies out, because a whole archive in one response
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 
+#: src/components/plugin-forms.tsx:219
 #: src/routes/dashboard.plugins_.backup.tsx:264
 msgid "A prefix inside the bucket."
 msgstr "A prefix inside the bucket."
 
-#: src/routes/dashboard.plugins_.s3.tsx:167
+#: src/components/plugin-forms.tsx:105
 msgid "Access key ID"
 msgstr "Access key ID"
 
@@ -364,6 +366,7 @@ msgstr "API"
 msgid "Apply"
 msgstr "Apply"
 
+#: src/routes/console.sites.$siteId.tsx:412
 #: src/routes/dashboard.plugins_.backup.tsx:347
 msgid "Archives"
 msgstr "Archives"
@@ -390,6 +393,7 @@ msgstr "Back"
 msgid "Back to editing"
 msgstr "Back to editing"
 
+#: src/routes/console.sites.$siteId.tsx:407
 #: src/routes/dashboard.plugins_.backup.tsx:337
 msgid "Back up now"
 msgstr "Back up now"
@@ -399,10 +403,12 @@ msgid "Backup settings saved"
 msgstr "Backup settings saved"
 
 #. placeholder {0}: file.name
+#: src/routes/console.sites.$siteId.tsx:218
 #: src/routes/dashboard.plugins_.backup.tsx:116
 msgid "Backup written: {0}"
 msgstr "Backup written: {0}"
 
+#: src/routes/console.sites.$siteId.tsx:303
 #: src/routes/dashboard.plugins_.backup.tsx:198
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Backups"
@@ -442,7 +448,7 @@ msgstr "Bold"
 msgid "Branch"
 msgstr "Branch"
 
-#: src/routes/dashboard.plugins_.s3.tsx:161
+#: src/components/plugin-forms.tsx:99
 msgid "Bucket"
 msgstr "Bucket"
 
@@ -691,11 +697,12 @@ msgstr "Could not load post"
 msgid "Could not load the accounts"
 msgstr "Could not load the accounts"
 
+#: src/routes/console.sites.$siteId.tsx:123
 #: src/routes/dashboard.plugins_.backup.tsx:84
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
 
-#: src/routes/console.sites.$siteId.tsx:66
+#: src/routes/console.sites.$siteId.tsx:130
 #: src/routes/dashboard.publish.tsx:48
 msgid "Could not load the publishing settings"
 msgstr "Could not load the publishing settings"
@@ -704,12 +711,16 @@ msgstr "Could not load the publishing settings"
 msgid "Could not load the sites"
 msgstr "Could not load the sites"
 
+#: src/routes/console.sites.$siteId.tsx:118
+msgid "Could not load the storage settings"
+msgstr "Could not load the storage settings"
+
 #: src/routes/console.index.tsx:54
 msgid "Could not load your sites"
 msgstr "Could not load your sites"
 
 #: src/routes/console.index.tsx:83
-#: src/routes/console.sites.$siteId.tsx:127
+#: src/routes/console.sites.$siteId.tsx:250
 msgid "Could not open the site"
 msgstr "Could not open the site"
 
@@ -734,7 +745,7 @@ msgstr "Could not remove language"
 msgid "Could not save post"
 msgstr "Could not save post"
 
-#: src/routes/dashboard.plugins_.s3.tsx:90
+#: src/routes/dashboard.plugins_.s3.tsx:88
 msgid "Could not save settings"
 msgstr "Could not save settings"
 
@@ -743,13 +754,15 @@ msgid "Could not save tag"
 msgstr "Could not save tag"
 
 #: src/routes/console.account.tsx:56
-#: src/routes/console.sites.$siteId.tsx:98
+#: src/routes/console.sites.$siteId.tsx:162
+#: src/routes/console.sites.$siteId.tsx:192
+#: src/routes/console.sites.$siteId.tsx:207
 #: src/routes/dashboard.plugins_.backup.tsx:105
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Could not save the settings"
 
-#: src/routes/console.sites.$siteId.tsx:113
+#: src/routes/console.sites.$siteId.tsx:177
 #: src/routes/dashboard.publish.tsx:97
 msgid "Could not start the build"
 msgstr "Could not start the build"
@@ -806,7 +819,7 @@ msgstr "Create the account"
 msgid "Create your administrator account"
 msgstr "Create your administrator account"
 
-#: src/routes/dashboard.plugins_.s3.tsx:218
+#: src/routes/dashboard.plugins_.s3.tsx:152
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Credentials are encrypted before they are stored and are never sent back to the browser."
 
@@ -977,12 +990,13 @@ msgstr "Embed a video"
 msgid "Emoji"
 msgstr "Emoji"
 
+#: src/components/plugin-forms.tsx:165
 #: src/routes/dashboard.plugins_.backup.tsx:207
 #: src/routes/dashboard.plugins.tsx:78
 msgid "Enabled"
 msgstr "Enabled"
 
-#: src/routes/dashboard.plugins_.s3.tsx:146
+#: src/components/plugin-forms.tsx:84
 msgid "Endpoint"
 msgstr "Endpoint"
 
@@ -998,10 +1012,12 @@ msgstr "Enter a valid email address"
 msgid "Enter details"
 msgstr "Enter details"
 
+#: src/components/plugin-forms.tsx:157
 #: src/routes/dashboard.plugins_.backup.tsx:90
 msgid "Every day"
 msgstr "Every day"
 
+#: src/components/plugin-forms.tsx:156
 #: src/routes/dashboard.plugins_.backup.tsx:89
 msgid "Every hour"
 msgstr "Every hour"
@@ -1019,6 +1035,7 @@ msgstr "Every post, category, tag and account this site has now is replaced by w
 msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 msgstr "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 
+#: src/components/plugin-forms.tsx:158
 #: src/routes/dashboard.plugins_.backup.tsx:91
 msgid "Every week"
 msgstr "Every week"
@@ -1054,6 +1071,7 @@ msgstr "Focus mode"
 msgid "Foldable details block"
 msgstr "Foldable details block"
 
+#: src/components/plugin-forms.tsx:216
 #: src/routes/dashboard.plugins_.backup.tsx:255
 msgid "Folder"
 msgstr "Folder"
@@ -1180,10 +1198,12 @@ msgstr "Highlighted on the home page"
 msgid "Host"
 msgstr "Host"
 
+#: src/components/plugin-forms.tsx:266
 #: src/routes/dashboard.plugins_.backup.tsx:307
 msgid "How many to keep"
 msgstr "How many to keep"
 
+#: src/components/plugin-forms.tsx:242
 #: src/routes/dashboard.plugins_.backup.tsx:284
 msgid "How often"
 msgstr "How often"
@@ -1222,6 +1242,7 @@ msgstr "Import this archive?"
 msgid "In review"
 msgstr "In review"
 
+#: src/components/plugin-forms.tsx:229
 #: src/routes/dashboard.plugins_.backup.tsx:271
 msgid "Include the uploaded files"
 msgstr "Include the uploaded files"
@@ -1322,7 +1343,7 @@ msgstr "Last run {0}"
 #~ msgid "Leave empty for a file of its own"
 #~ msgstr "Leave empty for a file of its own"
 
-#: src/routes/dashboard.plugins_.s3.tsx:147
+#: src/components/plugin-forms.tsx:85
 msgid "Leave empty for AWS S3"
 msgstr "Leave empty for AWS S3"
 
@@ -1380,12 +1401,13 @@ msgstr "Loading…"
 msgid "Make default"
 msgstr "Make default"
 
+#: src/components/plugin-forms.tsx:231
 #: src/routes/dashboard.plugins_.backup.tsx:273
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
 #: src/routes/console.index.tsx:174
-#: src/routes/console.sites.$siteId.tsx:164
+#: src/routes/console.sites.$siteId.tsx:287
 msgid "Manage"
 msgstr "Manage"
 
@@ -1467,6 +1489,7 @@ msgstr "New tag"
 msgid "Next"
 msgstr "Next"
 
+#: src/routes/console.sites.$siteId.tsx:415
 #: src/routes/dashboard.plugins_.backup.tsx:350
 msgid "No backups yet"
 msgstr "No backups yet"
@@ -1533,6 +1556,7 @@ msgstr "Numbered list"
 msgid "Off"
 msgstr "Off"
 
+#: src/components/plugin-forms.tsx:267
 #: src/routes/dashboard.plugins_.backup.tsx:319
 msgid "Older archives are removed once a new one is written."
 msgstr "Older archives are removed once a new one is written."
@@ -1542,6 +1566,8 @@ msgstr "Older archives are removed once a new one is written."
 msgid "On"
 msgstr "On"
 
+#: src/components/plugin-forms.tsx:190
+#: src/components/plugin-forms.tsx:195
 #: src/routes/dashboard.plugins_.backup.tsx:230
 #: src/routes/dashboard.plugins_.backup.tsx:235
 msgid "On the server's disk"
@@ -1567,6 +1593,7 @@ msgstr "One post by its address."
 msgid "One post, with its other languages."
 msgstr "One post, with its other languages."
 
+#: src/components/plugin-forms.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:88
 msgid "Only by hand"
 msgstr "Only by hand"
@@ -1592,7 +1619,7 @@ msgstr "Open in new tab"
 msgid "OpenAPI document"
 msgstr "OpenAPI document"
 
-#: src/routes/dashboard.plugins_.s3.tsx:194
+#: src/components/plugin-forms.tsx:130
 msgid "Optional folder inside the bucket"
 msgstr "Optional folder inside the bucket"
 
@@ -1643,7 +1670,7 @@ msgstr "Paste an image address, drag and drop one, or pick from your media libra
 msgid "Paste the video link."
 msgstr "Paste the video link."
 
-#: src/routes/dashboard.plugins_.s3.tsx:193
+#: src/components/plugin-forms.tsx:129
 msgid "Path prefix"
 msgstr "Path prefix"
 
@@ -1674,7 +1701,7 @@ msgstr "Plain text block"
 
 #: src/components/dashboard/dashboard-shell.tsx:36
 #: src/routes/dashboard.plugins_.backup.tsx:194
-#: src/routes/dashboard.plugins_.s3.tsx:113
+#: src/routes/dashboard.plugins_.s3.tsx:111
 #: src/routes/dashboard.plugins.tsx:49
 msgid "Plugins"
 msgstr "Plugins"
@@ -1735,13 +1762,14 @@ msgstr "Previous"
 #~ msgid "Product"
 #~ msgstr "Product"
 
-#: src/routes/dashboard.plugins_.s3.tsx:185
+#: src/components/plugin-forms.tsx:121
 msgid "Public base URL"
 msgstr "Public base URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:43
 #: src/components/editor/mavi-editor.tsx:607
 #: src/components/publish-panel.tsx:295
+#: src/routes/console.sites.$siteId.tsx:301
 #: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
 msgstr "Publish"
@@ -1754,7 +1782,7 @@ msgstr "Publish date"
 msgid "Published"
 msgstr "Published"
 
-#: src/routes/console.sites.$siteId.tsx:110
+#: src/routes/console.sites.$siteId.tsx:174
 #: src/routes/dashboard.publish.tsx:94
 msgid "Publishing — this takes a minute or two"
 msgstr "Publishing — this takes a minute or two"
@@ -1786,7 +1814,7 @@ msgstr "Reading"
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 
-#: src/routes/console.sites.$siteId.tsx:199
+#: src/routes/console.sites.$siteId.tsx:347
 #: src/routes/dashboard.publish.tsx:152
 msgid "Recent builds"
 msgstr "Recent builds"
@@ -1796,7 +1824,7 @@ msgstr "Recent builds"
 msgid "Redo"
 msgstr "Redo"
 
-#: src/routes/dashboard.plugins_.s3.tsx:154
+#: src/components/plugin-forms.tsx:92
 msgid "Region"
 msgstr "Region"
 
@@ -1859,10 +1887,11 @@ msgstr "Replace…"
 msgid "Repository"
 msgstr "Repository"
 
-#: src/routes/dashboard.plugins_.s3.tsx:74
+#: src/routes/dashboard.plugins_.s3.tsx:72
 msgid "Request failed"
 msgstr "Request failed"
 
+#: src/routes/console.sites.$siteId.tsx:437
 #: src/routes/dashboard.plugins_.backup.tsx:369
 #: src/routes/dashboard.plugins_.backup.tsx:448
 msgid "Restore"
@@ -1873,6 +1902,7 @@ msgid "Restore this backup?"
 msgstr "Restore this backup?"
 
 #. placeholder {0}: report.media_files
+#: src/routes/console.sites.$siteId.tsx:232
 #: src/routes/dashboard.plugins_.backup.tsx:143
 msgid "Restored: {rows} rows and {0} files"
 msgstr "Restored: {rows} rows and {0} files"
@@ -1881,18 +1911,22 @@ msgstr "Restored: {rows} rows and {0} files"
 msgid "Row"
 msgstr "Row"
 
+#: src/components/plugin-forms.tsx:189
+#: src/components/plugin-forms.tsx:202
 #: src/routes/dashboard.plugins_.backup.tsx:229
 #: src/routes/dashboard.plugins_.backup.tsx:242
 msgid "S3 bucket"
 msgstr "S3 bucket"
 
 #. placeholder {0}: settings.s3_bucket
+#: src/components/plugin-forms.tsx:188
+#: src/components/plugin-forms.tsx:201
 #: src/routes/dashboard.plugins_.backup.tsx:228
 #: src/routes/dashboard.plugins_.backup.tsx:241
 msgid "S3 bucket ({0})"
 msgstr "S3 bucket ({0})"
 
-#: src/routes/dashboard.plugins_.s3.tsx:117
+#: src/routes/dashboard.plugins_.s3.tsx:115
 #: src/routes/dashboard.plugins.tsx:26
 msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
@@ -1900,15 +1934,19 @@ msgstr "S3 compatible storage"
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:250
 #: src/routes/console.account.tsx:139
+#: src/routes/console.sites.$siteId.tsx:372
+#: src/routes/console.sites.$siteId.tsx:400
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.s3.tsx:238
+#: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Save"
 
 #: src/components/editor/status-bar.tsx:113
 #: src/routes/console.account.tsx:53
-#: src/routes/console.sites.$siteId.tsx:95
+#: src/routes/console.sites.$siteId.tsx:159
+#: src/routes/console.sites.$siteId.tsx:189
+#: src/routes/console.sites.$siteId.tsx:204
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Saved"
@@ -1926,6 +1964,7 @@ msgstr "Saving…"
 msgid "Scheduled"
 msgstr "Scheduled"
 
+#: src/components/plugin-forms.tsx:167
 #: src/routes/dashboard.plugins_.backup.tsx:209
 msgid "Scheduled backups only run while this is on. You can always back up by hand below."
 msgstr "Scheduled backups only run while this is on. You can always back up by hand below."
@@ -1943,7 +1982,7 @@ msgstr "Search engine"
 msgid "Search titles, summaries and bodies."
 msgstr "Search titles, summaries and bodies."
 
-#: src/routes/dashboard.plugins_.s3.tsx:173
+#: src/components/plugin-forms.tsx:111
 msgid "Secret access key"
 msgstr "Secret access key"
 
@@ -1984,6 +2023,7 @@ msgstr "Set a password"
 msgid "Set it"
 msgstr "Set it"
 
+#: src/components/plugin-forms.tsx:209
 #: src/routes/dashboard.plugins_.backup.tsx:249
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Set up the S3 plugin first if you want backups kept off this machine."
@@ -1996,7 +2036,7 @@ msgstr "Settings"
 msgid "Settings panel"
 msgstr "Settings panel"
 
-#: src/routes/dashboard.plugins_.s3.tsx:87
+#: src/routes/dashboard.plugins_.s3.tsx:85
 msgid "Settings saved"
 msgstr "Settings saved"
 
@@ -2086,11 +2126,15 @@ msgstr "Start writing, or type “/” for commands…"
 msgid "Status"
 msgstr "Status"
 
+#: src/routes/console.sites.$siteId.tsx:302
+msgid "Storage"
+msgstr "Storage"
+
 #: src/routes/dashboard.plugins.tsx:27
 msgid "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 
-#: src/routes/dashboard.plugins_.s3.tsx:177
+#: src/components/plugin-forms.tsx:114
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
@@ -2192,7 +2236,7 @@ msgstr "Tell us about your site"
 msgid "Test & continue"
 msgstr "Test & continue"
 
-#: src/routes/dashboard.plugins_.s3.tsx:234
+#: src/routes/dashboard.plugins_.s3.tsx:168
 msgid "Test connection"
 msgstr "Test connection"
 
@@ -2218,6 +2262,7 @@ msgstr "Text shown in search results"
 msgid "The address a title would get."
 msgstr "The address a title would get."
 
+#: src/routes/console.sites.$siteId.tsx:221
 #: src/routes/dashboard.plugins_.backup.tsx:120
 msgid "The backup failed"
 msgstr "The backup failed"
@@ -2243,6 +2288,7 @@ msgstr "The last backup failed: {0}"
 msgid "The most common shortcuts in the editor."
 msgstr "The most common shortcuts in the editor."
 
+#: src/routes/console.sites.$siteId.tsx:236
 #: src/routes/dashboard.plugins_.backup.tsx:154
 #: src/routes/dashboard.plugins_.backup.tsx:170
 msgid "The restore failed"
@@ -2362,7 +2408,7 @@ msgstr "Uploaded files and their addresses."
 msgid "URL"
 msgstr "URL"
 
-#: src/routes/dashboard.plugins_.s3.tsx:132
+#: src/components/plugin-forms.tsx:70
 msgid "Use S3 for new uploads"
 msgstr "Use S3 for new uploads"
 
@@ -2385,18 +2431,19 @@ msgstr "View"
 msgid "Weak"
 msgstr "Weak"
 
-#: src/routes/dashboard.plugins_.s3.tsx:134
+#: src/components/plugin-forms.tsx:72
 msgid "When off, uploads are stored on the server's disk."
 msgstr "When off, uploads are stored on the server's disk."
 
-#: src/routes/dashboard.plugins_.s3.tsx:186
+#: src/components/plugin-forms.tsx:122
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Where readers load the images from (bucket public URL or CDN)"
 
-#: src/routes/console.sites.$siteId.tsx:150
+#: src/routes/console.sites.$siteId.tsx:273
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Where this site's pages come from, and how the last builds went."
 
+#: src/components/plugin-forms.tsx:174
 #: src/routes/dashboard.plugins_.backup.tsx:216
 msgid "Where to keep them"
 msgstr "Where to keep them"
@@ -2413,7 +2460,7 @@ msgstr "Whole word"
 msgid "Working on a site? Type its address"
 msgstr "Working on a site? Type its address"
 
-#: src/routes/dashboard.plugins_.s3.tsx:119
+#: src/routes/dashboard.plugins_.s3.tsx:117
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 msgstr "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 
@@ -2460,7 +2507,7 @@ msgstr "Your pages are built from your own project. Publishing builds them again
 
 #: src/routes/console.account.tsx:72
 #: src/routes/console.index.tsx:124
-#: src/routes/console.sites.$siteId.tsx:143
+#: src/routes/console.sites.$siteId.tsx:266
 msgid "Your sites"
 msgstr "Your sites"
 

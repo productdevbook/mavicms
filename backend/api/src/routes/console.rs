@@ -674,3 +674,153 @@ pub async fn update_agency(
 
     Ok(StatusCode::NO_CONTENT)
 }
+
+/// The state of one of this agency's sites, which is what the plugin
+/// functions work on. Opening it is the same thing a request to that site
+/// would do — the console is simply reaching it from the other side.
+async fn owned_state(
+    hosting: &Hosting,
+    operator: &Operator,
+    id: Uuid,
+) -> AppResult<crate::state::AppState> {
+    let tenant = owned_site(hosting, operator, id).await?;
+    hosting.registry()?.state_for(&tenant).await
+}
+
+/// One of this agency's sites' storage settings.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/s3",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "S3 settings", body = crate::dto::plugins::S3SettingsResponse))
+)]
+pub async fn get_site_s3(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::dto::plugins::S3SettingsResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(crate::routes::plugins::s3_settings_of(&state).await?))
+}
+
+/// Set them.
+#[utoipa::path(
+    put,
+    path = "/console/sites/{id}/plugins/s3",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    request_body = crate::dto::plugins::S3SettingsRequest,
+    responses((status = 200, description = "Saved", body = crate::dto::plugins::S3SettingsResponse))
+)]
+pub async fn save_site_s3(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::dto::plugins::S3SettingsRequest>,
+) -> AppResult<Json<crate::dto::plugins::S3SettingsResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::save_s3_of(&state, payload).await?,
+    ))
+}
+
+/// One of this agency's sites' backup settings and archives.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/backup",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Backup settings", body = crate::dto::plugins::BackupSettingsResponse))
+)]
+pub async fn get_site_backup(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::dto::plugins::BackupSettingsResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::backup_settings_of(&state).await?,
+    ))
+}
+
+/// Set them.
+#[utoipa::path(
+    put,
+    path = "/console/sites/{id}/plugins/backup",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    request_body = crate::dto::plugins::UpdateBackupRequest,
+    responses((status = 200, description = "Saved", body = crate::dto::plugins::BackupSettingsResponse))
+)]
+pub async fn save_site_backup(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::dto::plugins::UpdateBackupRequest>,
+) -> AppResult<Json<crate::dto::plugins::BackupSettingsResponse>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::save_backup_of(&state, payload).await?,
+    ))
+}
+
+/// Take a backup of one of this agency's sites now.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/backup/run",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Backup written", body = crate::backup::BackupFile))
+)]
+pub async fn run_site_backup(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::backup::BackupFile>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(crate::backup::run(&state).await?))
+}
+
+/// Put one of this agency's sites back from one of its archives.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/backup/{name}/restore",
+    tag = "console",
+    params(
+        ("id" = String, Path, description = "Site id"),
+        ("name" = String, Path, description = "Archive name"),
+    ),
+    responses((status = 200, description = "What was put back", body = crate::backup::RestoreReport))
+)]
+pub async fn restore_site_backup(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path((id, name)): Path<(Uuid, String)>,
+) -> AppResult<Json<crate::backup::RestoreReport>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    let (_, config) = crate::backup::config(&state).await?;
+    let bytes = crate::backup::read(&state, &config, &name).await?;
+
+    tracing::warn!(by = %operator.email, site = %id, archive = %name, "restoring a backup");
+
+    Ok(Json(crate::backup::restore(&state, &bytes).await?))
+}

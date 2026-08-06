@@ -830,3 +830,48 @@ export function deleteSite(id: string, host: string): Promise<void> {
     body: JSON.stringify({ host }),
   })
 }
+
+export function getSiteS3(id: string): Promise<S3Settings> {
+  return request<S3Settings>(`/console/sites/${id}/plugins/s3`)
+}
+
+export function saveSiteS3(
+  id: string,
+  payload: S3SettingsPayload
+): Promise<S3Settings> {
+  return request<S3Settings>(`/console/sites/${id}/plugins/s3`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function getSiteBackup(id: string): Promise<BackupSettings> {
+  return request<BackupSettings>(`/console/sites/${id}/plugins/backup`)
+}
+
+export function saveSiteBackup(
+  id: string,
+  enabled: boolean,
+  config: BackupConfig
+): Promise<BackupSettings> {
+  return request<BackupSettings>(`/console/sites/${id}/plugins/backup`, {
+    method: "PUT",
+    body: JSON.stringify({ enabled, config }),
+  })
+}
+
+export function runSiteBackup(id: string): Promise<BackupFile> {
+  return request<BackupFile>(`/console/sites/${id}/plugins/backup/run`, {
+    method: "POST",
+  })
+}
+
+export function restoreSiteBackup(
+  id: string,
+  name: string
+): Promise<RestoreReport> {
+  return request<RestoreReport>(
+    `/console/sites/${id}/plugins/backup/${encodeURIComponent(name)}/restore`,
+    { method: "POST" }
+  )
+}

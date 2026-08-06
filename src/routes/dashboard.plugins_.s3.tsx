@@ -14,9 +14,7 @@ import {
   type S3SettingsPayload,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+import { S3Fields } from "@/components/plugin-forms"
 
 export const Route = createFileRoute("/dashboard/plugins_/s3")({
   component: S3SettingsRoute,
@@ -127,74 +125,10 @@ function S3SettingsRoute() {
         }}
         className="flex max-w-xl flex-col gap-4"
       >
-        <div className="flex items-start justify-between gap-3 rounded-xl border border-border p-3">
-          <div className="flex flex-col">
-            <Label htmlFor="s3-enabled">{t`Use S3 for new uploads`}</Label>
-            <span className="text-xs text-muted-foreground">
-              {t`When off, uploads are stored on the server's disk.`}
-            </span>
-          </div>
-          <Switch
-            id="s3-enabled"
-            checked={form.enabled}
-            onCheckedChange={(value) => patch({ enabled: value })}
-          />
-        </div>
-
-        <Field
-          id="s3-endpoint"
-          label={t`Endpoint`}
-          hint={t`Leave empty for AWS S3`}
-          value={form.endpoint}
-          placeholder="https://<account>.r2.cloudflarestorage.com"
-          onChange={(value) => patch({ endpoint: value })}
-        />
-        <Field
-          id="s3-region"
-          label={t`Region`}
-          value={form.region}
-          placeholder="auto"
-          onChange={(value) => patch({ region: value })}
-        />
-        <Field
-          id="s3-bucket"
-          label={t`Bucket`}
-          value={form.bucket}
-          onChange={(value) => patch({ bucket: value })}
-        />
-        <Field
-          id="s3-access-key"
-          label={t`Access key ID`}
-          value={form.access_key_id}
-          onChange={(value) => patch({ access_key_id: value })}
-        />
-        <Field
-          id="s3-secret"
-          label={t`Secret access key`}
-          type="password"
-          hint={
-            hasStoredSecret
-              ? t`Stored — leave empty to keep it unchanged`
-              : undefined
-          }
-          value={form.secret_access_key ?? ""}
-          onChange={(value) => patch({ secret_access_key: value })}
-        />
-        <Field
-          id="s3-public-url"
-          label={t`Public base URL`}
-          hint={t`Where readers load the images from (bucket public URL or CDN)`}
-          value={form.public_base_url}
-          placeholder="https://cdn.example.com"
-          onChange={(value) => patch({ public_base_url: value })}
-        />
-        <Field
-          id="s3-prefix"
-          label={t`Path prefix`}
-          hint={t`Optional folder inside the bucket`}
-          value={form.path_prefix}
-          placeholder="media"
-          onChange={(value) => patch({ path_prefix: value })}
+        <S3Fields
+          form={form}
+          hasStoredSecret={hasStoredSecret}
+          onChange={patch}
         />
 
         {testResult && (
@@ -240,37 +174,5 @@ function S3SettingsRoute() {
         </div>
       </form>
     </>
-  )
-}
-
-function Field({
-  id,
-  label,
-  hint,
-  value,
-  placeholder,
-  type,
-  onChange,
-}: {
-  id: string
-  label: string
-  hint?: string
-  value: string
-  placeholder?: string
-  type?: string
-  onChange: (value: string) => void
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
-      <Input
-        id={id}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        onChange={(event) => onChange(event.target.value)}
-      />
-      {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
-    </div>
   )
 }
