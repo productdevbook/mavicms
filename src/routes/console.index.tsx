@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components -- file-based route convention */
 import * as React from "react"
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router"
+import { Link, createFileRoute, redirect, useNavigate } from "@tanstack/react-router"
 import { useLingui } from "@lingui/react/macro"
-import { ExternalLink, Globe, Loader2, LogOut, Plus } from "lucide-react"
+import { ExternalLink, Globe, Loader2, LogOut, Plus, Settings } from "lucide-react"
 import { toast } from "sonner"
 
 import {
@@ -147,6 +147,14 @@ function ConsoleRoute() {
                     </p>
                   )}
                 </div>
+                <Link
+                  to="/console/sites/$siteId"
+                  params={{ siteId: site.id }}
+                  className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  <Settings className="size-4" />
+                  {t`Settings`}
+                </Link>
                 <Button
                   variant="outline"
                   size="sm"

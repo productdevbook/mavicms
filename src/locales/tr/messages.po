@@ -80,6 +80,11 @@ msgstr "{0} hazır. Kurulumu için sitesini açın."
 msgid "{0} is ready. You're signed in as <0>{1}</0>."
 msgstr "{0} hazır! <0>{1}</0> olarak oturum açtınız."
 
+#. placeholder {0}: status.managed_by
+#: src/components/publish-panel.tsx:197
+msgid "{0} looks after how this site is built."
+msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor."
+
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
 #: src/routes/console.index.tsx:121
@@ -143,7 +148,7 @@ msgstr "Kovanın içinde bir önek."
 msgid "Access key ID"
 msgstr "Erişim anahtarı (Access key ID)"
 
-#: src/routes/dashboard.publish.tsx:211
+#: src/components/publish-panel.tsx:145
 msgid "Access token"
 msgstr "Erişim jetonu"
 
@@ -168,7 +173,7 @@ msgstr "Yatay çizgi ekle"
 msgid "Add a hyperlink to the selected text."
 msgstr "Seçili metne köprü ekle."
 
-#: src/routes/console.index.tsx:172
+#: src/routes/console.index.tsx:180
 #: src/routes/dashboard.sites.tsx:116
 msgid "Add a site"
 msgstr "Site ekle"
@@ -219,7 +224,7 @@ msgid "Add row before"
 msgstr "Üste satır ekle"
 
 #: src/routes/console.index.tsx:125
-#: src/routes/console.index.tsx:195
+#: src/routes/console.index.tsx:203
 #: src/routes/dashboard.sites.tsx:75
 #: src/routes/dashboard.sites.tsx:154
 msgid "Add site"
@@ -230,7 +235,7 @@ msgid "Add table"
 msgstr "Tablo ekle"
 
 #: src/components/editor/dialogs.tsx:300
-#: src/routes/console.index.tsx:179
+#: src/routes/console.index.tsx:187
 #: src/routes/dashboard.sites.tsx:124
 msgid "Address"
 msgstr "Adres"
@@ -368,7 +373,7 @@ msgstr "Bloklar"
 msgid "Bold"
 msgstr "Kalın"
 
-#: src/routes/dashboard.publish.tsx:181
+#: src/components/publish-panel.tsx:115
 msgid "Branch"
 msgstr "Dal"
 
@@ -376,11 +381,11 @@ msgstr "Dal"
 msgid "Bucket"
 msgstr "Bucket"
 
-#: src/routes/dashboard.publish.tsx:199
+#: src/components/publish-panel.tsx:133
 msgid "Build command"
 msgstr "Derleme komutu"
 
-#: src/routes/dashboard.publish.tsx:224
+#: src/components/publish-panel.tsx:160
 msgid "Build variables"
 msgstr "Derleme değişkenleri"
 
@@ -397,7 +402,7 @@ msgstr "Madde listesi"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/routes/console.index.tsx:191
+#: src/routes/console.index.tsx:199
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
 #: src/routes/dashboard.index.tsx:253
@@ -580,7 +585,8 @@ msgstr "Yazı yüklenemedi"
 msgid "Could not load the backup settings"
 msgstr "Yedekleme ayarları yüklenemedi"
 
-#: src/routes/dashboard.publish.tsx:80
+#: src/routes/console.sites.$siteId.tsx:66
+#: src/routes/dashboard.publish.tsx:48
 msgid "Could not load the publishing settings"
 msgstr "Yayın ayarları yüklenemedi"
 
@@ -593,6 +599,7 @@ msgid "Could not load your sites"
 msgstr "Siteleriniz yüklenemedi"
 
 #: src/routes/console.index.tsx:83
+#: src/routes/console.sites.$siteId.tsx:129
 msgid "Could not open the site"
 msgstr "Site açılamadı"
 
@@ -620,12 +627,14 @@ msgstr "Ayarlar kaydedilemedi"
 msgid "Could not save tag"
 msgstr "Etiket kaydedilemedi"
 
+#: src/routes/console.sites.$siteId.tsx:100
 #: src/routes/dashboard.plugins_.backup.tsx:89
-#: src/routes/dashboard.publish.tsx:120
+#: src/routes/dashboard.publish.tsx:85
 msgid "Could not save the settings"
 msgstr "Ayarlar kaydedilemedi"
 
-#: src/routes/dashboard.publish.tsx:135
+#: src/routes/console.sites.$siteId.tsx:115
+#: src/routes/dashboard.publish.tsx:100
 msgid "Could not start the build"
 msgstr "Derleme başlatılamadı"
 
@@ -1095,7 +1104,7 @@ msgstr "Mavi CMS'i kur"
 msgid "Installing Mavi CMS…"
 msgstr "Mavi CMS kuruluyor…"
 
-#: src/routes/dashboard.publish.tsx:206
+#: src/components/publish-panel.tsx:140
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "CMS_API_URL ve SITE_URL bu sitenin adresine ayarlı olarak çalışır."
 
@@ -1202,7 +1211,8 @@ msgstr "Varsayılan yap"
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Arşivi belirgin biçimde büyütür. Medya bu makinedeyse değer; zaten bir kovadaysa daha az."
 
-#: src/routes/console.index.tsx:161
+#: src/routes/console.index.tsx:169
+#: src/routes/console.sites.$siteId.tsx:166
 msgid "Manage"
 msgstr "Yönet"
 
@@ -1329,7 +1339,7 @@ msgstr "Henüz etiket yok"
 msgid "Not configured"
 msgstr "Yapılandırılmadı"
 
-#: src/routes/dashboard.publish.tsx:251
+#: src/components/publish-panel.tsx:34
 msgid "Nothing published yet"
 msgstr "Henüz bir şey yayınlanmadı"
 
@@ -1352,7 +1362,7 @@ msgstr "Sunucunun diskinde"
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "Yürüttüğünüz bütün siteler için tek hesap. Her site kendi içeriğini ve kendi ekibini ayrı tutar."
 
-#: src/routes/dashboard.publish.tsx:236
+#: src/components/publish-panel.tsx:172
 msgid "One NAME=value per line. This is where the build's credentials go."
 msgstr "Her satıra bir AD=değer. Derlemenin kimlik bilgileri buraya yazılır."
 
@@ -1360,7 +1370,7 @@ msgstr "Her satıra bir AD=değer. Derlemenin kimlik bilgileri buraya yazılır.
 msgid "Only by hand"
 msgstr "Yalnızca elle"
 
-#: src/routes/dashboard.publish.tsx:218
+#: src/components/publish-panel.tsx:154
 msgid "Only for a private repository"
 msgstr "Yalnızca özel depolar için"
 
@@ -1389,7 +1399,7 @@ msgstr "Bu sunucunun barındırdığı diğer siteler. Her birine kendi veritaba
 #~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 #~ msgstr "Bu sunucunun barındırdığı diğer siteler. Her biri kendi içeriğini, hesaplarını ve yüklemelerini ayrı tutar."
 
-#: src/routes/dashboard.publish.tsx:189
+#: src/components/publish-panel.tsx:123
 msgid "Output folder"
 msgstr "Çıktı klasörü"
 
@@ -1450,7 +1460,7 @@ msgstr "Düz metin bloğu"
 msgid "Plugins"
 msgstr "Eklentiler"
 
-#: src/routes/console.index.tsx:174
+#: src/routes/console.index.tsx:182
 #: src/routes/dashboard.sites.tsx:118
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Önce adresi bu sunucuya yönlendirin — site burada verdiğiniz adres üzerinden yanıt verir."
@@ -1508,8 +1518,8 @@ msgstr "Genel URL tabanı"
 
 #: src/components/dashboard/dashboard-shell.tsx:39
 #: src/components/editor/mavi-editor.tsx:607
-#: src/routes/dashboard.publish.tsx:154
-#: src/routes/dashboard.publish.tsx:164
+#: src/components/publish-panel.tsx:224
+#: src/routes/dashboard.publish.tsx:119
 msgid "Publish"
 msgstr "Yayınla"
 
@@ -1521,11 +1531,12 @@ msgstr "Yayın tarihi"
 msgid "Published"
 msgstr "Yayında"
 
-#: src/routes/dashboard.publish.tsx:132
+#: src/routes/console.sites.$siteId.tsx:112
+#: src/routes/dashboard.publish.tsx:97
 msgid "Publishing — this takes a minute or two"
 msgstr "Yayınlanıyor — bir iki dakika sürer"
 
-#: src/routes/dashboard.publish.tsx:164
+#: src/components/publish-panel.tsx:224
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
 
@@ -1544,7 +1555,8 @@ msgstr "Metni üst simge yap"
 msgid "Readers can leave comments"
 msgstr "Okurlar yorum yazabilir"
 
-#: src/routes/dashboard.publish.tsx:248
+#: src/routes/console.sites.$siteId.tsx:197
+#: src/routes/dashboard.publish.tsx:151
 msgid "Recent builds"
 msgstr "Son derlemeler"
 
@@ -1599,7 +1611,7 @@ msgstr "İçeriği değiştir"
 msgid "Replace…"
 msgstr "Değiştir…"
 
-#: src/routes/dashboard.publish.tsx:170
+#: src/components/publish-panel.tsx:104
 msgid "Repository"
 msgstr "Depo"
 
@@ -1628,15 +1640,16 @@ msgid "S3 compatible storage"
 msgstr "S3 uyumlu depolama"
 
 #: src/components/editor/mavi-editor.tsx:596
+#: src/components/publish-panel.tsx:179
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.plugins_.backup.tsx:280
 #: src/routes/dashboard.plugins_.s3.tsx:238
-#: src/routes/dashboard.publish.tsx:243
 msgid "Save"
 msgstr "Kaydet"
 
 #: src/components/editor/status-bar.tsx:113
-#: src/routes/dashboard.publish.tsx:117
+#: src/routes/console.sites.$siteId.tsx:97
+#: src/routes/dashboard.publish.tsx:82
 msgid "Saved"
 msgstr "Kaydedildi"
 
@@ -1701,6 +1714,10 @@ msgstr "SEO başlığı"
 #: src/routes/dashboard.plugins_.backup.tsx:196
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Yedeklerin bu makinenin dışında durmasını istiyorsanız önce S3 eklentisini kurun."
+
+#: src/routes/console.index.tsx:156
+msgid "Settings"
+msgstr "Ayarlar"
 
 #: src/components/editor/mavi-editor.tsx:571
 msgid "Settings panel"
@@ -1784,12 +1801,12 @@ msgstr "Yüklenen medyayı yerel disk yerine bir S3 bucket'ında saklar (AWS S3,
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Kayıtlı — değiştirmemek için boş bırakın"
 
-#: src/routes/dashboard.publish.tsx:218
+#: src/components/publish-panel.tsx:153
 msgid "Stored — type to replace"
 msgstr "Kayıtlı — değiştirmek için yazın"
 
 #. placeholder {0}: config.environment_keys.join(", ")
-#: src/routes/dashboard.publish.tsx:235
+#: src/components/publish-panel.tsx:171
 msgid "Stored: {0}. Typing here replaces all of them."
 msgstr "Kayıtlı: {0}. Buraya yazmak hepsinin yerine geçer."
 
@@ -1939,7 +1956,7 @@ msgid "Today's date"
 msgstr "Bugünün tarihi"
 
 #. placeholder {0}: Math.max( 1, Math.round( (new Date(build.finished_at).getTime() - new Date(build.started_at).getTime()) / 1000 ) )
-#: src/routes/dashboard.publish.tsx:271
+#: src/components/publish-panel.tsx:57
 msgid "took {0} seconds"
 msgstr "{0} saniye sürdü"
 
@@ -2030,6 +2047,10 @@ msgstr "Kapalıyken yüklemeler sunucunun diskinde saklanır."
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Okuyucuların görselleri yüklediği adres (bucket genel URL'si veya CDN)"
 
+#: src/routes/console.sites.$siteId.tsx:152
+msgid "Where this site's pages come from, and how the last builds went."
+msgstr "Bu sitenin sayfaları nereden geliyor ve son derlemeler nasıl gitti."
+
 #: src/routes/dashboard.plugins_.backup.tsx:163
 msgid "Where to keep them"
 msgstr "Nerede saklansın"
@@ -2062,11 +2083,12 @@ msgstr "Bunu siteye giriş yapmak ve yönetmek için kullanacaksınız."
 msgid "Your name"
 msgstr "Adınız"
 
-#: src/routes/dashboard.publish.tsx:156
+#: src/routes/dashboard.publish.tsx:121
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Sayfalarınız kendi projenizden derleniyor. Yayınlamak, onları CMS'teki güncel içerikle yeniden derler."
 
 #: src/routes/console.index.tsx:119
+#: src/routes/console.sites.$siteId.tsx:145
 msgid "Your sites"
 msgstr "Siteleriniz"
 

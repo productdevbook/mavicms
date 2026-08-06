@@ -37,6 +37,11 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::me))
         .routes(routes!(console::list_sites, console::create_site))
         .routes(routes!(console::create_entry))
+        .routes(routes!(
+            console::get_site_publish,
+            console::save_site_publish,
+            console::request_site_publish
+        ))
         .routes(routes!(console::enter));
 
     let needs_db = OpenApiRouter::new()

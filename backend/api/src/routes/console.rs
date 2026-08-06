@@ -346,7 +346,22 @@ pub async fn create_entry(
 
     // Not found rather than forbidden: whether a site id exists is not this
     // agency's business either.
-    let tenant = hosting
+    let tenant = owned_site(&hosting, &operator, id).await?;
+    let token = console::create_entry(db, tenant.id, operator.id).await?;
+
+    Ok(Json(EntryResponse {
+        url: format!("https://{}/admin/enter?token={}", tenant.host, token),
+    }))
+}
+
+/// One of this agency's sites, or nothing — whether a site id exists at all
+/// is not an agency's business either.
+async fn owned_site(
+    hosting: &Hosting,
+    operator: &Operator,
+    id: Uuid,
+) -> AppResult<crate::tenants::Tenant> {
+    hosting
         .registry()?
         .all()
         .await?
@@ -354,13 +369,80 @@ pub async fn create_entry(
         .find(|tenant| {
             tenant.id == id && tenant.organization_id == Some(operator.organization_id)
         })
-        .ok_or_else(|| AppError::NotFound("site".to_string()))?;
+        .ok_or_else(|| AppError::NotFound("site".to_string()))
+}
 
-    let token = console::create_entry(db, tenant.id, operator.id).await?;
+/// How one of this agency's sites is built.
+///
+/// This lives here rather than in the site's own panel because it belongs to
+/// whoever built the site, not to whoever writes it: a repository address and
+/// a build command are the agency's work, and the person writing posts should
+/// not have to understand them to publish — or be able to break publishing by
+/// changing them.
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/publish",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Build settings and history", body = crate::routes::publish::PublishStatus))
+)]
+pub async fn get_site_publish(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::routes::publish::PublishStatus>> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+    let tenant = owned_site(&hosting, &operator, id).await?;
 
-    Ok(Json(EntryResponse {
-        url: format!("https://{}/admin/enter?token={}", tenant.host, token),
-    }))
+    Ok(Json(crate::routes::publish::status_of(db, &tenant).await?))
+}
+
+/// Say where one of this agency's sites is built from.
+#[utoipa::path(
+    put,
+    path = "/console/sites/{id}/publish",
+    tag = "console",
+    request_body = crate::publish::SaveBuildConfig,
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "Saved", body = crate::publish::BuildConfig))
+)]
+pub async fn save_site_publish(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::publish::SaveBuildConfig>,
+) -> AppResult<Json<crate::publish::BuildConfig>> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+    let tenant = owned_site(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::publish::save_config(db, hosting.secrets(), tenant.id, payload).await?,
+    ))
+}
+
+/// Publish one of this agency's sites.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/publish",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 202, description = "A build is queued", body = crate::publish::Build))
+)]
+pub async fn request_site_publish(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<(StatusCode, Json<crate::publish::Build>)> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+    let tenant = owned_site(&hosting, &operator, id).await?;
+
+    Ok((
+        StatusCode::ACCEPTED,
+        Json(crate::publish::request(db, tenant.id).await?),
+    ))
 }
 
 /// Trades an entry token for a session on this site.

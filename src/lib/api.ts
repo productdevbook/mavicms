@@ -642,13 +642,11 @@ export interface Build {
 export interface PublishStatus {
   config: BuildConfig | null
   builds: Build[]
+  /** The agency that looks after how this site is built, if one does. */
+  managed_by: string | null
 }
 
-export function getPublish(): Promise<PublishStatus> {
-  return request<PublishStatus>("/publish")
-}
-
-export function savePublish(payload: {
+export interface SavePublish {
   repository: string
   branch?: string
   build_command?: string
@@ -657,7 +655,13 @@ export function savePublish(payload: {
   token?: string
   /** Left out keeps what is stored. */
   environment?: Record<string, string>
-}): Promise<BuildConfig> {
+}
+
+export function getPublish(): Promise<PublishStatus> {
+  return request<PublishStatus>("/publish")
+}
+
+export function savePublish(payload: SavePublish): Promise<BuildConfig> {
   return request<BuildConfig>("/publish", {
     method: "PUT",
     body: JSON.stringify(payload),
@@ -666,4 +670,22 @@ export function savePublish(payload: {
 
 export function requestPublish(): Promise<Build> {
   return request<Build>("/publish", { method: "POST" })
+}
+
+export function getSitePublish(id: string): Promise<PublishStatus> {
+  return request<PublishStatus>(`/console/sites/${id}/publish`)
+}
+
+export function saveSitePublish(
+  id: string,
+  payload: SavePublish
+): Promise<BuildConfig> {
+  return request<BuildConfig>(`/console/sites/${id}/publish`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function requestSitePublish(id: string): Promise<Build> {
+  return request<Build>(`/console/sites/${id}/publish`, { method: "POST" })
 }

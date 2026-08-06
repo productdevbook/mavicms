@@ -80,6 +80,11 @@ msgstr "{0} is ready. Open it to set it up."
 msgid "{0} is ready. You're signed in as <0>{1}</0>."
 msgstr "{0} is ready. You're signed in as <0>{1}</0>."
 
+#. placeholder {0}: status.managed_by
+#: src/components/publish-panel.tsx:197
+msgid "{0} looks after how this site is built."
+msgstr "{0} looks after how this site is built."
+
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
 #: src/routes/console.index.tsx:121
@@ -143,7 +148,7 @@ msgstr "A prefix inside the bucket."
 msgid "Access key ID"
 msgstr "Access key ID"
 
-#: src/routes/dashboard.publish.tsx:211
+#: src/components/publish-panel.tsx:145
 msgid "Access token"
 msgstr "Access token"
 
@@ -168,7 +173,7 @@ msgstr "Add a horizontal rule"
 msgid "Add a hyperlink to the selected text."
 msgstr "Add a hyperlink to the selected text."
 
-#: src/routes/console.index.tsx:172
+#: src/routes/console.index.tsx:180
 #: src/routes/dashboard.sites.tsx:116
 msgid "Add a site"
 msgstr "Add a site"
@@ -219,7 +224,7 @@ msgid "Add row before"
 msgstr "Add row before"
 
 #: src/routes/console.index.tsx:125
-#: src/routes/console.index.tsx:195
+#: src/routes/console.index.tsx:203
 #: src/routes/dashboard.sites.tsx:75
 #: src/routes/dashboard.sites.tsx:154
 msgid "Add site"
@@ -230,7 +235,7 @@ msgid "Add table"
 msgstr "Add table"
 
 #: src/components/editor/dialogs.tsx:300
-#: src/routes/console.index.tsx:179
+#: src/routes/console.index.tsx:187
 #: src/routes/dashboard.sites.tsx:124
 msgid "Address"
 msgstr "Address"
@@ -368,7 +373,7 @@ msgstr "Blocks"
 msgid "Bold"
 msgstr "Bold"
 
-#: src/routes/dashboard.publish.tsx:181
+#: src/components/publish-panel.tsx:115
 msgid "Branch"
 msgstr "Branch"
 
@@ -376,11 +381,11 @@ msgstr "Branch"
 msgid "Bucket"
 msgstr "Bucket"
 
-#: src/routes/dashboard.publish.tsx:199
+#: src/components/publish-panel.tsx:133
 msgid "Build command"
 msgstr "Build command"
 
-#: src/routes/dashboard.publish.tsx:224
+#: src/components/publish-panel.tsx:160
 msgid "Build variables"
 msgstr "Build variables"
 
@@ -397,7 +402,7 @@ msgstr "Bullet list"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/routes/console.index.tsx:191
+#: src/routes/console.index.tsx:199
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
 #: src/routes/dashboard.index.tsx:253
@@ -580,7 +585,8 @@ msgstr "Could not load post"
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
 
-#: src/routes/dashboard.publish.tsx:80
+#: src/routes/console.sites.$siteId.tsx:66
+#: src/routes/dashboard.publish.tsx:48
 msgid "Could not load the publishing settings"
 msgstr "Could not load the publishing settings"
 
@@ -593,6 +599,7 @@ msgid "Could not load your sites"
 msgstr "Could not load your sites"
 
 #: src/routes/console.index.tsx:83
+#: src/routes/console.sites.$siteId.tsx:129
 msgid "Could not open the site"
 msgstr "Could not open the site"
 
@@ -620,12 +627,14 @@ msgstr "Could not save settings"
 msgid "Could not save tag"
 msgstr "Could not save tag"
 
+#: src/routes/console.sites.$siteId.tsx:100
 #: src/routes/dashboard.plugins_.backup.tsx:89
-#: src/routes/dashboard.publish.tsx:120
+#: src/routes/dashboard.publish.tsx:85
 msgid "Could not save the settings"
 msgstr "Could not save the settings"
 
-#: src/routes/dashboard.publish.tsx:135
+#: src/routes/console.sites.$siteId.tsx:115
+#: src/routes/dashboard.publish.tsx:100
 msgid "Could not start the build"
 msgstr "Could not start the build"
 
@@ -1099,7 +1108,7 @@ msgstr "Install Mavi CMS"
 msgid "Installing Mavi CMS…"
 msgstr "Installing Mavi CMS…"
 
-#: src/routes/dashboard.publish.tsx:206
+#: src/components/publish-panel.tsx:140
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "It runs with CMS_API_URL and SITE_URL set to this site's address."
 
@@ -1206,7 +1215,8 @@ msgstr "Make default"
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
-#: src/routes/console.index.tsx:161
+#: src/routes/console.index.tsx:169
+#: src/routes/console.sites.$siteId.tsx:166
 msgid "Manage"
 msgstr "Manage"
 
@@ -1333,7 +1343,7 @@ msgstr "No tags yet"
 msgid "Not configured"
 msgstr "Not configured"
 
-#: src/routes/dashboard.publish.tsx:251
+#: src/components/publish-panel.tsx:34
 msgid "Nothing published yet"
 msgstr "Nothing published yet"
 
@@ -1356,7 +1366,7 @@ msgstr "On the server's disk"
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "One account for every site you run. Each site keeps its own content and its own people."
 
-#: src/routes/dashboard.publish.tsx:236
+#: src/components/publish-panel.tsx:172
 msgid "One NAME=value per line. This is where the build's credentials go."
 msgstr "One NAME=value per line. This is where the build's credentials go."
 
@@ -1364,7 +1374,7 @@ msgstr "One NAME=value per line. This is where the build's credentials go."
 msgid "Only by hand"
 msgstr "Only by hand"
 
-#: src/routes/dashboard.publish.tsx:218
+#: src/components/publish-panel.tsx:154
 msgid "Only for a private repository"
 msgstr "Only for a private repository"
 
@@ -1393,7 +1403,7 @@ msgstr "Other sites this server hosts. Each gets its own database schema, accoun
 #~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 #~ msgstr "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 
-#: src/routes/dashboard.publish.tsx:189
+#: src/components/publish-panel.tsx:123
 msgid "Output folder"
 msgstr "Output folder"
 
@@ -1454,7 +1464,7 @@ msgstr "Plain text block"
 msgid "Plugins"
 msgstr "Plugins"
 
-#: src/routes/console.index.tsx:174
+#: src/routes/console.index.tsx:182
 #: src/routes/dashboard.sites.tsx:118
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Point the address at this server first — the site answers on whichever address you give it here."
@@ -1512,8 +1522,8 @@ msgstr "Public base URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:39
 #: src/components/editor/mavi-editor.tsx:607
-#: src/routes/dashboard.publish.tsx:154
-#: src/routes/dashboard.publish.tsx:164
+#: src/components/publish-panel.tsx:224
+#: src/routes/dashboard.publish.tsx:119
 msgid "Publish"
 msgstr "Publish"
 
@@ -1525,11 +1535,12 @@ msgstr "Publish date"
 msgid "Published"
 msgstr "Published"
 
-#: src/routes/dashboard.publish.tsx:132
+#: src/routes/console.sites.$siteId.tsx:112
+#: src/routes/dashboard.publish.tsx:97
 msgid "Publishing — this takes a minute or two"
 msgstr "Publishing — this takes a minute or two"
 
-#: src/routes/dashboard.publish.tsx:164
+#: src/components/publish-panel.tsx:224
 msgid "Publishing…"
 msgstr "Publishing…"
 
@@ -1548,7 +1559,8 @@ msgstr "Raise text above the line"
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
 
-#: src/routes/dashboard.publish.tsx:248
+#: src/routes/console.sites.$siteId.tsx:197
+#: src/routes/dashboard.publish.tsx:151
 msgid "Recent builds"
 msgstr "Recent builds"
 
@@ -1603,7 +1615,7 @@ msgstr "Replace content"
 msgid "Replace…"
 msgstr "Replace…"
 
-#: src/routes/dashboard.publish.tsx:170
+#: src/components/publish-panel.tsx:104
 msgid "Repository"
 msgstr "Repository"
 
@@ -1632,15 +1644,16 @@ msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
 #: src/components/editor/mavi-editor.tsx:596
+#: src/components/publish-panel.tsx:179
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.plugins_.backup.tsx:280
 #: src/routes/dashboard.plugins_.s3.tsx:238
-#: src/routes/dashboard.publish.tsx:243
 msgid "Save"
 msgstr "Save"
 
 #: src/components/editor/status-bar.tsx:113
-#: src/routes/dashboard.publish.tsx:117
+#: src/routes/console.sites.$siteId.tsx:97
+#: src/routes/dashboard.publish.tsx:82
 msgid "Saved"
 msgstr "Saved"
 
@@ -1705,6 +1718,10 @@ msgstr "SEO title"
 #: src/routes/dashboard.plugins_.backup.tsx:196
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Set up the S3 plugin first if you want backups kept off this machine."
+
+#: src/routes/console.index.tsx:156
+msgid "Settings"
+msgstr "Settings"
 
 #: src/components/editor/mavi-editor.tsx:571
 msgid "Settings panel"
@@ -1788,12 +1805,12 @@ msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, Digi
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
-#: src/routes/dashboard.publish.tsx:218
+#: src/components/publish-panel.tsx:153
 msgid "Stored — type to replace"
 msgstr "Stored — type to replace"
 
 #. placeholder {0}: config.environment_keys.join(", ")
-#: src/routes/dashboard.publish.tsx:235
+#: src/components/publish-panel.tsx:171
 msgid "Stored: {0}. Typing here replaces all of them."
 msgstr "Stored: {0}. Typing here replaces all of them."
 
@@ -1943,7 +1960,7 @@ msgid "Today's date"
 msgstr "Today's date"
 
 #. placeholder {0}: Math.max( 1, Math.round( (new Date(build.finished_at).getTime() - new Date(build.started_at).getTime()) / 1000 ) )
-#: src/routes/dashboard.publish.tsx:271
+#: src/components/publish-panel.tsx:57
 msgid "took {0} seconds"
 msgstr "took {0} seconds"
 
@@ -2034,6 +2051,10 @@ msgstr "When off, uploads are stored on the server's disk."
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Where readers load the images from (bucket public URL or CDN)"
 
+#: src/routes/console.sites.$siteId.tsx:152
+msgid "Where this site's pages come from, and how the last builds went."
+msgstr "Where this site's pages come from, and how the last builds went."
+
 #: src/routes/dashboard.plugins_.backup.tsx:163
 msgid "Where to keep them"
 msgstr "Where to keep them"
@@ -2066,11 +2087,12 @@ msgstr "You'll use this to sign in and manage your site."
 msgid "Your name"
 msgstr "Your name"
 
-#: src/routes/dashboard.publish.tsx:156
+#: src/routes/dashboard.publish.tsx:121
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 
 #: src/routes/console.index.tsx:119
+#: src/routes/console.sites.$siteId.tsx:145
 msgid "Your sites"
 msgstr "Your sites"
 
