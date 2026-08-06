@@ -189,7 +189,7 @@ class MaviCMS_Migrator {
 			$tags[] = $tag->name;
 		}
 
-		$content = $this->rewrite_images( (string) $post->post_content );
+		$content = $this->rewrite_images( $this->render( (string) $post->post_content ) );
 		if ( is_wp_error( $content ) ) {
 			return array(
 				'status'  => 'failed',
@@ -520,6 +520,25 @@ class MaviCMS_Migrator {
 		}
 		$path = $uploads['basedir'] . '/' . $relative;
 		return file_exists( $path ) ? $path : null;
+	}
+
+	/**
+	 * Turns stored post content into the HTML the site actually showed.
+	 *
+	 * WordPress keeps paragraphs as blank lines and leaves shortcodes
+	 * unexpanded, then renders both on the way out. Sending the stored text
+	 * as-is produces one enormous run-on block, and any picture a builder
+	 * placed through a shortcode never appears at all.
+	 *
+	 * The full `the_content` filter is deliberately not used: it invites every
+	 * plugin on the site to staple related-post lists and share buttons onto
+	 * the text being migrated.
+	 *
+	 * @param string $content Raw post content.
+	 * @return string
+	 */
+	private function render( $content ) {
+		return wpautop( do_shortcode( $content ) );
 	}
 
 	/**

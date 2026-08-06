@@ -78,7 +78,11 @@ import { Toolbar } from "@/components/editor/toolbar"
 import { useStatusLabels, type PostMeta } from "@/components/editor/types"
 
 const SCROLL_CONTAINER_ID = "mavi-editor-scroll"
-const CHARACTER_LIMIT = 20000
+// No cap. Posts are as long as they are, and a limit here does not merely
+// refuse new typing: Tiptap rejects the whole transaction, so a post over the
+// limit opens empty — and the next keystroke would autosave that emptiness
+// over the real thing.
+const CHARACTER_LIMIT = null
 const BLANK_CONTENT = "<p></p>"
 
 const BLANK_META: PostMeta = {
@@ -215,6 +219,16 @@ export function MaviEditor({
         // Loading is not an edit: an update event here would schedule an
         // autosave against the still-empty initial meta and PATCH a blank title.
         editor.commands.setContent(post.content_html, { emitUpdate: false })
+
+        // If the post had content and the editor ended up empty, something
+        // refused it. Autosaving from here would write that emptiness over the
+        // real thing, so the editor stays shut instead.
+        if (post.content_html.trim() !== "" && editor.isEmpty) {
+          toast.error(t`This post could not be opened, so it has been left untouched.`)
+          navigate({ to: "/dashboard" })
+          return
+        }
+
         setSavedAt(new Date(post.updated_at))
         setLoadedLocale(post.locale)
         setTranslations(post.translations)

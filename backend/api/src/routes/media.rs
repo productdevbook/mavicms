@@ -238,15 +238,17 @@ pub async fn drop_unreferenced(state: &AppState, candidates: Vec<String>) {
         }
     };
 
-    // Match on the tail of the address: content may carry the full public URL
-    // while the record holds a path, and a CDN in front can change the host.
+    // Compare file names exactly. The stored name is a uuid we generated, so
+    // it identifies the file on its own whatever host or CDN prefix the
+    // content carries. Matching on any looser suffix would let a post
+    // containing something as small as `src=".png"` sweep up every unreferenced
+    // png in the library when it was deleted.
+    let wanted: std::collections::HashSet<&str> =
+        candidates.iter().filter_map(|url| file_name(url)).collect();
+
     let orphans: Vec<_> = items
         .into_iter()
-        .filter(|item| {
-            candidates
-                .iter()
-                .any(|url| url.ends_with(&item.url_path) || item.url_path.ends_with(url.as_str()))
-        })
+        .filter(|item| file_name(&item.url_path).is_some_and(|name| wanted.contains(name)))
         .collect();
 
     for item in orphans {
@@ -270,15 +272,28 @@ pub async fn drop_unreferenced(state: &AppState, candidates: Vec<String>) {
     }
 }
 
+/// The last path segment of an address, without any query or fragment.
+fn file_name(url: &str) -> Option<&str> {
+    let path = url.split(['?', '#']).next().unwrap_or(url);
+    let name = path.rsplit('/').next().unwrap_or(path);
+    (!name.is_empty()).then_some(name)
+}
+
 /// Whether any post still points at this file.
 async fn still_referenced(db: &impl ConnectionTrait, url_path: &str) -> AppResult<bool> {
-    // The tail is what both the cover and the content have in common, whatever
-    // host or CDN prefix sits in front of it.
-    let needle = url_path.rsplit('/').next().unwrap_or(url_path);
-    if needle.is_empty() {
+    // The file name is what both the cover and the content have in common,
+    // whatever host or CDN prefix sits in front of it.
+    let Some(needle) = file_name(url_path) else {
+        // Nothing identifiable: keep the file rather than guess.
         return Ok(true);
-    }
-    let pattern = format!("%{needle}%");
+    };
+    // `%` and `_` are wildcards in LIKE; a name carrying one would otherwise
+    // match more than itself and hide a real reference.
+    let escaped = needle
+        .replace('\\', "\\\\")
+        .replace('%', "\\%")
+        .replace('_', "\\_");
+    let pattern = format!("%{escaped}%");
 
     Ok(post::Entity::find()
         .filter(
@@ -412,5 +427,32 @@ mod tests {
         assert!(!is_isobmff(b"\0\0\0\x18ftypav", b"avif"));
         assert!(sniff_image(b"").is_none());
         assert_eq!(describe(b""), "not a recognised image");
+    }
+}
+
+#[cfg(test)]
+mod orphan_tests {
+    use super::file_name;
+
+    #[test]
+    fn takes_the_file_name_only() {
+        assert_eq!(
+            file_name("https://cdn.example.com/prod/2026/08/abc.png"),
+            Some("abc.png")
+        );
+        assert_eq!(file_name("/uploads/2026/08/abc.png?v=2"), Some("abc.png"));
+        assert_eq!(file_name("abc.png#frag"), Some("abc.png"));
+    }
+
+    #[test]
+    fn a_bare_extension_matches_nothing_by_itself() {
+        // The whole point: ".png" must not stand in for every png there is.
+        assert_ne!(file_name(".png"), file_name("/uploads/2026/08/abc.png"));
+    }
+
+    #[test]
+    fn has_no_name_when_there_is_nothing_after_the_slash() {
+        assert_eq!(file_name("https://example.com/"), None);
+        assert_eq!(file_name(""), None);
     }
 }
