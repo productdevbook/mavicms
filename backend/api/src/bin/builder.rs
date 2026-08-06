@@ -81,13 +81,26 @@ async fn main() {
 
     tracing::info!("builder waiting for work");
     loop {
-        match builder.take_one().await {
-            Ok(true) => continue,
-            Ok(false) => tokio::time::sleep(IDLE_POLL).await,
+        // Builds first: somebody is usually watching a publish, and nobody
+        // watches a campaign go out one batch at a time.
+        let built = match builder.take_one().await {
+            Ok(taken) => taken,
             Err(err) => {
                 tracing::error!(error = %err, "could not reach the queue");
-                tokio::time::sleep(IDLE_POLL).await;
+                false
             }
+        };
+
+        let mailed = match builder.take_mail().await {
+            Ok(taken) => taken,
+            Err(err) => {
+                tracing::error!(error = %err, "could not reach the mail queue");
+                false
+            }
+        };
+
+        if !built && !mailed {
+            tokio::time::sleep(IDLE_POLL).await;
         }
     }
 }
@@ -155,6 +168,72 @@ impl Builder {
 
         publish::finish(&self.control, &id, outcome.is_ok(), &log).await?;
         Ok(true)
+    }
+
+    /// Sends one campaign's worth of batches, if a site has one waiting.
+    ///
+    /// The whole campaign in one claim rather than a row per batch: the queue
+    /// row is what says a worker is on it, and re-queuing between batches
+    /// would let a second worker start the same campaign while the first was
+    /// still going.
+    async fn take_mail(&self) -> AppResult<bool> {
+        let Some((run, tenant_id, campaign_id)) =
+            mavicms_api::mailing::claim_run(&self.control).await?
+        else {
+            return Ok(false);
+        };
+
+        let tenant = self.tenant(tenant_id).await?;
+        tracing::info!(campaign = %campaign_id, site = %tenant.host, "sending");
+
+        if let Err(err) = self.send_campaign(&tenant, campaign_id).await {
+            tracing::error!(campaign = %campaign_id, site = %tenant.host, error = %err, "campaign stopped");
+        }
+
+        mavicms_api::mailing::finish_run(&self.control, &run).await?;
+        Ok(true)
+    }
+
+    async fn send_campaign(&self, tenant: &Tenant, campaign_id: Uuid) -> AppResult<()> {
+        let url = if tenant.database_url.trim().is_empty() {
+            self.base_url.clone()
+        } else {
+            tenant.database_url.clone()
+        };
+        let db = db::connect_in_schema(&url, &tenant.schema)
+            .await
+            .map_err(|err| AppError::Internal(format!("could not open the site: {err}")))?;
+
+        let settings = mavicms_api::plugins::load::<mavicms_api::email::EmailConfig>(
+            &db,
+            &self.secrets,
+            mavicms_api::plugins::EMAIL_PLUGIN,
+        )
+        .await?
+        .filter(|stored| stored.enabled)
+        .ok_or_else(|| AppError::Validation("mail is not switched on for this site".to_string()))?;
+
+        let site_url = format!("{}://{}", self.site_scheme, tenant.host);
+        let api_base = format!("{site_url}/api");
+
+        // Until nobody is left. Each pass re-reads the campaign, so pausing
+        // or cancelling it in the panel stops the next batch rather than
+        // being noticed only at the end.
+        loop {
+            let done = mavicms_api::mailing::send_batch(
+                &db,
+                &self.secrets,
+                &settings.config,
+                &api_base,
+                &site_url,
+                campaign_id,
+            )
+            .await?;
+
+            if done == 0 {
+                return Ok(());
+            }
+        }
     }
 
     async fn tenant(&self, id: Uuid) -> AppResult<Tenant> {

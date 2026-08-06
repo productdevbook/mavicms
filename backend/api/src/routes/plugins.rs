@@ -421,9 +421,13 @@ async fn resolve_email(
         crate::plugins::load::<crate::email::EmailConfig>(state.db(), &state.secrets, EMAIL_PLUGIN)
             .await?;
 
+    // Absent means keep what is stored — the panel never receives the secret,
+    // so an untouched form leaves the field out and must not erase it.
+    // Present and empty means clear it, which is the only way to take a key
+    // back from a site without deleting everything else about its mail.
     let secret = match payload.secret_access_key.as_deref() {
-        Some(given) if !given.trim().is_empty() => given.trim().to_string(),
-        _ => stored
+        Some(given) => given.trim().to_string(),
+        None => stored
             .as_ref()
             .map(|stored| stored.config.secret_access_key.clone())
             .unwrap_or_default(),

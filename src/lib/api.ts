@@ -1179,3 +1179,208 @@ export function unsuppressSesAddress(
     { method: "DELETE" }
   )
 }
+
+export interface MailList {
+  id: string
+  name: string
+  slug: string
+  description: string
+  opt_in: string
+  public: boolean
+  confirmed: number
+  unconfirmed: number
+  unsubscribed: number
+  created_at: string
+}
+
+export interface Subscriber {
+  id: string
+  email: string
+  name: string
+  status: string
+  attributes: Record<string, unknown>
+  lists: { list_id: string; status: string }[]
+  created_at: string
+}
+
+export interface MailTemplate {
+  id: string
+  name: string
+  subject: string
+  body: string
+  is_default: boolean
+  created_at: string
+}
+
+export interface Campaign {
+  id: string
+  name: string
+  subject: string
+  body: string
+  template_id: string | null
+  status: string
+  lists: string[]
+  send_at: string | null
+  started_at: string | null
+  finished_at: string | null
+  to_send: number
+  sent: number
+  failed: number
+  opened: number
+  clicked: number
+  created_at: string
+}
+
+export interface MailLogEntry {
+  id: string
+  to_address: string
+  subject: string
+  status: string
+  detail: string
+  created_at: string
+}
+
+export interface ImportReport {
+  added: number
+  updated: number
+  skipped: string[]
+}
+
+export function getMailLists(): Promise<MailList[]> {
+  return request<MailList[]>("/mail/lists")
+}
+
+export function saveMailList(
+  payload: { name: string; description: string; opt_in: string; public: boolean },
+  id?: string
+): Promise<MailList> {
+  return request<MailList>(id ? `/mail/lists/${id}` : "/mail/lists", {
+    method: id ? "PUT" : "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteMailList(id: string): Promise<void> {
+  return request<void>(`/mail/lists/${id}`, { method: "DELETE" })
+}
+
+export function getSubscribers(params: {
+  q?: string
+  list?: string
+}): Promise<Subscriber[]> {
+  const search = new URLSearchParams()
+  if (params.q) search.set("q", params.q)
+  if (params.list) search.set("list", params.list)
+  const query = search.toString()
+  return request<Subscriber[]>(`/mail/subscribers${query ? `?${query}` : ""}`)
+}
+
+export function saveSubscriber(
+  payload: {
+    email: string
+    name: string
+    lists: string[]
+    attributes: Record<string, unknown>
+    status?: string
+  },
+  id?: string
+): Promise<Subscriber> {
+  return request<Subscriber>(
+    id ? `/mail/subscribers/${id}` : "/mail/subscribers",
+    { method: id ? "PUT" : "POST", body: JSON.stringify(payload) }
+  )
+}
+
+export function deleteSubscriber(id: string): Promise<void> {
+  return request<void>(`/mail/subscribers/${id}`, { method: "DELETE" })
+}
+
+export async function importSubscribers(
+  listId: string,
+  csv: string
+): Promise<ImportReport> {
+  const response = await fetch(
+    `/api/mail/subscribers/import?list=${encodeURIComponent(listId)}`,
+    { method: "POST", headers: { "Content-Type": "text/csv" }, body: csv }
+  )
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}))
+    throw new ApiError(response.status, body.error ?? response.statusText)
+  }
+  return response.json() as Promise<ImportReport>
+}
+
+/** The address the browser downloads from; not fetched here. */
+export function subscriberExportUrl(listId?: string): string {
+  return `/api/mail/subscribers/export${listId ? `?list=${encodeURIComponent(listId)}` : ""}`
+}
+
+export function getMailTemplates(): Promise<MailTemplate[]> {
+  return request<MailTemplate[]>("/mail/templates")
+}
+
+export function saveMailTemplate(
+  payload: { name: string; subject: string; body: string; is_default: boolean },
+  id?: string
+): Promise<MailTemplate> {
+  return request<MailTemplate>(id ? `/mail/templates/${id}` : "/mail/templates", {
+    method: id ? "PUT" : "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteMailTemplate(id: string): Promise<void> {
+  return request<void>(`/mail/templates/${id}`, { method: "DELETE" })
+}
+
+export function getCampaigns(): Promise<Campaign[]> {
+  return request<Campaign[]>("/mail/campaigns")
+}
+
+export function getCampaign(id: string): Promise<Campaign> {
+  return request<Campaign>(`/mail/campaigns/${id}`)
+}
+
+export function saveCampaign(
+  payload: {
+    name: string
+    subject: string
+    body: string
+    template_id: string | null
+    lists: string[]
+    send_at: string | null
+  },
+  id?: string
+): Promise<Campaign> {
+  return request<Campaign>(id ? `/mail/campaigns/${id}` : "/mail/campaigns", {
+    method: id ? "PUT" : "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteCampaign(id: string): Promise<void> {
+  return request<void>(`/mail/campaigns/${id}`, { method: "DELETE" })
+}
+
+export function startCampaign(id: string): Promise<Campaign> {
+  return request<Campaign>(`/mail/campaigns/${id}/send`, { method: "POST" })
+}
+
+export function pauseCampaign(id: string): Promise<Campaign> {
+  return request<Campaign>(`/mail/campaigns/${id}/pause`, { method: "POST" })
+}
+
+export function cancelCampaign(id: string): Promise<Campaign> {
+  return request<Campaign>(`/mail/campaigns/${id}/cancel`, { method: "POST" })
+}
+
+export function testCampaign(id: string, to: string): Promise<void> {
+  return request<void>(`/mail/campaigns/${id}/test`, {
+    method: "POST",
+    body: JSON.stringify({ to }),
+  })
+}
+
+export function getMailLog(): Promise<MailLogEntry[]> {
+  return request<MailLogEntry[]>("/mail/log")
+}

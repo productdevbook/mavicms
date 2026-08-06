@@ -10,28 +10,35 @@ pub struct Migration;
 #[sea_orm_migration::async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        let timestamp = |name: MailLists| ColumnDef::new(name).timestamp_with_time_zone().not_null();
-
         manager
             .create_table(
                 Table::create()
                     .table(MailLists::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(MailLists::Id).uuid().not_null().primary_key())
+                    .col(
+                        ColumnDef::new(MailLists::Id)
+                            .uuid()
+                            .not_null()
+                            .primary_key(),
+                    )
                     .col(ColumnDef::new(MailLists::Name).text().not_null())
                     .col(ColumnDef::new(MailLists::Slug).string_len(255).not_null())
                     .col(ColumnDef::new(MailLists::Description).text().not_null())
                     // "single" or "double". Double asks the subscriber to
                     // confirm by mail before anything else is sent to them.
                     .col(ColumnDef::new(MailLists::OptIn).string_len(10).not_null())
-                    /// Whether somebody may join it from the site itself.
+                    // Whether somebody may join it from the site itself.
                     .col(
                         ColumnDef::new(MailLists::Public)
                             .boolean()
                             .not_null()
                             .default(true),
                     )
-                    .col(timestamp(MailLists::CreatedAt))
+                    .col(
+                        ColumnDef::new(MailLists::CreatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -59,7 +66,11 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Subscribers::Email).string_len(320).not_null())
+                    .col(
+                        ColumnDef::new(Subscribers::Email)
+                            .string_len(320)
+                            .not_null(),
+                    )
                     .col(ColumnDef::new(Subscribers::Name).text().not_null())
                     // "enabled" or "blocked". Blocked is what a bounce or a
                     // spam complaint leaves behind, and it outranks every
@@ -69,8 +80,8 @@ impl MigrationTrait for Migration {
                             .string_len(20)
                             .not_null(),
                     )
-                    /// Whatever else is known about them, as JSON — a town, an
-                    /// order number, whatever the site collected.
+                    // Whatever else is known about them, as JSON — a town, an
+                    // order number, whatever the site collected.
                     .col(ColumnDef::new(Subscribers::Attributes).text().not_null())
                     .col(
                         ColumnDef::new(Subscribers::CreatedAt)
@@ -151,8 +162,8 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(MailTemplates::Name).text().not_null())
                     .col(ColumnDef::new(MailTemplates::Subject).text().not_null())
-                    /// The HTML around a campaign's own body, with
-                    /// placeholders. See `mailing::render`.
+                    // The HTML around a campaign's own body, with
+                    // placeholders. See `mailing::render`.
                     .col(ColumnDef::new(MailTemplates::Body).text().not_null())
                     .col(
                         ColumnDef::new(MailTemplates::IsDefault)
@@ -174,7 +185,12 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Campaigns::Table)
                     .if_not_exists()
-                    .col(ColumnDef::new(Campaigns::Id).uuid().not_null().primary_key())
+                    .col(
+                        ColumnDef::new(Campaigns::Id)
+                            .uuid()
+                            .not_null()
+                            .primary_key(),
+                    )
                     .col(ColumnDef::new(Campaigns::Name).text().not_null())
                     .col(ColumnDef::new(Campaigns::Subject).text().not_null())
                     .col(ColumnDef::new(Campaigns::Body).text().not_null())
@@ -184,14 +200,19 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Campaigns::SendAt).timestamp_with_time_zone())
                     .col(ColumnDef::new(Campaigns::StartedAt).timestamp_with_time_zone())
                     .col(ColumnDef::new(Campaigns::FinishedAt).timestamp_with_time_zone())
-                    /// How many it is meant to reach, counted when it starts.
+                    // How many it is meant to reach, counted when it starts.
                     .col(
                         ColumnDef::new(Campaigns::ToSend)
                             .integer()
                             .not_null()
                             .default(0),
                     )
-                    .col(ColumnDef::new(Campaigns::Sent).integer().not_null().default(0))
+                    .col(
+                        ColumnDef::new(Campaigns::Sent)
+                            .integer()
+                            .not_null()
+                            .default(0),
+                    )
                     .col(
                         ColumnDef::new(Campaigns::Failed)
                             .integer()
@@ -235,10 +256,18 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(CampaignEvents::CampaignId).uuid().not_null())
-                    .col(ColumnDef::new(CampaignEvents::SubscriberId).uuid().not_null())
+                    .col(
+                        ColumnDef::new(CampaignEvents::SubscriberId)
+                            .uuid()
+                            .not_null(),
+                    )
                     // sent, failed, open, click.
-                    .col(ColumnDef::new(CampaignEvents::Kind).string_len(20).not_null())
-                    /// Where a click went, or what a failure said.
+                    .col(
+                        ColumnDef::new(CampaignEvents::Kind)
+                            .string_len(20)
+                            .not_null(),
+                    )
+                    // Where a click went, or what a failure said.
                     .col(ColumnDef::new(CampaignEvents::Detail).text().not_null())
                     .col(
                         ColumnDef::new(CampaignEvents::CreatedAt)
@@ -285,7 +314,11 @@ impl MigrationTrait for Migration {
                     .table(EmailLog::Table)
                     .if_not_exists()
                     .col(ColumnDef::new(EmailLog::Id).uuid().not_null().primary_key())
-                    .col(ColumnDef::new(EmailLog::ToAddress).string_len(320).not_null())
+                    .col(
+                        ColumnDef::new(EmailLog::ToAddress)
+                            .string_len(320)
+                            .not_null(),
+                    )
                     .col(ColumnDef::new(EmailLog::Subject).text().not_null())
                     // "sent" or "failed".
                     .col(ColumnDef::new(EmailLog::Status).string_len(20).not_null())

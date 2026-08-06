@@ -31,6 +31,10 @@ msgstr "\"{0}\" onu kullanan bütün yazılardan kaldırılacak."
 msgid "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
 msgstr "\"{pendingDelete}\" kalıcı olarak silinecek. Bu geri alınamaz."
 
+#: src/routes/dashboard.mail.tsx:725
+msgid "{{ content }} is where the campaign goes. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them."
+msgstr "{{ content }} kampanyanın geleceği yerdir. {{ name }}, {{ email }} ve {{ unsubscribe_url }} her kişi için doldurulur; kişi hakkında tuttuğunuz diğer alanlar da öyle."
+
 #. placeholder {0}: stats.selected
 #: src/components/editor/status-bar.tsx:55
 msgid "{0, plural, one {# character selected} other {# characters selected}}"
@@ -64,11 +68,30 @@ msgstr "{0, plural, one {kelime} other {kelime}}"
 msgid "{0} · {1} · {2} · {3}"
 msgstr "{0} · {1} · {2} · {3}"
 
+#. placeholder {0}: done.added
+#. placeholder {1}: done.updated
+#. placeholder {2}: done.skipped.length
+#: src/routes/dashboard.mail.tsx:441
+msgid "{0} added, {1} updated, {2} skipped"
+msgstr "{0} eklendi, {1} güncellendi, {2} atlandı"
+
 #. placeholder {0}: removing?.name
 #. placeholder {1}: removing?.submissions ?? 0
 #: src/routes/dashboard.forms.tsx:345
 msgid "{0} and the {1} answers it holds go with it. Switching it off instead keeps them."
 msgstr "{0} ve içindeki {1} yanıt birlikte gider. Kapatırsanız yanıtlar kalır."
+
+#. placeholder {0}: row.clicked
+#: src/routes/dashboard.mail.tsx:196
+msgid "{0} clicked"
+msgstr "{0} tıkladı"
+
+#. placeholder {0}: list.confirmed
+#. placeholder {0}: row.confirmed
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:236
+#: src/routes/dashboard.mail.tsx:297
+msgid "{0} confirmed"
+msgstr "{0} onaylı"
 
 #. placeholder {0}: site.host
 #: src/routes/console.index.tsx:65
@@ -86,6 +109,11 @@ msgstr "{0} hazır"
 msgid "{0} is ready. You're signed in as <0>{1}</0>."
 msgstr "{0} hazır! <0>{1}</0> olarak oturum açtınız."
 
+#. placeholder {0}: row.unsubscribed
+#: src/routes/dashboard.mail.tsx:299
+msgid "{0} left"
+msgstr "{0} ayrıldı"
+
 #. placeholder {0}: status.managed_by
 #: src/components/publish-panel.tsx:268
 #~ msgid "{0} looks after how this site is built."
@@ -101,11 +129,31 @@ msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıkla
 #~ msgid "{0} looks after how this site is built. Publishing puts what you have written online."
 #~ msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıklarınızı siteye çıkarır."
 
+#. placeholder {0}: row.sent
+#. placeholder {1}: row.to_send
+#: src/routes/dashboard.mail.tsx:194
+msgid "{0} of {1} sent"
+msgstr "{1} kişiden {0} gönderildi"
+
+#. placeholder {0}: campaign.sent
+#. placeholder {1}: campaign.to_send
+#. placeholder {2}: campaign.failed
+#. placeholder {3}: campaign.opened
+#. placeholder {4}: campaign.clicked
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:153
+msgid "{0} of {1} sent, {2} refused, {3} opened, {4} clicked"
+msgstr "{1} kişiden {0} gönderildi, {2} reddedildi, {3} açtı, {4} tıkladı"
+
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
 #: src/routes/console.index.tsx:131
 msgid "{0} of {1} used."
 msgstr "{1} siteden {0} tanesi kullanılıyor."
+
+#. placeholder {0}: row.opened
+#: src/routes/dashboard.mail.tsx:195
+msgid "{0} opened"
+msgstr "{0} açtı"
 
 #. placeholder {0}: form.submissions
 #: src/routes/dashboard.forms.tsx:202
@@ -128,6 +176,11 @@ msgstr "{0} satır × {1} sütun"
 #: src/routes/dashboard.sites.tsx:200
 msgid "{0} sites"
 msgstr "{0} site"
+
+#. placeholder {0}: row.unconfirmed
+#: src/routes/dashboard.mail.tsx:298
+msgid "{0} waiting"
+msgstr "{0} bekliyor"
 
 #. placeholder {0}: resetting?.username
 #: src/routes/dashboard.users.tsx:317
@@ -248,6 +301,7 @@ msgstr "Etkin"
 
 #: src/components/editor/dialogs.tsx:200
 #: src/components/publish-panel.tsx:165
+#: src/routes/dashboard.mail.tsx:594
 #: src/routes/dashboard.tags.tsx:174
 #: src/routes/dashboard.users.tsx:303
 msgid "Add"
@@ -326,6 +380,8 @@ msgstr "Üste satır ekle"
 msgid "Add site"
 msgstr "Site ekle"
 
+#: src/routes/dashboard.mail.tsx:494
+#: src/routes/dashboard.mail.tsx:540
 #: src/routes/dashboard.users.tsx:156
 #: src/routes/dashboard.users.tsx:255
 msgid "Add someone"
@@ -334,6 +390,10 @@ msgstr "Kişi ekle"
 #: src/components/editor/dialogs.tsx:348
 msgid "Add table"
 msgstr "Tablo ekle"
+
+#: src/routes/dashboard.mail.tsx:585
+msgid "Added here counts as confirmed — say so only if they asked to be on it."
+msgstr "Buradan eklemek onaylı sayılır — yalnızca listede olmayı kendileri istediyse ekleyin."
 
 #: src/components/editor/dialogs.tsx:300
 #: src/routes/console.index.tsx:197
@@ -440,7 +500,7 @@ msgstr "Tek yetkisi ses:SendEmail olan bir IAM kullanıcısı. Bu anahtar sizin 
 msgid "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 msgstr "Yanıtlar /api/forms/{0}/submit adresine gönderilir. Değiştirirseniz oraya gönderim yapan ne varsa durur."
 
-#: src/components/dashboard/dashboard-shell.tsx:85
+#: src/components/dashboard/dashboard-shell.tsx:87
 #: src/routes/dashboard.api.tsx:135
 msgid "API"
 msgstr "API"
@@ -454,6 +514,10 @@ msgstr "Uygula"
 #: src/routes/dashboard.plugins_.backup.tsx:347
 msgid "Archives"
 msgstr "Arşivler"
+
+#: src/routes/dashboard.mail.tsx:366
+msgid "Ask people to confirm by email"
+msgstr "E-posta ile onay iste"
 
 #: src/components/ses-account.tsx:290
 msgid "Ask to leave the sandbox"
@@ -526,6 +590,10 @@ msgstr "Blok"
 msgid "Block menu"
 msgstr "Blok menüsü"
 
+#: src/routes/dashboard.mail.tsx:516
+msgid "blocked"
+msgstr "engelli"
+
 #: src/components/editor/dialogs.tsx:517
 #: src/components/editor/extensions/slash-command.tsx:129
 #: src/components/editor/extensions/slash-command.tsx:138
@@ -570,6 +638,10 @@ msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
 msgid "Bullet list"
 msgstr "Madde listesi"
 
+#: src/routes/dashboard.mail.tsx:75
+msgid "Campaigns"
+msgstr "Kampanyalar"
+
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
@@ -580,6 +652,10 @@ msgstr "Madde listesi"
 #: src/routes/dashboard.forms.tsx:349
 #: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
+#: src/routes/dashboard.mail.tsx:232
+#: src/routes/dashboard.mail.tsx:381
+#: src/routes/dashboard.mail.tsx:591
+#: src/routes/dashboard.mail.tsx:741
 #: src/routes/dashboard.media.tsx:144
 #: src/routes/dashboard.plugins_.backup.tsx:422
 #: src/routes/dashboard.plugins_.backup.tsx:442
@@ -593,15 +669,23 @@ msgstr "Madde listesi"
 msgid "Cancel"
 msgstr "Vazgeç"
 
+#: src/routes/dashboard.mail.tsx:164
+msgid "Cancelled"
+msgstr "İptal edildi"
+
 #: src/components/editor/post-settings.tsx:391
 msgid "Canonical URL"
 msgstr "Canonical URL"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:181
+msgid "Carry on"
+msgstr "Devam et"
 
 #: src/components/editor/find-replace.tsx:149
 msgid "Case sensitive"
 msgstr "Büyük/küçük harf duyarlı"
 
-#: src/components/dashboard/dashboard-shell.tsx:74
+#: src/components/dashboard/dashboard-shell.tsx:75
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Kategoriler"
@@ -637,6 +721,10 @@ msgstr "Seçenekler"
 #: src/routes/dashboard.plugins_.backup.tsx:393
 msgid "Choose a file"
 msgstr "Dosya seç"
+
+#: src/routes/dashboard.mail.tsx:434
+msgid "Choose a list first"
+msgstr "Önce bir liste seçin"
 
 #: src/components/editor/dialogs.tsx:513
 #: src/components/editor/toolbar.tsx:452
@@ -708,7 +796,7 @@ msgstr "Bağlandı. Sunucu yeniden başlatılıyor…"
 msgid "Connection URL"
 msgstr "Bağlantı URL'si"
 
-#: src/components/dashboard/dashboard-shell.tsx:70
+#: src/components/dashboard/dashboard-shell.tsx:71
 #: src/routes/dashboard.api.tsx:200
 msgid "Content"
 msgstr "İçerik"
@@ -774,6 +862,10 @@ msgstr "Hesap eklenemedi"
 msgid "Could not add the site"
 msgstr "Site eklenemedi"
 
+#: src/routes/dashboard.mail.tsx:427
+msgid "Could not add them"
+msgstr "Eklenemedi"
+
 #: src/components/ses-account.tsx:109
 msgid "Could not ask"
 msgstr "İstek gönderilemedi"
@@ -823,6 +915,7 @@ msgstr "Yedek silinemedi"
 
 #: src/components/site-mail.tsx:92
 #: src/routes/dashboard.forms_.$formId.tsx:89
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:104
 #: src/routes/dashboard.plugins_.email.tsx:92
 msgid "Could not do it"
 msgstr "Yapılamadı"
@@ -844,6 +937,14 @@ msgstr "Hesaplar yüklenemedi"
 msgid "Could not load the backup settings"
 msgstr "Yedekleme ayarları yüklenemedi"
 
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:48
+msgid "Could not load the campaign"
+msgstr "Kampanya yüklenemedi"
+
+#: src/routes/dashboard.mail.tsx:132
+msgid "Could not load the campaigns"
+msgstr "Kampanyalar yüklenemedi"
+
 #: src/routes/dashboard.forms_.$formId.tsx:78
 msgid "Could not load the form"
 msgstr "Form yüklenemedi"
@@ -851,6 +952,10 @@ msgstr "Form yüklenemedi"
 #: src/routes/dashboard.forms.tsx:86
 msgid "Could not load the forms"
 msgstr "Formlar yüklenemedi"
+
+#: src/routes/dashboard.mail.tsx:252
+msgid "Could not load the lists"
+msgstr "Listeler yüklenemedi"
 
 #: src/components/local-env.tsx:62
 msgid "Could not load the local settings"
@@ -860,6 +965,10 @@ msgstr "Yerel ayarlar yüklenemedi"
 #: src/routes/dashboard.plugins_.email.tsx:55
 msgid "Could not load the mail settings"
 msgstr "Posta ayarları yüklenemedi"
+
+#: src/routes/dashboard.mail.tsx:406
+msgid "Could not load the people"
+msgstr "Kişiler yüklenemedi"
 
 #: src/routes/console.sites.$siteId.tsx:137
 #: src/routes/dashboard.publish.tsx:48
@@ -874,6 +983,14 @@ msgstr "Siteler yüklenemedi"
 msgid "Could not load the storage settings"
 msgstr "Depolama ayarları yüklenemedi"
 
+#: src/routes/dashboard.mail.tsx:619
+msgid "Could not load the templates"
+msgstr "Şablonlar yüklenemedi"
+
+#: src/routes/dashboard.mail.tsx:760
+msgid "Could not load what was sent"
+msgstr "Gönderilenler yüklenemedi"
+
 #: src/routes/console.index.tsx:55
 msgid "Could not load your sites"
 msgstr "Siteleriniz yüklenemedi"
@@ -881,6 +998,10 @@ msgstr "Siteleriniz yüklenemedi"
 #: src/components/local-env.tsx:75
 msgid "Could not make a token"
 msgstr "Jeton üretilemedi"
+
+#: src/routes/dashboard.mail.tsx:152
+msgid "Could not make it"
+msgstr "Oluşturulamadı"
 
 #: src/routes/console.index.tsx:84
 #: src/routes/console.sites.$siteId.tsx:257
@@ -895,9 +1016,16 @@ msgstr "Site açılamadı"
 msgid "Could not reach the server. Please try again."
 msgstr "Sunucuya ulaşılamadı. Lütfen tekrar deneyin."
 
+#: src/routes/dashboard.mail.tsx:446
+msgid "Could not read the file"
+msgstr "Dosya okunamadı"
+
 #: src/components/ses-account.tsx:347
 #: src/routes/dashboard.forms_.$formId.tsx:103
 #: src/routes/dashboard.forms.tsx:127
+#: src/routes/dashboard.mail.tsx:206
+#: src/routes/dashboard.mail.tsx:314
+#: src/routes/dashboard.mail.tsx:681
 #: src/routes/dashboard.sites.tsx:100
 #: src/routes/dashboard.users.tsx:122
 msgid "Could not remove it"
@@ -907,7 +1035,14 @@ msgstr "Kaldırılamadı"
 msgid "Could not remove language"
 msgstr "Dil silinemedi"
 
+#: src/routes/dashboard.mail.tsx:527
+msgid "Could not remove them"
+msgstr "Kaldırılamadı"
+
 #: src/components/site-mail.tsx:78
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:84
+#: src/routes/dashboard.mail.tsx:273
+#: src/routes/dashboard.mail.tsx:640
 #: src/routes/dashboard.plugins_.email.tsx:78
 msgid "Could not save it"
 msgstr "Kaydedilemedi"
@@ -936,6 +1071,10 @@ msgstr "Form kaydedilemedi"
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Ayarlar kaydedilemedi"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:119
+msgid "Could not send it"
+msgstr "Gönderilemedi"
 
 #: src/routes/console.sites.$siteId.tsx:184
 #: src/routes/dashboard.publish.tsx:97
@@ -1047,6 +1186,10 @@ msgstr "Tarih"
 msgid "Decrease indent"
 msgstr "Girintiyi azalt"
 
+#: src/routes/dashboard.mail.tsx:666
+msgid "default"
+msgstr "varsayılan"
+
 #: src/components/editor/toolbar.tsx:273
 #: src/components/editor/toolbar.tsx:627
 #: src/routes/dashboard.languages.tsx:138
@@ -1135,6 +1278,7 @@ msgid "Download"
 msgstr "İndir"
 
 #: src/components/editor/types.ts:26
+#: src/routes/dashboard.mail.tsx:159
 msgid "Draft"
 msgstr "Taslak"
 
@@ -1155,12 +1299,22 @@ msgstr "Her dilin kendi etiketleri vardır. Bir yazının etiketinin başka dild
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.index.tsx:192
+#: src/routes/dashboard.mail.tsx:305
+#: src/routes/dashboard.mail.tsx:672
 msgid "Edit"
 msgstr "Düzenle"
 
 #: src/routes/dashboard.forms.tsx:228
 msgid "Edit the form"
 msgstr "Formu düzenle"
+
+#: src/routes/dashboard.mail.tsx:330
+msgid "Edit the list"
+msgstr "Listeyi düzenle"
+
+#: src/routes/dashboard.mail.tsx:698
+msgid "Edit the template"
+msgstr "Şablonu düzenle"
 
 #: src/components/editor/dialogs.tsx:529
 msgid "Editing"
@@ -1171,6 +1325,7 @@ msgstr "Düzenleme"
 #: src/routes/console.account.tsx:98
 #: src/routes/console.login.tsx:80
 #: src/routes/console.register.tsx:119
+#: src/routes/dashboard.mail.tsx:544
 #: src/routes/dashboard.users.tsx:271
 msgid "Email"
 msgstr "E-posta"
@@ -1219,6 +1374,10 @@ msgstr "Günde bir"
 msgid "Every hour"
 msgstr "Saatte bir"
 
+#: src/routes/dashboard.mail.tsx:466
+msgid "Every list"
+msgstr "Tüm listeler"
+
 #. placeholder {0}: pendingImport?.name
 #: src/routes/dashboard.plugins_.backup.tsx:462
 msgid "Every post, category, tag and account this site has now is replaced by what \"{0}\" holds. This cannot be undone."
@@ -1244,6 +1403,10 @@ msgstr "Bu paneldeki her şey bu API. Sayfalarınız bundan derleniyor, yazacağ
 #: src/components/editor/post-settings.tsx:265
 msgid "Excerpt"
 msgstr "Özet"
+
+#: src/routes/dashboard.mail.tsx:491
+msgid "Export"
+msgstr "Dışa aktar"
 
 #: src/components/editor/post-settings.tsx:345
 msgid "Featured"
@@ -1291,7 +1454,7 @@ msgstr "Biçim"
 msgid "Formatting"
 msgstr "Biçimlendirme"
 
-#: src/components/dashboard/dashboard-shell.tsx:76
+#: src/components/dashboard/dashboard-shell.tsx:77
 #: src/routes/dashboard.forms_.$formId.tsx:144
 #: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
@@ -1337,6 +1500,10 @@ msgstr "Önce yazıya bir başlık verin"
 #: src/routes/login.tsx:186
 msgid "Go"
 msgstr "Git"
+
+#: src/routes/dashboard.mail.tsx:161
+msgid "Going out"
+msgstr "Gönderiliyor"
 
 #: src/components/editor/post-settings.tsx:42
 #~ msgid "Guide"
@@ -1431,6 +1598,10 @@ msgstr "Ne sıklıkla"
 msgid "How to send to it"
 msgstr "Buraya nasıl gönderilir"
 
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:279
+msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
+msgstr "HTML. {{ name }}, {{ email }} ve {{ unsubscribe_url }} her kişi için doldurulur; kişi hakkında tuttuğunuz diğer alanlar da öyle. Düz metin bölümü bundan kendiliğinden üretilir."
+
 #: src/components/editor/toolbar.tsx:592
 msgid "Image"
 msgstr "Görsel"
@@ -1456,6 +1627,10 @@ msgstr "İçe / dışa aktar"
 #: src/routes/dashboard.plugins_.backup.tsx:386
 msgid "Import an archive"
 msgstr "Arşiv içe aktar"
+
+#: src/routes/dashboard.mail.tsx:483
+msgid "Import CSV"
+msgstr "CSV içe aktar"
 
 #: src/routes/dashboard.plugins_.backup.tsx:460
 msgid "Import this archive?"
@@ -1556,7 +1731,7 @@ msgstr "Etiket"
 msgid "Language"
 msgstr "Dil"
 
-#: src/components/dashboard/dashboard-shell.tsx:82
+#: src/components/dashboard/dashboard-shell.tsx:84
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Diller"
@@ -1595,6 +1770,10 @@ msgstr "Kimseye haber vermemek için boş bırakın"
 msgid "Leave empty to use this server's database"
 msgstr "Bu sunucunun veritabanını kullanmak için boş bırakın"
 
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:244
+msgid "Letterhead"
+msgstr "Antet"
+
 #: src/components/mode-toggle.tsx:37
 msgid "Light"
 msgstr "Açık"
@@ -1631,6 +1810,8 @@ msgstr "Çeviriyi bağla"
 #: src/components/editor/extensions/slash-command.tsx:102
 #: src/components/editor/extensions/slash-command.tsx:111
 #: src/components/editor/extensions/slash-command.tsx:120
+#: src/routes/dashboard.mail.tsx:76
+#: src/routes/dashboard.mail.tsx:566
 msgid "Lists"
 msgstr "Listeler"
 
@@ -1651,7 +1832,10 @@ msgstr "Uzun metin"
 msgid "Made {0}"
 msgstr "{0} tarihinde üretildi"
 
+#: src/components/dashboard/dashboard-shell.tsx:78
 #: src/routes/console.sites.$siteId.tsx:310
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:145
+#: src/routes/dashboard.mail.tsx:66
 msgid "Mail"
 msgstr "Posta"
 
@@ -1666,6 +1850,10 @@ msgstr "Jeton üret"
 #: src/routes/dashboard.languages.tsx:166
 msgid "Make default"
 msgstr "Varsayılan yap"
+
+#: src/routes/dashboard.mail.tsx:235
+msgid "Make it"
+msgstr "Oluştur"
 
 #: src/components/plugin-forms.tsx:236
 #: src/routes/dashboard.plugins_.backup.tsx:273
@@ -1697,7 +1885,7 @@ msgstr "Markdown içeri aktarıldı"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS, sitenizi saklamak için bir veritabanına ihtiyaç duyar."
 
-#: src/components/dashboard/dashboard-shell.tsx:73
+#: src/components/dashboard/dashboard-shell.tsx:74
 msgid "Media"
 msgstr "Medya"
 
@@ -1744,6 +1932,11 @@ msgstr "Mavi CMS Sitem"
 
 #: src/routes/dashboard.forms.tsx:160
 #: src/routes/dashboard.forms.tsx:238
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:189
+#: src/routes/dashboard.mail.tsx:222
+#: src/routes/dashboard.mail.tsx:335
+#: src/routes/dashboard.mail.tsx:556
+#: src/routes/dashboard.mail.tsx:704
 msgid "Name"
 msgstr "Ad"
 
@@ -1755,6 +1948,11 @@ msgstr "Ad (isteğe bağlı)"
 msgid "needs translation"
 msgstr "çeviri bekliyor"
 
+#: src/routes/dashboard.mail.tsx:173
+#: src/routes/dashboard.mail.tsx:219
+msgid "New campaign"
+msgstr "Yeni kampanya"
+
 #: src/components/editor/post-settings.tsx:201
 #: src/routes/dashboard.categories.tsx:187
 msgid "New category"
@@ -1765,13 +1963,18 @@ msgstr "Yeni kategori"
 msgid "New form"
 msgstr "Yeni form"
 
+#: src/routes/dashboard.mail.tsx:284
+#: src/routes/dashboard.mail.tsx:330
+msgid "New list"
+msgstr "Yeni liste"
+
 #: src/routes/console.account.tsx:111
 #: src/routes/dashboard.users.tsx:227
 #: src/routes/dashboard.users.tsx:321
 msgid "New password"
 msgstr "Yeni parola"
 
-#: src/components/dashboard/dashboard-shell.tsx:160
+#: src/components/dashboard/dashboard-shell.tsx:162
 #: src/routes/dashboard.index.tsx:153
 msgid "New post"
 msgstr "Yeni yazı"
@@ -1779,6 +1982,11 @@ msgstr "Yeni yazı"
 #: src/routes/dashboard.tags.tsx:153
 msgid "New tag"
 msgstr "Yeni etiket"
+
+#: src/routes/dashboard.mail.tsx:651
+#: src/routes/dashboard.mail.tsx:698
+msgid "New template"
+msgstr "Yeni şablon"
 
 #: src/components/ses-account.tsx:236
 #: src/components/ses-account.tsx:246
@@ -1795,6 +2003,10 @@ msgstr "Sonraki"
 msgid "No backups yet"
 msgstr "Henüz yedek yok"
 
+#: src/routes/dashboard.mail.tsx:178
+msgid "No campaigns yet"
+msgstr "Henüz kampanya yok"
+
 #: src/routes/dashboard.categories.tsx:220
 msgid "No categories yet"
 msgstr "Henüz kategori yok"
@@ -1810,6 +2022,14 @@ msgstr "Henüz form yok"
 #: src/components/ses-account.tsx:171
 msgid "no limit"
 msgstr "sınırsız"
+
+#: src/routes/dashboard.mail.tsx:289
+msgid "No lists yet"
+msgstr "Henüz liste yok"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:216
+msgid "No lists yet — make one first."
+msgstr "Henüz liste yok — önce bir tane oluşturun."
 
 #: src/components/editor/dialogs.tsx:154
 #: src/routes/dashboard.media.tsx:96
@@ -1846,17 +2066,33 @@ msgstr "Henüz site yok"
 msgid "No tags yet"
 msgstr "Henüz etiket yok"
 
+#: src/routes/dashboard.mail.tsx:656
+msgid "No templates yet — a campaign without one sends just its own body"
+msgstr "Henüz şablon yok — şablonsuz bir kampanya yalnızca kendi gövdesini gönderir"
+
 #: src/components/local-env.tsx:171
 msgid "No tokens yet"
 msgstr "Henüz jeton yok"
+
+#: src/routes/dashboard.mail.tsx:507
+msgid "Nobody here yet"
+msgstr "Henüz kimse yok"
 
 #: src/components/ses-account.tsx:395
 msgid "None"
 msgstr "Yok"
 
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:257
+msgid "None — send the body as it is"
+msgstr "Yok — gövdeyi olduğu gibi gönder"
+
 #: src/routes/dashboard.plugins.tsx:89
 msgid "Not configured"
 msgstr "Yapılandırılmadı"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:154
+msgid "Not sent yet"
+msgstr "Henüz gönderilmedi"
 
 #: src/components/plugin-forms.tsx:338
 msgid "Not set yet"
@@ -1873,6 +2109,10 @@ msgstr "Henüz bir şey gelmedi"
 #: src/components/publish-panel.tsx:34
 msgid "Nothing published yet"
 msgstr "Henüz bir şey yayınlanmadı"
+
+#: src/routes/dashboard.mail.tsx:764
+msgid "Nothing sent yet"
+msgstr "Henüz bir şey gönderilmedi"
 
 #: src/components/ses-account.tsx:323
 msgid "Nothing verified yet"
@@ -1907,6 +2147,11 @@ msgstr "Yeni bir arşiv yazılınca eskiler silinir."
 #: src/routes/dashboard.sites.tsx:227
 msgid "On"
 msgstr "Açık"
+
+#. placeholder {0}: row.lists.filter((l) => l.status === "confirmed").length
+#: src/routes/dashboard.mail.tsx:517
+msgid "on {0} lists"
+msgstr "{0} listede"
 
 #: src/components/plugin-forms.tsx:195
 #: src/components/plugin-forms.tsx:200
@@ -2029,10 +2274,23 @@ msgstr "Video bağlantısını yapıştır."
 msgid "Path prefix"
 msgstr "Yol öneki"
 
-#: src/components/dashboard/dashboard-shell.tsx:84
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:165
+msgid "Pause"
+msgstr "Duraklat"
+
+#: src/routes/dashboard.mail.tsx:162
+msgid "Paused"
+msgstr "Duraklatıldı"
+
+#: src/components/dashboard/dashboard-shell.tsx:86
+#: src/routes/dashboard.mail.tsx:77
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
 msgstr "Kişiler"
+
+#: src/routes/dashboard.mail.tsx:375
+msgid "People may join it from the site"
+msgstr "Siteden katılınabilir"
 
 #: src/components/editor/post-settings.tsx:152
 msgid "Permalink"
@@ -2058,7 +2316,7 @@ msgstr "düz metin"
 msgid "Plain text block"
 msgstr "Düz metin bloğu"
 
-#: src/components/dashboard/dashboard-shell.tsx:83
+#: src/components/dashboard/dashboard-shell.tsx:85
 #: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.email.tsx:115
 #: src/routes/dashboard.plugins_.s3.tsx:111
@@ -2105,7 +2363,7 @@ msgstr "Yazı başlığı"
 msgid "post-url"
 msgstr "yazi-adresi"
 
-#: src/components/dashboard/dashboard-shell.tsx:72
+#: src/components/dashboard/dashboard-shell.tsx:73
 msgid "Posts"
 msgstr "Yazılar"
 
@@ -2130,7 +2388,7 @@ msgstr "Önceki"
 msgid "Public base URL"
 msgstr "Genel URL tabanı"
 
-#: src/components/dashboard/dashboard-shell.tsx:90
+#: src/components/dashboard/dashboard-shell.tsx:92
 #: src/components/editor/mavi-editor.tsx:607
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:308
@@ -2218,6 +2476,10 @@ msgstr "Düzenli ifade"
 #: src/routes/dashboard.forms.tsx:211
 #: src/routes/dashboard.forms.tsx:351
 #: src/routes/dashboard.languages.tsx:196
+#: src/routes/dashboard.mail.tsx:202
+#: src/routes/dashboard.mail.tsx:310
+#: src/routes/dashboard.mail.tsx:523
+#: src/routes/dashboard.mail.tsx:677
 #: src/routes/dashboard.sites.tsx:177
 #: src/routes/dashboard.sites.tsx:334
 #: src/routes/dashboard.users.tsx:201
@@ -2252,6 +2514,10 @@ msgstr "Bu dil silinsin mi?"
 #: src/routes/dashboard.sites.tsx:304
 msgid "Remove this site?"
 msgstr "Bu site kaldırılsın mı?"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:296
+msgid "Rendered exactly as a subscriber would get it, unsubscribe link and all."
+msgstr "Bir abonenin alacağı hâliyle, abonelikten çıkma bağlantısı dahil."
 
 #: src/components/editor/find-replace.tsx:129
 msgid "Replace"
@@ -2337,6 +2603,9 @@ msgstr "Kum havuzu"
 #: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.forms.tsx:331
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:287
+#: src/routes/dashboard.mail.tsx:384
+#: src/routes/dashboard.mail.tsx:744
 #: src/routes/dashboard.plugins_.backup.tsx:333
 #: src/routes/dashboard.plugins_.email.tsx:145
 #: src/routes/dashboard.plugins_.s3.tsx:172
@@ -2350,6 +2619,7 @@ msgstr "Kaydet"
 #: src/routes/console.sites.$siteId.tsx:196
 #: src/routes/console.sites.$siteId.tsx:211
 #: src/routes/dashboard.forms.tsx:110
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:81
 #: src/routes/dashboard.plugins_.email.tsx:75
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
@@ -2365,6 +2635,7 @@ msgid "Saving…"
 msgstr "Kaydediliyor…"
 
 #: src/components/editor/types.ts:28
+#: src/routes/dashboard.mail.tsx:160
 msgid "Scheduled"
 msgstr "Zamanlanmış"
 
@@ -2377,6 +2648,10 @@ msgstr "Zamanlanmış yedekler yalnızca bu açıkken çalışır. Aşağıdan h
 #: src/routes/dashboard.sites.tsx:162
 msgid "Schema {0}"
 msgstr "Şema {0}"
+
+#: src/routes/dashboard.mail.tsx:458
+msgid "Search an address or a name"
+msgstr "Adres ya da ad arayın"
 
 #: src/components/editor/post-settings.tsx:361
 msgid "Search engine"
@@ -2412,6 +2687,7 @@ msgid "Select your language"
 msgstr "Dilinizi seçin"
 
 #: src/components/site-mail.tsx:158
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:312
 #: src/routes/dashboard.plugins_.email.tsx:175
 msgid "Send"
 msgstr "Gönder"
@@ -2425,6 +2701,10 @@ msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
 msgid "Send a test"
 msgstr "Deneme gönder"
 
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:181
+msgid "Send it"
+msgstr "Gönder"
+
 #: src/routes/dashboard.plugins.tsx:31
 msgid "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 msgstr "Amazon SES üzerinden posta gönderin — bu sitenin formlarından biri doldurulduğunda bildirim."
@@ -2434,9 +2714,23 @@ msgstr "Amazon SES üzerinden posta gönderin — bu sitenin formlarından biri 
 msgid "Send mail through SES"
 msgstr "Postaları SES ile gönder"
 
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:294
+msgid "Send yourself one"
+msgstr "Kendinize bir tane gönderin"
+
+#: src/routes/dashboard.mail.tsx:79
+#: src/routes/dashboard.mail.tsx:163
+msgid "Sent"
+msgstr "Gönderildi"
+
 #: src/components/ses-account.tsx:185
 msgid "sent in the last day"
 msgstr "son günde gönderilen"
+
+#. placeholder {0}: testTo.trim()
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:116
+msgid "Sent to {0}"
+msgstr "{0} adresine gönderildi"
 
 #: src/components/editor/post-settings.tsx:376
 msgid "SEO description"
@@ -2519,7 +2813,7 @@ msgstr "Sitenizi yönetmek için giriş yapın."
 msgid "Sign in; sets the session cookie."
 msgstr "Giriş yapar; oturum çerezini bırakır."
 
-#: src/components/dashboard/dashboard-shell.tsx:167
+#: src/components/dashboard/dashboard-shell.tsx:169
 #: src/components/editor/mavi-editor.tsx:580
 #: src/routes/console.index.tsx:119
 msgid "Sign out"
@@ -2549,7 +2843,7 @@ msgstr "Site kaldırıldı"
 msgid "Site title"
 msgstr "Site başlığı"
 
-#: src/components/dashboard/dashboard-shell.tsx:92
+#: src/components/dashboard/dashboard-shell.tsx:94
 #: src/routes/dashboard.sites.tsx:130
 msgid "Sites"
 msgstr "Siteler"
@@ -2573,6 +2867,10 @@ msgstr "Yazmaya başla veya komutlar için “/” yaz…"
 #: src/components/editor/post-settings.tsx:120
 msgid "Status"
 msgstr "Durum"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:172
+msgid "Stop"
+msgstr "Durdur"
 
 #. placeholder {0}: new Date(token.expires_at).toLocaleString()
 #: src/components/local-env.tsx:183
@@ -2614,6 +2912,10 @@ msgstr "Güçlü"
 #: src/components/editor/extensions/slash-command.tsx:92
 msgid "Sub-heading"
 msgstr "Alt başlık"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:201
+msgid "Subject"
+msgstr "Konu"
 
 #: src/components/editor/toolbar.tsx:438
 msgid "Subscript"
@@ -2662,7 +2964,7 @@ msgstr "İçindekiler"
 msgid "Tagline"
 msgstr "Slogan"
 
-#: src/components/dashboard/dashboard-shell.tsx:75
+#: src/components/dashboard/dashboard-shell.tsx:76
 #: src/components/editor/post-settings.tsx:222
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -2697,6 +2999,10 @@ msgstr "Haber ver"
 #: src/components/setup/setup-wizard.tsx:581
 msgid "Tell us about your site"
 msgstr "Siteniz hakkında bilgi verin"
+
+#: src/routes/dashboard.mail.tsx:78
+msgid "Templates"
+msgstr "Şablonlar"
 
 #: src/components/setup/setup-wizard.tsx:548
 msgid "Test & continue"
@@ -2758,6 +3064,14 @@ msgstr "İçeriğinizin yazılabileceği diller. Bu, yönetim panelinin dilinden
 #: src/routes/dashboard.plugins_.backup.tsx:326
 msgid "The last backup failed: {0}"
 msgstr "Son yedekleme başarısız oldu: {0}"
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:267
+msgid "The letter"
+msgstr "Mektup"
+
+#: src/routes/dashboard.mail.tsx:714
+msgid "The letterhead"
+msgstr "Antet"
 
 #: src/components/editor/dialogs.tsx:567
 msgid "The most common shortcuts in the editor."
@@ -2830,7 +3144,7 @@ msgstr "Bu yazı açılamadı, bu yüzden hiç değiştirilmedi."
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
 msgstr "Bu giriş sunucunun kendisine. Diğer herkes başka bir yerden giriyor:"
 
-#: src/components/dashboard/dashboard-shell.tsx:80
+#: src/components/dashboard/dashboard-shell.tsx:82
 msgid "This site"
 msgstr "Bu site"
 
@@ -2924,6 +3238,10 @@ msgstr "URL"
 msgid "Use S3 for new uploads"
 msgstr "Yeni yüklemelerde S3 kullan"
 
+#: src/routes/dashboard.mail.tsx:735
+msgid "Use this one by default"
+msgstr "Varsayılan olarak bunu kullan"
+
 #: src/components/setup/setup-wizard.tsx:519
 #: src/components/setup/setup-wizard.tsx:680
 #: src/routes/dashboard.users.tsx:262
@@ -2971,6 +3289,10 @@ msgstr "Gelenler gönderildiği gibi saklanır; alanları sonradan değiştirmek
 msgid "What has come in, newest first."
 msgstr "Gelenler, en yenisi başta."
 
+#: src/routes/dashboard.mail.tsx:346
+msgid "What it is"
+msgstr "Ne olduğu"
+
 #: src/components/ses-account.tsx:225
 msgid "What the mail is"
 msgstr "Postanın türü"
@@ -3005,6 +3327,7 @@ msgid "Where to keep them"
 msgstr "Nerede saklansın"
 
 #: src/components/site-mail.tsx:149
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:304
 #: src/routes/dashboard.plugins_.email.tsx:162
 msgid "Where to send it"
 msgstr "Nereye gönderilsin"
@@ -3017,6 +3340,10 @@ msgstr "Bir formun hangi alanları aldığı ve hangileri zorunlu."
 msgid "Who can sign in to this site and write on it."
 msgstr "Bu siteye kimler girip yazabilir."
 
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:213
+msgid "Who gets it"
+msgstr "Kimlere gidecek"
+
 #: src/components/ses-account.tsx:276
 msgid "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 msgstr "Kimin aldığı, listeye nasıl girdiği ve nasıl çıkabildiği. Bunu Amazon'da bir insan okuyor."
@@ -3024,6 +3351,10 @@ msgstr "Kimin aldığı, listeye nasıl girdiği ve nasıl çıkabildiği. Bunu 
 #: src/components/ses-account.tsx:299
 msgid "Who you may send as"
 msgstr "Kimin adına gönderebilirsiniz"
+
+#: src/routes/dashboard.mail.tsx:68
+msgid "Who you write to, and what you send them. Sending goes through the Amazon SES plugin."
+msgstr "Kime yazdığınız ve ne gönderdiğiniz. Gönderim Amazon SES eklentisi üzerinden yapılır."
 
 #: src/components/editor/find-replace.tsx:156
 msgid "Whole word"

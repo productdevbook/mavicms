@@ -112,13 +112,21 @@ fn addressed(name: &str, address: &str) -> String {
 /// sending to it answers.
 pub fn looks_like_an_address(value: &str) -> bool {
     let value = value.trim();
+
+    // Characters that need quoting to appear in an address at all. A comma is
+    // the one that matters: an address with one in it is nearly always a row
+    // of a spreadsheet that was split in the wrong place, and storing it
+    // means SES refuses it on every send from now on.
+    let impossible = |c: char| c.is_whitespace() || ",;<>()[]\\\"".contains(c);
+
     match value.split_once('@') {
         Some((local, domain)) => {
             !local.is_empty()
                 && domain.contains('.')
                 && !domain.starts_with('.')
                 && !domain.ends_with('.')
-                && !value.contains(char::is_whitespace)
+                && !domain.contains('@')
+                && !value.contains(impossible)
         }
         None => false,
     }
@@ -278,6 +286,13 @@ mod tests {
         assert!(!looks_like_an_address("@example.com"));
         assert!(!looks_like_an_address("two words@example.com"));
         assert!(!looks_like_an_address("no-at-sign"));
+        // A row of a spreadsheet that was split in the wrong place.
+        assert!(!looks_like_an_address("bir,iki@example.com"));
+        assert!(!looks_like_an_address("Ada <ada@example.com>"));
+        assert!(!looks_like_an_address("a@b@example.com"));
+        // Still ordinary addresses.
+        assert!(looks_like_an_address("ada.lovelace+news@example.co.uk"));
+        assert!(looks_like_an_address("a_b-c@sub.example.com"));
     }
 }
 

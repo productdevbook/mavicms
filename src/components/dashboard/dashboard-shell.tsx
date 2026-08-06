@@ -12,6 +12,7 @@ import {
   Globe,
   Image,
   Inbox,
+  Mails,
   LayoutDashboard,
   LogOut,
   Plug,
@@ -74,6 +75,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         { to: "/dashboard/categories", label: t`Categories`, icon: FolderTree },
         { to: "/dashboard/tags", label: t`Tags`, icon: Tags },
         { to: "/dashboard/forms", label: t`Forms`, icon: Inbox },
+        { to: "/dashboard/mail", label: t`Mail`, icon: Mails },
       ],
     },
     {

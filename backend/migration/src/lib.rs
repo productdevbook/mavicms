@@ -11,6 +11,7 @@ mod m20260108_000001_add_content_languages;
 mod m20260109_000001_add_content_markdown;
 mod m20260110_000001_create_forms;
 mod m20260111_000001_form_notify;
+mod m20260112_000001_mailing;
 
 pub struct Migrator;
 
@@ -29,6 +30,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260109_000001_add_content_markdown::Migration),
             Box::new(m20260110_000001_create_forms::Migration),
             Box::new(m20260111_000001_form_notify::Migration),
+            Box::new(m20260112_000001_mailing::Migration),
         ]
     }
 }

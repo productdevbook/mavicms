@@ -98,6 +98,7 @@ impl Registry {
         create_table(&control).await?;
         crate::console::create_tables(&control).await?;
         crate::publish::create_tables(&control).await?;
+        crate::mailing::create_tables(&control).await?;
         Ok(Self {
             control,
             base_url,

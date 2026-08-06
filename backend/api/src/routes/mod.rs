@@ -4,6 +4,7 @@ pub mod console;
 pub mod forms;
 pub mod health;
 pub mod languages;
+pub mod mailing;
 pub mod media;
 pub mod plugins;
 pub mod posts;
@@ -71,6 +72,11 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     let open = OpenApiRouter::new()
         .routes(routes!(forms::form_schema))
         .routes(routes!(forms::submit_form))
+        .routes(routes!(mailing::subscribe))
+        .routes(routes!(mailing::confirm))
+        .routes(routes!(mailing::unsubscribe_page, mailing::unsubscribe))
+        .routes(routes!(mailing::open_pixel))
+        .routes(routes!(mailing::click))
         .layer(DefaultBodyLimit::max(forms::MAX_SUBMISSION_BYTES))
         .layer(from_fn(require_database));
 
@@ -153,6 +159,36 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(forms::list_submissions))
         .routes(routes!(forms::mark_seen))
         .routes(routes!(forms::delete_submission))
+        .routes(routes!(mailing::list_lists, mailing::create_list))
+        .routes(routes!(mailing::update_list, mailing::delete_list))
+        .routes(routes!(
+            mailing::list_subscribers,
+            mailing::create_subscriber
+        ))
+        .routes(routes!(
+            mailing::update_subscriber,
+            mailing::delete_subscriber
+        ))
+        .routes(routes!(mailing::export_subscribers))
+        .routes(routes!(mailing::list_templates, mailing::create_template))
+        .routes(routes!(mailing::update_template, mailing::delete_template))
+        .routes(routes!(mailing::list_campaigns, mailing::create_campaign))
+        .routes(routes!(
+            mailing::get_campaign,
+            mailing::update_campaign,
+            mailing::delete_campaign
+        ))
+        .routes(routes!(mailing::send_campaign))
+        .routes(routes!(mailing::pause_campaign))
+        .routes(routes!(mailing::cancel_campaign))
+        .routes(routes!(mailing::test_campaign))
+        .routes(routes!(mailing::list_log))
+        .merge(
+            OpenApiRouter::new()
+                .routes(routes!(mailing::import_subscribers))
+                // A list of a hundred thousand people is a few megabytes.
+                .layer(DefaultBodyLimit::max(mailing::MAX_IMPORT)),
+        )
         .merge(
             OpenApiRouter::new()
                 .routes(routes!(plugins::import_backup))

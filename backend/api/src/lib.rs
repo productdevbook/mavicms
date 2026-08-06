@@ -14,6 +14,7 @@ pub mod entities;
 pub mod error;
 pub mod fetch;
 pub mod languages;
+pub mod mailing;
 pub mod middleware;
 pub mod openapi;
 pub mod plugins;
