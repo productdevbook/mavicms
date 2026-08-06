@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useLingui } from "@lingui/react/macro"
-import { CheckCircle2, Clock, Loader2, Rocket, XCircle } from "lucide-react"
+import { CheckCircle2, Clock, Loader2, Rocket, Trash2, XCircle } from "lucide-react"
 
 import type { Build, BuildConfig, PublishStatus } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -77,13 +77,94 @@ export function BuildHistory({ builds }: { builds: Build[] }) {
   )
 }
 
+/**
+ * The variables a build runs with, one at a time.
+ *
+ * Their values never come back from the server, so this shows the names and
+ * lets one be added or removed. A single box replacing the whole set would
+ * mean changing one password silently deletes the two beside it — and the
+ * build stops working for a reason nobody typed.
+ */
+function Variables({
+  names,
+  onAdd,
+  onRemove,
+  busy,
+}: {
+  names: string[]
+  onAdd: (name: string, value: string) => void
+  onRemove: (name: string) => void
+  busy: boolean
+}) {
+  const { t } = useLingui()
+  const [name, setName] = React.useState("")
+  const [value, setValue] = React.useState("")
+
+  const add = () => {
+    onAdd(name.trim(), value)
+    setName("")
+    setValue("")
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <Label>{t`Build variables`}</Label>
+
+      {names.length > 0 && (
+        <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
+          {names.map((stored) => (
+            <div key={stored} className="flex items-center gap-3 px-3 py-2">
+              <span className="flex-1 truncate font-mono text-sm">{stored}</span>
+              <span className="text-sm text-muted-foreground">••••••••</span>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t`Remove`}
+                disabled={busy}
+                onClick={() => onRemove(stored)}
+              >
+                <Trash2 />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <Input
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          placeholder="CMS_PASSWORD"
+          className="font-mono"
+        />
+        <Input
+          type="password"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          placeholder={t`value`}
+        />
+        <Button
+          variant="outline"
+          onClick={add}
+          disabled={busy || !name.trim() || !value}
+        >
+          {t`Add`}
+        </Button>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        {t`The build runs with these. A name already here is replaced; the others are left alone.`}
+      </p>
+    </div>
+  )
+}
+
 export function PublishForm({
   config,
   onChange,
   token,
   onTokenChange,
-  environment,
-  onEnvironmentChange,
+  onAddVariable,
+  onRemoveVariable,
   onSave,
   saving,
 }: {
@@ -91,8 +172,8 @@ export function PublishForm({
   onChange: (values: Partial<BuildConfig>) => void
   token: string
   onTokenChange: (value: string) => void
-  environment: string
-  onEnvironmentChange: (value: string) => void
+  onAddVariable: (name: string, value: string) => void
+  onRemoveVariable: (name: string) => void
   onSave: () => void
   saving: boolean
 }) {
@@ -156,22 +237,12 @@ export function PublishForm({
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="environment">{t`Build variables`}</Label>
-        <textarea
-          id="environment"
-          rows={4}
-          value={environment}
-          onChange={(event) => onEnvironmentChange(event.target.value)}
-          placeholder={"CMS_USERNAME=…\nCMS_PASSWORD=…"}
-          className="rounded-md border border-input bg-transparent px-3 py-2 font-mono text-sm shadow-xs outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-        />
-        <p className="text-sm text-muted-foreground">
-          {config.environment_keys.length > 0
-            ? t`Stored: ${config.environment_keys.join(", ")}. Typing here replaces all of them.`
-            : t`One NAME=value per line. This is where the build's credentials go.`}
-        </p>
-      </div>
+      <Variables
+        names={config.environment_keys}
+        onAdd={onAddVariable}
+        onRemove={onRemoveVariable}
+        busy={saving}
+      />
 
       <div>
         <Button onClick={onSave} disabled={saving}>

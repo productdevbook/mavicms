@@ -73,9 +73,15 @@ pub struct SaveBuildConfig {
     pub output_dir: Option<String>,
     /// Left out to keep the stored token, empty to remove it.
     pub token: Option<String>,
-    /// What the build runs with — the API credentials it reads content with,
-    /// and whatever else the project needs. Left out to keep what is stored.
+    /// Replaces every variable the build runs with. Left out to keep them.
     pub environment: Option<std::collections::BTreeMap<String, String>>,
+    /// Adds these, replacing any of the same name and leaving the rest alone.
+    /// This is what a panel offering "add a variable" sends, because replacing
+    /// the whole set to change one of them is how a build quietly stops
+    /// working.
+    pub environment_set: Option<std::collections::BTreeMap<String, String>>,
+    /// Removes these by name.
+    pub environment_remove: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Serialize, ToSchema)]
@@ -309,9 +315,21 @@ pub async fn save_config(
         secrets.encrypt(&stored_token)?
     };
 
-    let stored_environment = match payload.environment {
-        Some(values) => store_environment(secrets, &values)?,
-        None => current_environment(db, tenant_id).await?,
+    let stored_environment = match (
+        payload.environment,
+        payload.environment_set,
+        payload.environment_remove,
+    ) {
+        (Some(values), _, _) => store_environment(secrets, &values)?,
+        (None, None, None) => current_environment(db, tenant_id).await?,
+        (None, added, removed) => {
+            let mut values = environment(db, secrets, tenant_id).await?;
+            for name in removed.unwrap_or_default() {
+                values.remove(name.trim());
+            }
+            values.extend(added.unwrap_or_default());
+            store_environment(secrets, &values)?
+        }
     };
 
     let config = BuildConfig {

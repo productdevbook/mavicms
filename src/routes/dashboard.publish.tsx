@@ -12,6 +12,7 @@ import {
   savePublish,
   type BuildConfig,
   type PublishStatus,
+  type SavePublish,
 } from "@/lib/api"
 import {
   BuildHistory,
@@ -19,7 +20,7 @@ import {
   PublishButton,
   PublishForm,
 } from "@/components/publish-panel"
-import { EMPTY_CONFIG, isBusy, parseEnvironment } from "@/lib/publish"
+import { EMPTY_CONFIG, isBusy } from "@/lib/publish"
 
 export const Route = createFileRoute("/dashboard/publish")({
   component: PublishRoute,
@@ -33,7 +34,6 @@ function PublishRoute() {
   const [status, setStatus] = React.useState<PublishStatus | null>(null)
   const [config, setConfig] = React.useState<BuildConfig>(EMPTY_CONFIG)
   const [token, setToken] = React.useState("")
-  const [environment, setEnvironment] = React.useState("")
   const [saving, setSaving] = React.useState(false)
   const [publishing, setPublishing] = React.useState(false)
 
@@ -61,7 +61,7 @@ function PublishRoute() {
     return () => clearInterval(timer)
   }, [busy, apply])
 
-  const save = async () => {
+  const saveWith = async (extra: Partial<SavePublish>) => {
     setSaving(true)
     try {
       const saved = await savePublish({
@@ -69,16 +69,13 @@ function PublishRoute() {
         branch: config.branch,
         build_command: config.build_command,
         output_dir: config.output_dir,
-        // Left out unless typed, so saving the form does not clear what is
-        // already stored.
+        // Left out unless typed, so saving the form does not clear a token
+        // that is already stored.
         ...(token ? { token } : {}),
-        ...(environment.trim()
-          ? { environment: parseEnvironment(environment) }
-          : {}),
+        ...extra,
       })
       setConfig(saved)
       setToken("")
-      setEnvironment("")
       toast.success(t`Saved`)
     } catch (error) {
       toast.error(
@@ -140,9 +137,13 @@ function PublishRoute() {
             }
             token={token}
             onTokenChange={setToken}
-            environment={environment}
-            onEnvironmentChange={setEnvironment}
-            onSave={() => void save()}
+            onAddVariable={(name, value) =>
+              void saveWith({ environment_set: { [name]: value } })
+            }
+            onRemoveVariable={(name) =>
+              void saveWith({ environment_remove: [name] })
+            }
+            onSave={() => void saveWith({})}
             saving={saving}
           />
         )}

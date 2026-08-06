@@ -2,6 +2,7 @@ import * as React from "react"
 import { Link, useNavigate, useRouteContext } from "@tanstack/react-router"
 import { useLingui } from "@lingui/react/macro"
 import {
+  Code2,
   FolderTree,
   Globe,
   Server,
@@ -32,6 +33,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     { to: "/dashboard/tags", label: t`Tags`, icon: Tags },
     { to: "/dashboard/languages", label: t`Languages`, icon: Globe },
     { to: "/dashboard/plugins", label: t`Plugins`, icon: Plug },
+    { to: "/dashboard/api", label: t`API`, icon: Code2 },
     // Publishing is a hosted site's own pages being rebuilt. The server's own
     // installation has none — its pages are this panel.
     ...(user.operator

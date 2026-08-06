@@ -16,6 +16,7 @@ import {
   type BuildConfig,
   type ConsoleSite,
   type PublishStatus,
+  type SavePublish,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,7 +24,7 @@ import {
   PublishButton,
   PublishForm,
 } from "@/components/publish-panel"
-import { EMPTY_CONFIG, isBusy, parseEnvironment } from "@/lib/publish"
+import { EMPTY_CONFIG, isBusy } from "@/lib/publish"
 
 export const Route = createFileRoute("/console/sites/$siteId")({
   beforeLoad: async ({ params }) => {
@@ -50,7 +51,6 @@ function ConsoleSiteRoute() {
   const [status, setStatus] = React.useState<PublishStatus | null>(null)
   const [config, setConfig] = React.useState<BuildConfig>(EMPTY_CONFIG)
   const [token, setToken] = React.useState("")
-  const [environment, setEnvironment] = React.useState("")
   const [saving, setSaving] = React.useState(false)
   const [publishing, setPublishing] = React.useState(false)
   const [opening, setOpening] = React.useState(false)
@@ -77,23 +77,21 @@ function ConsoleSiteRoute() {
     return () => clearInterval(timer)
   }, [busy, siteId, apply])
 
-  const save = async () => {
+  const saveWith = async (extra: Partial<SavePublish>) => {
     setSaving(true)
     try {
-      setConfig(
-        await saveSitePublish(siteId, {
-          repository: config.repository,
-          branch: config.branch,
-          build_command: config.build_command,
-          output_dir: config.output_dir,
-          ...(token ? { token } : {}),
-          ...(environment.trim()
-            ? { environment: parseEnvironment(environment) }
-            : {}),
-        })
-      )
+      const saved = await saveSitePublish.bind(null, siteId)({
+        repository: config.repository,
+        branch: config.branch,
+        build_command: config.build_command,
+        output_dir: config.output_dir,
+        // Left out unless typed, so saving the form does not clear a token
+        // that is already stored.
+        ...(token ? { token } : {}),
+        ...extra,
+      })
+      setConfig(saved)
       setToken("")
-      setEnvironment("")
       toast.success(t`Saved`)
     } catch (error) {
       toast.error(
@@ -187,9 +185,13 @@ function ConsoleSiteRoute() {
               }
               token={token}
               onTokenChange={setToken}
-              environment={environment}
-              onEnvironmentChange={setEnvironment}
-              onSave={() => void save()}
+              onAddVariable={(name, value) =>
+                void saveWith({ environment_set: { [name]: value } })
+              }
+              onRemoveVariable={(name) =>
+                void saveWith({ environment_remove: [name] })
+              }
+              onSave={() => void saveWith({})}
               saving={saving}
             />
 

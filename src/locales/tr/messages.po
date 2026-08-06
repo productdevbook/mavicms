@@ -81,7 +81,7 @@ msgid "{0} is ready. You're signed in as <0>{1}</0>."
 msgstr "{0} hazır! <0>{1}</0> olarak oturum açtınız."
 
 #. placeholder {0}: status.managed_by
-#: src/components/publish-panel.tsx:197
+#: src/components/publish-panel.tsx:268
 msgid "{0} looks after how this site is built."
 msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor."
 
@@ -128,6 +128,10 @@ msgstr "0 sonuç"
 msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 karakter: harf, rakam, _ veya -"
 
+#: src/routes/dashboard.api.tsx:144
+msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
+msgstr "Derleme bunları, sitenin işletmesinin girdiği derleme değişkenlerinden alır — yani kimlik bilgileri projede değil sunucuda durur."
+
 #: src/routes/dashboard.sites.tsx:100
 #~ msgid "A database file of its own"
 #~ msgstr "Kendi veritabanı dosyası"
@@ -140,6 +144,14 @@ msgstr "3-32 karakter: harf, rakam, _ veya -"
 msgid "A folder inside the data directory."
 msgstr "Veri dizininin içinde bir klasör."
 
+#: src/routes/dashboard.api.tsx:152
+msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
+msgstr "Liste, yazıların gövdesini vermez; bütün arşivi tek yanıtta göndermek kimsenin istemediği megabaytlar demek. Gövdeler için include=content ekleyin."
+
+#: src/routes/dashboard.api.tsx:164
+msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
+msgstr "Bir yazı hem <0>content_markdown</0> taşır — yazının kendisi budur — hem de <1>content_html</1>, yani karşılığı. Markdown <2>comark</2> için yazılıyor, böylece bir proje bloklarını kendi bileşenlerine çevirebilir."
+
 #: src/routes/dashboard.plugins_.backup.tsx:211
 msgid "A prefix inside the bucket."
 msgstr "Kovanın içinde bir önek."
@@ -148,7 +160,7 @@ msgstr "Kovanın içinde bir önek."
 msgid "Access key ID"
 msgstr "Erişim anahtarı (Access key ID)"
 
-#: src/components/publish-panel.tsx:145
+#: src/components/publish-panel.tsx:226
 msgid "Access token"
 msgstr "Erişim jetonu"
 
@@ -157,6 +169,7 @@ msgid "Active"
 msgstr "Etkin"
 
 #: src/components/editor/dialogs.tsx:200
+#: src/components/publish-panel.tsx:151
 #: src/routes/dashboard.tags.tsx:174
 msgid "Add"
 msgstr "Ekle"
@@ -236,6 +249,7 @@ msgstr "Tablo ekle"
 
 #: src/components/editor/dialogs.tsx:300
 #: src/routes/console.index.tsx:187
+#: src/routes/dashboard.api.tsx:124
 #: src/routes/dashboard.sites.tsx:124
 msgid "Address"
 msgstr "Adres"
@@ -301,6 +315,11 @@ msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
 #: src/components/editor/post-settings.tsx:41
 #~ msgid "Announcement"
 #~ msgstr "Duyuru"
+
+#: src/components/dashboard/dashboard-shell.tsx:36
+#: src/routes/dashboard.api.tsx:116
+msgid "API"
+msgstr "API"
 
 #: src/components/editor/bubble-menus.tsx:259
 #: src/components/editor/dialogs.tsx:326
@@ -373,7 +392,7 @@ msgstr "Bloklar"
 msgid "Bold"
 msgstr "Kalın"
 
-#: src/components/publish-panel.tsx:115
+#: src/components/publish-panel.tsx:196
 msgid "Branch"
 msgstr "Dal"
 
@@ -381,11 +400,15 @@ msgstr "Dal"
 msgid "Bucket"
 msgstr "Bucket"
 
-#: src/components/publish-panel.tsx:133
+#: src/components/publish-panel.tsx:214
 msgid "Build command"
 msgstr "Derleme komutu"
 
-#: src/components/publish-panel.tsx:160
+#: src/routes/dashboard.api.tsx:110
+msgid "Build this site's pages again."
+msgstr "Bu sitenin sayfalarını yeniden derler."
+
+#: src/components/publish-panel.tsx:111
 msgid "Build variables"
 msgstr "Derleme değişkenleri"
 
@@ -422,10 +445,14 @@ msgstr "Canonical URL"
 msgid "Case sensitive"
 msgstr "Büyük/küçük harf duyarlı"
 
-#: src/components/dashboard/dashboard-shell.tsx:31
+#: src/components/dashboard/dashboard-shell.tsx:32
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Kategoriler"
+
+#: src/routes/dashboard.api.tsx:97
+msgid "Categories, per language."
+msgstr "Kategoriler, dile göre."
 
 #: src/components/editor/post-settings.tsx:178
 msgid "Category"
@@ -434,6 +461,10 @@ msgstr "Kategori"
 #: src/components/editor/extensions/slash-command.tsx:278
 msgid "Center the paragraph"
 msgstr "Paragrafı ortala"
+
+#: src/routes/dashboard.api.tsx:106
+msgid "Change one."
+msgstr "Bir yazıyı değiştirir."
 
 #: src/components/editor/extensions/slash-command.tsx:119
 msgid "Checkbox to-do list"
@@ -500,6 +531,10 @@ msgstr "Bağlandı. Sunucu yeniden başlatılıyor…"
 #: src/components/setup/setup-wizard.tsx:422
 msgid "Connection URL"
 msgstr "Bağlantı URL'si"
+
+#: src/routes/dashboard.api.tsx:162
+msgid "Content"
+msgstr "İçerik"
 
 #: src/routes/dashboard.languages.tsx:190
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
@@ -599,7 +634,7 @@ msgid "Could not load your sites"
 msgstr "Siteleriniz yüklenemedi"
 
 #: src/routes/console.index.tsx:83
-#: src/routes/console.sites.$siteId.tsx:129
+#: src/routes/console.sites.$siteId.tsx:127
 msgid "Could not open the site"
 msgstr "Site açılamadı"
 
@@ -627,14 +662,14 @@ msgstr "Ayarlar kaydedilemedi"
 msgid "Could not save tag"
 msgstr "Etiket kaydedilemedi"
 
-#: src/routes/console.sites.$siteId.tsx:100
+#: src/routes/console.sites.$siteId.tsx:98
 #: src/routes/dashboard.plugins_.backup.tsx:89
-#: src/routes/dashboard.publish.tsx:85
+#: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Ayarlar kaydedilemedi"
 
-#: src/routes/console.sites.$siteId.tsx:115
-#: src/routes/dashboard.publish.tsx:100
+#: src/routes/console.sites.$siteId.tsx:113
+#: src/routes/dashboard.publish.tsx:97
 msgid "Could not start the build"
 msgstr "Derleme başlatılamadı"
 
@@ -751,6 +786,10 @@ msgstr "Sil"
 #: src/components/editor/bubble-menus.tsx:439
 msgid "Delete column"
 msgstr "Sütunu sil"
+
+#: src/routes/dashboard.api.tsx:107
+msgid "Delete one, and any image left with no owner."
+msgstr "Bir yazıyı ve sahipsiz kalan resimlerini siler."
 
 #: src/components/editor/bubble-menus.tsx:467
 msgid "Delete row"
@@ -875,9 +914,17 @@ msgstr "Günde bir"
 msgid "Every hour"
 msgstr "Saatte bir"
 
+#: src/routes/dashboard.api.tsx:127
+msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
+msgstr "Her sitenin kendi adresinde kendi API'si var. Hepsine aynı sunucu yanıt veriyor ve kimin içeriğini alacağınızı adres belirliyor — bu adres bu sitenin içeriğini döner, başkasınınkini değil."
+
 #: src/routes/dashboard.plugins_.backup.tsx:75
 msgid "Every week"
 msgstr "Haftada bir"
+
+#: src/routes/dashboard.api.tsx:118
+msgid "Everything in this panel is this API. It is what your pages are built from, and what anything else you write can read."
+msgstr "Bu paneldeki her şey bu API. Sayfalarınız bundan derleniyor, yazacağınız başka her şey de bunu okuyabilir."
 
 #: src/components/editor/post-settings.tsx:265
 msgid "Excerpt"
@@ -1104,7 +1151,11 @@ msgstr "Mavi CMS'i kur"
 msgid "Installing Mavi CMS…"
 msgstr "Mavi CMS kuruluyor…"
 
-#: src/components/publish-panel.tsx:140
+#: src/routes/dashboard.api.tsx:190
+msgid "Interactive docs"
+msgstr "Etkileşimli belgeler"
+
+#: src/components/publish-panel.tsx:221
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "CMS_API_URL ve SITE_URL bu sitenin adresine ayarlı olarak çalışır."
 
@@ -1139,7 +1190,7 @@ msgstr "Klavye kısayolları"
 msgid "Language"
 msgstr "Dil"
 
-#: src/components/dashboard/dashboard-shell.tsx:33
+#: src/components/dashboard/dashboard-shell.tsx:34
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Diller"
@@ -1212,7 +1263,7 @@ msgid "Makes the archive much larger. Worth it when media sits on this machine; 
 msgstr "Arşivi belirgin biçimde büyütür. Medya bu makinedeyse değer; zaten bir kovadaysa daha az."
 
 #: src/routes/console.index.tsx:169
-#: src/routes/console.sites.$siteId.tsx:166
+#: src/routes/console.sites.$siteId.tsx:164
 msgid "Manage"
 msgstr "Yönet"
 
@@ -1232,7 +1283,7 @@ msgstr "Markdown içeri aktarıldı"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS, sitenizi saklamak için bir veritabanına ihtiyaç duyar."
 
-#: src/components/dashboard/dashboard-shell.tsx:30
+#: src/components/dashboard/dashboard-shell.tsx:31
 msgid "Media"
 msgstr "Medya"
 
@@ -1274,7 +1325,7 @@ msgstr "çeviri bekliyor"
 msgid "New category"
 msgstr "Yeni kategori"
 
-#: src/components/dashboard/dashboard-shell.tsx:80
+#: src/components/dashboard/dashboard-shell.tsx:82
 #: src/routes/dashboard.index.tsx:153
 msgid "New post"
 msgstr "Yeni yazı"
@@ -1362,15 +1413,27 @@ msgstr "Sunucunun diskinde"
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "Yürüttüğünüz bütün siteler için tek hesap. Her site kendi içeriğini ve kendi ekibini ayrı tutar."
 
+#: src/routes/dashboard.api.tsx:92
+msgid "One language, one page at a time."
+msgstr "Tek dil, sayfa sayfa."
+
 #: src/components/publish-panel.tsx:172
-msgid "One NAME=value per line. This is where the build's credentials go."
-msgstr "Her satıra bir AD=değer. Derlemenin kimlik bilgileri buraya yazılır."
+#~ msgid "One NAME=value per line. This is where the build's credentials go."
+#~ msgstr "Her satıra bir AD=değer. Derlemenin kimlik bilgileri buraya yazılır."
+
+#: src/routes/dashboard.api.tsx:95
+msgid "One post by its address."
+msgstr "Adresinden tek yazı."
+
+#: src/routes/dashboard.api.tsx:96
+msgid "One post, with its other languages."
+msgstr "Tek yazı, diğer dilleriyle birlikte."
 
 #: src/routes/dashboard.plugins_.backup.tsx:72
 msgid "Only by hand"
 msgstr "Yalnızca elle"
 
-#: src/components/publish-panel.tsx:154
+#: src/components/publish-panel.tsx:235
 msgid "Only for a private repository"
 msgstr "Yalnızca özel depolar için"
 
@@ -1387,6 +1450,10 @@ msgstr "İşletme hesabı aç"
 msgid "Open in new tab"
 msgstr "Yeni sekmede aç"
 
+#: src/routes/dashboard.api.tsx:199
+msgid "OpenAPI document"
+msgstr "OpenAPI belgesi"
+
 #: src/routes/dashboard.plugins_.s3.tsx:194
 msgid "Optional folder inside the bucket"
 msgstr "Bucket içinde isteğe bağlı klasör"
@@ -1399,7 +1466,7 @@ msgstr "Bu sunucunun barındırdığı diğer siteler. Her birine kendi veritaba
 #~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 #~ msgstr "Bu sunucunun barındırdığı diğer siteler. Her biri kendi içeriğini, hesaplarını ve yüklemelerini ayrı tutar."
 
-#: src/components/publish-panel.tsx:123
+#: src/components/publish-panel.tsx:204
 msgid "Output folder"
 msgstr "Çıktı klasörü"
 
@@ -1453,7 +1520,7 @@ msgstr "düz metin"
 msgid "Plain text block"
 msgstr "Düz metin bloğu"
 
-#: src/components/dashboard/dashboard-shell.tsx:34
+#: src/components/dashboard/dashboard-shell.tsx:35
 #: src/routes/dashboard.plugins_.backup.tsx:141
 #: src/routes/dashboard.plugins_.s3.tsx:113
 #: src/routes/dashboard.plugins.tsx:49
@@ -1495,9 +1562,13 @@ msgstr "Yazı başlığı"
 msgid "post-url"
 msgstr "yazi-adresi"
 
-#: src/components/dashboard/dashboard-shell.tsx:29
+#: src/components/dashboard/dashboard-shell.tsx:30
 msgid "Posts"
 msgstr "Yazılar"
+
+#: src/routes/dashboard.api.tsx:83
+msgid "Posts, newest first, in pages."
+msgstr "Yazılar, yeniden eskiye, sayfalanmış."
 
 #: src/components/editor/mavi-editor.tsx:543
 msgid "Preview"
@@ -1516,10 +1587,10 @@ msgstr "Önceki"
 msgid "Public base URL"
 msgstr "Genel URL tabanı"
 
-#: src/components/dashboard/dashboard-shell.tsx:39
+#: src/components/dashboard/dashboard-shell.tsx:41
 #: src/components/editor/mavi-editor.tsx:607
-#: src/components/publish-panel.tsx:224
-#: src/routes/dashboard.publish.tsx:119
+#: src/components/publish-panel.tsx:295
+#: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
 msgstr "Yayınla"
 
@@ -1531,12 +1602,12 @@ msgstr "Yayın tarihi"
 msgid "Published"
 msgstr "Yayında"
 
-#: src/routes/console.sites.$siteId.tsx:112
-#: src/routes/dashboard.publish.tsx:97
+#: src/routes/console.sites.$siteId.tsx:110
+#: src/routes/dashboard.publish.tsx:94
 msgid "Publishing — this takes a minute or two"
 msgstr "Yayınlanıyor — bir iki dakika sürer"
 
-#: src/components/publish-panel.tsx:224
+#: src/components/publish-panel.tsx:295
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
 
@@ -1555,8 +1626,16 @@ msgstr "Metni üst simge yap"
 msgid "Readers can leave comments"
 msgstr "Okurlar yorum yazabilir"
 
-#: src/routes/console.sites.$siteId.tsx:197
-#: src/routes/dashboard.publish.tsx:151
+#: src/routes/dashboard.api.tsx:149
+msgid "Reading"
+msgstr "Okuma"
+
+#: src/routes/dashboard.api.tsx:134
+msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
+msgstr "Okumak için bu sitede bir hesap gerekiyor. Bir kez giriş yapıp dönen çerezi kullanın."
+
+#: src/routes/console.sites.$siteId.tsx:199
+#: src/routes/dashboard.publish.tsx:152
 msgid "Recent builds"
 msgstr "Son derlemeler"
 
@@ -1575,6 +1654,7 @@ msgstr "Düzenli ifade"
 
 #: src/components/editor/bubble-menus.tsx:193
 #: src/components/editor/bubble-menus.tsx:274
+#: src/components/publish-panel.tsx:122
 #: src/routes/dashboard.languages.tsx:196
 msgid "Remove"
 msgstr "Kaldır"
@@ -1611,7 +1691,7 @@ msgstr "İçeriği değiştir"
 msgid "Replace…"
 msgstr "Değiştir…"
 
-#: src/components/publish-panel.tsx:104
+#: src/components/publish-panel.tsx:185
 msgid "Repository"
 msgstr "Depo"
 
@@ -1640,7 +1720,7 @@ msgid "S3 compatible storage"
 msgstr "S3 uyumlu depolama"
 
 #: src/components/editor/mavi-editor.tsx:596
-#: src/components/publish-panel.tsx:179
+#: src/components/publish-panel.tsx:250
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.plugins_.backup.tsx:280
 #: src/routes/dashboard.plugins_.s3.tsx:238
@@ -1648,8 +1728,8 @@ msgid "Save"
 msgstr "Kaydet"
 
 #: src/components/editor/status-bar.tsx:113
-#: src/routes/console.sites.$siteId.tsx:97
-#: src/routes/dashboard.publish.tsx:82
+#: src/routes/console.sites.$siteId.tsx:95
+#: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Kaydedildi"
 
@@ -1678,6 +1758,10 @@ msgstr "Şema {0}"
 #: src/components/editor/post-settings.tsx:361
 msgid "Search engine"
 msgstr "Arama motoru"
+
+#: src/routes/dashboard.api.tsx:94
+msgid "Search titles, summaries and bodies."
+msgstr "Başlık, özet ve gövdede arar."
 
 #: src/routes/dashboard.plugins_.s3.tsx:173
 msgid "Secret access key"
@@ -1758,11 +1842,19 @@ msgstr "Giriş yap"
 msgid "Sign in to manage your site."
 msgstr "Sitenizi yönetmek için giriş yapın."
 
-#: src/components/dashboard/dashboard-shell.tsx:87
+#: src/routes/dashboard.api.tsx:104
+msgid "Sign in; sets the session cookie."
+msgstr "Giriş yapar; oturum çerezini bırakır."
+
+#: src/components/dashboard/dashboard-shell.tsx:89
 #: src/components/editor/mavi-editor.tsx:580
 #: src/routes/console.index.tsx:109
 msgid "Sign out"
 msgstr "Çıkış yap"
+
+#: src/routes/dashboard.api.tsx:132
+msgid "Signing in"
+msgstr "Giriş"
 
 #: src/routes/enter.tsx:32
 msgid "Signing you in…"
@@ -1772,7 +1864,7 @@ msgstr "Girişiniz yapılıyor…"
 msgid "Site title"
 msgstr "Site başlığı"
 
-#: src/components/dashboard/dashboard-shell.tsx:41
+#: src/components/dashboard/dashboard-shell.tsx:43
 #: src/routes/dashboard.sites.tsx:69
 msgid "Sites"
 msgstr "Siteler"
@@ -1801,14 +1893,14 @@ msgstr "Yüklenen medyayı yerel disk yerine bir S3 bucket'ında saklar (AWS S3,
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Kayıtlı — değiştirmemek için boş bırakın"
 
-#: src/components/publish-panel.tsx:153
+#: src/components/publish-panel.tsx:234
 msgid "Stored — type to replace"
 msgstr "Kayıtlı — değiştirmek için yazın"
 
 #. placeholder {0}: config.environment_keys.join(", ")
 #: src/components/publish-panel.tsx:171
-msgid "Stored: {0}. Typing here replaces all of them."
-msgstr "Kayıtlı: {0}. Buraya yazmak hepsinin yerine geçer."
+#~ msgid "Stored: {0}. Typing here replaces all of them."
+#~ msgstr "Kayıtlı: {0}. Buraya yazmak hepsinin yerine geçer."
 
 #: src/components/editor/bubble-menus.tsx:143
 #: src/components/editor/dialogs.tsx:510
@@ -1864,7 +1956,7 @@ msgstr "İçindekiler"
 msgid "Tagline"
 msgstr "Slogan"
 
-#: src/components/dashboard/dashboard-shell.tsx:32
+#: src/components/dashboard/dashboard-shell.tsx:33
 #: src/components/editor/post-settings.tsx:222
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -1873,6 +1965,10 @@ msgstr "Etiketler"
 #: src/routes/dashboard.tags.tsx:101
 msgid "Tags linked"
 msgstr "Etiketler bağlandı"
+
+#: src/routes/dashboard.api.tsx:98
+msgid "Tags, per language."
+msgstr "Etiketler, dile göre."
 
 #: src/routes/dashboard.plugins.tsx:31
 msgid "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
@@ -1914,9 +2010,21 @@ msgstr "Metin rengi"
 msgid "Text shown in search results"
 msgstr "Arama sonuçlarında görünecek metin"
 
+#: src/routes/dashboard.api.tsx:109
+msgid "The address a title would get."
+msgstr "Bir başlığın alacağı adres."
+
 #: src/routes/dashboard.plugins_.backup.tsx:104
 msgid "The backup failed"
 msgstr "Yedekleme başarısız oldu"
+
+#: src/components/publish-panel.tsx:155
+msgid "The build runs with these. A name already here is replaced; the others are left alone."
+msgstr "Derleme bunlarla çalışır. Aynı isim varsa üzerine yazılır, diğerlerine dokunulmaz."
+
+#: src/routes/dashboard.api.tsx:99
+msgid "The languages this site writes in."
+msgstr "Bu sitenin yazdığı diller."
 
 #: src/routes/dashboard.languages.tsx:94
 msgid "The languages your content can be written in. This is separate from the language of this admin panel."
@@ -1931,6 +2039,10 @@ msgstr "Son yedekleme başarısız oldu: {0}"
 msgid "The most common shortcuts in the editor."
 msgstr "Editörde en sık kullanılan kısayollar."
 
+#: src/routes/dashboard.api.tsx:87
+msgid "The same, with each body included."
+msgstr "Aynısı, gövdeler dahil."
+
 #: src/components/setup/setup-wizard.tsx:322
 msgid "The server is taking longer than expected to restart. Reload this page in a moment."
 msgstr "Sunucunun yeniden başlaması beklenenden uzun sürüyor. Bir süre sonra bu sayfayı yenileyin."
@@ -1938,6 +2050,10 @@ msgstr "Sunucunun yeniden başlaması beklenenden uzun sürüyor. Bir süre sonr
 #: src/routes/dashboard.sites.tsx:143
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "Site, bu sunucunun veritabanında kendi şemasını alır. Buraya sığmayan bir siteye burada kendi adresi verilebilir."
+
+#: src/routes/dashboard.api.tsx:183
+msgid "The whole of it"
+msgstr "Tamamı"
 
 #: src/components/mode-toggle.tsx:24
 msgid "Theme"
@@ -2009,6 +2125,10 @@ msgstr "Başlıksız yazı"
 msgid "Upload"
 msgstr "Yükle"
 
+#: src/routes/dashboard.api.tsx:108
+msgid "Upload a file (multipart)."
+msgstr "Dosya yükler (multipart)."
+
 #: src/components/editor/post-settings.tsx:302
 msgid "Upload cover image"
 msgstr "Kapak görseli yükle"
@@ -2016,6 +2136,10 @@ msgstr "Kapak görseli yükle"
 #: src/components/editor/extensions/slash-command.tsx:177
 msgid "Upload image"
 msgstr "Görsel yükle"
+
+#: src/routes/dashboard.api.tsx:100
+msgid "Uploaded files and their addresses."
+msgstr "Yüklenen dosyalar ve adresleri."
 
 #: src/components/editor/dialogs.tsx:141
 msgid "URL"
@@ -2030,6 +2154,10 @@ msgstr "Yeni yüklemelerde S3 kullan"
 #: src/routes/login.tsx:114
 msgid "Username"
 msgstr "Kullanıcı adı"
+
+#: src/components/publish-panel.tsx:144
+msgid "value"
+msgstr "değer"
 
 #: src/components/editor/dialogs.tsx:541
 msgid "View"
@@ -2047,7 +2175,7 @@ msgstr "Kapalıyken yüklemeler sunucunun diskinde saklanır."
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Okuyucuların görselleri yüklediği adres (bucket genel URL'si veya CDN)"
 
-#: src/routes/console.sites.$siteId.tsx:152
+#: src/routes/console.sites.$siteId.tsx:150
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Bu sitenin sayfaları nereden geliyor ve son derlemeler nasıl gitti."
 
@@ -2067,6 +2195,14 @@ msgstr "Bir site üzerinde mi çalışıyorsunuz? Adresini yazın"
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 msgstr "AWS S3, Cloudflare R2, MinIO ve DigitalOcean Spaces ile çalışır. Mevcut yerel dosyalar yerinde kalır; yalnızca yeni yüklemeler bucket'a gider."
 
+#: src/routes/dashboard.api.tsx:105
+msgid "Write a post."
+msgstr "Yazı yazar."
+
+#: src/routes/dashboard.api.tsx:157
+msgid "Writing"
+msgstr "Yazma"
+
 #: src/components/setup/setup-wizard.tsx:584
 msgid "You can change this later in your post settings."
 msgstr "Bunu daha sonra yazı ayarlarından değiştirebilirsiniz."
@@ -2083,12 +2219,12 @@ msgstr "Bunu siteye giriş yapmak ve yönetmek için kullanacaksınız."
 msgid "Your name"
 msgstr "Adınız"
 
-#: src/routes/dashboard.publish.tsx:121
+#: src/routes/dashboard.publish.tsx:118
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Sayfalarınız kendi projenizden derleniyor. Yayınlamak, onları CMS'teki güncel içerikle yeniden derler."
 
 #: src/routes/console.index.tsx:119
-#: src/routes/console.sites.$siteId.tsx:145
+#: src/routes/console.sites.$siteId.tsx:143
 msgid "Your sites"
 msgstr "Siteleriniz"
 

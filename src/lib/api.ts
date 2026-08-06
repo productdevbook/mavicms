@@ -653,8 +653,12 @@ export interface SavePublish {
   output_dir?: string
   /** Left out keeps the stored token; empty removes it. */
   token?: string
-  /** Left out keeps what is stored. */
+  /** Replaces every variable. Left out keeps them. */
   environment?: Record<string, string>
+  /** Adds these, leaving the rest alone. */
+  environment_set?: Record<string, string>
+  /** Removes these by name. */
+  environment_remove?: string[]
 }
 
 export function getPublish(): Promise<PublishStatus> {
