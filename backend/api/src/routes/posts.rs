@@ -43,6 +43,20 @@ use crate::{
     tenants::Site,
 };
 
+/// A scheduled post with no date is not a schedule.
+///
+/// Nothing used to look, and the status did nothing, so the two agreed with
+/// each other. Now that the clock is read, a post left in this state is one
+/// the panel says is going out and that nothing will ever send.
+fn scheduled_needs_a_time(status: &str, has_time: bool) -> AppResult<()> {
+    if status == PostStatus::Scheduled.as_str() && !has_time {
+        return Err(AppError::Validation(
+            "a scheduled post needs a publish date to be scheduled for".to_string(),
+        ));
+    }
+    Ok(())
+}
+
 async fn category_ids_for(db: &impl ConnectionTrait, post_id: Uuid) -> AppResult<Vec<Uuid>> {
     let rows = post_category::Entity::find()
         .filter(post_category::Column::PostId.eq(post_id))
@@ -378,6 +392,8 @@ pub async fn create_post(
         translation_group_id = sibling.translation_group_id;
     }
 
+    scheduled_needs_a_time(payload.status.as_str(), payload.publish_at.is_some())?;
+
     // Checked up front so a re-run over content that is already there says
     // which post is in the way, instead of a bare unique-index conflict.
     if post::Entity::find()
@@ -526,6 +542,12 @@ pub async fn update_post(
     }
     model.updated_at = Set(Utc::now().fixed_offset());
 
+    // Asked of what the post will be, not of what the request said: a request
+    // that only clears the date leaves the status alone, and a request that
+    // only sets the status leaves the date alone. Either one on its own can
+    // arrive at a schedule with no time in it.
+    scheduled_needs_a_time(model.status.as_ref(), model.publish_at.as_ref().is_some())?;
+
     let saved = model.update(&txn).await?;
 
     if let Some(category_ids) = &payload.category_ids {
@@ -668,4 +690,23 @@ fn referenced_media(post: &post::Model) -> Vec<String> {
     urls.sort();
     urls.dedup();
     urls
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{PostStatus, scheduled_needs_a_time};
+
+    #[test]
+    fn a_schedule_needs_a_time() {
+        assert!(scheduled_needs_a_time(PostStatus::Scheduled.as_str(), false).is_err());
+        assert!(scheduled_needs_a_time(PostStatus::Scheduled.as_str(), true).is_ok());
+    }
+
+    /// A draft is where an unfinished thought lives, date or no date.
+    #[test]
+    fn nothing_else_needs_one() {
+        for status in [PostStatus::Draft, PostStatus::Review, PostStatus::Published] {
+            assert!(scheduled_needs_a_time(status.as_str(), false).is_ok());
+        }
+    }
 }

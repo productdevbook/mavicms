@@ -72,6 +72,8 @@ async fn main() {
         default_state: state,
     };
 
+    mavicms_api::schedule::spawn(hosting.clone());
+
     let (router, api) = OpenApiRouter::<mavicms_api::tenants::Hosting>::with_openapi(
         mavicms_api::openapi::ApiDoc::openapi(),
     )

@@ -7,6 +7,8 @@ database — Postgres, MySQL or SQLite — and your own object storage, or none.
   session cookies.
 - **Any database** — one `DATABASE_URL` away from Postgres, MySQL or SQLite.
   Migrations run at boot and are tested on all three.
+- **Scheduling** — a post given a date goes out on it, and the site is asked
+  to build. Within the minute, whether or not anybody is looking.
 - **Multilingual content** — the same post in as many languages as you like,
   each with its own title, slug, content and SEO, linked to its siblings.
   Categories and tags are translated too.
@@ -155,6 +157,11 @@ change to one post fetches one post and regenerates one page.
 
 Ask for `status=published` unless you mean not to. Without it, every draft on
 the site is in the answer.
+
+A post given a status of **scheduled** and a date is published when that date
+arrives — the server checks every minute — and the site is asked to build, so
+a post written on Friday for Monday morning is on the site on Monday morning.
+A build does not have to do anything for this; it will be asked to run.
 
 ## Migrating from WordPress
 

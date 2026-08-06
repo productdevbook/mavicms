@@ -274,6 +274,16 @@ export function MaviEditor({
         if (options?.notify) toast.error(t`Give your post a title first`)
         return
       }
+      // The status is chosen above the date it needs, so an autosave in
+      // between would refuse the post for a gap the writer is two seconds from
+      // filling. The server refuses it either way: a post scheduled for no
+      // time never goes out.
+      if (nextMeta.status === "scheduled" && !nextMeta.publishAt) {
+        if (options?.notify) {
+          toast.error(t`A scheduled post needs a publish date`)
+        }
+        return
+      }
       setSaveState("saving")
       // Both forms, from the one place that can produce either: Markdown is
       // canonical, and the HTML is what consumers that want HTML are given
