@@ -42,8 +42,24 @@ const IDLE_POLL: Duration = Duration::from_secs(5);
 /// whose build never finishes would stop every other site from publishing.
 const BUILD_TIMEOUT: Duration = Duration::from_secs(20 * 60);
 
+/// Everything one build needs, so that running it is a call rather than eight
+/// arguments nobody can read at the call site.
+struct Run<'a> {
+    checkout: &'a Path,
+    tenant: &'a Tenant,
+    command: &'a str,
+    environment: &'a std::collections::BTreeMap<String, String>,
+    /// A token the build reads the site with, when one could be minted.
+    read_token: Option<&'a str>,
+    /// The bun the project pinned, when it pinned one this could fetch.
+    toolchain: Option<&'a Path>,
+}
+
 struct Builder {
     control: DatabaseConnection,
+    /// The address of that database, used to reach a site's own schema when a
+    /// build needs a token to read it with.
+    base_url: String,
     secrets: SecretBox,
     /// Where checkouts live between builds.
     workspace: PathBuf,
@@ -85,7 +101,8 @@ impl Builder {
                 .ok_or_else(|| AppError::Internal(format!("{name} is not set")))
         };
 
-        let control = db::connect_plain(&required("DATABASE_URL")?)
+        let base_url = required("DATABASE_URL")?;
+        let control = db::connect_plain(&base_url)
             .await
             .map_err(|err| AppError::Internal(format!("could not open the database: {err}")))?;
 
@@ -104,6 +121,7 @@ impl Builder {
 
         Ok(Self {
             control,
+            base_url,
             secrets,
             workspace,
             published: published_storage()?,
@@ -145,7 +163,8 @@ impl Builder {
             .control
             .query_one_raw(Statement::from_sql_and_values(
                 backend,
-                "SELECT host, slug FROM tenants WHERE id = $1".to_string(),
+                "SELECT host, slug, schema_name, database_url FROM tenants WHERE id = $1"
+                    .to_string(),
                 [id.to_string().into()],
             ))
             .await?
@@ -155,8 +174,8 @@ impl Builder {
             id,
             host: row.try_get("", "host")?,
             slug: row.try_get("", "slug")?,
-            schema: String::new(),
-            database_url: String::new(),
+            schema: row.try_get("", "schema_name")?,
+            database_url: row.try_get("", "database_url")?,
             organization_id: None,
             active: true,
         })
@@ -173,16 +192,30 @@ impl Builder {
         self.fetch(&checkout, &config.repository, &config.branch, &token, log)
             .await?;
 
+        // Minted here and torn down below: the build reads the site with a
+        // token that exists for as long as the build does, rather than with
+        // somebody's password kept in a settings box.
+        let reader = self.build_token(tenant).await?;
+
         let toolchain = self.toolchain(&checkout, log).await?;
-        self.run_build(
-            &checkout,
-            tenant,
-            &config.build_command,
-            &environment,
-            toolchain.as_deref(),
-            log,
-        )
-        .await?;
+        let outcome = self
+            .run_build(
+                Run {
+                    checkout: &checkout,
+                    tenant,
+                    command: &config.build_command,
+                    environment: &environment,
+                    read_token: reader.as_ref().map(|(_, token)| token.as_str()),
+                    toolchain: toolchain.as_deref(),
+                },
+                log,
+            )
+            .await;
+
+        if let Some((db, token)) = reader {
+            spend_token(&db, &token).await;
+        }
+        outcome?;
 
         let output = checkout.join(&config.output_dir);
         if !output.is_dir() {
@@ -305,15 +338,62 @@ impl Builder {
         Ok(Some(root.join("bin")))
     }
 
-    async fn run_build(
+    /// A session on the site that lasts as long as the build.
+    ///
+    /// It belongs to an account with the builder role, which can read the site
+    /// and nothing else — so a token that turns up in a log is a token that
+    /// can look at published posts, rather than one that can delete them.
+    async fn build_token(
         &self,
-        checkout: &Path,
         tenant: &Tenant,
-        build_command: &str,
-        environment: &std::collections::BTreeMap<String, String>,
-        toolchain: Option<&Path>,
-        log: &mut String,
-    ) -> AppResult<()> {
+    ) -> AppResult<Option<(sea_orm::DatabaseConnection, String)>> {
+        let url = if tenant.database_url.trim().is_empty() {
+            &self.base_url
+        } else {
+            &tenant.database_url
+        };
+
+        let db = match mavicms_api::db::connect_in_schema(url, &tenant.schema).await {
+            Ok(db) => db,
+            Err(err) => {
+                // A site whose database will not open is a build that will
+                // fail on its own, and more usefully.
+                tracing::warn!(site = %tenant.host, error = %err, "no build token this time");
+                return Ok(None);
+            }
+        };
+
+        let user = reader_account(&db).await?;
+        let token = Uuid::new_v4();
+
+        db.execute_raw(Statement::from_sql_and_values(
+            db.get_database_backend(),
+            "INSERT INTO sessions (id, user_id, expires_at, created_at) \
+             VALUES ($1::uuid, $2::uuid, $3::timestamptz, $4::timestamptz)",
+            [
+                token.to_string().into(),
+                user.to_string().into(),
+                (chrono::Utc::now() + chrono::Duration::hours(2))
+                    .to_rfc3339()
+                    .into(),
+                chrono::Utc::now().to_rfc3339().into(),
+            ],
+        ))
+        .await?;
+
+        Ok(Some((db, token.to_string())))
+    }
+
+    async fn run_build(&self, what: Run<'_>, log: &mut String) -> AppResult<()> {
+        let Run {
+            checkout,
+            tenant,
+            command: build_command,
+            environment,
+            read_token,
+            toolchain,
+        } = what;
+
         log.push_str(&format!("\n$ {build_command}\n"));
 
         let mut command = Command::new("sh");
@@ -332,6 +412,10 @@ impl Builder {
                 format!("{}://{}", self.site_scheme, tenant.host),
             )
             .env("CI", "true");
+
+        if let Some(token) = read_token {
+            command.env("CMS_TOKEN", token);
+        }
 
         // In front of the image's own bun, so the version the project asked
         // for is the one that runs.
@@ -538,6 +622,56 @@ fn bun_version(manifest: &str) -> Option<String> {
             .chars()
             .all(|c| c.is_ascii_digit() || c == '.' || c.is_ascii_alphanumeric() || c == '-');
     usable.then(|| version.to_string())
+}
+
+/// The account a build reads as, made on first use.
+///
+/// It has no password: the only way to be it is a token the builder minted
+/// minutes ago, so there is nothing here for anybody to guess or reuse.
+async fn reader_account(db: &sea_orm::DatabaseConnection) -> AppResult<Uuid> {
+    let existing = db
+        .query_one_raw(Statement::from_sql_and_values(
+            db.get_database_backend(),
+            "SELECT id FROM users WHERE username = $1",
+            ["build".into()],
+        ))
+        .await?;
+
+    if let Some(row) = existing {
+        return Uuid::parse_str(&row.try_get::<String>("", "id")?)
+            .map_err(|err| AppError::Internal(format!("bad user id: {err}")));
+    }
+
+    let id = Uuid::new_v4();
+    db.execute_raw(Statement::from_sql_and_values(
+        db.get_database_backend(),
+        "INSERT INTO users (id, username, email, password_hash, role, created_at) \
+         VALUES ($1::uuid, $2, $3, $4, $5, $6::timestamptz)",
+        [
+            id.to_string().into(),
+            "build".into(),
+            "build@localhost".into(),
+            String::new().into(),
+            mavicms_api::auth::BUILDER.into(),
+            chrono::Utc::now().to_rfc3339().into(),
+        ],
+    ))
+    .await?;
+
+    Ok(id)
+}
+
+/// Ends the build's session. Best effort — it expires on its own within hours,
+/// and a build that succeeded is not undone because tidying up failed.
+async fn spend_token(db: &sea_orm::DatabaseConnection, token: &str) {
+    let statement = Statement::from_sql_and_values(
+        db.get_database_backend(),
+        "DELETE FROM sessions WHERE id = $1::uuid",
+        [token.into()],
+    );
+    if let Err(err) = db.execute_raw(statement).await {
+        tracing::warn!(error = %err, "could not end the build's session");
+    }
 }
 
 #[cfg(test)]

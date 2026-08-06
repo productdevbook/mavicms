@@ -149,8 +149,12 @@ msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 characters: letters, numbers, _ or -"
 
 #: src/routes/dashboard.api.tsx:144
-msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
-msgstr "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
+msgid "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
+msgstr "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
+
+#: src/routes/dashboard.api.tsx:144
+#~ msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
+#~ msgstr "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
 
 #: src/routes/dashboard.sites.tsx:100
 #~ msgid "A database file of its own"
@@ -165,11 +169,11 @@ msgstr "A build gets these from its build variables, which the site's agency set
 msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
 
-#: src/routes/dashboard.api.tsx:152
+#: src/routes/dashboard.api.tsx:156
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 
-#: src/routes/dashboard.api.tsx:164
+#: src/routes/dashboard.api.tsx:168
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 
@@ -598,7 +602,7 @@ msgstr "Connected. Restarting the server…"
 msgid "Connection URL"
 msgstr "Connection URL"
 
-#: src/routes/dashboard.api.tsx:162
+#: src/routes/dashboard.api.tsx:166
 msgid "Content"
 msgstr "Content"
 
@@ -1282,7 +1286,7 @@ msgstr "Install Mavi CMS"
 msgid "Installing Mavi CMS…"
 msgstr "Installing Mavi CMS…"
 
-#: src/routes/dashboard.api.tsx:190
+#: src/routes/dashboard.api.tsx:194
 msgid "Interactive docs"
 msgstr "Interactive docs"
 
@@ -1615,7 +1619,7 @@ msgstr "Open an agency account"
 msgid "Open in new tab"
 msgstr "Open in new tab"
 
-#: src/routes/dashboard.api.tsx:199
+#: src/routes/dashboard.api.tsx:203
 msgid "OpenAPI document"
 msgstr "OpenAPI document"
 
@@ -1806,7 +1810,7 @@ msgstr "Raise text above the line"
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
 
-#: src/routes/dashboard.api.tsx:149
+#: src/routes/dashboard.api.tsx:153
 msgid "Reading"
 msgstr "Reading"
 
@@ -2306,7 +2310,7 @@ msgstr "The server is taking longer than expected to restart. Reload this page i
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 
-#: src/routes/dashboard.api.tsx:183
+#: src/routes/dashboard.api.tsx:187
 msgid "The whole of it"
 msgstr "The whole of it"
 
@@ -2468,7 +2472,7 @@ msgstr "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existin
 msgid "Write a post."
 msgstr "Write a post."
 
-#: src/routes/dashboard.api.tsx:157
+#: src/routes/dashboard.api.tsx:161
 msgid "Writing"
 msgstr "Writing"
 

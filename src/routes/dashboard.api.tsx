@@ -141,8 +141,12 @@ function ApiRoute() {
 curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
           />
           <p className="text-sm text-muted-foreground">
-            {t`A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project.`}
+            {t`A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing.`}
           </p>
+          <Snippet
+            text={`curl -H "Authorization: Bearer $CMS_TOKEN" \\
+  '${base}/posts?include=content&limit=100'`}
+          />
         </section>
 
         <section className="flex flex-col gap-3">

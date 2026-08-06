@@ -1,5 +1,6 @@
 use axum::{
     extract::Request,
+    http::Method,
     middleware::Next,
     response::{IntoResponse, Response},
 };
@@ -69,8 +70,25 @@ pub async fn require_auth(
     mut request: Request,
     next: Next,
 ) -> Response {
-    match authenticate(&state, &cookies).await {
+    let bearer = request
+        .headers()
+        .get(axum::http::header::AUTHORIZATION)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.strip_prefix("Bearer "))
+        .map(str::to_string);
+
+    match authenticate(&state, &cookies, bearer.as_deref()).await {
         Ok(user) => {
+            // A build reads; it does not write. The token exists so that a
+            // build does not need somebody's password, and a read-only token
+            // that can still delete posts would not have been worth having.
+            if user.role == BUILDER && !matches!(*request.method(), Method::GET | Method::HEAD) {
+                return AppError::Forbidden(
+                    "a build token can read this site and nothing else".to_string(),
+                )
+                .into_response();
+            }
+
             request.extensions_mut().insert(user);
             next.run(request).await
         }
@@ -78,8 +96,24 @@ pub async fn require_auth(
     }
 }
 
-async fn authenticate(state: &AppState, cookies: &Cookies) -> Result<user::Model, AppError> {
+/// The role a build runs as. It reads the site to build its pages and has no
+/// reason to change anything.
+pub const BUILDER: &str = "builder";
+
+async fn authenticate(
+    state: &AppState,
+    cookies: &Cookies,
+    bearer: Option<&str>,
+) -> Result<user::Model, AppError> {
     let db = state.db_or_unavailable()?;
+
+    // A bearer token is the same session id by another route, for something
+    // holding a token rather than a cookie jar — a build, chiefly.
+    if let Some(token) = bearer
+        && let Ok(session_id) = Uuid::parse_str(token)
+    {
+        return by_session(db, session_id).await;
+    }
 
     let token = cookies
         .get(SESSION_COOKIE)
@@ -87,6 +121,10 @@ async fn authenticate(state: &AppState, cookies: &Cookies) -> Result<user::Model
     let session_id = Uuid::parse_str(token.value())
         .map_err(|_| AppError::Unauthorized("not signed in".to_string()))?;
 
+    by_session(db, session_id).await
+}
+
+async fn by_session(db: &DatabaseConnection, session_id: Uuid) -> Result<user::Model, AppError> {
     let session_row = session::Entity::find_by_id(session_id)
         .one(db)
         .await?

@@ -149,8 +149,12 @@ msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 karakter: harf, rakam, _ veya -"
 
 #: src/routes/dashboard.api.tsx:144
-msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
-msgstr "Derleme bunları, sitenin işletmesinin girdiği derleme değişkenlerinden alır — yani kimlik bilgileri projede değil sunucuda durur."
+msgid "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
+msgstr "Derleme giriş yapmaz. Kendisine CMS_TOKEN verilir; derleme kadar yaşar ve bu siteyi yalnızca okuyabilir — yani onun için hiçbir parola saklanmaz ve kayda düşen bir jeton hiçbir şeye mal olmaz."
+
+#: src/routes/dashboard.api.tsx:144
+#~ msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
+#~ msgstr "Derleme bunları, sitenin işletmesinin girdiği derleme değişkenlerinden alır — yani kimlik bilgileri projede değil sunucuda durur."
 
 #: src/routes/dashboard.sites.tsx:100
 #~ msgid "A database file of its own"
@@ -165,11 +169,11 @@ msgstr "Derleme bunları, sitenin işletmesinin girdiği derleme değişkenlerin
 msgid "A folder inside the data directory."
 msgstr "Veri dizininin içinde bir klasör."
 
-#: src/routes/dashboard.api.tsx:152
+#: src/routes/dashboard.api.tsx:156
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "Liste, yazıların gövdesini vermez; bütün arşivi tek yanıtta göndermek kimsenin istemediği megabaytlar demek. Gövdeler için include=content ekleyin."
 
-#: src/routes/dashboard.api.tsx:164
+#: src/routes/dashboard.api.tsx:168
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "Bir yazı hem <0>content_markdown</0> taşır — yazının kendisi budur — hem de <1>content_html</1>, yani karşılığı. Markdown <2>comark</2> için yazılıyor, böylece bir proje bloklarını kendi bileşenlerine çevirebilir."
 
@@ -598,7 +602,7 @@ msgstr "Bağlandı. Sunucu yeniden başlatılıyor…"
 msgid "Connection URL"
 msgstr "Bağlantı URL'si"
 
-#: src/routes/dashboard.api.tsx:162
+#: src/routes/dashboard.api.tsx:166
 msgid "Content"
 msgstr "İçerik"
 
@@ -1278,7 +1282,7 @@ msgstr "Mavi CMS'i kur"
 msgid "Installing Mavi CMS…"
 msgstr "Mavi CMS kuruluyor…"
 
-#: src/routes/dashboard.api.tsx:190
+#: src/routes/dashboard.api.tsx:194
 msgid "Interactive docs"
 msgstr "Etkileşimli belgeler"
 
@@ -1611,7 +1615,7 @@ msgstr "İşletme hesabı aç"
 msgid "Open in new tab"
 msgstr "Yeni sekmede aç"
 
-#: src/routes/dashboard.api.tsx:199
+#: src/routes/dashboard.api.tsx:203
 msgid "OpenAPI document"
 msgstr "OpenAPI belgesi"
 
@@ -1802,7 +1806,7 @@ msgstr "Metni üst simge yap"
 msgid "Readers can leave comments"
 msgstr "Okurlar yorum yazabilir"
 
-#: src/routes/dashboard.api.tsx:149
+#: src/routes/dashboard.api.tsx:153
 msgid "Reading"
 msgstr "Okuma"
 
@@ -2302,7 +2306,7 @@ msgstr "Sunucunun yeniden başlaması beklenenden uzun sürüyor. Bir süre sonr
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "Site, bu sunucunun veritabanında kendi şemasını alır. Buraya sığmayan bir siteye burada kendi adresi verilebilir."
 
-#: src/routes/dashboard.api.tsx:183
+#: src/routes/dashboard.api.tsx:187
 msgid "The whole of it"
 msgstr "Tamamı"
 
@@ -2464,7 +2468,7 @@ msgstr "AWS S3, Cloudflare R2, MinIO ve DigitalOcean Spaces ile çalışır. Mev
 msgid "Write a post."
 msgstr "Yazı yazar."
 
-#: src/routes/dashboard.api.tsx:157
+#: src/routes/dashboard.api.tsx:161
 msgid "Writing"
 msgstr "Yazma"
 
