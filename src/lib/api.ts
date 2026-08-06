@@ -234,6 +234,8 @@ export interface Post {
   featured: boolean
   allow_comments: boolean
   content_html: string
+  /** The canonical form; null on posts written before the move to Markdown. */
+  content_markdown: string | null
   locale: string
   translation_group_id: string
   /** Languages this post exists in, including its own. */
@@ -271,6 +273,7 @@ export interface PostPayload {
   featured?: boolean
   allow_comments?: boolean
   content_html?: string
+  content_markdown?: string
   locale?: string
   /** Id of an existing post this is a translation of. */
   translation_of?: string

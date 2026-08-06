@@ -44,6 +44,8 @@ pub struct PostSummary {
     /// carrying them beats nine hundred that each fetch one.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub content_html: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content_markdown: Option<String>,
     pub title: String,
     pub slug: String,
     pub excerpt: String,
@@ -73,6 +75,7 @@ impl PostSummary {
         Self {
             id: model.id,
             content_html: with_content.then_some(model.content_html),
+            content_markdown: with_content.then_some(model.content_markdown).flatten(),
             title: model.title,
             slug: model.slug,
             excerpt: model.excerpt,
@@ -144,6 +147,7 @@ pub struct PostResponse {
     pub featured: bool,
     pub allow_comments: bool,
     pub content_html: String,
+    pub content_markdown: Option<String>,
     pub locale: String,
     pub translation_group_id: Uuid,
     /// Which languages this post exists in, including its own. Cheap enough to
@@ -197,6 +201,7 @@ impl PostResponse {
             featured: model.featured,
             allow_comments: model.allow_comments,
             content_html: model.content_html,
+            content_markdown: model.content_markdown,
             locale: model.locale,
             translation_group_id: model.translation_group_id,
             locales,
@@ -244,6 +249,10 @@ pub struct CreatePostRequest {
     pub allow_comments: bool,
     #[serde(default)]
     pub content_html: String,
+    /// The canonical form. The editor sends both; an importer that only has
+    /// HTML may send that alone.
+    #[serde(default)]
+    pub content_markdown: Option<String>,
     /// Defaults to the site's default language.
     #[serde(default)]
     pub locale: Option<String>,
@@ -277,4 +286,5 @@ pub struct UpdatePostRequest {
     pub featured: Option<bool>,
     pub allow_comments: Option<bool>,
     pub content_html: Option<String>,
+    pub content_markdown: Option<String>,
 }

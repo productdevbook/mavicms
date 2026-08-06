@@ -21,6 +21,9 @@ pub struct Model {
     pub allow_comments: bool,
     #[sea_orm(column_type = "Text")]
     pub content_html: String,
+    /// The canonical form since the move to Markdown. `None` on posts that
+    /// predate it and have not been rewritten.
+    pub content_markdown: Option<String>,
     pub locale: String,
     /// Rows sharing this id are translations of one another. Nullable in the
     /// schema only because a uuid column cannot take a portable NOT NULL

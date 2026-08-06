@@ -155,7 +155,7 @@ async fn siblings_of(
         ("slug" = Option<String>, Query, description = "Exact address to look for"),
         ("limit" = Option<u64>, Query, description = "How many posts to return (default 50, max 200)"),
         ("offset" = Option<u64>, Query, description = "How many to skip"),
-        ("include" = Option<String>, Query, description = "Comma-separated extras; `content` adds content_html to each item"),
+        ("include" = Option<String>, Query, description = "Comma-separated extras; `content` adds the post body to each item"),
         ("q" = Option<String>, Query, description = "Free text to search for in the title, excerpt and body"),
     ),
     responses((status = 200, description = "A page of posts", body = PostPage))
@@ -398,6 +398,7 @@ pub async fn create_post(
         featured: Set(payload.featured),
         allow_comments: Set(payload.allow_comments),
         content_html: Set(payload.content_html),
+        content_markdown: Set(payload.content_markdown),
         locale: Set(locale.clone()),
         translation_group_id: Set(translation_group_id),
         created_at: Set(payload.created_at.map_or(now, |value| value.fixed_offset())),
@@ -503,6 +504,9 @@ pub async fn update_post(
     }
     if let Some(content_html) = payload.content_html {
         model.content_html = Set(content_html);
+    }
+    if let Some(content_markdown) = payload.content_markdown {
+        model.content_markdown = Set(Some(content_markdown));
     }
     model.updated_at = Set(Utc::now().fixed_offset());
 

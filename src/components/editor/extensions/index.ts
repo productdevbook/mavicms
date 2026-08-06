@@ -18,7 +18,18 @@ import {
   type TableOfContentData,
 } from "@tiptap/extension-table-of-contents"
 import TextAlign from "@tiptap/extension-text-align"
-import { TextStyleKit } from "@tiptap/extension-text-style"
+import {
+  BackgroundColor,
+  Color,
+  FontFamily,
+  FontSize,
+  LineHeight,
+  TextStyle,
+} from "@tiptap/extension-text-style"
+import { Markdown } from "@tiptap/markdown"
+import Heading from "@tiptap/extension-heading"
+import Paragraph from "@tiptap/extension-paragraph"
+import Underline from "@tiptap/extension-underline"
 import Typography from "@tiptap/extension-typography"
 import UniqueID from "@tiptap/extension-unique-id"
 import Youtube from "@tiptap/extension-youtube"
@@ -28,6 +39,15 @@ import { toast } from "sonner"
 
 import { ApiError, uploadMedia } from "@/lib/api"
 import { slugify } from "@/lib/editor-utils"
+import {
+  alignedHeadingMarkdown,
+  alignedParagraphMarkdown,
+  highlightMarkdown,
+  subscriptMarkdown,
+  superscriptMarkdown,
+  textStyleMarkdown,
+  underlineMarkdown,
+} from "@/components/editor/extensions/comark"
 import { CodeBlockView } from "@/components/editor/code-block-view"
 import { lowlight } from "@/components/editor/extensions/languages"
 import { SearchReplace } from "@/components/editor/extensions/search-replace"
@@ -51,7 +71,6 @@ export function buildExtensions({
   return [
     StarterKit.configure({
       codeBlock: false,
-      heading: { levels: [1, 2, 3, 4, 5, 6] },
       link: {
         openOnClick: false,
         autolink: true,
@@ -60,17 +79,38 @@ export function buildExtensions({
       },
       horizontalRule: { HTMLAttributes: { class: "mavi-hr" } },
       undoRedo: { depth: 200 },
+      // Replaced below so they can write themselves in a form comark reads.
+      underline: false,
+      paragraph: false,
+      heading: false,
+    }),
+
+    Underline.extend({ renderMarkdown: underlineMarkdown }),
+    Paragraph.extend({ renderMarkdown: alignedParagraphMarkdown }),
+    Heading.extend({ renderMarkdown: alignedHeadingMarkdown }).configure({
+      levels: [1, 2, 3, 4, 5, 6],
     }),
 
     CodeBlockLowlight.extend({
       addNodeView: () => ReactNodeViewRenderer(CodeBlockView),
     }).configure({ lowlight, defaultLanguage: "typescript" }),
 
-    TextStyleKit,
+    Markdown,
 
-    Highlight.configure({ multicolor: true }),
-    Subscript,
-    Superscript,
+    // The individual marks rather than the kit, so the one carrying colour and
+    // size can write itself as a span comark understands.
+    TextStyle.extend({ renderMarkdown: textStyleMarkdown }),
+    Color,
+    BackgroundColor,
+    FontFamily,
+    FontSize,
+    LineHeight,
+
+    Highlight.extend({ renderMarkdown: highlightMarkdown }).configure({
+      multicolor: true,
+    }),
+    Subscript.extend({ renderMarkdown: subscriptMarkdown }),
+    Superscript.extend({ renderMarkdown: superscriptMarkdown }),
     Typography,
 
     TextAlign.configure({

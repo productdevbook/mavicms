@@ -130,7 +130,11 @@ function postToMeta(post: Post): PostMeta {
   }
 }
 
-function metaToPayload(meta: PostMeta, contentHtml: string): PostPayload {
+function metaToPayload(
+  meta: PostMeta,
+  contentHtml: string,
+  contentMarkdown: string
+): PostPayload {
   return {
     title: meta.title,
     slug: meta.slug.trim() || slugify(meta.title),
@@ -148,6 +152,7 @@ function metaToPayload(meta: PostMeta, contentHtml: string): PostPayload {
     featured: meta.featured,
     allow_comments: meta.allowComments,
     content_html: contentHtml,
+    content_markdown: contentMarkdown,
   }
 }
 
@@ -219,12 +224,23 @@ export function MaviEditor({
         setMeta(postToMeta(post))
         // Loading is not an edit: an update event here would schedule an
         // autosave against the still-empty initial meta and PATCH a blank title.
-        editor.commands.setContent(post.content_html, { emitUpdate: false })
+        // Markdown when the post has it, which is the form it was saved in;
+        // HTML is what posts written before the move still carry.
+        if (post.content_markdown) {
+          editor.commands.setContent(post.content_markdown, {
+            emitUpdate: false,
+            contentType: "markdown",
+          })
+        } else {
+          editor.commands.setContent(post.content_html, { emitUpdate: false })
+        }
 
         // If the post had content and the editor ended up empty, something
         // refused it. Autosaving from here would write that emptiness over the
         // real thing, so the editor stays shut instead.
-        if (post.content_html.trim() !== "" && editor.isEmpty) {
+        const hadContent =
+          (post.content_markdown ?? post.content_html).trim() !== ""
+        if (hadContent && editor.isEmpty) {
           toast.error(
             t`This post could not be opened, so it has been left untouched.`
           )
@@ -259,7 +275,14 @@ export function MaviEditor({
         return
       }
       setSaveState("saving")
-      const payload = metaToPayload(nextMeta, editor.getHTML())
+      // Both forms, from the one place that can produce either: Markdown is
+      // canonical, and the HTML is what consumers that want HTML are given
+      // without anyone having to render directives on the server.
+      const payload = metaToPayload(
+        nextMeta,
+        editor.getHTML(),
+        editor.getMarkdown()
+      )
       try {
         if (currentPostId) {
           const saved = await updatePost(currentPostId, payload)
