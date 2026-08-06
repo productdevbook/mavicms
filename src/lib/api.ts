@@ -122,11 +122,22 @@ export function getCategories(locale?: string): Promise<Category[]> {
 export function createCategory(
   name: string,
   locale?: string,
-  description = ""
+  description = "",
+  parentId?: string | null
 ): Promise<Category> {
   return request<Category>("/categories", {
     method: "POST",
-    body: JSON.stringify({ name, description, locale }),
+    body: JSON.stringify({ name, description, locale, parent_id: parentId }),
+  })
+}
+
+export function updateCategory(
+  id: string,
+  payload: { name?: string; description?: string; parent_id?: string | null }
+): Promise<Category> {
+  return request<Category>(`/categories/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
   })
 }
 
@@ -329,7 +340,12 @@ export function createLanguage(payload: {
 
 export function updateLanguage(
   code: string,
-  payload: Partial<Pick<Language, "name" | "native_name" | "direction" | "is_active" | "is_default">>
+  payload: Partial<
+    Pick<
+      Language,
+      "name" | "native_name" | "direction" | "is_active" | "is_default"
+    >
+  >
 ): Promise<Language> {
   return request<Language>(`/languages/${code}`, {
     method: "PUT",
@@ -392,7 +408,9 @@ export function getS3Settings(): Promise<S3Settings> {
   return request<S3Settings>("/plugins/s3")
 }
 
-export function saveS3Settings(payload: S3SettingsPayload): Promise<S3Settings> {
+export function saveS3Settings(
+  payload: S3SettingsPayload
+): Promise<S3Settings> {
   return request<S3Settings>("/plugins/s3", {
     method: "PUT",
     body: JSON.stringify(payload),

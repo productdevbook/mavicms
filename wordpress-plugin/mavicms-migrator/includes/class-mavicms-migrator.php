@@ -240,8 +240,12 @@ class MaviCMS_Migrator {
 		$posts_map[ $post_id ] = $created['id'];
 		$this->save_map( self::OPTION_MAP_POSTS, $posts_map );
 
-		/* translators: %s: post title. */
-		$message = sprintf( __( 'Migrated "%s".', 'mavicms-migrator' ), $post->post_title );
+		$message = sprintf(
+			/* translators: 1: post title, 2: language it was migrated into. */
+			__( 'Migrated "%1$s" into %2$s.', 'mavicms-migrator' ),
+			$post->post_title,
+			$locale
+		);
 		if ( $this->warnings ) {
 			$message .= ' ' . implode( '; ', $this->warnings ) . '.';
 		}

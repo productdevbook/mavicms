@@ -1,5 +1,6 @@
 import * as React from "react"
 import { useLingui } from "@lingui/react/macro"
+
 import { ImageOff, Plus, Sparkles, Upload, X } from "lucide-react"
 import { toast } from "sonner"
 
@@ -15,6 +16,7 @@ import {
   type Category,
   type Tag,
 } from "@/lib/api"
+import { toCategoryTree } from "@/lib/category-tree"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -51,6 +53,10 @@ export function PostSettings({
   const { t } = useLingui()
   const [tagDraft, setTagDraft] = React.useState("")
   const [categories, setCategories] = React.useState<Category[]>([])
+  const categoryRows = React.useMemo(
+    () => toCategoryTree(categories),
+    [categories]
+  )
   const [tags, setTags] = React.useState<Tag[]>([])
   const [newCategory, setNewCategory] = React.useState("")
   const coverInputRef = React.useRef<HTMLInputElement>(null)
@@ -94,10 +100,14 @@ export function PostSettings({
     try {
       const created = await createTag(value, locale)
       setTags((current) =>
-        current.some((tag) => tag.id === created.id) ? current : [...current, created]
+        current.some((tag) => tag.id === created.id)
+          ? current
+          : [...current, created]
       )
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : t`Could not save tag`)
+      toast.error(
+        error instanceof ApiError ? error.message : t`Could not save tag`
+      )
     }
   }
 
@@ -172,8 +182,9 @@ export function PostSettings({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {categories.map((category) => (
+            {categoryRows.map(({ category, depth }) => (
               <SelectItem key={category.id} value={category.name}>
+                {"\u00a0".repeat(depth * 3)}
                 {category.name}
               </SelectItem>
             ))}
@@ -245,7 +256,11 @@ export function PostSettings({
         )}
       </Field>
 
-      <Field label={t`Excerpt`} htmlFor="meta-excerpt" hint={`${meta.excerpt.length}/160`}>
+      <Field
+        label={t`Excerpt`}
+        htmlFor="meta-excerpt"
+        hint={`${meta.excerpt.length}/160`}
+      >
         <Textarea
           id="meta-excerpt"
           value={meta.excerpt}

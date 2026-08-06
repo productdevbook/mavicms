@@ -16,7 +16,7 @@ msgstr ""
 #. placeholder {0}: pendingDelete?.filename
 #. placeholder {0}: pendingDelete?.name
 #. placeholder {0}: pendingDelete?.title
-#: src/routes/dashboard.categories.tsx:136
+#: src/routes/dashboard.categories.tsx:327
 #: src/routes/dashboard.index.tsx:192
 #: src/routes/dashboard.media.tsx:140
 msgid "\"{0}\" will be permanently deleted. This cannot be undone."
@@ -121,7 +121,7 @@ msgstr "Add a horizontal rule"
 msgid "Add a hyperlink to the selected text."
 msgstr "Add a hyperlink to the selected text."
 
-#: src/components/editor/post-settings.tsx:212
+#: src/components/editor/post-settings.tsx:223
 msgid "Add a tag and press Enter"
 msgstr "Add a tag and press Enter"
 
@@ -129,8 +129,8 @@ msgstr "Add a tag and press Enter"
 msgid "Add an image from a link"
 msgstr "Add an image from a link"
 
-#: src/components/editor/post-settings.tsx:198
-#: src/routes/dashboard.categories.tsx:93
+#: src/components/editor/post-settings.tsx:209
+#: src/routes/dashboard.categories.tsx:202
 msgid "Add category"
 msgstr "Add category"
 
@@ -278,7 +278,8 @@ msgstr "Bullet list"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/routes/dashboard.categories.tsx:140
+#: src/routes/dashboard.categories.tsx:288
+#: src/routes/dashboard.categories.tsx:331
 #: src/routes/dashboard.index.tsx:196
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
@@ -286,7 +287,7 @@ msgstr "Bullet list"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/editor/post-settings.tsx:371
+#: src/components/editor/post-settings.tsx:386
 msgid "Canonical URL"
 msgstr "Canonical URL"
 
@@ -295,11 +296,11 @@ msgid "Case sensitive"
 msgstr "Case sensitive"
 
 #: src/components/dashboard/dashboard-shell.tsx:28
-#: src/routes/dashboard.categories.tsx:78
+#: src/routes/dashboard.categories.tsx:149
 msgid "Categories"
 msgstr "Categories"
 
-#: src/components/editor/post-settings.tsx:163
+#: src/components/editor/post-settings.tsx:173
 msgid "Category"
 msgstr "Category"
 
@@ -348,7 +349,7 @@ msgstr "Column"
 msgid "Command menu"
 msgstr "Command menu"
 
-#: src/components/editor/post-settings.tsx:332
+#: src/components/editor/post-settings.tsx:347
 msgid "Comments"
 msgstr "Comments"
 
@@ -415,12 +416,12 @@ msgstr "Could not add language"
 msgid "Could not add tag"
 msgstr "Could not add tag"
 
-#: src/components/editor/post-settings.tsx:84
-#: src/routes/dashboard.categories.tsx:55
+#: src/components/editor/post-settings.tsx:90
+#: src/routes/dashboard.categories.tsx:96
 msgid "Could not create category"
 msgstr "Could not create category"
 
-#: src/routes/dashboard.categories.tsx:69
+#: src/routes/dashboard.categories.tsx:132
 msgid "Could not delete category"
 msgstr "Could not delete category"
 
@@ -462,13 +463,17 @@ msgstr "Could not save post"
 msgid "Could not save settings"
 msgstr "Could not save settings"
 
-#: src/components/editor/post-settings.tsx:100
+#: src/components/editor/post-settings.tsx:109
 msgid "Could not save tag"
 msgstr "Could not save tag"
 
 #: src/routes/dashboard.tags.tsx:115
 msgid "Could not unlink tag"
 msgstr "Could not unlink tag"
+
+#: src/routes/dashboard.categories.tsx:120
+msgid "Could not update category"
+msgstr "Could not update category"
 
 #: src/routes/dashboard.languages.tsx:73
 msgid "Could not update language"
@@ -482,15 +487,15 @@ msgstr "Could not update language"
 msgid "Could not upload {0}"
 msgstr "Could not upload {0}"
 
-#: src/components/editor/post-settings.tsx:303
+#: src/components/editor/post-settings.tsx:318
 msgid "Could not upload cover image"
 msgstr "Could not upload cover image"
 
-#: src/components/editor/post-settings.tsx:270
+#: src/components/editor/post-settings.tsx:285
 msgid "Cover image"
 msgstr "Cover image"
 
-#: src/components/editor/post-settings.tsx:313
+#: src/components/editor/post-settings.tsx:328
 msgid "Cover preview"
 msgstr "Cover preview"
 
@@ -550,8 +555,8 @@ msgstr "Default"
 
 #: src/components/editor/block-handle.tsx:186
 #: src/components/editor/bubble-menus.tsx:395
-#: src/routes/dashboard.categories.tsx:118
-#: src/routes/dashboard.categories.tsx:142
+#: src/routes/dashboard.categories.tsx:307
+#: src/routes/dashboard.categories.tsx:333
 #: src/routes/dashboard.index.tsx:174
 #: src/routes/dashboard.index.tsx:198
 #: src/routes/dashboard.languages.tsx:171
@@ -574,7 +579,7 @@ msgstr "Delete row"
 msgid "Delete table"
 msgstr "Delete table"
 
-#: src/routes/dashboard.categories.tsx:134
+#: src/routes/dashboard.categories.tsx:325
 msgid "Delete this category?"
 msgstr "Delete this category?"
 
@@ -590,7 +595,7 @@ msgstr "Delete this post?"
 msgid "Delete this tag?"
 msgstr "Delete this tag?"
 
-#: src/components/editor/post-settings.tsx:388
+#: src/components/editor/post-settings.tsx:403
 msgid "Description text shown in search results."
 msgstr "Description text shown in search results."
 
@@ -633,6 +638,7 @@ msgstr "Each language has its own tags. Link them so a post's tag can point at i
 
 #: src/components/editor/bubble-menus.tsx:323
 #: src/components/editor/mavi-editor.tsx:452
+#: src/routes/dashboard.categories.tsx:299
 #: src/routes/dashboard.index.tsx:164
 msgid "Edit"
 msgstr "Edit"
@@ -677,11 +683,11 @@ msgstr "Enter a valid email address"
 msgid "Enter details"
 msgstr "Enter details"
 
-#: src/components/editor/post-settings.tsx:248
+#: src/components/editor/post-settings.tsx:260
 msgid "Excerpt"
 msgstr "Excerpt"
 
-#: src/components/editor/post-settings.tsx:325
+#: src/components/editor/post-settings.tsx:340
 msgid "Featured"
 msgstr "Featured"
 
@@ -727,11 +733,11 @@ msgstr "Full width"
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
-#: src/components/editor/post-settings.tsx:266
+#: src/components/editor/post-settings.tsx:281
 msgid "Generate from post"
 msgstr "Generate from post"
 
-#: src/components/editor/post-settings.tsx:155
+#: src/components/editor/post-settings.tsx:165
 msgid "Generate from title"
 msgstr "Generate from title"
 
@@ -814,7 +820,7 @@ msgstr "Highlight color"
 msgid "Highlight text with color"
 msgstr "Highlight text with color"
 
-#: src/components/editor/post-settings.tsx:326
+#: src/components/editor/post-settings.tsx:341
 msgid "Highlighted on the home page"
 msgstr "Highlighted on the home page"
 
@@ -1009,8 +1015,12 @@ msgstr "My Mavi CMS Site"
 msgid "Name (optional)"
 msgstr "Name (optional)"
 
-#: src/components/editor/post-settings.tsx:185
-#: src/routes/dashboard.categories.tsx:90
+#: src/routes/dashboard.categories.tsx:269
+msgid "needs translation"
+msgstr "needs translation"
+
+#: src/components/editor/post-settings.tsx:196
+#: src/routes/dashboard.categories.tsx:179
 msgid "New category"
 msgstr "New category"
 
@@ -1027,7 +1037,7 @@ msgstr "New tag"
 msgid "Next"
 msgstr "Next"
 
-#: src/routes/dashboard.categories.tsx:103
+#: src/routes/dashboard.categories.tsx:212
 msgid "No categories yet"
 msgstr "No categories yet"
 
@@ -1039,6 +1049,11 @@ msgstr "No emoji found"
 #: src/routes/dashboard.media.tsx:96
 msgid "No media uploaded yet"
 msgstr "No media uploaded yet"
+
+#: src/routes/dashboard.categories.tsx:192
+#: src/routes/dashboard.categories.tsx:248
+msgid "No parent (top level)"
+msgstr "No parent (top level)"
 
 #: src/components/editor/extensions/suggestions.tsx:139
 msgid "No people found"
@@ -1106,7 +1121,7 @@ msgstr "Paste the video link."
 msgid "Path prefix"
 msgstr "Path prefix"
 
-#: src/components/editor/post-settings.tsx:141
+#: src/components/editor/post-settings.tsx:151
 msgid "Permalink"
 msgstr "Permalink"
 
@@ -1136,7 +1151,7 @@ msgstr "Plugins"
 msgid "Port"
 msgstr "Port"
 
-#: src/components/editor/post-settings.tsx:382
+#: src/components/editor/post-settings.tsx:397
 msgid "post"
 msgstr "post"
 
@@ -1153,12 +1168,12 @@ msgid "Post settings"
 msgstr "Post settings"
 
 #: src/components/editor/mavi-editor.tsx:594
-#: src/components/editor/post-settings.tsx:385
+#: src/components/editor/post-settings.tsx:400
 msgid "Post title"
 msgstr "Post title"
 
-#: src/components/editor/post-settings.tsx:143
-#: src/components/editor/post-settings.tsx:150
+#: src/components/editor/post-settings.tsx:153
+#: src/components/editor/post-settings.tsx:160
 msgid "post-url"
 msgstr "post-url"
 
@@ -1186,7 +1201,7 @@ msgstr "Public base URL"
 msgid "Publish"
 msgstr "Publish"
 
-#: src/components/editor/post-settings.tsx:131
+#: src/components/editor/post-settings.tsx:141
 msgid "Publish date"
 msgstr "Publish date"
 
@@ -1205,7 +1220,7 @@ msgstr "Quote"
 msgid "Raise text above the line"
 msgstr "Raise text above the line"
 
-#: src/components/editor/post-settings.tsx:333
+#: src/components/editor/post-settings.tsx:348
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
 
@@ -1228,7 +1243,7 @@ msgstr "Regular expression"
 msgid "Remove"
 msgstr "Remove"
 
-#: src/components/editor/post-settings.tsx:234
+#: src/components/editor/post-settings.tsx:245
 msgid "Remove {tag} tag"
 msgstr "Remove {tag} tag"
 
@@ -1274,6 +1289,7 @@ msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
 #: src/components/editor/mavi-editor.tsx:532
+#: src/routes/dashboard.categories.tsx:280
 #: src/routes/dashboard.plugins_.s3.tsx:238
 msgid "Save"
 msgstr "Save"
@@ -1295,7 +1311,7 @@ msgstr "Saving…"
 msgid "Scheduled"
 msgstr "Scheduled"
 
-#: src/components/editor/post-settings.tsx:341
+#: src/components/editor/post-settings.tsx:356
 msgid "Search engine"
 msgstr "Search engine"
 
@@ -1311,7 +1327,7 @@ msgstr "section"
 msgid "Section title"
 msgstr "Section title"
 
-#: src/components/editor/post-settings.tsx:117
+#: src/components/editor/post-settings.tsx:127
 msgid "Select"
 msgstr "Select"
 
@@ -1323,11 +1339,11 @@ msgstr "Select all"
 msgid "Select your language"
 msgstr "Select your language"
 
-#: src/components/editor/post-settings.tsx:356
+#: src/components/editor/post-settings.tsx:371
 msgid "SEO description"
 msgstr "SEO description"
 
-#: src/components/editor/post-settings.tsx:344
+#: src/components/editor/post-settings.tsx:359
 msgid "SEO title"
 msgstr "SEO title"
 
@@ -1347,7 +1363,7 @@ msgstr "Setup failed"
 msgid "Short description of the image"
 msgstr "Short description of the image"
 
-#: src/components/editor/post-settings.tsx:254
+#: src/components/editor/post-settings.tsx:269
 msgid "Short description shown on listing pages"
 msgstr "Short description shown on listing pages"
 
@@ -1390,7 +1406,7 @@ msgstr "Split cell"
 msgid "Start writing, or type “/” for commands…"
 msgstr "Start writing, or type “/” for commands…"
 
-#: src/components/editor/post-settings.tsx:109
+#: src/components/editor/post-settings.tsx:119
 msgid "Status"
 msgstr "Status"
 
@@ -1452,7 +1468,7 @@ msgid "Tagline"
 msgstr "Tagline"
 
 #: src/components/dashboard/dashboard-shell.tsx:29
-#: src/components/editor/post-settings.tsx:206
+#: src/components/editor/post-settings.tsx:217
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
 msgstr "Tags"
@@ -1493,7 +1509,7 @@ msgstr "Text"
 msgid "Text color"
 msgstr "Text color"
 
-#: src/components/editor/post-settings.tsx:364
+#: src/components/editor/post-settings.tsx:379
 msgid "Text shown in search results"
 msgstr "Text shown in search results"
 
@@ -1566,7 +1582,7 @@ msgstr "Untitled post"
 msgid "Upload"
 msgstr "Upload"
 
-#: src/components/editor/post-settings.tsx:282
+#: src/components/editor/post-settings.tsx:297
 msgid "Upload cover image"
 msgstr "Upload cover image"
 

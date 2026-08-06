@@ -43,19 +43,6 @@ defined( 'ABSPATH' ) || exit;
 				<p class="description"><?php esc_html_e( 'Used once to sign in. Only the resulting session is stored, never the password.', 'mavicms-migrator' ); ?></p>
 			</td>
 		</tr>
-		<tr id="mavicms-locale-row" style="<?php echo $connected ? '' : 'display:none'; ?>">
-			<th scope="row"><label for="mavicms-locale"><?php esc_html_e( 'Content language', 'mavicms-migrator' ); ?></label></th>
-			<td>
-				<select id="mavicms-locale">
-					<?php foreach ( $languages as $language ) : ?>
-						<option value="<?php echo esc_attr( $language['code'] ); ?>" <?php selected( $language['code'], $locale ); ?>>
-							<?php echo esc_html( $language['native_name'] . ' (' . $language['code'] . ')' ); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-				<p class="description"><?php esc_html_e( 'Used for posts with no language of their own. Polylang and WPML languages are carried across as they are.', 'mavicms-migrator' ); ?></p>
-			</td>
-		</tr>
 	</table>
 	<p>
 		<button type="button" class="button" id="mavicms-connect"><?php esc_html_e( 'Connect', 'mavicms-migrator' ); ?></button>
@@ -85,14 +72,14 @@ defined( 'ABSPATH' ) || exit;
 							?>
 						</td>
 						<td><?php echo (int) $count; ?></td>
-						<td><?php echo esc_html( '' === $code ? $locale : $code ); ?></td>
+						<td <?php echo '' === $code ? 'id="mavicms-fallback-target"' : ''; ?>><?php echo esc_html( '' === $code ? $locale : $code ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
 		<?php if ( isset( $breakdown[''] ) ) : ?>
 			<p class="description" style="max-width:40em">
-				<?php esc_html_e( 'Posts with no language are ones no multilingual plugin has tagged. They all go to the language chosen above, whatever language they are actually written in.', 'mavicms-migrator' ); ?>
+				<?php esc_html_e( 'Posts with no language are ones no multilingual plugin has tagged. They all go to the language chosen below, whatever language they are actually written in.', 'mavicms-migrator' ); ?>
 			</p>
 		<?php endif; ?>
 	<?php endif; ?>
@@ -108,6 +95,14 @@ defined( 'ABSPATH' ) || exit;
 		?>
 	</p>
 	<p>
+		<label for="mavicms-locale"><?php esc_html_e( 'Content language', 'mavicms-migrator' ); ?></label>
+		<select id="mavicms-locale" <?php disabled( ! $connected ); ?> style="margin-right:.75em">
+			<?php foreach ( $languages as $language ) : ?>
+				<option value="<?php echo esc_attr( $language['code'] ); ?>" <?php selected( $language['code'], $locale ); ?>>
+					<?php echo esc_html( $language['native_name'] . ' (' . $language['code'] . ')' ); ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
 		<button type="button" class="button button-primary" id="mavicms-start" <?php disabled( ! $connected ); ?>>
 			<?php esc_html_e( 'Start migration', 'mavicms-migrator' ); ?>
 		</button>
@@ -118,8 +113,8 @@ defined( 'ABSPATH' ) || exit;
 			<?php esc_html_e( 'Forget history', 'mavicms-migrator' ); ?>
 		</button>
 	</p>
-	<p class="description">
-		<?php esc_html_e( 'A post that has already been sent is skipped, so you can stop and continue at any time.', 'mavicms-migrator' ); ?>
+	<p class="description" style="max-width:40em">
+		<?php esc_html_e( 'The language above is only used for posts that have none of their own; posts tagged by Polylang or WPML keep theirs. A post that has already been sent is skipped, so you can stop and continue at any time.', 'mavicms-migrator' ); ?>
 	</p>
 
 	<div id="mavicms-progress" style="display:none">

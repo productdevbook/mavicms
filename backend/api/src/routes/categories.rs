@@ -119,15 +119,20 @@ pub async fn list_categories(
     ))
 }
 
-/// Create a category.
+/// Create a category, or return the existing one with that name in that
+/// language.
+///
+/// Idempotent like tag creation, and for the same reason: an importer that has
+/// to be re-run should be able to send the same taxonomy again without every
+/// post that uses it failing.
 #[utoipa::path(
     post,
     path = "/categories",
     tag = "taxonomy",
     request_body = CreateCategoryRequest,
     responses(
+        (status = 200, description = "Existing category returned", body = CategoryResponse),
         (status = 201, description = "Category created", body = CategoryResponse),
-        (status = 409, description = "A category with this name already exists", body = crate::error::ErrorBody),
     )
 )]
 pub async fn create_category(
@@ -169,16 +174,20 @@ pub async fn create_category(
     }
 
     let slug = slugify_or(name, "category");
-    if category::Entity::find()
+    if let Some(existing) = category::Entity::find()
         .filter(category::Column::Locale.eq(&locale))
         .filter(category::Column::Slug.eq(&slug))
         .one(db)
         .await?
-        .is_some()
     {
-        return Err(AppError::Conflict(
-            "a category with this name already exists".to_string(),
-        ));
+        // Returning the existing row would quietly ignore a request to put it
+        // in a particular translation group, so that case still conflicts.
+        if payload.translation_of.is_some() {
+            return Err(AppError::Conflict(
+                "a category with this name already exists".to_string(),
+            ));
+        }
+        return Ok((StatusCode::OK, Json(existing.into())));
     }
 
     let model = category::ActiveModel {

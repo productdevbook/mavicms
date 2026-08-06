@@ -16,7 +16,7 @@ msgstr ""
 #. placeholder {0}: pendingDelete?.filename
 #. placeholder {0}: pendingDelete?.name
 #. placeholder {0}: pendingDelete?.title
-#: src/routes/dashboard.categories.tsx:136
+#: src/routes/dashboard.categories.tsx:327
 #: src/routes/dashboard.index.tsx:192
 #: src/routes/dashboard.media.tsx:140
 msgid "\"{0}\" will be permanently deleted. This cannot be undone."
@@ -121,7 +121,7 @@ msgstr "Yatay çizgi ekle"
 msgid "Add a hyperlink to the selected text."
 msgstr "Seçili metne köprü ekle."
 
-#: src/components/editor/post-settings.tsx:212
+#: src/components/editor/post-settings.tsx:223
 msgid "Add a tag and press Enter"
 msgstr "Etiket ekle ve Enter'a bas"
 
@@ -129,8 +129,8 @@ msgstr "Etiket ekle ve Enter'a bas"
 msgid "Add an image from a link"
 msgstr "Bağlantıdan görsel ekle"
 
-#: src/components/editor/post-settings.tsx:198
-#: src/routes/dashboard.categories.tsx:93
+#: src/components/editor/post-settings.tsx:209
+#: src/routes/dashboard.categories.tsx:202
 msgid "Add category"
 msgstr "Kategori ekle"
 
@@ -278,7 +278,8 @@ msgstr "Madde listesi"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/routes/dashboard.categories.tsx:140
+#: src/routes/dashboard.categories.tsx:288
+#: src/routes/dashboard.categories.tsx:331
 #: src/routes/dashboard.index.tsx:196
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
@@ -286,7 +287,7 @@ msgstr "Madde listesi"
 msgid "Cancel"
 msgstr "Vazgeç"
 
-#: src/components/editor/post-settings.tsx:371
+#: src/components/editor/post-settings.tsx:386
 msgid "Canonical URL"
 msgstr "Canonical URL"
 
@@ -295,11 +296,11 @@ msgid "Case sensitive"
 msgstr "Büyük/küçük harf duyarlı"
 
 #: src/components/dashboard/dashboard-shell.tsx:28
-#: src/routes/dashboard.categories.tsx:78
+#: src/routes/dashboard.categories.tsx:149
 msgid "Categories"
 msgstr "Kategoriler"
 
-#: src/components/editor/post-settings.tsx:163
+#: src/components/editor/post-settings.tsx:173
 msgid "Category"
 msgstr "Kategori"
 
@@ -348,7 +349,7 @@ msgstr "Sütun"
 msgid "Command menu"
 msgstr "Komut menüsü"
 
-#: src/components/editor/post-settings.tsx:332
+#: src/components/editor/post-settings.tsx:347
 msgid "Comments"
 msgstr "Yorumlar"
 
@@ -415,12 +416,12 @@ msgstr "Dil eklenemedi"
 msgid "Could not add tag"
 msgstr "Etiket eklenemedi"
 
-#: src/components/editor/post-settings.tsx:84
-#: src/routes/dashboard.categories.tsx:55
+#: src/components/editor/post-settings.tsx:90
+#: src/routes/dashboard.categories.tsx:96
 msgid "Could not create category"
 msgstr "Kategori oluşturulamadı"
 
-#: src/routes/dashboard.categories.tsx:69
+#: src/routes/dashboard.categories.tsx:132
 msgid "Could not delete category"
 msgstr "Kategori silinemedi"
 
@@ -462,13 +463,17 @@ msgstr "Yazı kaydedilemedi"
 msgid "Could not save settings"
 msgstr "Ayarlar kaydedilemedi"
 
-#: src/components/editor/post-settings.tsx:100
+#: src/components/editor/post-settings.tsx:109
 msgid "Could not save tag"
 msgstr "Etiket kaydedilemedi"
 
 #: src/routes/dashboard.tags.tsx:115
 msgid "Could not unlink tag"
 msgstr "Etiket bağlantısı kaldırılamadı"
+
+#: src/routes/dashboard.categories.tsx:120
+msgid "Could not update category"
+msgstr "Kategori güncellenemedi"
 
 #: src/routes/dashboard.languages.tsx:73
 msgid "Could not update language"
@@ -482,15 +487,15 @@ msgstr "Dil güncellenemedi"
 msgid "Could not upload {0}"
 msgstr "{0} yüklenemedi"
 
-#: src/components/editor/post-settings.tsx:303
+#: src/components/editor/post-settings.tsx:318
 msgid "Could not upload cover image"
 msgstr "Kapak görseli yüklenemedi"
 
-#: src/components/editor/post-settings.tsx:270
+#: src/components/editor/post-settings.tsx:285
 msgid "Cover image"
 msgstr "Kapak görseli"
 
-#: src/components/editor/post-settings.tsx:313
+#: src/components/editor/post-settings.tsx:328
 msgid "Cover preview"
 msgstr "Kapak önizlemesi"
 
@@ -550,8 +555,8 @@ msgstr "Varsayılan"
 
 #: src/components/editor/block-handle.tsx:186
 #: src/components/editor/bubble-menus.tsx:395
-#: src/routes/dashboard.categories.tsx:118
-#: src/routes/dashboard.categories.tsx:142
+#: src/routes/dashboard.categories.tsx:307
+#: src/routes/dashboard.categories.tsx:333
 #: src/routes/dashboard.index.tsx:174
 #: src/routes/dashboard.index.tsx:198
 #: src/routes/dashboard.languages.tsx:171
@@ -574,7 +579,7 @@ msgstr "Satırı sil"
 msgid "Delete table"
 msgstr "Tabloyu sil"
 
-#: src/routes/dashboard.categories.tsx:134
+#: src/routes/dashboard.categories.tsx:325
 msgid "Delete this category?"
 msgstr "Bu kategori silinsin mi?"
 
@@ -590,7 +595,7 @@ msgstr "Bu yazı silinsin mi?"
 msgid "Delete this tag?"
 msgstr "Bu etiket silinsin mi?"
 
-#: src/components/editor/post-settings.tsx:388
+#: src/components/editor/post-settings.tsx:403
 msgid "Description text shown in search results."
 msgstr "Arama sonuçlarında görünecek açıklama metni."
 
@@ -629,6 +634,7 @@ msgstr "Her dilin kendi etiketleri vardır. Bir yazının etiketinin başka dild
 
 #: src/components/editor/bubble-menus.tsx:323
 #: src/components/editor/mavi-editor.tsx:452
+#: src/routes/dashboard.categories.tsx:299
 #: src/routes/dashboard.index.tsx:164
 msgid "Edit"
 msgstr "Düzenle"
@@ -673,11 +679,11 @@ msgstr "Geçerli bir e-posta adresi girin"
 msgid "Enter details"
 msgstr "Bilgileri gir"
 
-#: src/components/editor/post-settings.tsx:248
+#: src/components/editor/post-settings.tsx:260
 msgid "Excerpt"
 msgstr "Özet"
 
-#: src/components/editor/post-settings.tsx:325
+#: src/components/editor/post-settings.tsx:340
 msgid "Featured"
 msgstr "Öne çıkar"
 
@@ -723,11 +729,11 @@ msgstr "Tam genişlik"
 msgid "Fullscreen"
 msgstr "Tam ekran"
 
-#: src/components/editor/post-settings.tsx:266
+#: src/components/editor/post-settings.tsx:281
 msgid "Generate from post"
 msgstr "Yazıdan üret"
 
-#: src/components/editor/post-settings.tsx:155
+#: src/components/editor/post-settings.tsx:165
 msgid "Generate from title"
 msgstr "Başlıktan üret"
 
@@ -810,7 +816,7 @@ msgstr "Vurgu rengi"
 msgid "Highlight text with color"
 msgstr "Metni renkli vurgula"
 
-#: src/components/editor/post-settings.tsx:326
+#: src/components/editor/post-settings.tsx:341
 msgid "Highlighted on the home page"
 msgstr "Ana sayfada vitrine alınır"
 
@@ -1005,8 +1011,12 @@ msgstr "Mavi CMS Sitem"
 msgid "Name (optional)"
 msgstr "Ad (isteğe bağlı)"
 
-#: src/components/editor/post-settings.tsx:185
-#: src/routes/dashboard.categories.tsx:90
+#: src/routes/dashboard.categories.tsx:269
+msgid "needs translation"
+msgstr "çeviri bekliyor"
+
+#: src/components/editor/post-settings.tsx:196
+#: src/routes/dashboard.categories.tsx:179
 msgid "New category"
 msgstr "Yeni kategori"
 
@@ -1023,7 +1033,7 @@ msgstr "Yeni etiket"
 msgid "Next"
 msgstr "Sonraki"
 
-#: src/routes/dashboard.categories.tsx:103
+#: src/routes/dashboard.categories.tsx:212
 msgid "No categories yet"
 msgstr "Henüz kategori yok"
 
@@ -1035,6 +1045,11 @@ msgstr "Emoji bulunamadı"
 #: src/routes/dashboard.media.tsx:96
 msgid "No media uploaded yet"
 msgstr "Henüz medya yüklenmedi"
+
+#: src/routes/dashboard.categories.tsx:192
+#: src/routes/dashboard.categories.tsx:248
+msgid "No parent (top level)"
+msgstr "Üst kategori yok (en üst düzey)"
 
 #: src/components/editor/extensions/suggestions.tsx:139
 msgid "No people found"
@@ -1102,7 +1117,7 @@ msgstr "Video bağlantısını yapıştır."
 msgid "Path prefix"
 msgstr "Yol öneki"
 
-#: src/components/editor/post-settings.tsx:141
+#: src/components/editor/post-settings.tsx:151
 msgid "Permalink"
 msgstr "Kalıcı bağlantı"
 
@@ -1132,7 +1147,7 @@ msgstr "Eklentiler"
 msgid "Port"
 msgstr "Port"
 
-#: src/components/editor/post-settings.tsx:382
+#: src/components/editor/post-settings.tsx:397
 msgid "post"
 msgstr "yazı"
 
@@ -1149,12 +1164,12 @@ msgid "Post settings"
 msgstr "Yazı ayarları"
 
 #: src/components/editor/mavi-editor.tsx:594
-#: src/components/editor/post-settings.tsx:385
+#: src/components/editor/post-settings.tsx:400
 msgid "Post title"
 msgstr "Yazı başlığı"
 
-#: src/components/editor/post-settings.tsx:143
-#: src/components/editor/post-settings.tsx:150
+#: src/components/editor/post-settings.tsx:153
+#: src/components/editor/post-settings.tsx:160
 msgid "post-url"
 msgstr "yazi-adresi"
 
@@ -1182,7 +1197,7 @@ msgstr "Genel URL tabanı"
 msgid "Publish"
 msgstr "Yayınla"
 
-#: src/components/editor/post-settings.tsx:131
+#: src/components/editor/post-settings.tsx:141
 msgid "Publish date"
 msgstr "Yayın tarihi"
 
@@ -1201,7 +1216,7 @@ msgstr "Alıntı"
 msgid "Raise text above the line"
 msgstr "Metni üst simge yap"
 
-#: src/components/editor/post-settings.tsx:333
+#: src/components/editor/post-settings.tsx:348
 msgid "Readers can leave comments"
 msgstr "Okurlar yorum yazabilir"
 
@@ -1224,7 +1239,7 @@ msgstr "Düzenli ifade"
 msgid "Remove"
 msgstr "Kaldır"
 
-#: src/components/editor/post-settings.tsx:234
+#: src/components/editor/post-settings.tsx:245
 msgid "Remove {tag} tag"
 msgstr "{tag} etiketini kaldır"
 
@@ -1270,6 +1285,7 @@ msgid "S3 compatible storage"
 msgstr "S3 uyumlu depolama"
 
 #: src/components/editor/mavi-editor.tsx:532
+#: src/routes/dashboard.categories.tsx:280
 #: src/routes/dashboard.plugins_.s3.tsx:238
 msgid "Save"
 msgstr "Kaydet"
@@ -1291,7 +1307,7 @@ msgstr "Kaydediliyor…"
 msgid "Scheduled"
 msgstr "Zamanlanmış"
 
-#: src/components/editor/post-settings.tsx:341
+#: src/components/editor/post-settings.tsx:356
 msgid "Search engine"
 msgstr "Arama motoru"
 
@@ -1307,7 +1323,7 @@ msgstr "bölüm"
 msgid "Section title"
 msgstr "Bölüm başlığı"
 
-#: src/components/editor/post-settings.tsx:117
+#: src/components/editor/post-settings.tsx:127
 msgid "Select"
 msgstr "Seç"
 
@@ -1319,11 +1335,11 @@ msgstr "Tümünü seç"
 msgid "Select your language"
 msgstr "Dilinizi seçin"
 
-#: src/components/editor/post-settings.tsx:356
+#: src/components/editor/post-settings.tsx:371
 msgid "SEO description"
 msgstr "SEO açıklaması"
 
-#: src/components/editor/post-settings.tsx:344
+#: src/components/editor/post-settings.tsx:359
 msgid "SEO title"
 msgstr "SEO başlığı"
 
@@ -1343,7 +1359,7 @@ msgstr "Kurulum başarısız oldu"
 msgid "Short description of the image"
 msgstr "Görseli tanımlayan kısa metin"
 
-#: src/components/editor/post-settings.tsx:254
+#: src/components/editor/post-settings.tsx:269
 msgid "Short description shown on listing pages"
 msgstr "Liste sayfalarında görünecek kısa açıklama"
 
@@ -1386,7 +1402,7 @@ msgstr "Hücreyi böl"
 msgid "Start writing, or type “/” for commands…"
 msgstr "Yazmaya başla veya komutlar için “/” yaz…"
 
-#: src/components/editor/post-settings.tsx:109
+#: src/components/editor/post-settings.tsx:119
 msgid "Status"
 msgstr "Durum"
 
@@ -1448,7 +1464,7 @@ msgid "Tagline"
 msgstr "Slogan"
 
 #: src/components/dashboard/dashboard-shell.tsx:29
-#: src/components/editor/post-settings.tsx:206
+#: src/components/editor/post-settings.tsx:217
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
 msgstr "Etiketler"
@@ -1489,7 +1505,7 @@ msgstr "Metin"
 msgid "Text color"
 msgstr "Metin rengi"
 
-#: src/components/editor/post-settings.tsx:364
+#: src/components/editor/post-settings.tsx:379
 msgid "Text shown in search results"
 msgstr "Arama sonuçlarında görünecek metin"
 
@@ -1562,7 +1578,7 @@ msgstr "Başlıksız yazı"
 msgid "Upload"
 msgstr "Yükle"
 
-#: src/components/editor/post-settings.tsx:282
+#: src/components/editor/post-settings.tsx:297
 msgid "Upload cover image"
 msgstr "Kapak görseli yükle"
 

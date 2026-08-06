@@ -61,7 +61,7 @@
 				status.textContent = data.message;
 				element('mavicms-password').value = '';
 				element('mavicms-start').disabled = false;
-				element('mavicms-locale-row').style.display = '';
+				element('mavicms-locale').disabled = false;
 
 				var select = element('mavicms-locale');
 				select.innerHTML = '';
@@ -191,6 +191,12 @@
 		post('mavicms_set_locale', { locale: element('mavicms-locale').value })
 			.then(function () {
 				status.textContent = settings.i18n.languageSaved;
+				// The breakdown table names this language as the destination for
+				// untagged posts, and would otherwise still show the old one.
+				var target = element('mavicms-fallback-target');
+				if (target) {
+					target.textContent = element('mavicms-locale').value;
+				}
 			})
 			.catch(function (error) {
 				log(error.message, 'error');
