@@ -385,12 +385,7 @@ async fn one_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppRes
     };
 
     let found = found.ok_or_else(|| AppError::NotFound("that post".to_string()))?;
-    described(crate::dto::post::PostResponse::from_model(
-        found,
-        Vec::new(),
-        Vec::new(),
-        Vec::new(),
-    ))
+    described(crate::routes::posts::detail(db, found).await?)
 }
 
 async fn write_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
@@ -424,7 +419,7 @@ async fn write_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppR
             .to_string(),
         category: String::new(),
         category_ids: Vec::new(),
-        tags: strings(arguments, "tags"),
+        tags: tags(arguments)?.unwrap_or_default(),
         cover_url: String::new(),
         seo_title: String::new(),
         seo_description: arguments
@@ -477,7 +472,7 @@ async fn change_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> App
         author: text(arguments, "author"),
         category: None,
         category_ids: None,
-        tags: arguments.get("tags").map(|_| strings(arguments, "tags")),
+        tags: tags(arguments)?,
         cover_url: None,
         seo_title: None,
         seo_description: arguments
@@ -526,17 +521,32 @@ fn publish_at(arguments: &Value) -> AppResult<Option<chrono::DateTime<chrono::Ut
         })
 }
 
-fn strings(arguments: &Value, key: &str) -> Vec<String> {
-    arguments
-        .get(key)
-        .and_then(Value::as_array)
-        .map(|values| {
-            values
-                .iter()
-                .filter_map(|value| value.as_str().map(str::to_string))
-                .collect()
+/// The tags asked for: absent, or a list of them.
+///
+/// Something that is not a list is refused rather than read as an empty one.
+/// Tags are replaced wholesale by a write, so a misunderstanding about the
+/// shape of this field would silently take every tag off the post.
+fn tags(arguments: &Value) -> AppResult<Option<Vec<String>>> {
+    let Some(given) = arguments.get("tags") else {
+        return Ok(None);
+    };
+
+    let Some(values) = given.as_array() else {
+        return Err(AppError::Validation(
+            "tags is a list of words, such as [\"one\", \"two\"]".to_string(),
+        ));
+    };
+
+    values
+        .iter()
+        .map(|value| {
+            value
+                .as_str()
+                .map(str::to_string)
+                .ok_or_else(|| AppError::Validation("every tag is a word".to_string()))
         })
-        .unwrap_or_default()
+        .collect::<AppResult<Vec<_>>>()
+        .map(Some)
 }
 
 async fn taxonomy(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {

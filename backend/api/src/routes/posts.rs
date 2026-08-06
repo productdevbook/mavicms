@@ -351,17 +351,27 @@ pub async fn get_post(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<Json
         .await?
         .ok_or_else(|| AppError::NotFound(format!("post {id}")))?;
 
+    Ok(Json(detail(db, post).await?))
+}
+
+/// One post with everything that is not on its own row: which categories it
+/// is in, and the languages it exists in. See [`page`] for why this is not
+/// inside the handler.
+pub async fn detail(
+    db: &sea_orm::DatabaseConnection,
+    post: post::Model,
+) -> AppResult<PostResponse> {
     let category_ids = category_ids_for(db, post.id).await?;
     let translations = siblings_of(db, &post).await?;
     let mut locales: Vec<String> = translations.iter().map(|t| t.locale.clone()).collect();
     locales.push(post.locale.clone());
 
-    Ok(Json(PostResponse::from_model(
+    Ok(PostResponse::from_model(
         post,
         category_ids,
         locales,
         translations,
-    )))
+    ))
 }
 
 /// Create a post, optionally as the translation of an existing one.
