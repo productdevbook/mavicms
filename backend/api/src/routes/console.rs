@@ -848,7 +848,7 @@ pub async fn restore_site_backup(
 /// should not stop the site publishing, and stopping a build should not lock
 /// somebody out of their editor. Passwordless, like the others here — the only
 /// way to be it is a token this handed out.
-async fn local_reader(db: &sea_orm::DatabaseConnection) -> AppResult<Uuid> {
+pub(crate) async fn local_reader(db: &sea_orm::DatabaseConnection) -> AppResult<Uuid> {
     use sea_orm::{ActiveModelTrait, ActiveValue::Set, ColumnTrait, EntityTrait, QueryFilter};
 
     use crate::entities::user;
@@ -883,9 +883,9 @@ pub const LOCAL_READER: &str = "local";
 ///
 /// Long enough to not be a weekly errand, short enough that a laptop that
 /// leaves the agency stops working by itself.
-const DEVELOPMENT_TOKEN_DAYS: i64 = 30;
+pub(crate) const DEVELOPMENT_TOKEN_DAYS: i64 = 30;
 
-async fn development_tokens(
+pub(crate) async fn development_tokens(
     db: &sea_orm::DatabaseConnection,
 ) -> AppResult<Vec<crate::dto::plugins::DevelopmentToken>> {
     use sea_orm::{ColumnTrait, EntityTrait, Order, QueryFilter, QueryOrder};

@@ -1,0 +1,403 @@
+# {{title}}
+
+> {{title}} runs on Mavi CMS. Its posts, categories, tags, uploaded files and
+> forms all live behind one HTTP API, and this file is what a program — or
+> somebody's assistant — needs in order to build pages out of them.
+
+This file is served by the site it describes, so every address in it is this
+site's and no other's. One server answers for many sites and the host name is
+the whole of the difference between them: copy the addresses exactly as they
+are written here rather than assembling them from a hostname you were told
+somewhere else.
+
+- API: {{base}}
+- Panel: {{origin}}/admin
+- Interactive docs: {{origin}}/scalar
+- OpenAPI: {{base}}/api-docs/openapi.json
+
+## Getting in
+
+Reading needs an account on this site. A build is not a person and has none:
+it is handed a build token, made in the panel under **API**, which can read
+this site, can change nothing, and lasts thirty days. Put it in the
+environment as `CMS_TOKEN` and send it as a bearer token.
+
+```
+curl -H "Authorization: Bearer $CMS_TOKEN" \
+  '{{base}}/posts?status=published&include=content&limit=100'
+```
+
+Somebody working in a browser signs in at the panel and gets a cookie instead.
+The two are the same session by different routes; a token is the one to use
+anywhere a person is not sitting.
+
+A token that writes does not exist. If something you are building has to
+create or change a post it signs in as an account with a password, and that is
+a different and larger decision than reading.
+
+Three addresses answer to anybody at all, because the visitor filling in a
+contact form or a newsletter box has no account here:
+`GET /forms/{slug}/schema`, `POST /forms/{slug}/submit` and
+`POST /mail/subscribe`.
+
+## Reading
+
+| Method | Address | What it answers |
+|---|---|---|
+| GET | `/posts` | Posts, newest first, in pages. |
+| GET | `/posts/{id}` | One post, with its sibling languages. |
+| GET | `/categories` | Categories, per language. |
+| GET | `/tags` | Tags, per language. |
+| GET | `/languages` | The languages this site writes in. |
+| GET | `/media` | Uploaded files and their addresses. |
+| GET | `/forms` | The forms this site accepts answers on. |
+
+`GET /posts` takes:
+
+- `status` — comma-separated. **A build wants `status=published`.** Left out,
+  every status comes back and drafts go online.
+- `locale` — comma-separated language codes. Left out, every language comes
+  back, which is what a site with one language wants and never what a site
+  with three does.
+- `include=content` — adds `content_html` and `content_markdown` to each item.
+  A listing leaves the bodies out otherwise, because a whole archive in one
+  response is megabytes nobody asked for.
+- `limit` (default 50, maximum 200) and `offset`.
+- `q` — free text across titles, summaries and bodies.
+- `slug` — an exact address, for asking whether one post exists.
+
+The answer is `{ items, total, limit, offset, counts }`. Page with `offset`
+until you have `total`; do not assume one request is the archive.
+
+### What a post looks like
+
+```json
+{
+  "id": "0198c0de-0000-7000-8000-000000000000",
+  "title": "A title",
+  "slug": "a-title",
+  "excerpt": "One paragraph, for cards and meta description fallbacks.",
+  "status": "published",
+  "publish_at": null,
+  "author": "Somebody",
+  "category": "Notes",
+  "category_ids": ["0198c0de-0000-7000-8000-000000000001"],
+  "tags": ["one", "two"],
+  "cover_url": "/uploads/2026/08/cover.png",
+  "featured": false,
+  "locale": "en",
+  "translation_group_id": "0198c0de-0000-7000-8000-000000000002",
+  "locales": ["en", "tr"],
+  "digest": "6f1e0a2b4c8d9e7f0a1b2c3d4e5f6071",
+  "created_at": "2026-08-01T09:00:00+00:00",
+  "updated_at": "2026-08-02T11:30:00+00:00",
+  "content_html": "<p>…</p>",
+  "content_markdown": "…"
+}
+```
+
+Worth knowing about the fields:
+
+- **`digest`** is a fingerprint of everything the post renders to. It changes
+  when the post changes and does not change when the row is merely saved
+  again, so it is what a build should key its cache on. It is on every item of
+  a listing whether or not the bodies were asked for, which is what makes it
+  possible to find out what changed without downloading the archive.
+- **`content_markdown`** is the canonical form and `content_html` is what it
+  renders to. The Markdown is written for [comark](https://comark.dev), so a
+  project that wants its own components for blocks parses the Markdown; a
+  project that wants the post as it stands uses the HTML.
+- **`locales`** lists every language this post exists in, and
+  `translation_group_id` is shared by all of them. Together they are enough to
+  emit `hreflang` alternates without a request per language.
+- **`cover_url`** and any address inside the content that begins with `/` is
+  on this server: put `{{origin}}` in front of it. When the site uploads to
+  object storage the addresses are already absolute.
+- **`status`** is `draft`, `review`, `scheduled` or `published`. A scheduled
+  post is not published — it is waiting for somebody to publish it.
+
+### Asking again, cheaply
+
+`GET /posts` carries an `ETag`. Send it back as `If-None-Match` and a listing
+that has not changed answers `304` with no body at all. A development server
+that reloads on every save, and a build that runs after a change to one post,
+both spend nothing to learn that the other nine hundred posts are as they
+were.
+
+## Sending
+
+Forms are made in the panel, so no fixed description can say which fields one
+takes. Ask it, then send it:
+
+```
+curl {{base}}/forms/contact/schema
+```
+
+```json
+{
+  "name": "Contact",
+  "slug": "contact",
+  "fields": [
+    { "name": "email", "label": "Email", "type": "email", "required": true },
+    { "name": "message", "label": "Message", "type": "textarea", "required": true }
+  ]
+}
+```
+
+```
+curl -X POST {{base}}/forms/contact/submit \
+  -H 'content-type: application/json' \
+  -d '{"email":"someone@example.com","message":"Hello"}'
+```
+
+A key the form does not define is refused rather than quietly kept, so send
+what the schema lists and nothing else. Neither address needs a token. A form
+that has been switched off answers `404` rather than saying it exists.
+
+A newsletter box is the same shape, against a list that has been made public
+in the panel:
+
+```
+curl -X POST {{base}}/mail/subscribe \
+  -H 'content-type: application/json' \
+  -d '{"email":"someone@example.com","name":"","lists":["news"]}'
+```
+
+It answers `202` whether or not anything was sent: on a double opt-in list
+nothing goes out until the address answers a confirmation, and the page should
+say so rather than say "you are subscribed".
+
+## Astro
+
+What follows is a whole working connection for Astro 7.2 or newer. It reads
+this site at build time, rebuilds only the pages whose posts changed, and
+needs nothing beyond `astro` itself.
+
+### 1. The environment
+
+```
+CMS_API_URL={{base}}
+CMS_TOKEN=…
+```
+
+`CMS_TOKEN` comes from **API → Build tokens** in the panel. It is shown once.
+A build with no token sees nothing, and "why are there no posts" is almost
+always this.
+
+### 2. `src/loaders/mavicms.ts`
+
+```ts
+import type { Loader } from "astro/loaders"
+
+// Astro reads .env into import.meta.env; CI usually sets the environment
+// itself and leaves that empty, so take either.
+const API = import.meta.env.CMS_API_URL ?? process.env.CMS_API_URL
+const TOKEN = import.meta.env.CMS_TOKEN ?? process.env.CMS_TOKEN
+const PAGE = 200
+
+interface Summary {
+  id: string
+  slug: string
+  digest: string
+  locale: string
+}
+
+export function posts({ locale }: { locale?: string } = {}): Loader {
+  return {
+    name: "mavicms-posts",
+    load: async ({ store, meta, logger, parseData }) => {
+      if (!TOKEN) throw new Error("CMS_TOKEN is not set; the CMS will answer nothing")
+
+      const get = async (path: string, init?: RequestInit) => {
+        const response = await fetch(`${API}${path}`, {
+          ...init,
+          headers: { Authorization: `Bearer ${TOKEN}`, ...init?.headers },
+        })
+        if (!response.ok && response.status !== 304) {
+          throw new Error(`${path} answered ${response.status}`)
+        }
+        return response
+      }
+
+      // The index carries every post's digest and none of the bodies, so it is
+      // small enough to ask for in full every time — and when it has not
+      // changed the server sends nothing back at all.
+      const index: Summary[] = []
+      for (let offset = 0; ; offset += PAGE) {
+        const query = new URLSearchParams({
+          status: "published",
+          limit: String(PAGE),
+          offset: String(offset),
+        })
+        if (locale) query.set("locale", locale)
+
+        // The tag is only worth sending if last time's answer was kept, since
+        // a 304 has no body to fall back on.
+        const held = meta.get(`index:${offset}`)
+        const tag = held ? meta.get(`etag:${offset}`) : undefined
+        const response = await get(`/posts?${query}`, {
+          headers: tag ? { "If-None-Match": tag } : {},
+        })
+
+        let page: { total: number; items: Summary[] }
+        if (response.status === 304) {
+          page = JSON.parse(held!)
+        } else {
+          const body = await response.json()
+          page = {
+            total: body.total,
+            items: body.items.map((item: Summary) => ({
+              id: item.id,
+              slug: item.slug,
+              digest: item.digest,
+              locale: item.locale,
+            })),
+          }
+          meta.set(`etag:${offset}`, response.headers.get("etag") ?? "")
+          meta.set(`index:${offset}`, JSON.stringify(page))
+        }
+
+        index.push(...page.items)
+        if (index.length >= page.total || page.items.length === 0) break
+      }
+
+      // Only the posts whose digest moved are fetched in full. A build after a
+      // change to one post is one request, not the archive.
+      let fetched = 0
+      for (const summary of index) {
+        if (store.get(summary.id)?.digest === summary.digest) continue
+
+        const post = await (await get(`/posts/${summary.id}`)).json()
+        store.set({
+          id: summary.id,
+          data: await parseData({ id: summary.id, data: post }),
+          rendered: { html: post.content_html },
+          digest: summary.digest,
+        })
+        fetched += 1
+      }
+
+      const live = new Set(index.map((summary) => summary.id))
+      for (const id of store.keys()) {
+        if (!live.has(id)) store.delete(id)
+      }
+
+      logger.info(`${index.length} posts, ${fetched} changed`)
+    },
+  }
+}
+```
+
+### 3. `src/content.config.ts`
+
+```ts
+import { defineCollection, z } from "astro:content"
+import { posts } from "./loaders/mavicms"
+
+const blog = defineCollection({
+  loader: posts(),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    excerpt: z.string(),
+    author: z.string(),
+    category: z.string(),
+    tags: z.array(z.string()),
+    cover_url: z.string(),
+    featured: z.boolean(),
+    locale: z.string(),
+    locales: z.array(z.string()),
+    digest: z.string(),
+    seo_title: z.string(),
+    seo_description: z.string(),
+    canonical: z.string(),
+    created_at: z.coerce.date(),
+    updated_at: z.coerce.date(),
+  }),
+})
+
+export const collections = { blog }
+```
+
+### 4. `astro.config.mjs`
+
+```js
+import { defineConfig } from "astro/config"
+
+export default defineConfig({
+  experimental: {
+    // Astro 7.2. With a cacheKey on each page, a build regenerates the posts
+    // that changed and copies the rest out of the cache.
+    incrementalBuild: true,
+  },
+  // A site built from a CMS has no sessions of its own. Saying so keeps the
+  // session runtime out of the bundle.
+  session: false,
+})
+```
+
+### 5. `src/pages/blog/[...slug].astro`
+
+```astro
+---
+import { getCollection, render } from "astro:content"
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog")
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+    // Astro 7.2. The page is rebuilt when this changes and taken from the
+    // cache when it does not, which is the whole of what the digest is for.
+    cacheKey: post.data.digest,
+  }))
+}
+
+const { post } = Astro.props
+const { Content } = await render(post)
+---
+
+<article>
+  <h1>{post.data.title}</h1>
+  <Content />
+</article>
+```
+
+`astro dev` re-runs the loader on every reload, and after the first run almost
+every one of those is a `304` and no work. `astro preview --background` (Astro
+7.2) leaves a built site serving while you carry on, with
+`astro preview status`, `logs` and `stop` to manage it.
+
+### Sending a form from an Astro page
+
+The submit address takes no token, so it can be called from the browser. What
+it accepts is what the schema says, which means the form can be built from the
+schema rather than written twice:
+
+```ts
+const schema = await fetch(`${API}/forms/contact/schema`).then((r) => r.json())
+
+await fetch(`${API}/forms/contact/submit`, {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ email, message }),
+})
+```
+
+## Publishing
+
+`POST /publish` asks this site's build to run again — the same button the
+panel has. Somebody writing a post presses it; a program rarely needs to.
+
+## Rules of the road
+
+- Ask for `status=published` unless you have a reason not to. Everything else
+  is somebody's unfinished work.
+- Page until you have `total`. The first fifty posts are not the archive.
+- Key caches on `digest`, not on `updated_at`. A post saved with no changes
+  keeps its digest, and rebuilding a site because somebody opened a post and
+  closed it is the cost this field exists to avoid.
+- Send `If-None-Match` back. It costs one header and saves the archive.
+- The token reads. Anything that writes is a person signing in, and should be
+  treated as one.
+- Addresses beginning with `/` are relative to {{origin}}.

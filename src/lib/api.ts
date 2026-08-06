@@ -1015,6 +1015,39 @@ export function deleteSiteDevelopmentToken(
   })
 }
 
+/** The same tokens, from the site's own panel rather than an agency console. */
+export function listBuildTokens(): Promise<DevelopmentToken[]> {
+  return request<DevelopmentToken[]>("/development/tokens")
+}
+
+export function createBuildToken(): Promise<{
+  token: string
+  expires_at: string
+}> {
+  return request<{ token: string; expires_at: string }>("/development/tokens", {
+    method: "POST",
+  })
+}
+
+export function deleteBuildToken(tokenId: string): Promise<void> {
+  return request<void>(`/development/tokens/${tokenId}`, { method: "DELETE" })
+}
+
+/**
+ * What this site tells a program about itself, as text.
+ *
+ * Not `request`, which speaks JSON. Fetched with the session so the copy
+ * carries this site's own languages and forms; fetched by anything else it is
+ * the same document without them.
+ */
+export async function getLlmsText(): Promise<string> {
+  const response = await fetch("/api/llms.txt")
+  if (!response.ok) {
+    throw new ApiError(response.status, response.statusText)
+  }
+  return response.text()
+}
+
 export interface Sender {
   address: string
   name: string

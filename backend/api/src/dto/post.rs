@@ -35,6 +35,61 @@ impl PostStatus {
     }
 }
 
+/// A short, stable fingerprint of everything a post renders to.
+///
+/// A site generator compares it against what it built last time to decide
+/// whether a page has to be made again, so it covers what ends up on the page
+/// and deliberately not `updated_at`: opening a post and saving it unchanged
+/// must not rebuild the site.
+///
+/// It is on the listing whether or not the bodies were asked for. A build that
+/// only wants to know what changed should not have to download every body to
+/// find out.
+pub fn digest(model: &PostModel) -> String {
+    use sha2::{Digest, Sha256};
+
+    let mut hasher = Sha256::new();
+    let mut field = |bytes: &[u8]| {
+        hasher.update(bytes);
+        // Without a separator "ab" + "c" and "a" + "bc" are the same post.
+        hasher.update([0x1f]);
+    };
+
+    field(model.title.as_bytes());
+    field(model.slug.as_bytes());
+    field(model.excerpt.as_bytes());
+    field(model.status.as_bytes());
+    field(
+        model
+            .publish_at
+            .map(|at| at.to_rfc3339())
+            .unwrap_or_default()
+            .as_bytes(),
+    );
+    field(model.author.as_bytes());
+    field(model.category.as_bytes());
+    field(model.tags.to_string().as_bytes());
+    field(model.cover_url.as_bytes());
+    field(model.seo_title.as_bytes());
+    field(model.seo_description.as_bytes());
+    field(model.canonical.as_bytes());
+    field(&[model.featured as u8]);
+    field(&[model.allow_comments as u8]);
+    field(model.content_html.as_bytes());
+    field(
+        model
+            .content_markdown
+            .as_deref()
+            .unwrap_or_default()
+            .as_bytes(),
+    );
+    field(model.locale.as_bytes());
+    field(model.translation_group_id.as_bytes());
+    field(model.created_at.to_rfc3339().as_bytes());
+
+    hex::encode(&hasher.finalize()[..16])
+}
+
 /// A blog post as stored and returned by the API.
 #[derive(Debug, Serialize, ToSchema)]
 pub struct PostSummary {
@@ -61,6 +116,8 @@ pub struct PostSummary {
     pub translation_group_id: Uuid,
     /// Which languages this post exists in, including its own.
     pub locales: Vec<String>,
+    /// See [`digest`]. What a build keys its cache on.
+    pub digest: String,
     pub created_at: DateTime<FixedOffset>,
     pub updated_at: DateTime<FixedOffset>,
 }
@@ -73,6 +130,7 @@ impl PostSummary {
         with_content: bool,
     ) -> Self {
         Self {
+            digest: digest(&model),
             id: model.id,
             content_html: with_content.then_some(model.content_html),
             content_markdown: with_content.then_some(model.content_markdown).flatten(),
@@ -156,6 +214,8 @@ pub struct PostResponse {
     pub locales: Vec<String>,
     /// Sibling language versions. Empty on the list endpoint.
     pub translations: Vec<PostTranslation>,
+    /// See [`digest`]. What a build keys its cache on.
+    pub digest: String,
     pub created_at: DateTime<FixedOffset>,
     pub updated_at: DateTime<FixedOffset>,
 }
@@ -181,9 +241,11 @@ impl PostResponse {
         locales: Vec<String>,
         translations: Vec<PostTranslation>,
     ) -> Self {
+        let fingerprint = digest(&model);
         let tags: Vec<String> = serde_json::from_value(model.tags).unwrap_or_default();
 
         Self {
+            digest: fingerprint,
             id: model.id,
             title: model.title,
             slug: model.slug,
@@ -287,4 +349,68 @@ pub struct UpdatePostRequest {
     pub allow_comments: Option<bool>,
     pub content_html: Option<String>,
     pub content_markdown: Option<String>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{PostModel, digest};
+
+    fn post() -> PostModel {
+        let now = chrono::Utc::now().fixed_offset();
+        PostModel {
+            id: uuid::Uuid::now_v7(),
+            title: "A title".to_string(),
+            slug: "a-title".to_string(),
+            excerpt: String::new(),
+            status: "published".to_string(),
+            publish_at: None,
+            author: "Someone".to_string(),
+            category: String::new(),
+            tags: serde_json::json!([]),
+            cover_url: String::new(),
+            seo_title: String::new(),
+            seo_description: String::new(),
+            canonical: String::new(),
+            featured: false,
+            allow_comments: true,
+            content_html: "<p>A body</p>".to_string(),
+            content_markdown: Some("A body".to_string()),
+            locale: "en".to_string(),
+            translation_group_id: uuid::Uuid::now_v7(),
+            created_at: now,
+            updated_at: now,
+        }
+    }
+
+    #[test]
+    fn changing_the_body_changes_the_digest() {
+        let before = post();
+        let mut after = before.clone();
+        after.content_html = "<p>Another body</p>".to_string();
+
+        assert_ne!(digest(&before), digest(&after));
+    }
+
+    #[test]
+    fn saving_without_changing_anything_does_not() {
+        let before = post();
+        let mut after = before.clone();
+        after.updated_at += chrono::Duration::hours(1);
+
+        assert_eq!(digest(&before), digest(&after));
+    }
+
+    /// Two fields that run into one another would let a rename go unnoticed.
+    #[test]
+    fn a_field_boundary_is_part_of_the_digest() {
+        let mut before = post();
+        before.title = "ab".to_string();
+        before.slug = "c".to_string();
+
+        let mut after = before.clone();
+        after.title = "a".to_string();
+        after.slug = "bc".to_string();
+
+        assert_ne!(digest(&before), digest(&after));
+    }
 }

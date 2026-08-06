@@ -12,6 +12,7 @@ pub mod dto;
 pub mod email;
 pub mod entities;
 pub mod error;
+pub mod etag;
 pub mod fetch;
 pub mod languages;
 pub mod mailing;

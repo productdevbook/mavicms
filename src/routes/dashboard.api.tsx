@@ -2,8 +2,11 @@
 import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { Trans, useLingui } from "@lingui/react/macro"
-import { Check, Copy, ExternalLink } from "lucide-react"
+import { Bot, Check, Copy, ExternalLink, Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
+import { getLlmsText } from "@/lib/api"
+import { BuildTokens } from "@/components/build-tokens"
 import { Button } from "@/components/ui/button"
 
 export const Route = createFileRoute("/dashboard/api")({
@@ -51,6 +54,63 @@ function Snippet({ text }: { text: string }) {
   )
 }
 
+/**
+ * The whole of this page, and the rest of it, as one thing to paste.
+ *
+ * Somebody wiring a front end to this site — or an assistant doing it for them
+ * — needs the addresses, the shape of a post and a working loader, and reading
+ * them off a screen and typing them back in is where the mistakes come from.
+ * The document is built by the server so the addresses in it are this site's.
+ */
+function ForAnAssistant() {
+  const { t } = useLingui()
+  const [state, setState] = React.useState<"idle" | "copying" | "copied">(
+    "idle"
+  )
+
+  const copy = async () => {
+    setState("copying")
+    try {
+      await navigator.clipboard.writeText(await getLlmsText())
+      setState("copied")
+      setTimeout(() => setState("idle"), 2000)
+    } catch {
+      setState("idle")
+      toast.error(t`Could not copy it`)
+    }
+  }
+
+  return (
+    <section className="flex flex-col gap-2 rounded-xl border border-border bg-muted/30 px-4 py-4">
+      <h2 className="text-sm font-medium">{t`Handing this to an assistant`}</h2>
+      <p className="text-sm text-muted-foreground">
+        {t`Everything below, plus a working Astro connection, as one document written for whatever is doing the wiring. It carries this site's own address, languages and forms — paste it into an assistant and it can build the front end without being told any of this twice.`}
+      </p>
+      <div className="flex flex-wrap gap-2 pt-1">
+        <Button onClick={() => void copy()} disabled={state === "copying"}>
+          {state === "copying" ? (
+            <Loader2 className="animate-spin" />
+          ) : state === "copied" ? (
+            <Check />
+          ) : (
+            <Bot />
+          )}
+          {state === "copied" ? t`Copied` : t`Copy for an assistant`}
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => window.open("/api/llms.txt", "_blank", "noopener")}
+        >
+          <ExternalLink /> {t`Read it`}
+        </Button>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        {t`It lives at /api/llms.txt, so anything that can reach this site can read it.`}
+      </p>
+    </section>
+  )
+}
+
 function Table({ rows }: { rows: Endpoint[] }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-border">
@@ -81,6 +141,11 @@ function ApiRoute() {
 
   const reading: Endpoint[] = [
     { method: "GET", path: "/posts", what: t`Posts, newest first, in pages.` },
+    {
+      method: "GET",
+      path: "/posts?status=published",
+      what: t`Only what is online. What a build wants.`,
+    },
     {
       method: "GET",
       path: "/posts?include=content",
@@ -139,6 +204,8 @@ function ApiRoute() {
       </div>
 
       <div className="flex max-w-3xl flex-col gap-8">
+        <ForAnAssistant />
+
         <section className="flex flex-col gap-2">
           <h2 className="text-sm font-medium">{t`Address`}</h2>
           <Snippet text={base} />
@@ -160,13 +227,15 @@ function ApiRoute() {
 curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
           />
           <p className="text-sm text-muted-foreground">
-            {t`A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing.`}
+            {t`A build does not sign in. It is handed CMS_TOKEN, made below, which can read this site and nothing else — so no password is stored for it and a token in a log costs nothing.`}
           </p>
           <Snippet
             text={`curl -H "Authorization: Bearer $CMS_TOKEN" \\
-  '${base}/posts?include=content&limit=100'`}
+  '${base}/posts?status=published&include=content&limit=100'`}
           />
         </section>
+
+        <BuildTokens />
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">{t`Reading`}</h2>
@@ -213,6 +282,22 @@ curl -X POST ${base}/forms/contact/submit \\
                 comark
               </a>
               , so a project can turn its blocks into its own components.
+            </Trans>
+          </p>
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <h2 className="text-sm font-medium">{t`Building only what changed`}</h2>
+          <p className="text-sm text-muted-foreground">
+            <Trans>
+              Every post carries a{" "}
+              <code className="font-mono text-xs">digest</code>, which changes
+              when the post changes and not when it is merely saved again. A
+              build that keeps it rebuilds the pages that moved and leaves the
+              rest alone. A listing also carries an{" "}
+              <code className="font-mono text-xs">ETag</code>: send it back as{" "}
+              <code className="font-mono text-xs">If-None-Match</code> and an
+              archive that has not changed answers with nothing at all.
             </Trans>
           </p>
         </section>
