@@ -545,3 +545,132 @@ async fn unique_username(db: &sea_orm::DatabaseConnection, email: &str) -> AppRe
         "could not find a free username for the agency".to_string(),
     ))
 }
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct UpdateAccountRequest {
+    /// Asked for even though the session already proves who this is: a session
+    /// left open somewhere should not be enough to take the account away.
+    pub current_password: String,
+    pub name: Option<String>,
+    pub email: Option<String>,
+    pub new_password: Option<String>,
+}
+
+/// Change this agency account's own name, address or password.
+#[utoipa::path(
+    put,
+    path = "/console/me",
+    tag = "console",
+    request_body = UpdateAccountRequest,
+    responses(
+        (status = 200, description = "Changed", body = AccountResponse),
+        (status = 401, description = "That is not the current password", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn update_account(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Json(payload): Json<UpdateAccountRequest>,
+) -> AppResult<Json<AccountResponse>> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+
+    let updated = console::update_account(
+        db,
+        operator.id,
+        &payload.current_password,
+        payload.name.as_deref(),
+        payload.email.as_deref(),
+        payload.new_password.as_deref(),
+    )
+    .await?;
+
+    let organization = console::organization(db, updated.organization_id)
+        .await?
+        .ok_or_else(|| AppError::Internal("the agency behind this account is gone".to_string()))?;
+
+    Ok(Json(AccountResponse {
+        name: updated.name,
+        email: updated.email,
+        organization_name: organization.name,
+        site_limit: organization.site_limit,
+    }))
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct AgencyResponse {
+    pub id: String,
+    pub name: String,
+    pub email: String,
+    pub site_limit: i32,
+    pub active: bool,
+    /// How many sites it has now, against the limit above.
+    pub sites: u32,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct UpdateAgencyRequest {
+    pub site_limit: Option<i32>,
+    /// Switching an agency off leaves its sites serving and stops it signing
+    /// in — the customers are not the ones who fell out with anybody.
+    pub active: Option<bool>,
+}
+
+/// Every agency on this server. The operator's view.
+#[utoipa::path(
+    get,
+    path = "/agencies",
+    tag = "sites",
+    responses((status = 200, description = "The agencies", body = Vec<AgencyResponse>))
+)]
+pub async fn list_agencies(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+) -> AppResult<Json<Vec<AgencyResponse>>> {
+    let registry = hosting.registry()?;
+    let sites = registry.all().await?;
+
+    Ok(Json(
+        console::organizations(registry.control())
+            .await?
+            .into_iter()
+            .map(|(organization, email)| AgencyResponse {
+                sites: sites
+                    .iter()
+                    .filter(|site| site.organization_id == Some(organization.id))
+                    .count() as u32,
+                id: organization.id.to_string(),
+                name: organization.name,
+                email,
+                site_limit: organization.site_limit,
+                active: organization.active,
+            })
+            .collect(),
+    ))
+}
+
+/// How many sites an agency may have, and whether it may sign in.
+#[utoipa::path(
+    put,
+    path = "/agencies/{id}",
+    tag = "sites",
+    params(("id" = String, Path, description = "Agency id")),
+    request_body = UpdateAgencyRequest,
+    responses((status = 204, description = "Changed"))
+)]
+pub async fn update_agency(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<UpdateAgencyRequest>,
+) -> AppResult<StatusCode> {
+    console::set_organization(
+        hosting.registry()?.control(),
+        id,
+        payload.site_limit,
+        payload.active,
+    )
+    .await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}

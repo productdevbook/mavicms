@@ -11,6 +11,7 @@ pub mod setup;
 pub mod sites;
 pub mod slug;
 pub mod tags;
+pub mod users;
 
 use axum::{
     extract::DefaultBodyLimit,
@@ -35,6 +36,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::login))
         .routes(routes!(console::logout))
         .routes(routes!(console::me))
+        .routes(routes!(console::update_account))
         .routes(routes!(console::list_sites, console::create_site))
         .routes(routes!(console::create_entry))
         .routes(routes!(
@@ -70,6 +72,10 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(tags::set_tag_translation_group))
         .routes(routes!(slug::make_slug))
         .routes(routes!(sites::list_sites, sites::create_site))
+        .routes(routes!(sites::update_site))
+        .routes(routes!(sites::delete_site))
+        .routes(routes!(console::list_agencies))
+        .routes(routes!(console::update_agency))
         .routes(routes!(media::delete_media))
         .routes(routes!(media::import_media))
         .routes(routes!(
@@ -93,6 +99,9 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(plugins::run_backup))
         .routes(routes!(plugins::delete_backup))
         .routes(routes!(plugins::restore_backup))
+        .routes(routes!(users::list_users, users::create_user))
+        .routes(routes!(users::update_user, users::delete_user))
+        .routes(routes!(users::change_own_password))
         .merge(
             OpenApiRouter::new()
                 .routes(routes!(plugins::import_backup))

@@ -102,7 +102,12 @@ function ConsoleRoute() {
         </span>
         <span className="text-sm font-semibold">{account.organization_name}</span>
         <div className="flex-1" />
-        <span className="text-sm text-muted-foreground">{account.email}</span>
+        <Link
+          to="/console/account"
+          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+        >
+          {account.email}
+        </Link>
         <Button
           variant="ghost"
           size="icon-sm"

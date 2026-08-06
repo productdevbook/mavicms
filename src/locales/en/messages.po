@@ -71,8 +71,8 @@ msgstr "{0} is ready"
 
 #. placeholder {0}: site.host
 #: src/routes/dashboard.sites.tsx:47
-msgid "{0} is ready. Open it to set it up."
-msgstr "{0} is ready. Open it to set it up."
+#~ msgid "{0} is ready. Open it to set it up."
+#~ msgstr "{0} is ready. Open it to set it up."
 
 #. placeholder {0}: result.site_title
 #. placeholder {1}: result.admin_username
@@ -87,7 +87,7 @@ msgstr "{0} looks after how this site is built."
 
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
-#: src/routes/console.index.tsx:121
+#: src/routes/console.index.tsx:126
 msgid "{0} of {1} used."
 msgstr "{0} of {1} used."
 
@@ -97,12 +97,32 @@ msgstr "{0} of {1} used."
 msgid "{0} rows × {1} columns"
 msgstr "{0} rows × {1} columns"
 
+#. placeholder {0}: agency.sites
+#: src/routes/dashboard.sites.tsx:200
+msgid "{0} sites"
+msgstr "{0} sites"
+
+#. placeholder {0}: resetting?.username
+#: src/routes/dashboard.users.tsx:308
+msgid "{0} will be signed out everywhere and can sign in again with this."
+msgstr "{0} will be signed out everywhere and can sign in again with this."
+
+#. placeholder {0}: removing?.username
+#: src/routes/dashboard.users.tsx:344
+msgid "{0} will no longer be able to sign in. Their posts stay."
+msgstr "{0} will no longer be able to sign in. Their posts stay."
+
 #. placeholder {0}: page.offset + 1
 #. placeholder {1}: Math.min(page.offset + page.limit, page.total)
 #. placeholder {2}: page.total
 #: src/routes/dashboard.index.tsx:218
 msgid "{0}–{1} of {2}"
 msgstr "{0}–{1} of {2}"
+
+#. placeholder {0}: account.organization_name
+#: src/routes/console.account.tsx:78
+msgid "{0}. This is the account that opens and manages your sites."
+msgstr "{0}. This is the account that opens and manages your sites."
 
 #: src/components/editor/status-bar.tsx:63
 msgid "{minutes, plural, one {# min read} other {# min read}}"
@@ -164,6 +184,10 @@ msgstr "Access key ID"
 msgid "Access token"
 msgstr "Access token"
 
+#: src/routes/dashboard.users.tsx:87
+msgid "Account added"
+msgstr "Account added"
+
 #: src/routes/dashboard.languages.tsx:148
 msgid "Active"
 msgstr "Active"
@@ -171,6 +195,7 @@ msgstr "Active"
 #: src/components/editor/dialogs.tsx:200
 #: src/components/publish-panel.tsx:151
 #: src/routes/dashboard.tags.tsx:174
+#: src/routes/dashboard.users.tsx:294
 msgid "Add"
 msgstr "Add"
 
@@ -186,8 +211,8 @@ msgstr "Add a horizontal rule"
 msgid "Add a hyperlink to the selected text."
 msgstr "Add a hyperlink to the selected text."
 
-#: src/routes/console.index.tsx:180
-#: src/routes/dashboard.sites.tsx:116
+#: src/routes/console.index.tsx:185
+#: src/routes/dashboard.sites.tsx:249
 msgid "Add a site"
 msgstr "Add a site"
 
@@ -236,23 +261,32 @@ msgstr "Add row after"
 msgid "Add row before"
 msgstr "Add row before"
 
-#: src/routes/console.index.tsx:125
-#: src/routes/console.index.tsx:203
-#: src/routes/dashboard.sites.tsx:75
-#: src/routes/dashboard.sites.tsx:154
+#: src/routes/console.index.tsx:130
+#: src/routes/console.index.tsx:208
+#: src/routes/dashboard.sites.tsx:136
+#: src/routes/dashboard.sites.tsx:287
 msgid "Add site"
 msgstr "Add site"
+
+#: src/routes/dashboard.users.tsx:156
+#: src/routes/dashboard.users.tsx:246
+msgid "Add someone"
+msgstr "Add someone"
 
 #: src/components/editor/dialogs.tsx:348
 msgid "Add table"
 msgstr "Add table"
 
 #: src/components/editor/dialogs.tsx:300
-#: src/routes/console.index.tsx:187
+#: src/routes/console.index.tsx:192
 #: src/routes/dashboard.api.tsx:124
-#: src/routes/dashboard.sites.tsx:124
+#: src/routes/dashboard.sites.tsx:257
 msgid "Address"
 msgstr "Address"
+
+#: src/routes/dashboard.sites.tsx:189
+msgid "Agencies"
+msgstr "Agencies"
 
 #: src/routes/login.tsx:160
 msgid "Agencies → the console"
@@ -320,7 +354,7 @@ msgstr "An archive taken on another server. This is how a site moves — everyth
 #~ msgid "Announcement"
 #~ msgstr "Announcement"
 
-#: src/components/dashboard/dashboard-shell.tsx:36
+#: src/components/dashboard/dashboard-shell.tsx:38
 #: src/routes/dashboard.api.tsx:116
 msgid "API"
 msgstr "API"
@@ -334,9 +368,17 @@ msgstr "Apply"
 msgid "Archives"
 msgstr "Archives"
 
+#: src/routes/console.account.tsx:125
+msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
+msgstr "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
+
 #: src/routes/console.register.tsx:140
 msgid "At least {MINIMUM_PASSWORD} characters."
 msgstr "At least {MINIMUM_PASSWORD} characters."
+
+#: src/routes/dashboard.users.tsx:238
+msgid "At least {MINIMUM_PASSWORD} characters. Changing it signs you out everywhere, this browser included."
+msgstr "At least {MINIMUM_PASSWORD} characters. Changing it signs you out everywhere, this browser included."
 
 #: src/components/setup/setup-wizard.tsx:545
 #: src/components/setup/setup-wizard.tsx:615
@@ -429,7 +471,7 @@ msgstr "Bullet list"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/routes/console.index.tsx:199
+#: src/routes/console.index.tsx:204
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
 #: src/routes/dashboard.index.tsx:253
@@ -438,8 +480,12 @@ msgstr "Bullet list"
 #: src/routes/dashboard.plugins_.backup.tsx:422
 #: src/routes/dashboard.plugins_.backup.tsx:442
 #: src/routes/dashboard.plugins_.backup.tsx:466
-#: src/routes/dashboard.sites.tsx:150
+#: src/routes/dashboard.sites.tsx:283
+#: src/routes/dashboard.sites.tsx:326
 #: src/routes/dashboard.tags.tsx:301
+#: src/routes/dashboard.users.tsx:282
+#: src/routes/dashboard.users.tsx:323
+#: src/routes/dashboard.users.tsx:348
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -451,7 +497,7 @@ msgstr "Canonical URL"
 msgid "Case sensitive"
 msgstr "Case sensitive"
 
-#: src/components/dashboard/dashboard-shell.tsx:32
+#: src/components/dashboard/dashboard-shell.tsx:33
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Categories"
@@ -467,6 +513,10 @@ msgstr "Category"
 #: src/components/editor/extensions/slash-command.tsx:278
 msgid "Center the paragraph"
 msgstr "Center the paragraph"
+
+#: src/routes/dashboard.users.tsx:234
+msgid "Change it"
+msgstr "Change it"
 
 #: src/routes/dashboard.api.tsx:106
 msgid "Change one."
@@ -588,10 +638,21 @@ msgstr "Could not add language"
 msgid "Could not add tag"
 msgstr "Could not add tag"
 
+#: src/routes/dashboard.users.tsx:90
+msgid "Could not add the account"
+msgstr "Could not add the account"
+
 #: src/routes/console.index.tsx:67
-#: src/routes/dashboard.sites.tsx:50
+#: src/routes/dashboard.sites.tsx:71
 msgid "Could not add the site"
 msgstr "Could not add the site"
+
+#: src/routes/dashboard.sites.tsx:84
+#: src/routes/dashboard.sites.tsx:113
+#: src/routes/dashboard.users.tsx:108
+#: src/routes/dashboard.users.tsx:140
+msgid "Could not change it"
+msgstr "Could not change it"
 
 #: src/components/editor/post-settings.tsx:91
 #: src/routes/dashboard.categories.tsx:96
@@ -626,6 +687,10 @@ msgstr "Could not link tags"
 msgid "Could not load post"
 msgstr "Could not load post"
 
+#: src/routes/dashboard.users.tsx:69
+msgid "Could not load the accounts"
+msgstr "Could not load the accounts"
+
 #: src/routes/dashboard.plugins_.backup.tsx:84
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
@@ -635,7 +700,7 @@ msgstr "Could not load the backup settings"
 msgid "Could not load the publishing settings"
 msgstr "Could not load the publishing settings"
 
-#: src/routes/dashboard.sites.tsx:36
+#: src/routes/dashboard.sites.tsx:52
 msgid "Could not load the sites"
 msgstr "Could not load the sites"
 
@@ -656,6 +721,11 @@ msgstr "Could not open the site"
 msgid "Could not reach the server. Please try again."
 msgstr "Could not reach the server. Please try again."
 
+#: src/routes/dashboard.sites.tsx:100
+#: src/routes/dashboard.users.tsx:122
+msgid "Could not remove it"
+msgstr "Could not remove it"
+
 #: src/routes/dashboard.languages.tsx:83
 msgid "Could not remove language"
 msgstr "Could not remove language"
@@ -672,6 +742,7 @@ msgstr "Could not save settings"
 msgid "Could not save tag"
 msgstr "Could not save tag"
 
+#: src/routes/console.account.tsx:56
 #: src/routes/console.sites.$siteId.tsx:98
 #: src/routes/dashboard.plugins_.backup.tsx:105
 #: src/routes/dashboard.publish.tsx:82
@@ -739,6 +810,11 @@ msgstr "Create your administrator account"
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Credentials are encrypted before they are stored and are never sent back to the browser."
 
+#: src/routes/console.account.tsx:117
+#: src/routes/dashboard.users.tsx:209
+msgid "Current password"
+msgstr "Current password"
+
 #: src/components/editor/toolbar.tsx:378
 msgid "Custom"
 msgstr "Custom"
@@ -751,7 +827,7 @@ msgstr "Dark"
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: src/routes/dashboard.sites.tsx:135
+#: src/routes/dashboard.sites.tsx:268
 msgid "Database"
 msgstr "Database"
 
@@ -882,8 +958,10 @@ msgid "Editing"
 msgstr "Editing"
 
 #: src/components/setup/setup-wizard.tsx:698
+#: src/routes/console.account.tsx:93
 #: src/routes/console.login.tsx:80
 #: src/routes/console.register.tsx:119
+#: src/routes/dashboard.users.tsx:262
 msgid "Email"
 msgstr "Email"
 
@@ -1197,9 +1275,13 @@ msgstr "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgid "Italic"
 msgstr "Italic"
 
-#: src/routes/dashboard.sites.tsx:99
+#: src/routes/dashboard.sites.tsx:161
 msgid "Its own database server"
 msgstr "Its own database server"
+
+#: src/routes/dashboard.sites.tsx:306
+msgid "Its posts, its accounts, its uploads and its database schema all go. There is no undo. Type the address to confirm."
+msgstr "Its posts, its accounts, its uploads and its database schema all go. There is no undo. Type the address to confirm."
 
 #: src/components/setup/setup-wizard.tsx:609
 msgid "Just another Mavi CMS site"
@@ -1222,7 +1304,7 @@ msgstr "Keyboard shortcuts"
 msgid "Language"
 msgstr "Language"
 
-#: src/components/dashboard/dashboard-shell.tsx:34
+#: src/components/dashboard/dashboard-shell.tsx:35
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Languages"
@@ -1244,13 +1326,21 @@ msgstr "Last run {0}"
 msgid "Leave empty for AWS S3"
 msgstr "Leave empty for AWS S3"
 
-#: src/routes/dashboard.sites.tsx:140
+#: src/routes/console.account.tsx:112
+msgid "Leave empty to keep the one you have"
+msgstr "Leave empty to keep the one you have"
+
+#: src/routes/dashboard.sites.tsx:273
 msgid "Leave empty to use this server's database"
 msgstr "Leave empty to use this server's database"
 
 #: src/components/mode-toggle.tsx:37
 msgid "Light"
 msgstr "Light"
+
+#: src/routes/dashboard.sites.tsx:208
+msgid "Limit"
+msgstr "Limit"
 
 #: src/components/editor/toolbar.tsx:620
 msgid "Line height"
@@ -1294,7 +1384,7 @@ msgstr "Make default"
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
-#: src/routes/console.index.tsx:169
+#: src/routes/console.index.tsx:174
 #: src/routes/console.sites.$siteId.tsx:164
 msgid "Manage"
 msgstr "Manage"
@@ -1315,7 +1405,7 @@ msgstr "Markdown imported"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS needs a database to store your site."
 
-#: src/components/dashboard/dashboard-shell.tsx:31
+#: src/components/dashboard/dashboard-shell.tsx:32
 msgid "Media"
 msgstr "Media"
 
@@ -1357,7 +1447,13 @@ msgstr "needs translation"
 msgid "New category"
 msgstr "New category"
 
-#: src/components/dashboard/dashboard-shell.tsx:82
+#: src/routes/console.account.tsx:106
+#: src/routes/dashboard.users.tsx:218
+#: src/routes/dashboard.users.tsx:312
+msgid "New password"
+msgstr "New password"
+
+#: src/components/dashboard/dashboard-shell.tsx:84
 #: src/routes/dashboard.index.tsx:153
 msgid "New post"
 msgstr "New post"
@@ -1388,7 +1484,7 @@ msgstr "No emoji found"
 msgid "No media uploaded yet"
 msgstr "No media uploaded yet"
 
-#: src/routes/dashboard.sites.tsx:81
+#: src/routes/dashboard.sites.tsx:143
 msgid "No other sites yet"
 msgstr "No other sites yet"
 
@@ -1410,7 +1506,7 @@ msgstr "No posts yet"
 msgid "No results found"
 msgstr "No results found"
 
-#: src/routes/console.index.tsx:135
+#: src/routes/console.index.tsx:140
 msgid "No sites yet"
 msgstr "No sites yet"
 
@@ -1432,9 +1528,19 @@ msgstr "Nothing published yet"
 msgid "Numbered list"
 msgstr "Numbered list"
 
+#: src/routes/dashboard.sites.tsx:167
+#: src/routes/dashboard.sites.tsx:227
+msgid "Off"
+msgstr "Off"
+
 #: src/routes/dashboard.plugins_.backup.tsx:319
 msgid "Older archives are removed once a new one is written."
 msgstr "Older archives are removed once a new one is written."
+
+#: src/routes/dashboard.sites.tsx:167
+#: src/routes/dashboard.sites.tsx:227
+msgid "On"
+msgstr "On"
 
 #: src/routes/dashboard.plugins_.backup.tsx:230
 #: src/routes/dashboard.plugins_.backup.tsx:235
@@ -1490,7 +1596,7 @@ msgstr "OpenAPI document"
 msgid "Optional folder inside the bucket"
 msgstr "Optional folder inside the bucket"
 
-#: src/routes/dashboard.sites.tsx:71
+#: src/routes/dashboard.sites.tsx:132
 msgid "Other sites this server hosts. Each gets its own database schema, accounts and uploads."
 msgstr "Other sites this server hosts. Each gets its own database schema, accounts and uploads."
 
@@ -1512,9 +1618,18 @@ msgstr "Paragraph"
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console.login.tsx:93
 #: src/routes/console.register.tsx:131
+#: src/routes/dashboard.users.tsx:271
 #: src/routes/login.tsx:126
 msgid "Password"
 msgstr "Password"
+
+#: src/routes/dashboard.users.tsx:105
+msgid "Password changed"
+msgstr "Password changed"
+
+#: src/routes/dashboard.users.tsx:136
+msgid "Password changed — sign in again"
+msgstr "Password changed — sign in again"
 
 #: src/components/editor/dialogs.tsx:110
 #~ msgid "Paste an image address or drag and drop one."
@@ -1531,6 +1646,11 @@ msgstr "Paste the video link."
 #: src/routes/dashboard.plugins_.s3.tsx:193
 msgid "Path prefix"
 msgstr "Path prefix"
+
+#: src/components/dashboard/dashboard-shell.tsx:37
+#: src/routes/dashboard.users.tsx:150
+msgid "People"
+msgstr "People"
 
 #: src/components/editor/post-settings.tsx:152
 msgid "Permalink"
@@ -1552,15 +1672,15 @@ msgstr "plain text"
 msgid "Plain text block"
 msgstr "Plain text block"
 
-#: src/components/dashboard/dashboard-shell.tsx:35
+#: src/components/dashboard/dashboard-shell.tsx:36
 #: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.s3.tsx:113
 #: src/routes/dashboard.plugins.tsx:49
 msgid "Plugins"
 msgstr "Plugins"
 
-#: src/routes/console.index.tsx:182
-#: src/routes/dashboard.sites.tsx:118
+#: src/routes/console.index.tsx:187
+#: src/routes/dashboard.sites.tsx:251
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Point the address at this server first — the site answers on whichever address you give it here."
 
@@ -1594,7 +1714,7 @@ msgstr "Post title"
 msgid "post-url"
 msgstr "post-url"
 
-#: src/components/dashboard/dashboard-shell.tsx:30
+#: src/components/dashboard/dashboard-shell.tsx:31
 msgid "Posts"
 msgstr "Posts"
 
@@ -1619,7 +1739,7 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:41
+#: src/components/dashboard/dashboard-shell.tsx:43
 #: src/components/editor/mavi-editor.tsx:607
 #: src/components/publish-panel.tsx:295
 #: src/routes/dashboard.publish.tsx:116
@@ -1688,6 +1808,10 @@ msgstr "Regular expression"
 #: src/components/editor/bubble-menus.tsx:274
 #: src/components/publish-panel.tsx:122
 #: src/routes/dashboard.languages.tsx:196
+#: src/routes/dashboard.sites.tsx:177
+#: src/routes/dashboard.sites.tsx:334
+#: src/routes/dashboard.users.tsx:194
+#: src/routes/dashboard.users.tsx:350
 msgid "Remove"
 msgstr "Remove"
 
@@ -1703,9 +1827,17 @@ msgstr "Remove highlight"
 msgid "Remove link"
 msgstr "Remove link"
 
+#: src/routes/dashboard.users.tsx:342
+msgid "Remove this account?"
+msgstr "Remove this account?"
+
 #: src/routes/dashboard.languages.tsx:188
 msgid "Remove this language?"
 msgstr "Remove this language?"
+
+#: src/routes/dashboard.sites.tsx:304
+msgid "Remove this site?"
+msgstr "Remove this site?"
 
 #: src/components/editor/find-replace.tsx:129
 msgid "Replace"
@@ -1767,6 +1899,7 @@ msgstr "S3 compatible storage"
 
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:250
+#: src/routes/console.account.tsx:139
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.plugins_.backup.tsx:333
 #: src/routes/dashboard.plugins_.s3.tsx:238
@@ -1774,6 +1907,7 @@ msgid "Save"
 msgstr "Save"
 
 #: src/components/editor/status-bar.tsx:113
+#: src/routes/console.account.tsx:53
 #: src/routes/console.sites.$siteId.tsx:95
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
@@ -1797,7 +1931,7 @@ msgid "Scheduled backups only run while this is on. You can always back up by ha
 msgstr "Scheduled backups only run while this is on. You can always back up by hand below."
 
 #. placeholder {0}: site.schema
-#: src/routes/dashboard.sites.tsx:100
+#: src/routes/dashboard.sites.tsx:162
 msgid "Schema {0}"
 msgstr "Schema {0}"
 
@@ -1841,11 +1975,20 @@ msgstr "SEO description"
 msgid "SEO title"
 msgstr "SEO title"
 
+#: src/routes/dashboard.users.tsx:189
+#: src/routes/dashboard.users.tsx:306
+msgid "Set a password"
+msgstr "Set a password"
+
+#: src/routes/dashboard.users.tsx:330
+msgid "Set it"
+msgstr "Set it"
+
 #: src/routes/dashboard.plugins_.backup.tsx:249
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Set up the S3 plugin first if you want backups kept off this machine."
 
-#: src/routes/console.index.tsx:156
+#: src/routes/console.index.tsx:161
 msgid "Settings"
 msgstr "Settings"
 
@@ -1892,9 +2035,9 @@ msgstr "Sign in to manage your site."
 msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
-#: src/components/dashboard/dashboard-shell.tsx:89
+#: src/components/dashboard/dashboard-shell.tsx:91
 #: src/components/editor/mavi-editor.tsx:580
-#: src/routes/console.index.tsx:109
+#: src/routes/console.index.tsx:114
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -1906,12 +2049,24 @@ msgstr "Signing in"
 msgid "Signing you in…"
 msgstr "Signing you in…"
 
+#: src/routes/dashboard.users.tsx:181
+msgid "signs in from the console"
+msgstr "signs in from the console"
+
+#: src/routes/dashboard.sites.tsx:68
+msgid "Site added"
+msgstr "Site added"
+
+#: src/routes/dashboard.sites.tsx:97
+msgid "Site removed"
+msgstr "Site removed"
+
 #: src/components/setup/setup-wizard.tsx:590
 msgid "Site title"
 msgstr "Site title"
 
-#: src/components/dashboard/dashboard-shell.tsx:43
-#: src/routes/dashboard.sites.tsx:69
+#: src/components/dashboard/dashboard-shell.tsx:45
+#: src/routes/dashboard.sites.tsx:130
 msgid "Sites"
 msgstr "Sites"
 
@@ -1975,10 +2130,13 @@ msgstr "Success!"
 msgid "Superscript"
 msgstr "Superscript"
 
-#: src/routes/console.index.tsx:146
-#: src/routes/dashboard.sites.tsx:105
+#: src/routes/console.index.tsx:151
 msgid "Switched off"
 msgstr "Switched off"
+
+#: src/routes/dashboard.sites.tsx:240
+msgid "Switching an agency off stops it signing in. Its sites keep serving — the customers are not the ones who fell out with anybody."
+msgstr "Switching an agency off stops it signing in. Its sites keep serving — the customers are not the ones who fell out with anybody."
 
 #: src/components/editor/extensions/slash-command.tsx:137
 msgid "Syntax-highlighted code"
@@ -2002,7 +2160,7 @@ msgstr "Table of contents"
 msgid "Tagline"
 msgstr "Tagline"
 
-#: src/components/dashboard/dashboard-shell.tsx:33
+#: src/components/dashboard/dashboard-shell.tsx:34
 #: src/components/editor/post-settings.tsx:222
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -2098,7 +2256,7 @@ msgstr "The same, with each body included."
 msgid "The server is taking longer than expected to restart. Reload this page in a moment."
 msgstr "The server is taking longer than expected to restart. Reload this page in a moment."
 
-#: src/routes/dashboard.sites.tsx:143
+#: src/routes/dashboard.sites.tsx:276
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 
@@ -2109,6 +2267,14 @@ msgstr "The whole of it"
 #: src/components/mode-toggle.tsx:24
 msgid "Theme"
 msgstr "Theme"
+
+#: src/routes/dashboard.users.tsx:248
+msgid "They can write, publish and manage this site."
+msgstr "They can write, publish and manage this site."
+
+#: src/routes/console.account.tsx:101
+msgid "This is what you sign in with."
+msgstr "This is what you sign in with."
 
 #: src/components/editor/mavi-editor.tsx:245
 msgid "This post could not be opened, so it has been left untouched."
@@ -2202,6 +2368,7 @@ msgstr "Use S3 for new uploads"
 
 #: src/components/setup/setup-wizard.tsx:519
 #: src/components/setup/setup-wizard.tsx:680
+#: src/routes/dashboard.users.tsx:253
 #: src/routes/login.tsx:114
 msgid "Username"
 msgstr "Username"
@@ -2234,6 +2401,10 @@ msgstr "Where this site's pages come from, and how the last builds went."
 msgid "Where to keep them"
 msgstr "Where to keep them"
 
+#: src/routes/dashboard.users.tsx:152
+msgid "Who can sign in to this site and write on it."
+msgstr "Who can sign in to this site and write on it."
+
 #: src/components/editor/find-replace.tsx:156
 msgid "Whole word"
 msgstr "Whole word"
@@ -2254,6 +2425,10 @@ msgstr "Write a post."
 msgid "Writing"
 msgstr "Writing"
 
+#: src/routes/dashboard.users.tsx:175
+msgid "you"
+msgstr "you"
+
 #: src/components/setup/setup-wizard.tsx:584
 msgid "You can change this later in your post settings."
 msgstr "You can change this later in your post settings."
@@ -2266,15 +2441,25 @@ msgstr "You can change this later."
 msgid "You'll use this to sign in and manage your site."
 msgstr "You'll use this to sign in and manage your site."
 
+#: src/routes/console.account.tsx:76
+msgid "Your account"
+msgstr "Your account"
+
+#: src/routes/console.account.tsx:84
 #: src/routes/console.register.tsx:108
 msgid "Your name"
 msgstr "Your name"
+
+#: src/routes/dashboard.users.tsx:206
+msgid "Your own password"
+msgstr "Your own password"
 
 #: src/routes/dashboard.publish.tsx:118
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 
-#: src/routes/console.index.tsx:119
+#: src/routes/console.account.tsx:72
+#: src/routes/console.index.tsx:124
 #: src/routes/console.sites.$siteId.tsx:143
 msgid "Your sites"
 msgstr "Your sites"

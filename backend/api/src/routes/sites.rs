@@ -107,3 +107,76 @@ pub async fn create_site(
 
     Ok((StatusCode::CREATED, Json(tenant.into())))
 }
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct UpdateSiteRequest {
+    /// Off leaves the content alone and stops the address serving.
+    pub active: Option<bool>,
+}
+
+/// Switch a site on or off.
+#[utoipa::path(
+    put,
+    path = "/sites/{id}",
+    tag = "sites",
+    params(("id" = String, Path, description = "Site id")),
+    request_body = UpdateSiteRequest,
+    responses((status = 204, description = "Changed"))
+)]
+pub async fn update_site(
+    _operator: Operator,
+    State(hosting): State<Hosting>,
+    axum::extract::Path(id): axum::extract::Path<uuid::Uuid>,
+    Json(payload): Json<UpdateSiteRequest>,
+) -> AppResult<StatusCode> {
+    if let Some(active) = payload.active {
+        hosting.registry()?.set_active(id, active).await?;
+    }
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Remove a site: its content, its accounts, its uploads.
+///
+/// The address has to be sent back to confirm it. A site is somebody's work
+/// and an id in a URL is not something anybody reads before clicking.
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct DeleteSiteRequest {
+    pub host: String,
+}
+
+#[utoipa::path(
+    post,
+    path = "/sites/{id}/delete",
+    tag = "sites",
+    params(("id" = String, Path, description = "Site id")),
+    request_body = DeleteSiteRequest,
+    responses(
+        (status = 204, description = "Removed"),
+        (status = 400, description = "That is not this site's address", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn delete_site(
+    _operator: Operator,
+    State(hosting): State<Hosting>,
+    axum::extract::Path(id): axum::extract::Path<uuid::Uuid>,
+    Json(payload): Json<DeleteSiteRequest>,
+) -> AppResult<StatusCode> {
+    let registry = hosting.registry()?;
+    let tenant = registry
+        .all()
+        .await?
+        .into_iter()
+        .find(|tenant| tenant.id == id)
+        .ok_or_else(|| crate::error::AppError::NotFound("site".to_string()))?;
+
+    if payload.host.trim().to_lowercase() != tenant.host {
+        return Err(crate::error::AppError::Validation(
+            "type the site's address to confirm".to_string(),
+        ));
+    }
+
+    tracing::warn!(site = %tenant.host, "removing a site");
+    registry.remove(&tenant).await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}

@@ -725,3 +725,108 @@ export function saveSitePublish(
 export function requestSitePublish(id: string): Promise<Build> {
   return request<Build>(`/console/sites/${id}/publish`, { method: "POST" })
 }
+
+export interface SiteUser {
+  id: string
+  username: string
+  email: string
+  role: string
+  /** False for the account an agency arrives on: no password, link only. */
+  can_sign_in: boolean
+  created_at: string
+}
+
+export function getUsers(): Promise<SiteUser[]> {
+  return request<SiteUser[]>("/users")
+}
+
+export function createUser(payload: {
+  username: string
+  email: string
+  password: string
+}): Promise<SiteUser> {
+  return request<SiteUser>("/users", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function updateUser(
+  id: string,
+  payload: { email?: string; password?: string }
+): Promise<SiteUser> {
+  return request<SiteUser>(`/users/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteUser(id: string): Promise<void> {
+  return request<void>(`/users/${id}`, { method: "DELETE" })
+}
+
+export function changeOwnPassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<void> {
+  return request<void>("/me/password", {
+    method: "POST",
+    body: JSON.stringify({
+      current_password: currentPassword,
+      new_password: newPassword,
+    }),
+  })
+}
+
+export function updateConsoleAccount(payload: {
+  current_password: string
+  name?: string
+  email?: string
+  new_password?: string
+}): Promise<ConsoleAccount> {
+  return request<ConsoleAccount>("/console/me", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export interface Agency {
+  id: string
+  name: string
+  email: string
+  site_limit: number
+  active: boolean
+  sites: number
+}
+
+export function getAgencies(): Promise<Agency[]> {
+  return request<Agency[]>("/agencies")
+}
+
+export function updateAgency(
+  id: string,
+  payload: { site_limit?: number; active?: boolean }
+): Promise<void> {
+  return request<void>(`/agencies/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function updateSite(
+  id: string,
+  payload: { active?: boolean }
+): Promise<void> {
+  return request<void>(`/sites/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+/** The address has to be typed back: a site is somebody's work. */
+export function deleteSite(id: string, host: string): Promise<void> {
+  return request<void>(`/sites/${id}/delete`, {
+    method: "POST",
+    body: JSON.stringify({ host }),
+  })
+}

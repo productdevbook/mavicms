@@ -259,6 +259,65 @@ impl Registry {
         Ok(())
     }
 
+    /// Switches a site on or off. Off means its address answers "switched off"
+    /// and nothing else — the content is still there, and turning it back on is
+    /// the whole of the undo.
+    pub async fn set_active(&self, id: Uuid, active: bool) -> AppResult<()> {
+        let backend = self.control.get_database_backend();
+        self.control
+            .execute_raw(Statement::from_sql_and_values(
+                backend,
+                format!(
+                    "UPDATE tenants SET active = {} WHERE id = {}",
+                    placeholder(backend, 1),
+                    placeholder(backend, 2)
+                ),
+                [i32::from(active).into(), id.to_string().into()],
+            ))
+            .await?;
+
+        self.forget(id).await;
+        Ok(())
+    }
+
+    /// Removes a site: its row, its schema, its folder.
+    ///
+    /// There is no undo and this does not pretend otherwise. What it does do is
+    /// go in the order that leaves nothing half-removed and reachable: the row
+    /// first, so no request can find the site while its tables are going.
+    pub async fn remove(&self, tenant: &Tenant) -> AppResult<()> {
+        let backend = self.control.get_database_backend();
+
+        self.control
+            .execute_raw(Statement::from_sql_and_values(
+                backend,
+                format!("DELETE FROM tenants WHERE id = {}", placeholder(backend, 1)),
+                [tenant.id.to_string().into()],
+            ))
+            .await?;
+        self.forget(tenant.id).await;
+
+        if tenant.database_url.trim().is_empty() {
+            self.drop_schema(&tenant.schema).await;
+        }
+
+        let root = tenant.root(&self.sites_dir);
+        if let Err(err) = tokio::fs::remove_dir_all(&root).await
+            && err.kind() != std::io::ErrorKind::NotFound
+        {
+            tracing::error!(error = %err, site = %tenant.slug, "could not remove the site folder");
+        }
+
+        Ok(())
+    }
+
+    /// Closes a site's connection, so the next request opens it afresh —
+    /// which is how a site that was switched off or removed stops being served
+    /// from something already in memory.
+    async fn forget(&self, id: Uuid) {
+        self.open.lock().await.retain(|(open, _)| *open != id);
+    }
+
     async fn drop_schema(&self, schema: &str) {
         let statement = Statement::from_string(
             DatabaseBackend::Postgres,
