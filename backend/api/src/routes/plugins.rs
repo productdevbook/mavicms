@@ -262,6 +262,10 @@ pub async fn save_s3_of(
     let config = resolve_config(state, &payload).await?;
     if payload.enabled {
         config.validate()?;
+        // Said here as well as at every call, so somebody typing an address
+        // the server will not talk to is told now rather than at the first
+        // upload.
+        config.ensure_reachable().await?;
     }
 
     save_s3(state.db(), &state.secrets, payload.enabled, &config).await?;

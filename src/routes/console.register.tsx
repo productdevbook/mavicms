@@ -12,6 +12,9 @@ import { Label } from "@/components/ui/label"
 
 export const Route = createFileRoute("/console/register")({
   component: ConsoleRegisterRoute,
+  validateSearch: (search: Record<string, unknown>) => ({
+    invite: typeof search.invite === "string" ? search.invite : "",
+  }),
 })
 
 const MINIMUM_PASSWORD = 10
@@ -19,6 +22,7 @@ const MINIMUM_PASSWORD = 10
 function ConsoleRegisterRoute() {
   const { t } = useLingui()
   const navigate = useNavigate()
+  const { invite } = Route.useSearch()
 
   const [organizationName, setOrganizationName] = React.useState("")
   const [name, setName] = React.useState("")
@@ -42,6 +46,7 @@ function ConsoleRegisterRoute() {
         name: name.trim(),
         email: email.trim(),
         password,
+        invite,
       })
       await navigate({ to: "/console" })
     } catch (error) {
@@ -52,6 +57,35 @@ function ConsoleRegisterRoute() {
       )
       setSubmitting(false)
     }
+  }
+
+  // Without a link there is nothing to fill in. Saying so is kinder than a
+  // form that takes everything and then refuses at the end.
+  if (!invite) {
+    return (
+      <div className="flex min-h-svh items-center justify-center bg-muted/40 p-4">
+        <div className="w-full max-w-sm">
+          <div className="mb-6 flex flex-col items-center gap-2">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground">
+              M
+            </span>
+            <h1 className="text-lg font-semibold">Mavi CMS</h1>
+          </div>
+
+          <Card>
+            <CardContent className="flex flex-col gap-3 pt-6 text-center">
+              <p className="font-medium">{t`This server is by invitation`}</p>
+              <p className="text-sm text-muted-foreground">
+                {t`Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address.`}
+              </p>
+              <Link to="/console/login" className="text-sm underline underline-offset-4">
+                {t`I already have an account`}
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   return (

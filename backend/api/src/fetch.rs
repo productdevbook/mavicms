@@ -138,6 +138,23 @@ async fn resolve_public(url: &Url) -> Result<Option<(String, SocketAddr)>, Fetch
     Ok((!is_literal).then(|| (bare.to_string(), SocketAddr::new(first, port))))
 }
 
+/// Refuses a URL whose host is not on the public internet.
+///
+/// For an address this server is configured to talk to rather than one it was
+/// handed in a request — a storage endpoint, say. Those are set by whoever
+/// runs a site, who is not whoever runs the server, and an endpoint pointing
+/// at the cluster would make the server fetch from inside itself and hand the
+/// answer back in an error message.
+///
+/// The name is resolved every time rather than only when it is saved: a name
+/// that answered publicly this morning can answer 127.0.0.1 this afternoon,
+/// and that is somebody else's DNS to change.
+pub async fn ensure_public_host(url: &str) -> Result<(), FetchError> {
+    let parsed =
+        Url::parse(url).map_err(|_| FetchError::Rejected(format!("{url} is not an address")))?;
+    resolve_public(&parsed).await.map(|_| ())
+}
+
 /// Downloads a remote file, refusing private hosts and anything over `max_bytes`.
 pub async fn fetch_remote_file(url: &str, max_bytes: usize) -> Result<Vec<u8>, FetchError> {
     let mut current = Url::parse(url)

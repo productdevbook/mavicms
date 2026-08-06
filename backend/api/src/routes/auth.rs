@@ -26,10 +26,52 @@ use crate::{
 pub async fn login(
     Site(state): Site,
     Extension(resolved): Extension<Resolved>,
+    headers: axum::http::HeaderMap,
     cookies: Cookies,
     Json(payload): Json<LoginRequest>,
 ) -> AppResult<Json<UserResponse>> {
     let db = state.db_or_unavailable()?;
+
+    // Both keys are checked before the password is read, and both are counted
+    // after: guessing one account from many addresses and many accounts from
+    // one address are the same attack wearing different hats.
+    let host = headers
+        .get(axum::http::header::HOST)
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_string();
+    let keys = [
+        format!("login:who:{}:{}", host, payload.username),
+        format!("login:from:{}", crate::throttle::caller(&headers)),
+    ];
+    if let Some(left) = keys.iter().find_map(|key| crate::throttle::pause_left(key)) {
+        return Err(crate::error::AppError::TooManyRequests(
+            left.as_secs().max(1),
+        ));
+    }
+
+    let counted = |result: AppResult<Json<UserResponse>>| match result {
+        Ok(value) => {
+            keys.iter().for_each(|key| crate::throttle::right(key));
+            Ok(value)
+        }
+        Err(err) => {
+            keys.iter().for_each(|key| {
+                crate::throttle::wrong(key);
+            });
+            Err(err)
+        }
+    };
+
+    counted(sign_in(db, &cookies, payload, resolved).await)
+}
+
+async fn sign_in(
+    db: &sea_orm::DatabaseConnection,
+    cookies: &Cookies,
+    payload: LoginRequest,
+    resolved: Resolved,
+) -> AppResult<Json<UserResponse>> {
     let invalid = || AppError::Unauthorized("invalid username or password".to_string());
 
     let user = user::Entity::find()
@@ -52,7 +94,7 @@ pub async fn login(
         .verify_password(payload.password.as_bytes(), &parsed_hash)
         .map_err(|_| invalid())?;
 
-    create_session(db, &cookies, user.id).await?;
+    create_session(db, cookies, user.id).await?;
 
     Ok(Json(UserResponse {
         username: user.username,

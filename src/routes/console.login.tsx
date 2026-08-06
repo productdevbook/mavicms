@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- file-based route convention */
 import * as React from "react"
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { Trans, useLingui } from "@lingui/react/macro"
 import { Loader2 } from "lucide-react"
 
@@ -108,11 +108,8 @@ function ConsoleLoginRoute() {
                 )}
               </Button>
 
-              <p className="text-center text-sm text-muted-foreground">
-                <Link to="/console/register" className="hover:underline">
-                  <Trans>Open an agency account</Trans>
-                </Link>
-              </p>
+              {/* No link to registration: an agency is opened from an
+                  invitation, and an invitation arrives as a link of its own. */}
             </form>
           </CardContent>
         </Card>

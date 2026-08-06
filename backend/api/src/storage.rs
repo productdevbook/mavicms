@@ -71,6 +71,28 @@ impl S3Config {
         Ok(())
     }
 
+    /// The address this configuration actually talks to.
+    fn effective_endpoint(&self) -> String {
+        if self.endpoint.trim().is_empty() {
+            format!("https://s3.{}.amazonaws.com", self.region)
+        } else {
+            self.endpoint.trim_end_matches('/').to_string()
+        }
+    }
+
+    /// Refuses to talk to an endpoint that is not on the public internet.
+    ///
+    /// The endpoint is typed in by whoever runs a site, and the server is what
+    /// connects to it — so without this, a site could point it at the cluster
+    /// and read the first part of whatever answered back out of the error
+    /// message. Checked on every call rather than only when it is saved,
+    /// because the name behind it is not ours to trust twice.
+    pub async fn ensure_reachable(&self) -> AppResult<()> {
+        crate::fetch::ensure_public_host(&self.effective_endpoint())
+            .await
+            .map_err(|err| AppError::Validation(format!("the storage endpoint {err}")))
+    }
+
     fn bucket(&self) -> AppResult<Box<Bucket>> {
         let credentials = Credentials::new(
             Some(&self.access_key_id),
@@ -214,6 +236,7 @@ impl S3Config {
         &self,
         prefix: &str,
     ) -> AppResult<Vec<(String, u64, chrono::DateTime<chrono::FixedOffset>)>> {
+        self.ensure_reachable().await?;
         let bucket = self.bucket()?;
         let results = bucket
             .list(self.object_key(prefix), None)
@@ -242,6 +265,7 @@ impl S3Config {
     /// Round-trips a small object so the credentials are checked for write
     /// access, not just connectivity.
     pub async fn test_connection(&self) -> AppResult<()> {
+        self.ensure_reachable().await?;
         let bucket = self.bucket()?;
         let key = self.object_key(".mavicms-connection-test");
 
@@ -288,6 +312,7 @@ impl MediaStorage {
                 Ok(format!("/uploads/{key}"))
             }
             MediaStorage::S3(config) => {
+                config.ensure_reachable().await?;
                 let bucket = config.bucket()?;
                 bucket
                     .put_object_with_content_type(config.object_key(key), bytes, mime_type)
@@ -309,6 +334,7 @@ impl MediaStorage {
         match self {
             MediaStorage::Local { root } => tokio::fs::read(root.join(key)).await.ok(),
             MediaStorage::S3(config) => {
+                config.ensure_reachable().await.ok()?;
                 let bucket = config.bucket().ok()?;
                 let response = bucket.get_object(config.object_key(key)).await.ok()?;
                 (response.status_code() < 300).then(|| response.bytes().to_vec())
@@ -326,10 +352,58 @@ impl MediaStorage {
                 }
             }
             MediaStorage::S3(config) => {
+                if let Err(err) = config.ensure_reachable().await {
+                    tracing::warn!(error = %err, key, "refused to reach the storage endpoint");
+                    return;
+                }
                 if let Err(err) = config.delete_object(key).await {
                     tracing::warn!(error = %err, key, "failed to delete object");
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn at(endpoint: &str) -> S3Config {
+        S3Config {
+            endpoint: endpoint.to_string(),
+            region: "auto".to_string(),
+            bucket: "kova".to_string(),
+            access_key_id: "x".to_string(),
+            secret_access_key: "y".to_string(),
+            public_base_url: "https://example.invalid".to_string(),
+            path_prefix: String::new(),
+        }
+    }
+
+    #[tokio::test]
+    async fn the_storage_endpoint_cannot_point_inside() {
+        // The addresses that make this server a way to reach its own cluster.
+        for endpoint in [
+            "http://127.0.0.1:8080",
+            "http://169.254.169.254",
+            "http://10.0.0.5",
+            "http://[::1]:9000",
+            "http://192.168.1.10",
+        ] {
+            assert!(
+                at(endpoint).ensure_reachable().await.is_err(),
+                "{endpoint} should be refused"
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn an_ordinary_endpoint_is_allowed() {
+        assert!(
+            at("https://s3.eu-central-1.amazonaws.com")
+                .ensure_reachable()
+                .await
+                .is_ok()
+        );
     }
 }
