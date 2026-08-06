@@ -20,6 +20,7 @@ import { Switch } from "@/components/ui/switch"
 import { EmailFields } from "@/components/plugin-forms"
 import { SesAccountPanel } from "@/components/ses-account"
 import { SesHealthPanel } from "@/components/ses-health"
+import { SesSetupGuide } from "@/components/ses-setup"
 
 export const Route = createFileRoute("/dashboard/plugins_/email")({
   component: EmailSettingsRoute,
@@ -124,6 +125,8 @@ function EmailSettingsRoute() {
       </div>
 
       <div className="flex max-w-2xl flex-col gap-6">
+        <SesSetupGuide region={form.region} />
+
         <Label className="flex items-center gap-3 font-normal">
           <Switch
             checked={form.enabled}

@@ -487,10 +487,14 @@ msgstr "Alt text"
 #~ msgid "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
 #~ msgstr "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
 
-#: src/routes/dashboard.plugins_.email.tsx:120
+#: src/routes/dashboard.plugins_.email.tsx:121
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Amazon SES"
 msgstr "Amazon SES"
+
+#: src/components/ses-setup.tsx:186
+msgid "Amazon's own pages"
+msgstr "Amazon's own pages"
 
 #: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
@@ -547,6 +551,10 @@ msgstr "Ask people to confirm by email"
 #: src/components/ses-account.tsx:343
 msgid "Ask to leave the sandbox"
 msgstr "Ask to leave the sandbox"
+
+#: src/components/ses-setup.tsx:180
+msgid "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
+msgstr "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
 
 #: src/routes/console.account.tsx:130
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
@@ -858,6 +866,7 @@ msgstr "Continue to the dashboard"
 #: src/components/editor/bubble-menus.tsx:317
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
+#: src/components/ses-setup.tsx:149
 #: src/routes/dashboard.forms_.$formId.tsx:53
 msgid "Copy"
 msgstr "Copy"
@@ -925,6 +934,7 @@ msgstr "Could not change it"
 
 #: src/components/local-env.tsx:109
 #: src/components/ses-account.tsx:151
+#: src/components/ses-setup.tsx:109
 #: src/routes/dashboard.forms_.$formId.tsx:41
 msgid "Could not copy it"
 msgstr "Could not copy it"
@@ -955,10 +965,10 @@ msgid "Could not delete the backup"
 msgstr "Could not delete the backup"
 
 #: src/components/ses-account.tsx:242
-#: src/components/site-mail.tsx:93
+#: src/components/site-mail.tsx:94
 #: src/routes/dashboard.forms_.$formId.tsx:89
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:104
-#: src/routes/dashboard.plugins_.email.tsx:93
+#: src/routes/dashboard.plugins_.email.tsx:94
 msgid "Could not do it"
 msgstr "Could not do it"
 
@@ -1003,8 +1013,8 @@ msgstr "Could not load the lists"
 msgid "Could not load the local settings"
 msgstr "Could not load the local settings"
 
-#: src/components/site-mail.tsx:59
-#: src/routes/dashboard.plugins_.email.tsx:56
+#: src/components/site-mail.tsx:60
+#: src/routes/dashboard.plugins_.email.tsx:57
 msgid "Could not load the mail settings"
 msgstr "Could not load the mail settings"
 
@@ -1081,11 +1091,11 @@ msgstr "Could not remove language"
 msgid "Could not remove them"
 msgstr "Could not remove them"
 
-#: src/components/site-mail.tsx:79
+#: src/components/site-mail.tsx:80
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:84
 #: src/routes/dashboard.mail.tsx:273
 #: src/routes/dashboard.mail.tsx:640
-#: src/routes/dashboard.plugins_.email.tsx:79
+#: src/routes/dashboard.plugins_.email.tsx:80
 msgid "Could not save it"
 msgstr "Could not save it"
 
@@ -1544,6 +1554,10 @@ msgstr "Generate from title"
 msgid "Generate password"
 msgstr "Generate password"
 
+#: src/components/ses-setup.tsx:141
+msgid "Give it this policy."
+msgstr "Give it this policy."
+
 #: src/components/editor/mavi-editor.tsx:274
 msgid "Give your post a title first"
 msgstr "Give your post a title first"
@@ -1649,6 +1663,10 @@ msgstr "How often"
 msgid "How the sending is going"
 msgstr "How the sending is going"
 
+#: src/components/ses-setup.tsx:123
+msgid "How to get these keys"
+msgstr "How to get these keys"
+
 #: src/routes/dashboard.forms_.$formId.tsx:169
 msgid "How to send to it"
 msgstr "How to send to it"
@@ -1656,6 +1674,10 @@ msgstr "How to send to it"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:279
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
+
+#: src/components/ses-setup.tsx:135
+msgid "IAM users"
+msgstr "IAM users"
 
 #: src/components/editor/toolbar.tsx:592
 msgid "Image"
@@ -1825,6 +1847,10 @@ msgstr "Leave empty to tell nobody"
 msgid "Leave empty to use this server's database"
 msgstr "Leave empty to use this server's database"
 
+#: src/components/ses-setup.tsx:190
+msgid "Leaving the sandbox"
+msgstr "Leaving the sandbox"
+
 #: src/components/ses-health.tsx:249
 msgid "Leaving the sandbox is the first increase. This is the one after it — Amazon treats it as a support request, and this opens one in the same words its console would."
 msgstr "Leaving the sandbox is the first increase. This is the one after it — Amazon treats it as a support request, and this opens one in the same words its console would."
@@ -1898,13 +1924,21 @@ msgstr "Made {0}"
 msgid "Mail"
 msgstr "Mail"
 
-#: src/routes/dashboard.plugins_.email.tsx:122
+#: src/routes/dashboard.plugins_.email.tsx:123
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Mail this site sends — a notification when somebody fills in one of your forms."
 
 #: src/components/local-env.tsx:153
 msgid "Make a token"
 msgstr "Make a token"
+
+#: src/components/ses-setup.tsx:163
+msgid "Make an access key for that user and paste the two halves above, with the region your SES lives in."
+msgstr "Make an access key for that user and paste the two halves above, with the region your SES lives in."
+
+#: src/components/ses-setup.tsx:131
+msgid "Make an IAM user in the AWS account that owns the sending domain."
+msgstr "Make an IAM user in the AWS account that owns the sending domain."
 
 #: src/routes/dashboard.languages.tsx:166
 msgid "Make default"
@@ -2276,6 +2310,10 @@ msgstr "Only for a private repository"
 msgid "Open"
 msgstr "Open"
 
+#: src/components/ses-setup.tsx:229
+msgid "Open a case at AWS"
+msgstr "Open a case at AWS"
+
 #: src/routes/console.login.tsx:113
 #: src/routes/console.register.tsx:78
 msgid "Open an agency account"
@@ -2371,6 +2409,10 @@ msgstr "People may join it from the site"
 msgid "Permalink"
 msgstr "Permalink"
 
+#: src/components/ses-setup.tsx:215
+msgid "Permissions in SES"
+msgstr "Permissions in SES"
+
 #: src/components/form-fields-editor.tsx:52
 msgid "Phone"
 msgstr "Phone"
@@ -2393,7 +2435,7 @@ msgstr "Plain text block"
 
 #: src/components/dashboard/dashboard-shell.tsx:85
 #: src/routes/dashboard.plugins_.backup.tsx:194
-#: src/routes/dashboard.plugins_.email.tsx:116
+#: src/routes/dashboard.plugins_.email.tsx:117
 #: src/routes/dashboard.plugins_.s3.tsx:111
 #: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
@@ -2680,7 +2722,7 @@ msgstr "Sandbox"
 
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:264
-#: src/components/site-mail.tsx:133
+#: src/components/site-mail.tsx:136
 #: src/routes/console.account.tsx:144
 #: src/routes/console.sites.$siteId.tsx:381
 #: src/routes/console.sites.$siteId.tsx:409
@@ -2690,20 +2732,20 @@ msgstr "Sandbox"
 #: src/routes/dashboard.mail.tsx:384
 #: src/routes/dashboard.mail.tsx:744
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:146
+#: src/routes/dashboard.plugins_.email.tsx:149
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Save"
 
 #: src/components/editor/status-bar.tsx:113
-#: src/components/site-mail.tsx:76
+#: src/components/site-mail.tsx:77
 #: src/routes/console.account.tsx:58
 #: src/routes/console.sites.$siteId.tsx:166
 #: src/routes/console.sites.$siteId.tsx:196
 #: src/routes/console.sites.$siteId.tsx:211
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:81
-#: src/routes/dashboard.plugins_.email.tsx:76
+#: src/routes/dashboard.plugins_.email.tsx:77
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Saved"
@@ -2769,9 +2811,9 @@ msgstr "Select all"
 msgid "Select your language"
 msgstr "Select your language"
 
-#: src/components/site-mail.tsx:159
+#: src/components/site-mail.tsx:162
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:312
-#: src/routes/dashboard.plugins_.email.tsx:176
+#: src/routes/dashboard.plugins_.email.tsx:179
 msgid "Send"
 msgstr "Send"
 
@@ -2779,8 +2821,8 @@ msgstr "Send"
 msgid "Send a form's answers. No account needed."
 msgstr "Send a form's answers. No account needed."
 
-#: src/components/site-mail.tsx:139
-#: src/routes/dashboard.plugins_.email.tsx:152
+#: src/components/site-mail.tsx:142
+#: src/routes/dashboard.plugins_.email.tsx:155
 msgid "Send a test"
 msgstr "Send a test"
 
@@ -2792,8 +2834,8 @@ msgstr "Send it"
 msgid "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 msgstr "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 
-#: src/components/site-mail.tsx:121
-#: src/routes/dashboard.plugins_.email.tsx:134
+#: src/components/site-mail.tsx:124
+#: src/routes/dashboard.plugins_.email.tsx:137
 msgid "Send mail through SES"
 msgstr "Send mail through SES"
 
@@ -2805,6 +2847,10 @@ msgstr "Send yourself one"
 #: src/components/ses-account.tsx:222
 msgid "Sending is off on this account ({0}). Nothing goes out until it is on again — Amazon switches it off itself when an account is in trouble."
 msgstr "Sending is off on this account ({0}). Nothing goes out until it is on again — Amazon switches it off itself when an account is in trouble."
+
+#: src/components/ses-setup.tsx:200
+msgid "Sending limits, and raising them"
+msgstr "Sending limits, and raising them"
 
 #: src/components/ses-account.tsx:178
 msgid "Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher."
@@ -2843,6 +2889,10 @@ msgstr "SEO title"
 #: src/components/form-fields-editor.tsx:196
 msgid "Separated by commas"
 msgstr "Separated by commas"
+
+#: src/components/ses-setup.tsx:227
+msgid "SES console"
+msgstr "SES console"
 
 #: src/components/ses-account.tsx:354
 msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
@@ -3034,6 +3084,10 @@ msgstr "Success!"
 msgid "Superscript"
 msgstr "Superscript"
 
+#: src/components/ses-setup.tsx:220
+msgid "Support cases, which a quota increase is"
+msgstr "Support cases, which a quota increase is"
+
 #: src/routes/dashboard.forms.tsx:183
 msgid "switched off"
 msgstr "switched off"
@@ -3152,6 +3206,10 @@ msgstr "The backup failed"
 msgid "The build runs with these. A name already here is replaced; the others are left alone."
 msgstr "The build runs with these. A name already here is replaced; the others are left alone."
 
+#: src/components/ses-setup.tsx:157
+msgid "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
+msgstr "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
+
 #: src/routes/dashboard.api.tsx:101
 msgid "The forms this site accepts answers on."
 msgstr "The forms this site accepts answers on."
@@ -3189,8 +3247,8 @@ msgstr "The most common shortcuts in the editor."
 msgid "The one your SES identities are verified in. Verification does not cross regions."
 msgstr "The one your SES identities are verified in. Verification does not cross regions."
 
-#: src/components/site-mail.tsx:141
-#: src/routes/dashboard.plugins_.email.tsx:154
+#: src/components/site-mail.tsx:144
+#: src/routes/dashboard.plugins_.email.tsx:157
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 
@@ -3365,9 +3423,21 @@ msgstr "value"
 msgid "Verified"
 msgstr "Verified"
 
+#: src/components/ses-setup.tsx:173
+msgid "Verified identities in {where}"
+msgstr "Verified identities in {where}"
+
 #: src/components/ses-account.tsx:370
 msgid "Verify"
 msgstr "Verify"
+
+#: src/components/ses-setup.tsx:169
+msgid "Verify the address or domain you send from. SES refuses to send from anything it has not verified."
+msgstr "Verify the address or domain you send from. SES refuses to send from anything it has not verified."
+
+#: src/components/ses-setup.tsx:195
+msgid "Verifying an address or a domain"
+msgstr "Verifying an address or a domain"
 
 #: src/components/editor/dialogs.tsx:541
 msgid "View"
@@ -3376,6 +3446,10 @@ msgstr "View"
 #: src/components/ses-account.tsx:388
 msgid "Waiting"
 msgstr "Waiting"
+
+#: src/components/ses-setup.tsx:210
+msgid "Watching how sending is going"
+msgstr "Watching how sending is going"
 
 #: src/components/setup/setup-wizard.tsx:641
 msgid "Weak"
@@ -3389,6 +3463,10 @@ msgstr "Website"
 #: src/components/ses-account.tsx:191
 msgid "What Amazon allows"
 msgstr "What Amazon allows"
+
+#: src/components/ses-setup.tsx:205
+msgid "What Amazon does about bounces and complaints"
+msgstr "What Amazon does about bounces and complaints"
 
 #: src/routes/dashboard.forms.tsx:231
 msgid "What comes in is kept as it was sent, so changing the fields later never rewrites it."
@@ -3410,7 +3488,7 @@ msgstr "What the mail is"
 msgid "What this form is for — only you see this"
 msgstr "What this form is for — only you see this"
 
-#: src/components/site-mail.tsx:111
+#: src/components/site-mail.tsx:112
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 
@@ -3439,9 +3517,9 @@ msgstr "Where this site's pages come from, and how the last builds went."
 msgid "Where to keep them"
 msgstr "Where to keep them"
 
-#: src/components/site-mail.tsx:150
+#: src/components/site-mail.tsx:153
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:304
-#: src/routes/dashboard.plugins_.email.tsx:163
+#: src/routes/dashboard.plugins_.email.tsx:166
 msgid "Where to send it"
 msgstr "Where to send it"
 

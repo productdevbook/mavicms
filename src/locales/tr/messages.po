@@ -487,10 +487,14 @@ msgstr "Alternatif metin"
 #~ msgid "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
 #~ msgstr "Amazon bu hesapta göndermeyi durdurmuş ({0}). Onlarla çözülene kadar hiçbir şey çıkmaz."
 
-#: src/routes/dashboard.plugins_.email.tsx:120
+#: src/routes/dashboard.plugins_.email.tsx:121
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Amazon SES"
 msgstr "Amazon SES"
+
+#: src/components/ses-setup.tsx:186
+msgid "Amazon's own pages"
+msgstr "Amazon'un kendi sayfaları"
 
 #: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
@@ -547,6 +551,10 @@ msgstr "E-posta ile onay iste"
 #: src/components/ses-account.tsx:343
 msgid "Ask to leave the sandbox"
 msgstr "Kum havuzundan çıkmayı iste"
+
+#: src/components/ses-setup.tsx:180
+msgid "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
+msgstr "Aşağıdaki bölümden kum havuzundan çıkmayı isteyin. Amazon kabul edene kadar SES yalnızca doğruladığınız adreslere yazar — yani iletişim formu denenebilir ama kullanılamaz."
 
 #: src/routes/console.account.tsx:130
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
@@ -858,6 +866,7 @@ msgstr "Panele devam et"
 #: src/components/editor/bubble-menus.tsx:317
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
+#: src/components/ses-setup.tsx:149
 #: src/routes/dashboard.forms_.$formId.tsx:53
 msgid "Copy"
 msgstr "Kopyala"
@@ -925,6 +934,7 @@ msgstr "Değiştirilemedi"
 
 #: src/components/local-env.tsx:109
 #: src/components/ses-account.tsx:151
+#: src/components/ses-setup.tsx:109
 #: src/routes/dashboard.forms_.$formId.tsx:41
 msgid "Could not copy it"
 msgstr "Kopyalanamadı"
@@ -955,10 +965,10 @@ msgid "Could not delete the backup"
 msgstr "Yedek silinemedi"
 
 #: src/components/ses-account.tsx:242
-#: src/components/site-mail.tsx:93
+#: src/components/site-mail.tsx:94
 #: src/routes/dashboard.forms_.$formId.tsx:89
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:104
-#: src/routes/dashboard.plugins_.email.tsx:93
+#: src/routes/dashboard.plugins_.email.tsx:94
 msgid "Could not do it"
 msgstr "Yapılamadı"
 
@@ -1003,8 +1013,8 @@ msgstr "Listeler yüklenemedi"
 msgid "Could not load the local settings"
 msgstr "Yerel ayarlar yüklenemedi"
 
-#: src/components/site-mail.tsx:59
-#: src/routes/dashboard.plugins_.email.tsx:56
+#: src/components/site-mail.tsx:60
+#: src/routes/dashboard.plugins_.email.tsx:57
 msgid "Could not load the mail settings"
 msgstr "Posta ayarları yüklenemedi"
 
@@ -1081,11 +1091,11 @@ msgstr "Dil silinemedi"
 msgid "Could not remove them"
 msgstr "Kaldırılamadı"
 
-#: src/components/site-mail.tsx:79
+#: src/components/site-mail.tsx:80
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:84
 #: src/routes/dashboard.mail.tsx:273
 #: src/routes/dashboard.mail.tsx:640
-#: src/routes/dashboard.plugins_.email.tsx:79
+#: src/routes/dashboard.plugins_.email.tsx:80
 msgid "Could not save it"
 msgstr "Kaydedilemedi"
 
@@ -1540,6 +1550,10 @@ msgstr "Başlıktan üret"
 msgid "Generate password"
 msgstr "Parola üret"
 
+#: src/components/ses-setup.tsx:141
+msgid "Give it this policy."
+msgstr "Şu politikayı verin."
+
 #: src/components/editor/mavi-editor.tsx:274
 msgid "Give your post a title first"
 msgstr "Önce yazıya bir başlık verin"
@@ -1645,6 +1659,10 @@ msgstr "Ne sıklıkla"
 msgid "How the sending is going"
 msgstr "Gönderim nasıl gidiyor"
 
+#: src/components/ses-setup.tsx:123
+msgid "How to get these keys"
+msgstr "Bu anahtarlar nasıl alınır"
+
 #: src/routes/dashboard.forms_.$formId.tsx:169
 msgid "How to send to it"
 msgstr "Buraya nasıl gönderilir"
@@ -1652,6 +1670,10 @@ msgstr "Buraya nasıl gönderilir"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:279
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} ve {{ unsubscribe_url }} her kişi için doldurulur; kişi hakkında tuttuğunuz diğer alanlar da öyle. Düz metin bölümü bundan kendiliğinden üretilir."
+
+#: src/components/ses-setup.tsx:135
+msgid "IAM users"
+msgstr "IAM kullanıcıları"
 
 #: src/components/editor/toolbar.tsx:592
 msgid "Image"
@@ -1821,6 +1843,10 @@ msgstr "Kimseye haber vermemek için boş bırakın"
 msgid "Leave empty to use this server's database"
 msgstr "Bu sunucunun veritabanını kullanmak için boş bırakın"
 
+#: src/components/ses-setup.tsx:190
+msgid "Leaving the sandbox"
+msgstr "Kum havuzundan çıkmak"
+
 #: src/components/ses-health.tsx:249
 msgid "Leaving the sandbox is the first increase. This is the one after it — Amazon treats it as a support request, and this opens one in the same words its console would."
 msgstr "Kum havuzundan çıkmak ilk artıştır. Bu ondan sonraki — Amazon bunu bir destek talebi sayar ve buradan, konsolunun kullanacağı ifadelerle bir talep açılır."
@@ -1894,13 +1920,21 @@ msgstr "{0} tarihinde üretildi"
 msgid "Mail"
 msgstr "Posta"
 
-#: src/routes/dashboard.plugins_.email.tsx:122
+#: src/routes/dashboard.plugins_.email.tsx:123
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Bu sitenin gönderdiği postalar — formlarınızdan biri doldurulduğunda bildirim."
 
 #: src/components/local-env.tsx:153
 msgid "Make a token"
 msgstr "Jeton üret"
+
+#: src/components/ses-setup.tsx:163
+msgid "Make an access key for that user and paste the two halves above, with the region your SES lives in."
+msgstr "O kullanıcı için bir erişim anahtarı üretin ve iki parçasını yukarıya, SES'inizin bulunduğu bölgeyle birlikte yapıştırın."
+
+#: src/components/ses-setup.tsx:131
+msgid "Make an IAM user in the AWS account that owns the sending domain."
+msgstr "Gönderim alan adının sahibi olan AWS hesabında bir IAM kullanıcısı oluşturun."
 
 #: src/routes/dashboard.languages.tsx:166
 msgid "Make default"
@@ -2272,6 +2306,10 @@ msgstr "Yalnızca özel depolar için"
 msgid "Open"
 msgstr "Aç"
 
+#: src/components/ses-setup.tsx:229
+msgid "Open a case at AWS"
+msgstr "AWS'de talep aç"
+
 #: src/routes/console.login.tsx:113
 #: src/routes/console.register.tsx:78
 msgid "Open an agency account"
@@ -2367,6 +2405,10 @@ msgstr "Siteden katılınabilir"
 msgid "Permalink"
 msgstr "Kalıcı bağlantı"
 
+#: src/components/ses-setup.tsx:215
+msgid "Permissions in SES"
+msgstr "SES'te yetkiler"
+
 #: src/components/form-fields-editor.tsx:52
 msgid "Phone"
 msgstr "Telefon"
@@ -2389,7 +2431,7 @@ msgstr "Düz metin bloğu"
 
 #: src/components/dashboard/dashboard-shell.tsx:85
 #: src/routes/dashboard.plugins_.backup.tsx:194
-#: src/routes/dashboard.plugins_.email.tsx:116
+#: src/routes/dashboard.plugins_.email.tsx:117
 #: src/routes/dashboard.plugins_.s3.tsx:111
 #: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
@@ -2676,7 +2718,7 @@ msgstr "Kum havuzu"
 
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:264
-#: src/components/site-mail.tsx:133
+#: src/components/site-mail.tsx:136
 #: src/routes/console.account.tsx:144
 #: src/routes/console.sites.$siteId.tsx:381
 #: src/routes/console.sites.$siteId.tsx:409
@@ -2686,20 +2728,20 @@ msgstr "Kum havuzu"
 #: src/routes/dashboard.mail.tsx:384
 #: src/routes/dashboard.mail.tsx:744
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:146
+#: src/routes/dashboard.plugins_.email.tsx:149
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Kaydet"
 
 #: src/components/editor/status-bar.tsx:113
-#: src/components/site-mail.tsx:76
+#: src/components/site-mail.tsx:77
 #: src/routes/console.account.tsx:58
 #: src/routes/console.sites.$siteId.tsx:166
 #: src/routes/console.sites.$siteId.tsx:196
 #: src/routes/console.sites.$siteId.tsx:211
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:81
-#: src/routes/dashboard.plugins_.email.tsx:76
+#: src/routes/dashboard.plugins_.email.tsx:77
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Kaydedildi"
@@ -2765,9 +2807,9 @@ msgstr "Tümünü seç"
 msgid "Select your language"
 msgstr "Dilinizi seçin"
 
-#: src/components/site-mail.tsx:159
+#: src/components/site-mail.tsx:162
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:312
-#: src/routes/dashboard.plugins_.email.tsx:176
+#: src/routes/dashboard.plugins_.email.tsx:179
 msgid "Send"
 msgstr "Gönder"
 
@@ -2775,8 +2817,8 @@ msgstr "Gönder"
 msgid "Send a form's answers. No account needed."
 msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
 
-#: src/components/site-mail.tsx:139
-#: src/routes/dashboard.plugins_.email.tsx:152
+#: src/components/site-mail.tsx:142
+#: src/routes/dashboard.plugins_.email.tsx:155
 msgid "Send a test"
 msgstr "Deneme gönder"
 
@@ -2788,8 +2830,8 @@ msgstr "Gönder"
 msgid "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 msgstr "Amazon SES üzerinden posta gönderin — bu sitenin formlarından biri doldurulduğunda bildirim."
 
-#: src/components/site-mail.tsx:121
-#: src/routes/dashboard.plugins_.email.tsx:134
+#: src/components/site-mail.tsx:124
+#: src/routes/dashboard.plugins_.email.tsx:137
 msgid "Send mail through SES"
 msgstr "Postaları SES ile gönder"
 
@@ -2801,6 +2843,10 @@ msgstr "Kendinize bir tane gönderin"
 #: src/components/ses-account.tsx:222
 msgid "Sending is off on this account ({0}). Nothing goes out until it is on again — Amazon switches it off itself when an account is in trouble."
 msgstr "Bu hesapta gönderim kapalı ({0}). Yeniden açılana kadar hiçbir şey çıkmaz — hesap sıkıntıya girdiğinde Amazon bunu kendisi kapatır."
+
+#: src/components/ses-setup.tsx:200
+msgid "Sending limits, and raising them"
+msgstr "Gönderim sınırları ve artırılması"
 
 #: src/components/ses-account.tsx:178
 msgid "Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher."
@@ -2839,6 +2885,10 @@ msgstr "SEO başlığı"
 #: src/components/form-fields-editor.tsx:196
 msgid "Separated by commas"
 msgstr "Virgülle ayırın"
+
+#: src/components/ses-setup.tsx:227
+msgid "SES console"
+msgstr "SES konsolu"
 
 #: src/components/ses-account.tsx:354
 msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
@@ -3030,6 +3080,10 @@ msgstr "Başarılı!"
 msgid "Superscript"
 msgstr "Üst simge"
 
+#: src/components/ses-setup.tsx:220
+msgid "Support cases, which a quota increase is"
+msgstr "Destek talepleri — kota artışı da bunlardan biri"
+
 #: src/routes/dashboard.forms.tsx:183
 msgid "switched off"
 msgstr "kapalı"
@@ -3148,6 +3202,10 @@ msgstr "Yedekleme başarısız oldu"
 msgid "The build runs with these. A name already here is replaced; the others are left alone."
 msgstr "Derleme bunlarla çalışır. Aynı isim varsa üzerine yazılır, diğerlerine dokunulmaz."
 
+#: src/components/ses-setup.tsx:157
+msgid "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
+msgstr "İlk blok göndermek için gereken her şey; gerisi bu sayfanın okuduğu ve istediği şeyler. Herhangi bir blok çıkarılabilir — yalnızca sayfanın o kısmını kaybedersiniz, başka bir şeyi değil."
+
 #: src/routes/dashboard.api.tsx:101
 msgid "The forms this site accepts answers on."
 msgstr "Bu sitenin yanıt aldığı formlar."
@@ -3185,8 +3243,8 @@ msgstr "Editörde en sık kullanılan kısayollar."
 msgid "The one your SES identities are verified in. Verification does not cross regions."
 msgstr "SES kimliklerinizin doğrulandığı bölge. Doğrulama bölgeler arasında geçmez."
 
-#: src/components/site-mail.tsx:141
-#: src/routes/dashboard.plugins_.email.tsx:154
+#: src/components/site-mail.tsx:144
+#: src/routes/dashboard.plugins_.email.tsx:157
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, SES'in doğrulamadığı bir adres ve hâlâ kum havuzundaki bir hesap — gerçekten bir şey gönderilene kadar üçü de aynı görünür."
 
@@ -3361,9 +3419,21 @@ msgstr "değer"
 msgid "Verified"
 msgstr "Doğrulandı"
 
+#: src/components/ses-setup.tsx:173
+msgid "Verified identities in {where}"
+msgstr "{where} bölgesindeki doğrulanmış kimlikler"
+
 #: src/components/ses-account.tsx:370
 msgid "Verify"
 msgstr "Doğrula"
+
+#: src/components/ses-setup.tsx:169
+msgid "Verify the address or domain you send from. SES refuses to send from anything it has not verified."
+msgstr "Gönderdiğiniz adresi ya da alan adını doğrulayın. SES, doğrulamadığı hiçbir şeyden göndermez."
+
+#: src/components/ses-setup.tsx:195
+msgid "Verifying an address or a domain"
+msgstr "Adres ya da alan adı doğrulamak"
 
 #: src/components/editor/dialogs.tsx:541
 msgid "View"
@@ -3372,6 +3442,10 @@ msgstr "Görünüm"
 #: src/components/ses-account.tsx:388
 msgid "Waiting"
 msgstr "Bekliyor"
+
+#: src/components/ses-setup.tsx:210
+msgid "Watching how sending is going"
+msgstr "Gönderimin nasıl gittiğini izlemek"
 
 #: src/components/setup/setup-wizard.tsx:641
 msgid "Weak"
@@ -3385,6 +3459,10 @@ msgstr "Web sitesi"
 #: src/components/ses-account.tsx:191
 msgid "What Amazon allows"
 msgstr "Amazon'un izin verdiği"
+
+#: src/components/ses-setup.tsx:205
+msgid "What Amazon does about bounces and complaints"
+msgstr "Amazon'un iade ve şikâyetlere ne yaptığı"
 
 #: src/routes/dashboard.forms.tsx:231
 msgid "What comes in is kept as it was sent, so changing the fields later never rewrites it."
@@ -3406,7 +3484,7 @@ msgstr "Postanın türü"
 msgid "What this form is for — only you see this"
 msgstr "Bu form ne için — bunu yalnızca siz görürsünüz"
 
-#: src/components/site-mail.tsx:111
+#: src/components/site-mail.tsx:112
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "Bu sitenin postayı neyle gönderdiği. Bir form haber verilecek bir adres belirtebilir; oraya bu yoldan ulaşır."
 
@@ -3435,9 +3513,9 @@ msgstr "Bu sitenin sayfaları nereden geliyor ve son derlemeler nasıl gitti."
 msgid "Where to keep them"
 msgstr "Nerede saklansın"
 
-#: src/components/site-mail.tsx:150
+#: src/components/site-mail.tsx:153
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:304
-#: src/routes/dashboard.plugins_.email.tsx:163
+#: src/routes/dashboard.plugins_.email.tsx:166
 msgid "Where to send it"
 msgstr "Nereye gönderilsin"
 

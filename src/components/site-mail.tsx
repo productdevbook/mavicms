@@ -18,6 +18,7 @@ import { Switch } from "@/components/ui/switch"
 import { EmailFields } from "@/components/plugin-forms"
 import { SesAccountPanel } from "@/components/ses-account"
 import { SesHealthPanel } from "@/components/ses-health"
+import { SesSetupGuide } from "@/components/ses-setup"
 
 /**
  * One site's mail settings, from the agency's side.
@@ -110,6 +111,8 @@ export function SiteMail({ siteId }: { siteId: string }) {
       <p className="text-sm text-muted-foreground">
         {t`What this site sends mail with. A form can name an address to tell, and this is how it gets there.`}
       </p>
+
+      <SesSetupGuide region={form.region} />
 
       <Label className="flex items-center gap-3 font-normal">
         <Switch
