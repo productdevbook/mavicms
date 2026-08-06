@@ -200,6 +200,10 @@ async fn find_form(db: &sea_orm::DatabaseConnection, id: Uuid) -> AppResult<form
 }
 
 /// One form.
+///
+/// Any account on the site, a build included: this is the shape a form
+/// accepts, not what anybody sent through it, and a build that draws the
+/// site's contact form from this definition is a reader worth allowing.
 #[utoipa::path(
     get,
     path = "/forms/{id}",
@@ -312,6 +316,12 @@ pub struct SubmissionsQuery {
 }
 
 /// What has been sent through a form.
+///
+/// Administrators only, unlike the form's own definition above. What a form
+/// asks for is a shape and reading it lets a build draw the form; what people
+/// answered is their name, their address and their telephone number, and the
+/// build token that reads this site's posts is handed to whatever builds the
+/// pages. It has no business with any of that.
 #[utoipa::path(
     get,
     path = "/forms/{id}/submissions",
@@ -320,6 +330,7 @@ pub struct SubmissionsQuery {
     responses((status = 200, description = "Submissions, newest first", body = Vec<SubmissionResponse>))
 )]
 pub async fn list_submissions(
+    _admin: Administrator,
     Site(state): Site,
     Path(id): Path<Uuid>,
     Query(query): Query<SubmissionsQuery>,
@@ -353,6 +364,10 @@ pub async fn list_submissions(
 }
 
 /// Mark everything a form holds as read.
+///
+/// A build token cannot reach this today — it is a POST, and a build may only
+/// read — but the gate is stated here rather than left to that, because "the
+/// method happens to be POST" is not the reason this is refused.
 #[utoipa::path(
     post,
     path = "/forms/{id}/seen",
@@ -360,7 +375,11 @@ pub async fn list_submissions(
     params(("id" = Uuid, Path, description = "Form id")),
     responses((status = 204, description = "Marked"))
 )]
-pub async fn mark_seen(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
+pub async fn mark_seen(
+    _admin: Administrator,
+    Site(state): Site,
+    Path(id): Path<Uuid>,
+) -> AppResult<StatusCode> {
     let db = state.db();
     find_form(db, id).await?;
 
