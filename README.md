@@ -3,8 +3,6 @@
 A self-hosted CMS with a Rust backend and a Tiptap editor. Bring your own
 database — Postgres, MySQL or SQLite — and your own object storage, or none.
 
-[Türkçe belgeler →](README.tr.md)
-
 - **Rust backend** — Axum, SeaORM, OpenAPI docs, argon2 password hashing,
   session cookies.
 - **Any database** — one `DATABASE_URL` away from Postgres, MySQL or SQLite.
@@ -97,7 +95,7 @@ The frontend expects the backend on `:8080`; point it elsewhere with
 `VITE_API_PROXY_TARGET`.
 
 ```bash
-bun run build        # vite build (also regenerates the route tree)
+bun run build        # builds, then typechecks — vite generates the route tree
 bun run typecheck
 bun run lint
 bun run extract      # pull new translatable strings into src/locales/*/messages.po
