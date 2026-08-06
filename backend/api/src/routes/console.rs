@@ -485,36 +485,41 @@ pub async fn enter(
 /// agency's console account closes every site with it rather than leaving a
 /// working login behind on fifty of them.
 ///
-/// Found by a name built from the agency account's id rather than by its
-/// email, because an agency that changes its email is the same agency — going
-/// by email left the old account behind on every site it had ever opened and
-/// made a second one beside it.
+/// Found by a name built from the agency account's id, and by nothing else.
+///
+/// The id rather than the email, because an agency that changes its email is
+/// the same agency — going by email left the old account behind on every site
+/// it had ever opened and made a second one beside it.
+///
+/// And *only* the id: matching on the email as well would mean an agency whose
+/// address happens to match somebody already writing on the site takes that
+/// person's account over — renames it, and signs in as them. An agency and one
+/// of its customers' editors sharing an address is not unusual; the same
+/// person often is both.
+///
+/// The whole id, not a prefix of it: two agencies sharing eight characters
+/// would share an account, and there is no reason to leave that reasoning to
+/// anybody.
 async fn agency_user(db: &sea_orm::DatabaseConnection, operator: &Operator) -> AppResult<Uuid> {
     use sea_orm::{ActiveModelTrait, ActiveValue::Set, ColumnTrait, EntityTrait, QueryFilter};
 
     use crate::entities::user;
 
-    let username = format!(
-        "agency-{}",
-        operator.id.to_string().split('-').next().unwrap_or("0")
-    );
+    let username = format!("agency-{}", operator.id);
 
-    // By the stable name, or by the email for the accounts made before there
-    // was one — either way there is one account, and it ends up with both.
     let existing = user::Entity::find()
-        .filter(
-            sea_orm::Condition::any()
-                .add(user::Column::Username.eq(username.clone()))
-                .add(user::Column::Email.eq(operator.email.clone())),
-        )
+        .filter(user::Column::Username.eq(username.clone()))
         .one(db)
         .await?;
 
     if let Some(found) = existing {
-        let mut changed: user::ActiveModel = found.clone().into();
-        changed.username = Set(username);
-        changed.email = Set(operator.email.clone());
-        changed.update(db).await?;
+        // The email follows the console account, so a change there shows here
+        // too — but only on an account this agency already owns.
+        if found.email != operator.email {
+            let mut changed: user::ActiveModel = found.clone().into();
+            changed.email = Set(operator.email.clone());
+            changed.update(db).await?;
+        }
         return Ok(found.id);
     }
 
