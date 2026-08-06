@@ -270,11 +270,11 @@ msgstr "A folder inside the data directory."
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 
-#: src/components/ses-account.tsx:437
+#: src/components/ses-account.tsx:442
 msgid "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 msgstr "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 
-#: src/components/ses-account.tsx:255
+#: src/components/ses-account.tsx:260
 msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 msgstr "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 
@@ -287,7 +287,7 @@ msgstr "A post carries <0>content_markdown</0>, which is what it is written as, 
 msgid "A prefix inside the bucket."
 msgstr "A prefix inside the bucket."
 
-#: src/components/ses-account.tsx:210
+#: src/components/ses-account.tsx:215
 msgid "a second, at most"
 msgstr "a second, at most"
 
@@ -420,7 +420,7 @@ msgstr "Added here counts as confirmed — say so only if they asked to be on it
 msgid "Address"
 msgstr "Address"
 
-#: src/components/ses-account.tsx:435
+#: src/components/ses-account.tsx:440
 msgid "Addresses Amazon refuses"
 msgstr "Addresses Amazon refuses"
 
@@ -505,8 +505,12 @@ msgid "An email each time somebody fills this in. Needs Amazon SES switched on u
 msgstr "An email each time somebody fills this in. Needs Amazon SES switched on under Plugins — what comes in is kept either way."
 
 #: src/components/plugin-forms.tsx:342
-msgid "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
-msgstr "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
+#~ msgid "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
+#~ msgstr "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
+
+#: src/components/plugin-forms.tsx:342
+msgid "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
+msgstr "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 
 #: src/components/editor/post-settings.tsx:41
 #~ msgid "Announcement"
@@ -540,7 +544,7 @@ msgstr "Ask for it"
 msgid "Ask people to confirm by email"
 msgstr "Ask people to confirm by email"
 
-#: src/components/ses-account.tsx:338
+#: src/components/ses-account.tsx:343
 msgid "Ask to leave the sandbox"
 msgstr "Ask to leave the sandbox"
 
@@ -905,7 +909,7 @@ msgid "Could not ask"
 msgstr "Could not ask"
 
 #: src/components/ses-account.tsx:100
-#: src/components/ses-account.tsx:174
+#: src/components/ses-account.tsx:175
 #: src/components/ses-health.tsx:114
 #: src/components/ses-health.tsx:130
 #: src/components/ses-health.tsx:170
@@ -950,7 +954,7 @@ msgstr "Could not delete tag"
 msgid "Could not delete the backup"
 msgstr "Could not delete the backup"
 
-#: src/components/ses-account.tsx:237
+#: src/components/ses-account.tsx:242
 #: src/components/site-mail.tsx:93
 #: src/routes/dashboard.forms_.$formId.tsx:89
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:104
@@ -1058,7 +1062,7 @@ msgstr "Could not reach the server. Please try again."
 msgid "Could not read the file"
 msgstr "Could not read the file"
 
-#: src/components/ses-account.tsx:395
+#: src/components/ses-account.tsx:400
 #: src/routes/dashboard.forms_.$formId.tsx:103
 #: src/routes/dashboard.forms.tsx:127
 #: src/routes/dashboard.mail.tsx:206
@@ -1123,7 +1127,7 @@ msgstr "Could not start the build"
 msgid "Could not take it back"
 msgstr "Could not take it back"
 
-#: src/components/ses-account.tsx:467
+#: src/components/ses-account.tsx:472
 msgid "Could not unblock it"
 msgstr "Could not unblock it"
 
@@ -1298,7 +1302,7 @@ msgstr "Description text shown in search results."
 #~ msgid "Design"
 #~ msgstr "Design"
 
-#: src/components/ses-account.tsx:457
+#: src/components/ses-account.tsx:462
 #: src/components/ses-health.tsx:180
 msgid "Did not arrive"
 msgstr "Did not arrive"
@@ -1515,7 +1519,7 @@ msgstr "From address"
 msgid "From name"
 msgstr "From name"
 
-#: src/components/ses-account.tsx:262
+#: src/components/ses-account.tsx:267
 msgid "Full access"
 msgstr "Full access"
 
@@ -1792,7 +1796,7 @@ msgid "Large section heading"
 msgstr "Large section heading"
 
 #. placeholder {0}: account.review_status
-#: src/components/ses-account.tsx:268
+#: src/components/ses-account.tsx:273
 msgid "Last request: {0}"
 msgstr "Last request: {0}"
 
@@ -1965,7 +1969,7 @@ msgstr "Mention someone"
 msgid "Merge cells"
 msgstr "Merge cells"
 
-#: src/components/ses-account.tsx:195
+#: src/components/ses-account.tsx:200
 msgid "messages a day"
 msgstr "messages a day"
 
@@ -2051,8 +2055,8 @@ msgstr "New tag"
 msgid "New template"
 msgstr "New template"
 
-#: src/components/ses-account.tsx:284
-#: src/components/ses-account.tsx:294
+#: src/components/ses-account.tsx:289
+#: src/components/ses-account.tsx:299
 msgid "Newsletters and campaigns"
 msgstr "Newsletters and campaigns"
 
@@ -2082,7 +2086,7 @@ msgstr "No emoji found"
 msgid "No forms yet"
 msgstr "No forms yet"
 
-#: src/components/ses-account.tsx:192
+#: src/components/ses-account.tsx:197
 msgid "no limit"
 msgstr "no limit"
 
@@ -2141,7 +2145,7 @@ msgstr "No tokens yet"
 msgid "Nobody here yet"
 msgstr "Nobody here yet"
 
-#: src/components/ses-account.tsx:443
+#: src/components/ses-account.tsx:448
 msgid "None"
 msgstr "None"
 
@@ -2185,12 +2189,12 @@ msgstr "Nothing sent in the last two weeks"
 msgid "Nothing sent yet"
 msgstr "Nothing sent yet"
 
-#: src/components/ses-account.tsx:371
+#: src/components/ses-account.tsx:376
 msgid "Nothing verified yet"
 msgstr "Nothing verified yet"
 
-#: src/components/ses-account.tsx:285
-#: src/components/ses-account.tsx:291
+#: src/components/ses-account.tsx:290
+#: src/components/ses-account.tsx:296
 msgid "Notifications people asked for"
 msgstr "Notifications people asked for"
 
@@ -2471,7 +2475,7 @@ msgstr "Publish"
 msgid "Publish date"
 msgstr "Publish date"
 
-#: src/components/ses-account.tsx:405
+#: src/components/ses-account.tsx:410
 msgid "Publish these three CNAME records on the domain, then this turns itself green."
 msgstr "Publish these three CNAME records on the domain, then this turns itself green."
 
@@ -2542,7 +2546,7 @@ msgstr "Regular expression"
 #: src/components/editor/bubble-menus.tsx:274
 #: src/components/form-fields-editor.tsx:175
 #: src/components/publish-panel.tsx:136
-#: src/components/ses-account.tsx:390
+#: src/components/ses-account.tsx:395
 #: src/routes/dashboard.forms_.$formId.tsx:224
 #: src/routes/dashboard.forms.tsx:211
 #: src/routes/dashboard.forms.tsx:351
@@ -2614,7 +2618,7 @@ msgstr "Reply-to"
 msgid "Reported as spam"
 msgstr "Reported as spam"
 
-#: src/components/ses-account.tsx:456
+#: src/components/ses-account.tsx:461
 msgid "Reported it as spam"
 msgstr "Reported it as spam"
 
@@ -2642,7 +2646,7 @@ msgstr "Restore this backup?"
 msgid "Restored: {rows} rows and {0} files"
 msgstr "Restored: {rows} rows and {0} files"
 
-#: src/components/ses-account.tsx:244
+#: src/components/ses-account.tsx:249
 msgid "Resume sending"
 msgstr "Resume sending"
 
@@ -2670,7 +2674,7 @@ msgstr "S3 bucket ({0})"
 msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
-#: src/components/ses-account.tsx:251
+#: src/components/ses-account.tsx:256
 msgid "Sandbox"
 msgstr "Sandbox"
 
@@ -2798,15 +2802,19 @@ msgid "Send yourself one"
 msgstr "Send yourself one"
 
 #. placeholder {0}: account.enforcement_status
-#: src/components/ses-account.tsx:217
+#: src/components/ses-account.tsx:222
 msgid "Sending is off on this account ({0}). Nothing goes out until it is on again — Amazon switches it off itself when an account is in trouble."
 msgstr "Sending is off on this account ({0}). Nothing goes out until it is on again — Amazon switches it off itself when an account is in trouble."
 
-#: src/components/ses-account.tsx:231
+#: src/components/ses-account.tsx:178
+msgid "Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher."
+msgstr "Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher."
+
+#: src/components/ses-account.tsx:236
 msgid "Sending resumed"
 msgstr "Sending resumed"
 
-#: src/components/ses-account.tsx:230
+#: src/components/ses-account.tsx:235
 msgid "Sending stopped"
 msgstr "Sending stopped"
 
@@ -2815,7 +2823,7 @@ msgstr "Sending stopped"
 msgid "Sent"
 msgstr "Sent"
 
-#: src/components/ses-account.tsx:206
+#: src/components/ses-account.tsx:211
 msgid "sent in the last day"
 msgstr "sent in the last day"
 
@@ -2836,7 +2844,7 @@ msgstr "SEO title"
 msgid "Separated by commas"
 msgstr "Separated by commas"
 
-#: src/components/ses-account.tsx:349
+#: src/components/ses-account.tsx:354
 msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 msgstr "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 
@@ -2944,7 +2952,7 @@ msgstr "Sites"
 msgid "Small section heading"
 msgstr "Small section heading"
 
-#: src/components/ses-account.tsx:357
+#: src/components/ses-account.tsx:362
 msgid "someone@example.com or example.com"
 msgstr "someone@example.com or example.com"
 
@@ -2964,7 +2972,7 @@ msgstr "Status"
 msgid "Stop"
 msgstr "Stop"
 
-#: src/components/ses-account.tsx:244
+#: src/components/ses-account.tsx:249
 msgid "Stop all sending"
 msgstr "Stop all sending"
 
@@ -3220,7 +3228,7 @@ msgstr "These answer to anybody, because a visitor filling in a contact form has
 msgid "They can write, publish and manage this site."
 msgstr "They can write, publish and manage this site."
 
-#: src/components/ses-account.tsx:254
+#: src/components/ses-account.tsx:259
 msgid "This account is out of the sandbox: it can write to anybody."
 msgstr "This account is out of the sandbox: it can write to anybody."
 
@@ -3273,7 +3281,7 @@ msgstr "Try again"
 msgid "Turn into"
 msgstr "Turn into"
 
-#: src/components/ses-account.tsx:470
+#: src/components/ses-account.tsx:475
 msgid "Unblock"
 msgstr "Unblock"
 
@@ -3353,11 +3361,11 @@ msgstr "Username"
 msgid "value"
 msgstr "value"
 
-#: src/components/ses-account.tsx:383
+#: src/components/ses-account.tsx:388
 msgid "Verified"
 msgstr "Verified"
 
-#: src/components/ses-account.tsx:365
+#: src/components/ses-account.tsx:370
 msgid "Verify"
 msgstr "Verify"
 
@@ -3365,7 +3373,7 @@ msgstr "Verify"
 msgid "View"
 msgstr "View"
 
-#: src/components/ses-account.tsx:383
+#: src/components/ses-account.tsx:388
 msgid "Waiting"
 msgstr "Waiting"
 
@@ -3373,12 +3381,12 @@ msgstr "Waiting"
 msgid "Weak"
 msgstr "Weak"
 
-#: src/components/ses-account.tsx:301
+#: src/components/ses-account.tsx:306
 #: src/components/ses-health.tsx:282
 msgid "Website"
 msgstr "Website"
 
-#: src/components/ses-account.tsx:186
+#: src/components/ses-account.tsx:191
 msgid "What Amazon allows"
 msgstr "What Amazon allows"
 
@@ -3394,7 +3402,7 @@ msgstr "What has come in, newest first."
 msgid "What it is"
 msgstr "What it is"
 
-#: src/components/ses-account.tsx:273
+#: src/components/ses-account.tsx:278
 msgid "What the mail is"
 msgstr "What the mail is"
 
@@ -3449,7 +3457,7 @@ msgstr "Who can sign in to this site and write on it."
 msgid "Who gets it"
 msgstr "Who gets it"
 
-#: src/components/ses-account.tsx:324
+#: src/components/ses-account.tsx:329
 msgid "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 msgstr "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 
@@ -3457,7 +3465,7 @@ msgstr "Who receives it, how they came to be on the list, and how they stop it. 
 msgid "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 msgstr "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 
-#: src/components/ses-account.tsx:347
+#: src/components/ses-account.tsx:352
 msgid "Who you may send as"
 msgstr "Who you may send as"
 
@@ -3473,7 +3481,7 @@ msgstr "Whole word"
 msgid "Why you need it"
 msgstr "Why you need it"
 
-#: src/components/ses-account.tsx:313
+#: src/components/ses-account.tsx:318
 msgid "Why you send"
 msgstr "Why you send"
 

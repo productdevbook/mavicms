@@ -339,7 +339,7 @@ export function EmailFields({
           }
         />
         <p className="text-sm text-muted-foreground">
-          {t`An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else.`}
+          {t`An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is.`}
         </p>
       </div>
 

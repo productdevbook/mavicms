@@ -170,9 +170,14 @@ export function SesAccountPanel({
 
   if (problem || !account) {
     return (
-      <p className="rounded-xl border border-dashed border-border px-4 py-6 text-sm text-muted-foreground">
-        {problem ?? t`Could not ask Amazon`}
-      </p>
+      <div className="flex flex-col gap-2 rounded-xl border border-dashed border-border px-4 py-6">
+        <p className="text-sm text-muted-foreground">
+          {problem ?? t`Could not ask Amazon`}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {t`Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher.`}
+        </p>
+      </div>
     )
   }
 
