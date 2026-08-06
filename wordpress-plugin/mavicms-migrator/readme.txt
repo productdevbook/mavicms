@@ -4,7 +4,7 @@ Tags: migration, export, cms, headless
 Requires at least: 5.9
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.1.6
+Stable tag: 0.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,14 @@ its own copy. An image it cannot fetch keeps its original address, and the
 failure is shown in the log.
 
 == Changelog ==
+
+= 0.1.7 =
+* Copy images in post content even when WordPress has no matchable media
+  record for them, which is most of what a page builder produces. They were
+  being skipped in silence, leaving posts loading their pictures from the site
+  they had just left.
+* Link a translation as it is migrated, rather than only in a pass at the end,
+  so an interrupted run leaves what it did send correctly linked.
 
 = 0.1.6 =
 * Adopt posts that are already on the destination instead of failing on them.

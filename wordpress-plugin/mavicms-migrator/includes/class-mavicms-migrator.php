@@ -228,7 +228,23 @@ class MaviCMS_Migrator {
 			'allow_comments' => 'closed' !== $post->comment_status,
 		);
 
+		// Link as we go: if a translation of this post has already been sent,
+		// join its group now. Leaving it all to the pass at the end means an
+		// interrupted run ends with everything it did send unlinked.
+		$sibling = $this->migrated_sibling( $post_id );
+		if ( $sibling ) {
+			$payload['translation_of'] = $sibling;
+		}
+
 		$created = $this->client->create_post( $payload );
+		if ( is_wp_error( $created ) && $sibling ) {
+			// The group may already hold this language — from an earlier run,
+			// or two WordPress posts claiming the same translation. Send it
+			// unlinked rather than losing the post; the pass at the end sorts
+			// out what it can.
+			unset( $payload['translation_of'] );
+			$created = $this->client->create_post( $payload );
+		}
 		if ( is_wp_error( $created ) ) {
 			// It may simply be there already, from a run whose record of what
 			// it had sent was cleared. Adopt it rather than reporting a
@@ -276,6 +292,23 @@ class MaviCMS_Migrator {
 			'status'  => $this->warnings ? 'warned' : 'migrated',
 			'message' => $message,
 		);
+	}
+
+	/**
+	 * The destination id of a translation of this post that has already been
+	 * migrated, if there is one.
+	 *
+	 * @param int $post_id WordPress post id.
+	 * @return string|null
+	 */
+	private function migrated_sibling( $post_id ) {
+		$posts_map = $this->map( self::OPTION_MAP_POSTS );
+		foreach ( $this->translation_group_of( $post_id ) as $sibling_id ) {
+			if ( (int) $sibling_id !== (int) $post_id && isset( $posts_map[ $sibling_id ] ) ) {
+				return $posts_map[ $sibling_id ];
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -382,26 +415,63 @@ class MaviCMS_Migrator {
 	 * @return string|WP_Error New URL on the Mavi CMS side.
 	 */
 	private function migrate_attachment( $attachment_id ) {
-		$media = $this->map( self::OPTION_MAP_MEDIA );
-		if ( isset( $media[ $attachment_id ] ) ) {
-			return $media[ $attachment_id ];
-		}
-
 		$source = wp_get_attachment_url( $attachment_id );
 		if ( ! $source ) {
 			return new WP_Error( 'mavicms_no_attachment', __( 'The attachment has no URL.', 'mavicms-migrator' ) );
 		}
+		return $this->migrate_image( $source, (int) $attachment_id );
+	}
 
-		$filename = basename( wp_parse_url( $source, PHP_URL_PATH ) );
-		$alt      = (string) get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+	/**
+	 * Copies one image across by its address, whether or not WordPress still
+	 * has a media record for it.
+	 *
+	 * Keyed by address rather than attachment id: page builders and pasted
+	 * markup point at files whose attachment row is missing or unmatchable,
+	 * and refusing to move those was leaving posts loading their pictures from
+	 * the site they had just left.
+	 *
+	 * @param string   $source        Absolute URL of the image.
+	 * @param int|null $attachment_id Its attachment, when there is one — used
+	 *                                for the alt text and the local file.
+	 * @return string|WP_Error New URL on the Mavi CMS side.
+	 */
+	private function migrate_image( $source, $attachment_id = null ) {
+		$media = $this->map( self::OPTION_MAP_MEDIA );
+
+		// One entry per image, not per generated size: "photo-300x200.jpg" and
+		// "photo.jpg" are the same picture and must not be copied twice.
+		$key = $this->strip_size_suffix( $source );
+		if ( isset( $media[ $key ] ) ) {
+			return $media[ $key ];
+		}
+		// Earlier versions keyed this map by attachment id; honour those so an
+		// upgrade mid-migration does not re-upload what is already across.
+		if ( $attachment_id && isset( $media[ $attachment_id ] ) ) {
+			return $media[ $attachment_id ];
+		}
+
+		// Prefer the original over whichever generated size the content
+		// happened to reference.
+		if ( $attachment_id ) {
+			$full = wp_get_attachment_url( $attachment_id );
+			if ( $full ) {
+				$source = $full;
+			}
+		}
+
+		$filename = basename( (string) wp_parse_url( $source, PHP_URL_PATH ) );
+		$alt      = $attachment_id
+			? (string) get_post_meta( $attachment_id, '_wp_attachment_image_alt', true )
+			: '';
 
 		$imported = $this->client->import_media( $source, $filename, $alt );
 		if ( is_wp_error( $imported ) ) {
 			// Mavi CMS could not reach this site — behind a firewall, on a
 			// private network, or on the same machine. Push the bytes instead
 			// of asking it to pull them.
-			$path = get_attached_file( $attachment_id );
-			if ( ! $path || ! file_exists( $path ) ) {
+			$path = $this->local_path( $source, $attachment_id );
+			if ( ! $path ) {
 				return $imported;
 			}
 			$imported = $this->client->upload_media( $path, $filename );
@@ -412,11 +482,44 @@ class MaviCMS_Migrator {
 
 		$url = $this->absolute_media_url( $imported['url'] );
 
-		$media                   = $this->map( self::OPTION_MAP_MEDIA );
-		$media[ $attachment_id ] = $url;
+		$media         = $this->map( self::OPTION_MAP_MEDIA );
+		$media[ $key ] = $url;
 		$this->save_map( self::OPTION_MAP_MEDIA, $media );
 
 		return $url;
+	}
+
+	/**
+	 * Where the file sits on disk, from its attachment or worked out from the
+	 * uploads directory.
+	 *
+	 * @param string   $source        Absolute URL of the image.
+	 * @param int|null $attachment_id Its attachment, when there is one.
+	 * @return string|null
+	 */
+	private function local_path( $source, $attachment_id ) {
+		if ( $attachment_id ) {
+			$path = get_attached_file( $attachment_id );
+			if ( $path && file_exists( $path ) ) {
+				return $path;
+			}
+		}
+
+		$uploads = wp_get_upload_dir();
+		if ( empty( $uploads['baseurl'] ) || empty( $uploads['basedir'] ) ) {
+			return null;
+		}
+		if ( 0 !== strpos( $source, $uploads['baseurl'] ) ) {
+			return null;
+		}
+
+		$relative = ltrim( substr( $source, strlen( $uploads['baseurl'] ) ), '/' );
+		// No traversal out of the uploads directory, whatever the content says.
+		if ( '' === $relative || false !== strpos( $relative, '..' ) ) {
+			return null;
+		}
+		$path = $uploads['basedir'] . '/' . $relative;
+		return file_exists( $path ) ? $path : null;
 	}
 
 	/**
@@ -448,11 +551,11 @@ class MaviCMS_Migrator {
 
 		$replacements = array();
 		foreach ( array_unique( $matches[0] ) as $source ) {
+			// The attachment is a nicety, not a requirement: it supplies the alt
+			// text and a local file to fall back on, and plenty of images in
+			// real content have no matchable attachment row at all.
 			$attachment_id = attachment_url_to_postid( $this->strip_size_suffix( $source ) );
-			if ( ! $attachment_id ) {
-				continue;
-			}
-			$new = $this->migrate_attachment( (int) $attachment_id );
+			$new           = $this->migrate_image( $source, $attachment_id ? (int) $attachment_id : null );
 			if ( is_wp_error( $new ) ) {
 				$this->warnings[] = sprintf(
 					/* translators: 1: image file name, 2: reason it failed. */
