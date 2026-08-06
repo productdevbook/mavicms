@@ -4,12 +4,15 @@ use axum::{
     http::StatusCode,
 };
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, ActiveValue::Set, EntityTrait, QueryOrder};
+use sea_orm::{
+    ActiveModelTrait, ActiveValue::Set, ColumnTrait, Condition, ConnectionTrait, EntityTrait,
+    QueryFilter, QueryOrder,
+};
 use uuid::Uuid;
 
 use crate::{
     dto::media::{ImportMediaRequest, MediaResponse},
-    entities::media,
+    entities::{media, post},
     error::{AppError, AppResult},
     fetch::{FetchError, fetch_remote_file},
     plugins::{active_storage, storage_for},
@@ -210,6 +213,82 @@ pub async fn import_media(
     )
     .await?;
     Ok((StatusCode::CREATED, Json(saved.into())))
+}
+
+/// Deletes any of `candidates` that no post refers to any more.
+///
+/// Called after a post is removed: its pictures are usually its own, and
+/// leaving them behind means paying to store files nothing will ever show
+/// again. A file still used by another post — or as another post's cover — is
+/// kept, so a picture shared between two posts survives the first deletion.
+///
+/// Best effort by design: a failure here must not turn a successful deletion
+/// into an error for the caller.
+pub async fn drop_unreferenced(state: &AppState, candidates: Vec<String>) {
+    if candidates.is_empty() {
+        return;
+    }
+    let db = state.db();
+
+    let items = match media::Entity::find().all(db).await {
+        Ok(items) => items,
+        Err(err) => {
+            tracing::warn!(error = %err, "could not list media to tidy up");
+            return;
+        }
+    };
+
+    // Match on the tail of the address: content may carry the full public URL
+    // while the record holds a path, and a CDN in front can change the host.
+    let orphans: Vec<_> = items
+        .into_iter()
+        .filter(|item| {
+            candidates
+                .iter()
+                .any(|url| url.ends_with(&item.url_path) || item.url_path.ends_with(url.as_str()))
+        })
+        .collect();
+
+    for item in orphans {
+        match still_referenced(db, &item.url_path).await {
+            Err(err) => tracing::warn!(error = %err, "could not check whether media is still used"),
+            Ok(true) => {}
+            Ok(false) => {
+                let storage = match storage_for(state, &item.storage_backend).await {
+                    Ok(storage) => storage,
+                    Err(err) => {
+                        tracing::warn!(error = %err, "cannot reach storage to tidy up");
+                        continue;
+                    }
+                };
+                storage.delete(&item.storage_key).await;
+                if let Err(err) = media::Entity::delete_by_id(item.id).exec(db).await {
+                    tracing::warn!(error = %err, "could not remove the media record");
+                }
+            }
+        }
+    }
+}
+
+/// Whether any post still points at this file.
+async fn still_referenced(db: &impl ConnectionTrait, url_path: &str) -> AppResult<bool> {
+    // The tail is what both the cover and the content have in common, whatever
+    // host or CDN prefix sits in front of it.
+    let needle = url_path.rsplit('/').next().unwrap_or(url_path);
+    if needle.is_empty() {
+        return Ok(true);
+    }
+    let pattern = format!("%{needle}%");
+
+    Ok(post::Entity::find()
+        .filter(
+            Condition::any()
+                .add(post::Column::ContentHtml.like(&pattern))
+                .add(post::Column::CoverUrl.like(&pattern)),
+        )
+        .one(db)
+        .await?
+        .is_some())
 }
 
 /// List uploaded media, most recently uploaded first.

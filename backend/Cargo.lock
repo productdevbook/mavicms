@@ -1872,7 +1872,7 @@ checksum = "47e1ffaa40ddd1f3ed91f717a33c8c0ee23fff369e3aa8772b9605cc1d22f4c3"
 
 [[package]]
 name = "mavicms-api"
-version = "0.1.7"
+version = "0.1.8"
 dependencies = [
  "aes-gcm",
  "argon2",
@@ -1880,14 +1880,18 @@ dependencies = [
  "base64 0.23.1",
  "chrono",
  "dotenvy",
+ "hex",
+ "hmac 0.12.1",
  "migration",
  "password-hash",
  "percent-encoding",
+ "regex",
  "reqwest",
  "rust-s3",
  "sea-orm",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
  "thiserror",
  "tokio",
  "tower",

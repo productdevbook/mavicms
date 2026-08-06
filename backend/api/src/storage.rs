@@ -107,6 +107,107 @@ impl S3Config {
         }
     }
 
+    /// Deletes an object, signing the request here rather than through the S3
+    /// client.
+    ///
+    /// The client signs `DELETE` with `content-length` and `content-type`
+    /// among the signed headers but sends neither on a request with no body.
+    /// AWS lets that pass; R2 refuses it as a signature mismatch, and the
+    /// failure is invisible unless you go looking — every deleted image would
+    /// stay in the bucket for ever.
+    async fn delete_object(&self, key: &str) -> Result<(), String> {
+        use hmac::{Hmac, Mac};
+        use sha2::{Digest, Sha256};
+
+        type HmacSha256 = Hmac<Sha256>;
+
+        fn sign(key: &[u8], message: &str) -> Vec<u8> {
+            let mut mac = HmacSha256::new_from_slice(key).expect("hmac takes any key length");
+            mac.update(message.as_bytes());
+            mac.finalize().into_bytes().to_vec()
+        }
+
+        let endpoint = if self.endpoint.trim().is_empty() {
+            format!("https://s3.{}.amazonaws.com", self.region)
+        } else {
+            self.endpoint.trim_end_matches('/').to_string()
+        };
+        let host = endpoint
+            .split("://")
+            .nth(1)
+            .ok_or_else(|| format!("endpoint has no host: {endpoint}"))?
+            .trim_end_matches('/')
+            .to_string();
+
+        // Path style, matching how the bucket is addressed elsewhere. Each
+        // segment is encoded, the separators are not.
+        let encoded: String = self
+            .object_key(key)
+            .split('/')
+            .map(|segment| {
+                percent_encoding::utf8_percent_encode(segment, percent_encoding::NON_ALPHANUMERIC)
+                    .to_string()
+                    .replace("%2D", "-")
+                    .replace("%2E", ".")
+                    .replace("%5F", "_")
+                    .replace("%7E", "~")
+            })
+            .collect::<Vec<_>>()
+            .join("/");
+        let uri = format!("/{}/{}", self.bucket, encoded);
+
+        let now = chrono::Utc::now();
+        let amz_date = now.format("%Y%m%dT%H%M%SZ").to_string();
+        let date = now.format("%Y%m%d").to_string();
+        let region = if self.region.trim().is_empty() {
+            "auto"
+        } else {
+            self.region.trim()
+        };
+        let scope = format!("{date}/{region}/s3/aws4_request");
+        // The payload is empty, and this is its hash.
+        let payload_hash = hex::encode(Sha256::digest(b""));
+
+        let canonical = format!(
+            "DELETE\n{uri}\n\nhost:{host}\nx-amz-content-sha256:{payload_hash}\nx-amz-date:{amz_date}\n\nhost;x-amz-content-sha256;x-amz-date\n{payload_hash}"
+        );
+        let to_sign = format!(
+            "AWS4-HMAC-SHA256\n{amz_date}\n{scope}\n{}",
+            hex::encode(Sha256::digest(canonical.as_bytes()))
+        );
+
+        let key_date = sign(format!("AWS4{}", self.secret_access_key).as_bytes(), &date);
+        let key_region = sign(&key_date, region);
+        let key_service = sign(&key_region, "s3");
+        let key_signing = sign(&key_service, "aws4_request");
+        let signature = hex::encode(sign(&key_signing, &to_sign));
+
+        let authorization = format!(
+            "AWS4-HMAC-SHA256 Credential={}/{scope}, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature={signature}",
+            self.access_key_id
+        );
+
+        let response = reqwest::Client::new()
+            .delete(format!("{endpoint}{uri}"))
+            .header("host", &host)
+            .header("x-amz-content-sha256", &payload_hash)
+            .header("x-amz-date", &amz_date)
+            .header("authorization", authorization)
+            .send()
+            .await
+            .map_err(|err| err.to_string())?;
+
+        let status = response.status();
+        if !status.is_success() && status != reqwest::StatusCode::NOT_FOUND {
+            let body = response.text().await.unwrap_or_default();
+            return Err(format!(
+                "{status}: {}",
+                body.chars().take(200).collect::<String>()
+            ));
+        }
+        Ok(())
+    }
+
     fn public_url(&self, key: &str) -> String {
         format!(
             "{}/{}",
@@ -176,16 +277,21 @@ impl MediaStorage {
 
     /// Best-effort removal — a missing object should not block deleting the
     /// database row the user actually asked to remove.
+    /// Removes the stored file. A failure here leaves an orphan that nobody
+    /// will ever look for again, so it is reported rather than swallowed —
+    /// including the case where the bucket cannot even be built.
     pub async fn delete(&self, key: &str) {
         match self {
             MediaStorage::Local { root } => {
-                let _ = tokio::fs::remove_file(root.join(key)).await;
+                if let Err(err) = tokio::fs::remove_file(root.join(key)).await
+                    && err.kind() != std::io::ErrorKind::NotFound
+                {
+                    tracing::warn!(error = %err, key, "failed to delete media file");
+                }
             }
             MediaStorage::S3(config) => {
-                if let Ok(bucket) = config.bucket()
-                    && let Err(err) = bucket.delete_object(config.object_key(key)).await
-                {
-                    tracing::warn!(error = %err, "failed to delete object from S3");
+                if let Err(err) = config.delete_object(key).await {
+                    tracing::warn!(error = %err, key, "failed to delete object");
                 }
             }
         }

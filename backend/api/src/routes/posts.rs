@@ -13,6 +13,13 @@ use sea_orm::{
 use serde::Deserialize;
 use uuid::Uuid;
 
+/// Any `src`, `href` or bare address in post content. Deliberately broad: the
+/// point is to notice that a file is still referenced, and a false positive
+/// only means a file is kept.
+static MEDIA_IN_HTML: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+    regex::Regex::new(r#"(?:src|href)=["']([^"']+)["']"#).expect("the pattern is valid")
+});
+
 use crate::{
     dto::{
         post::{CreatePostRequest, PostResponse, PostStatus, PostTranslation, UpdatePostRequest},
@@ -547,9 +554,30 @@ pub async fn delete_post(
     State(state): State<AppState>,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
-    let result = post::Entity::delete_by_id(id).exec(state.db()).await?;
-    if result.rows_affected == 0 {
-        return Err(AppError::NotFound(format!("post {id}")));
-    }
+    let db = state.db();
+    let existing = post::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("post {id}")))?;
+
+    let used = referenced_media(&existing);
+    post::Entity::delete_by_id(id).exec(db).await?;
+    crate::routes::media::drop_unreferenced(&state, used).await;
+
     Ok(StatusCode::NO_CONTENT)
+}
+
+/// Every media address the post pointed at: its cover and everything in its
+/// body.
+fn referenced_media(post: &post::Model) -> Vec<String> {
+    let mut urls: Vec<String> = MEDIA_IN_HTML
+        .captures_iter(&post.content_html)
+        .filter_map(|caps| caps.get(1).map(|m| m.as_str().to_string()))
+        .collect();
+    if !post.cover_url.trim().is_empty() {
+        urls.push(post.cover_url.trim().to_string());
+    }
+    urls.sort();
+    urls.dedup();
+    urls
 }
