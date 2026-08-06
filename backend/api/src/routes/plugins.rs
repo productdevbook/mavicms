@@ -711,3 +711,103 @@ pub async fn delete_email_suppressed(
 pub async fn unsuppress_email_of(state: &AppState, address: &str) -> AppResult<()> {
     crate::email::unsuppress(&email_config_of(state).await?, address).await
 }
+
+/// How the account has been behaving: the bounce and complaint rates Amazon
+/// suspends accounts over.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/health",
+    tag = "plugins",
+    responses((status = 200, description = "Two weeks of sending", body = crate::email::SendingHealth))
+)]
+pub async fn get_email_health(Site(state): Site) -> AppResult<Json<crate::email::SendingHealth>> {
+    Ok(Json(email_health_of(&state).await?))
+}
+
+pub async fn email_health_of(state: &AppState) -> AppResult<crate::email::SendingHealth> {
+    crate::email::health(&email_config_of(state).await?).await
+}
+
+#[derive(Debug, serde::Deserialize, utoipa::ToSchema)]
+pub struct SendingSwitch {
+    pub enabled: bool,
+}
+
+/// Stop or resume everything this account sends.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/sending",
+    tag = "plugins",
+    request_body = SendingSwitch,
+    responses((status = 204, description = "Changed"))
+)]
+pub async fn set_email_sending(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    Json(payload): Json<SendingSwitch>,
+) -> AppResult<StatusCode> {
+    set_email_sending_of(&state, payload.enabled).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn set_email_sending_of(state: &AppState, enabled: bool) -> AppResult<()> {
+    crate::email::set_sending(&email_config_of(state).await?, enabled).await
+}
+
+/// The configuration sets this account has.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/configuration-sets",
+    tag = "plugins",
+    responses((status = 200, description = "Their names", body = Vec<String>))
+)]
+pub async fn list_email_configuration_sets(Site(state): Site) -> AppResult<Json<Vec<String>>> {
+    Ok(Json(email_configuration_sets_of(&state).await?))
+}
+
+pub async fn email_configuration_sets_of(state: &AppState) -> AppResult<Vec<String>> {
+    crate::email::configuration_sets(&email_config_of(state).await?).await
+}
+
+/// Ask Amazon for a bigger quota.
+#[utoipa::path(
+    post,
+    path = "/plugins/email/quota-increase",
+    tag = "plugins",
+    request_body = crate::email::QuotaIncreaseRequest,
+    responses((status = 201, description = "Asked", body = crate::email::SupportCase))
+)]
+pub async fn request_email_quota_increase(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+    Json(payload): Json<crate::email::QuotaIncreaseRequest>,
+) -> AppResult<(StatusCode, Json<crate::email::SupportCase>)> {
+    Ok((
+        StatusCode::CREATED,
+        Json(request_quota_increase_of(&state, payload).await?),
+    ))
+}
+
+pub async fn request_quota_increase_of(
+    state: &AppState,
+    payload: crate::email::QuotaIncreaseRequest,
+) -> AppResult<crate::email::SupportCase> {
+    crate::email::request_quota_increase(&email_config_of(state).await?, payload).await
+}
+
+/// The requests this account has made about sending, and where they got to.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/requests",
+    tag = "plugins",
+    responses((status = 200, description = "Requests", body = Vec<crate::email::SupportCase>))
+)]
+pub async fn list_email_requests(
+    Site(state): Site,
+) -> AppResult<Json<Vec<crate::email::SupportCase>>> {
+    Ok(Json(email_requests_of(&state).await?))
+}
+
+pub async fn email_requests_of(state: &AppState) -> AppResult<Vec<crate::email::SupportCase>> {
+    crate::email::support_cases(&email_config_of(state).await?).await
+}

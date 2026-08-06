@@ -50,6 +50,13 @@ html-escape = "0.2"
 # fiddly, and Amazon maintaining it is worth the compile. Apache-2.0, which
 # this project's MIT licence can carry.
 aws-sdk-sesv2 = { version = "1", default-features = false, features = ["rt-tokio", "rustls", "behavior-version-latest"] }
+# The v1 API as well, for one call: GetSendStatistics. Bounce and complaint
+# rates are what get an account suspended, and v2 only offers them through the
+# paid deliverability dashboard or Virtual Deliverability Manager.
+aws-sdk-ses = { version = "1", default-features = false, features = ["rt-tokio", "rustls", "behavior-version-latest"] }
+# And Support, for asking to be given a bigger quota once the sandbox is
+# behind you. That request is a support case; there is no other API for it.
+aws-sdk-support = { version = "1", default-features = false, features = ["rt-tokio", "rustls", "behavior-version-latest"] }
 hmac = "0.12"
 sha2 = "0.10"
 hex = "0.4"

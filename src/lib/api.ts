@@ -1384,3 +1384,68 @@ export function testCampaign(id: string, to: string): Promise<void> {
 export function getMailLog(): Promise<MailLogEntry[]> {
   return request<MailLogEntry[]>("/mail/log")
 }
+
+export interface SesHealth {
+  delivery_attempts: number
+  bounces: number
+  complaints: number
+  rejects: number
+  bounce_rate: number
+  complaint_rate: number
+  /** "healthy", "watch" or "danger", against Amazon's own thresholds. */
+  bounce_standing: string
+  complaint_standing: string
+  bounce_review_at: number
+  bounce_pause_at: number
+  complaint_review_at: number
+  complaint_pause_at: number
+  days: { day: string; delivery_attempts: number; bounces: number; complaints: number }[]
+}
+
+export interface SesRequest {
+  id: string
+  subject: string
+  status: string
+  created_at: string
+  latest: string
+}
+
+export interface QuotaIncreasePayload {
+  daily_limit: number
+  send_rate: number
+  website_url: string
+  use_case_description: string
+  language: string
+}
+
+export function getSesHealth(siteId?: string): Promise<SesHealth> {
+  return request<SesHealth>(`${mailBase(siteId)}/health`)
+}
+
+export function setSesSending(
+  enabled: boolean,
+  siteId?: string
+): Promise<void> {
+  return request<void>(`${mailBase(siteId)}/sending`, {
+    method: "POST",
+    body: JSON.stringify({ enabled }),
+  })
+}
+
+export function getSesConfigurationSets(siteId?: string): Promise<string[]> {
+  return request<string[]>(`${mailBase(siteId)}/configuration-sets`)
+}
+
+export function requestQuotaIncrease(
+  payload: QuotaIncreasePayload,
+  siteId?: string
+): Promise<SesRequest> {
+  return request<SesRequest>(`${mailBase(siteId)}/quota-increase`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function getSesRequests(siteId?: string): Promise<SesRequest[]> {
+  return request<SesRequest[]>(`${mailBase(siteId)}/requests`)
+}

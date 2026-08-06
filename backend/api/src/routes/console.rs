@@ -1257,3 +1257,112 @@ pub async fn delete_site_email_suppressed(
     crate::routes::plugins::unsuppress_email_of(&state, &address).await?;
     Ok(StatusCode::NO_CONTENT)
 }
+
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email/health",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "For that site", body = crate::email::SendingHealth))
+)]
+pub async fn get_site_email_health(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<crate::email::SendingHealth>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(crate::routes::plugins::email_health_of(&state).await?))
+}
+
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email/configuration-sets",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "For that site", body = Vec<String>))
+)]
+pub async fn list_site_email_configuration_sets(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<Vec<String>>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::email_configuration_sets_of(&state).await?,
+    ))
+}
+
+#[utoipa::path(
+    get,
+    path = "/console/sites/{id}/plugins/email/requests",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 200, description = "For that site", body = Vec<crate::email::SupportCase>))
+)]
+pub async fn list_site_email_requests(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<Json<Vec<crate::email::SupportCase>>> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok(Json(
+        crate::routes::plugins::email_requests_of(&state).await?,
+    ))
+}
+
+/// Stop or resume everything one of this agency's sites sends.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/sending",
+    tag = "console",
+    request_body = crate::routes::plugins::SendingSwitch,
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 204, description = "Changed"))
+)]
+pub async fn set_site_email_sending(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::routes::plugins::SendingSwitch>,
+) -> AppResult<StatusCode> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    crate::routes::plugins::set_email_sending_of(&state, payload.enabled).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Ask Amazon for a bigger quota for one of this agency's sites.
+#[utoipa::path(
+    post,
+    path = "/console/sites/{id}/plugins/email/quota-increase",
+    tag = "console",
+    request_body = crate::email::QuotaIncreaseRequest,
+    params(("id" = String, Path, description = "Site id")),
+    responses((status = 201, description = "Asked", body = crate::email::SupportCase))
+)]
+pub async fn request_site_quota_increase(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<crate::email::QuotaIncreaseRequest>,
+) -> AppResult<(StatusCode, Json<crate::email::SupportCase>)> {
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let state = owned_state(&hosting, &operator, id).await?;
+
+    Ok((
+        StatusCode::CREATED,
+        Json(crate::routes::plugins::request_quota_increase_of(&state, payload).await?),
+    ))
+}

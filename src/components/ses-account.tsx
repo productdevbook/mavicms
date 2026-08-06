@@ -25,6 +25,7 @@ import {
   type SesSuppressed,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { SesHealthPanel } from "@/components/ses-health"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -197,6 +198,12 @@ export function SesAccountPanel({ siteId }: { siteId?: string }) {
           </p>
         )}
       </section>
+
+      <SesHealthPanel
+        siteId={siteId}
+        sendingEnabled={account.sending_enabled}
+        onSendingChanged={load}
+      />
 
       <section className="flex flex-col gap-3">
         <div>
