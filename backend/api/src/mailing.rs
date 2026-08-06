@@ -160,11 +160,6 @@ pub fn wrap(template: Option<&str>, body: &str) -> String {
     }
 }
 
-/// A readable plain-text part from the HTML one.
-///
-/// Every message carries both. One with only HTML scores worse with several
-/// filters that count parts, and a reader whose client shows text gets a wall
-/// of markup instead of a letter.
 /// True when `haystack` begins with `needle`, ignoring case.
 ///
 /// Tag names are ASCII, so this compares ASCII-insensitively and never builds
@@ -187,6 +182,11 @@ fn find_ci(haystack: &str, needle: &str) -> Option<usize> {
         .map(|(at, _)| at)
 }
 
+/// A readable plain-text part from the HTML one.
+///
+/// Every message carries both. One with only HTML scores worse with several
+/// filters that count parts, and a reader whose client shows text gets a wall
+/// of markup instead of a letter.
 pub fn as_text(html: &str) -> String {
     let mut out = String::with_capacity(html.len());
     let mut in_tag = false;
@@ -1241,6 +1241,39 @@ mod tests {
     }
 
     #[test]
+    fn an_event_names_its_own_recipients_not_the_whole_letter() {
+        let three = r#"["one@example.com","two@example.com","three@example.com"]"#;
+
+        // Delivered to one of the three so far. Counting all three would say
+        // two letters arrived that have not.
+        let delivered = read_event(&format!(
+            r#"{{"eventType":"Delivery",
+                 "delivery":{{"recipients":["one@example.com"]}},
+                 "mail":{{"messageId":"m","destination":{three}}}}}"#
+        ))
+        .expect("a delivery");
+        assert_eq!(delivered.recipients, vec!["one@example.com"]);
+        assert!(!delivered.blocks);
+
+        // Delayed for one. Not a reason to stop writing to anybody.
+        let delayed = read_event(&format!(
+            r#"{{"eventType":"DeliveryDelay",
+                 "deliveryDelay":{{"delayedRecipients":[{{"emailAddress":"TWO@example.com"}}]}},
+                 "mail":{{"messageId":"m","destination":{three}}}}}"#
+        ))
+        .expect("a delay");
+        assert_eq!(delayed.recipients, vec!["two@example.com"]);
+        assert!(!delayed.blocks);
+
+        // Nothing named: the letter's own addresses are all there is to go on.
+        let sent = read_event(&format!(
+            r#"{{"eventType":"Send","mail":{{"messageId":"m","destination":{three}}}}}"#
+        ))
+        .expect("a send");
+        assert_eq!(sent.recipients.len(), 3);
+    }
+
+    #[test]
     fn only_amazon_subscribe_urls_are_followed() {
         assert!(is_an_sns_url(
             "https://sns.eu-central-1.amazonaws.com/?Action=ConfirmSubscription"
@@ -1346,9 +1379,12 @@ pub fn read_event(body: &str) -> Option<SesEvent> {
             .and_then(|v| uuid::Uuid::parse_str(v).ok())
     };
 
-    // Bounces and complaints name their own recipients, which is not always
-    // everybody the message went to — blocking the whole destination list
-    // over one bad address would be a way to empty a mailing list.
+    // Most events name their own recipients, which is not always everybody the
+    // message went to: a bounce names the one address that failed, and a
+    // delivery names the ones that arrived on this attempt rather than all
+    // three the letter was addressed to. Falling back to the destination list
+    // would block a whole list over one bad address, and would count two
+    // deliveries that have not happened yet.
     let named = |section: &str, field: &str| -> Option<Vec<String>> {
         parsed.get(section)?.get(field)?.as_array().map(|list| {
             list.iter()
@@ -1358,8 +1394,21 @@ pub fn read_event(body: &str) -> Option<SesEvent> {
         })
     };
 
+    // Delivery says the same thing as a bare list of addresses.
+    let listed = |section: &str, field: &str| -> Option<Vec<String>> {
+        parsed.get(section)?.get(field)?.as_array().map(|list| {
+            list.iter()
+                .filter_map(|v| v.as_str())
+                .map(str::to_lowercase)
+                .collect()
+        })
+    };
+
     let recipients = named("bounce", "bouncedRecipients")
         .or_else(|| named("complaint", "complainedRecipients"))
+        .or_else(|| named("deliveryDelay", "delayedRecipients"))
+        .or_else(|| listed("delivery", "recipients"))
+        .filter(|found: &Vec<String>| !found.is_empty())
         .unwrap_or_else(|| {
             mail.and_then(|m| m.get("destination"))
                 .and_then(|v| v.as_array())
