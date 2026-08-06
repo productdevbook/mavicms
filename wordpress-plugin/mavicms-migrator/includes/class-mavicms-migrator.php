@@ -230,9 +230,28 @@ class MaviCMS_Migrator {
 
 		$created = $this->client->create_post( $payload );
 		if ( is_wp_error( $created ) ) {
+			// It may simply be there already, from a run whose record of what
+			// it had sent was cleared. Adopt it rather than reporting a
+			// conflict the user can do nothing useful about.
+			$existing = $this->client->find_post( $payload['slug'], $locale );
+			if ( is_wp_error( $existing ) || ! $existing ) {
+				return array(
+					'status'  => 'failed',
+					'message' => $created->get_error_message(),
+				);
+			}
+
+			$posts_map             = $this->map( self::OPTION_MAP_POSTS );
+			$posts_map[ $post_id ] = $existing['id'];
+			$this->save_map( self::OPTION_MAP_POSTS, $posts_map );
+
 			return array(
-				'status'  => 'failed',
-				'message' => $created->get_error_message(),
+				'status'  => 'skipped',
+				'message' => sprintf(
+					/* translators: %s: post title. */
+					__( '"%s" was already on the destination.', 'mavicms-migrator' ),
+					$post->post_title
+				),
 			);
 		}
 
@@ -244,7 +263,10 @@ class MaviCMS_Migrator {
 			/* translators: 1: post title, 2: language it was migrated into. */
 			__( 'Migrated "%1$s" into %2$s.', 'mavicms-migrator' ),
 			$post->post_title,
-			$locale
+			// The language the destination actually stored, not the one asked
+			// for: an empty request means "the site default", and reporting
+			// that back as blank helps nobody.
+			isset( $created['locale'] ) ? $created['locale'] : $locale
 		);
 		if ( $this->warnings ) {
 			$message .= ' ' . implode( '; ', $this->warnings ) . '.';

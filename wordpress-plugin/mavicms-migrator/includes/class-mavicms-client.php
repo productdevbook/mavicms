@@ -190,6 +190,24 @@ class MaviCMS_Client {
 	}
 
 	/**
+	 * Finds a post already on the destination by its address.
+	 *
+	 * @param string $slug   Post address.
+	 * @param string $locale Language it would be in.
+	 * @return array|null|WP_Error The post, or null when there is none.
+	 */
+	public function find_post( $slug, $locale ) {
+		$found = $this->request(
+			'GET',
+			'/posts?slug=' . rawurlencode( $slug ) . '&locale=' . rawurlencode( $locale )
+		);
+		if ( is_wp_error( $found ) ) {
+			return $found;
+		}
+		return isset( $found[0] ) ? $found[0] : null;
+	}
+
+	/**
 	 * Joins a post to another post's translation group.
 	 *
 	 * @param string $id     Post id to move.

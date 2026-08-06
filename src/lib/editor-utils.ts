@@ -11,11 +11,17 @@ export function readingTimeMinutes(words: number): number {
  * language at once (Turkish wants ü→u, German wants ü→ue).
  */
 export function slugify(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, "-")
-    .replace(/^-+|-+$/g, "")
+  return (
+    value
+      .trim()
+      .toLowerCase()
+      // Dropped rather than treated as a separator: lowercasing Turkish "İ"
+      // yields "i" plus a combining dot, which would split "İstanbul" into
+      // "i-stanbul".
+      .replace(/\p{M}+/gu, "")
+      .replace(/[^\p{L}\p{N}]+/gu, "-")
+      .replace(/^-+|-+$/g, "")
+  )
 }
 
 export function downloadFile(filename: string, content: string, mime: string) {

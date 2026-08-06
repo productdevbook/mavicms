@@ -4,7 +4,7 @@ Tags: migration, export, cms, headless
 Requires at least: 5.9
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.1.5
+Stable tag: 0.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,13 @@ its own copy. An image it cannot fetch keeps its original address, and the
 failure is shown in the log.
 
 == Changelog ==
+
+= 0.1.6 =
+* Adopt posts that are already on the destination instead of failing on them.
+  After "Forget history" every post that had been migrated came back as an
+  unexplained conflict, which stalled the whole run.
+* Report the language the destination actually stored, rather than the one
+  that was asked for.
 
 = 0.1.5 =
 * Move the content language next to the migrate button, where it belongs — it

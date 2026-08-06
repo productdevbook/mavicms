@@ -96,6 +96,10 @@ pub struct LocaleQuery {
     /// Comma-separated language codes. Omitted means every language.
     #[serde(default)]
     pub locale: Option<String>,
+    /// Exact address to look for. Lets an importer ask whether something it is
+    /// about to send is already here, without fetching the whole archive.
+    #[serde(default)]
+    pub slug: Option<String>,
 }
 
 impl LocaleQuery {

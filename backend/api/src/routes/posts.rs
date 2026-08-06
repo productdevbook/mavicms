@@ -132,7 +132,10 @@ async fn siblings_of(
     get,
     path = "/posts",
     tag = "posts",
-    params(("locale" = Option<String>, Query, description = "Comma-separated language codes")),
+    params(
+        ("locale" = Option<String>, Query, description = "Comma-separated language codes"),
+        ("slug" = Option<String>, Query, description = "Exact address to look for"),
+    ),
     responses((status = 200, description = "List of posts", body = Vec<PostResponse>))
 )]
 pub async fn list_posts(
@@ -144,6 +147,14 @@ pub async fn list_posts(
     let mut find = post::Entity::find().order_by_desc(post::Column::CreatedAt);
     if let Some(codes) = query.codes() {
         find = find.filter(post::Column::Locale.is_in(codes));
+    }
+    if let Some(slug) = query
+        .slug
+        .as_deref()
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+    {
+        find = find.filter(post::Column::Slug.eq(slug));
     }
     let posts = find.all(db).await?;
 
@@ -271,6 +282,21 @@ pub async fn create_post(
             )));
         }
         translation_group_id = sibling.translation_group_id;
+    }
+
+    // Checked up front so a re-run over content that is already there says
+    // which post is in the way, instead of a bare unique-index conflict.
+    if post::Entity::find()
+        .filter(post::Column::Locale.eq(&locale))
+        .filter(post::Column::Slug.eq(payload.slug.trim()))
+        .one(db)
+        .await?
+        .is_some()
+    {
+        return Err(AppError::Conflict(format!(
+            "a {locale} post with the address \"{}\" already exists",
+            payload.slug.trim()
+        )));
     }
 
     let txn = db.begin().await?;

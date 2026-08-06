@@ -15,7 +15,7 @@ use crate::{
     error::{AppError, AppResult},
     languages::resolve,
     routes::posts::TranslationGroupRequest,
-    slug::slugify_or,
+    slug::{slugify, slugify_or},
     state::AppState,
 };
 
@@ -41,12 +41,20 @@ pub async fn get_or_create_tag(
         return Err(AppError::Validation("name must not be empty".to_string()));
     }
 
-    if let Some(existing) = tag::Entity::find()
-        .filter(tag::Column::Locale.eq(locale))
-        .filter(tag::Column::Name.eq(name))
-        .one(db)
-        .await?
-    {
+    // Identity is the slug, because that is what the database enforces. Going
+    // by name instead let "Diyet" and "diyet" miss each other on a
+    // case-sensitive database and then collide on the very same slug, which
+    // surfaced as an unexplained conflict partway through an import.
+    let slug = slugify(name);
+    let mut find = tag::Entity::find().filter(tag::Column::Locale.eq(locale));
+    find = if slug.is_empty() {
+        // Nothing sluggable in the name — its slug carries a random suffix, so
+        // the name is all there is to match on.
+        find.filter(tag::Column::Name.eq(name))
+    } else {
+        find.filter(tag::Column::Slug.eq(&slug))
+    };
+    if let Some(existing) = find.one(db).await? {
         return Ok((existing, false));
     }
 
@@ -54,7 +62,11 @@ pub async fn get_or_create_tag(
     let model = tag::ActiveModel {
         id: Set(id),
         name: Set(name.to_string()),
-        slug: Set(slugify_or(name, "tag")),
+        slug: Set(if slug.is_empty() {
+            slugify_or(name, "tag")
+        } else {
+            slug
+        }),
         locale: Set(locale.to_string()),
         translation_group_id: Set(id),
         translation_status: Set("complete".to_string()),
