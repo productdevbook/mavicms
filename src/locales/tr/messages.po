@@ -65,6 +65,11 @@ msgid "{0} · {1} · {2} · {3}"
 msgstr "{0} · {1} · {2} · {3}"
 
 #. placeholder {0}: site.host
+#: src/routes/console.index.tsx:64
+msgid "{0} is ready"
+msgstr "{0} hazır"
+
+#. placeholder {0}: site.host
 #: src/routes/dashboard.sites.tsx:47
 msgid "{0} is ready. Open it to set it up."
 msgstr "{0} hazır. Kurulumu için sitesini açın."
@@ -74,6 +79,12 @@ msgstr "{0} hazır. Kurulumu için sitesini açın."
 #: src/components/setup/setup-wizard.tsx:838
 msgid "{0} is ready. You're signed in as <0>{1}</0>."
 msgstr "{0} hazır! <0>{1}</0> olarak oturum açtınız."
+
+#. placeholder {0}: sites?.length ?? 0
+#. placeholder {1}: account.site_limit
+#: src/routes/console.index.tsx:121
+msgid "{0} of {1} used."
+msgstr "{1} siteden {0} tanesi kullanılıyor."
 
 #. placeholder {0}: hover.rows
 #. placeholder {1}: hover.cols
@@ -153,6 +164,7 @@ msgstr "Yatay çizgi ekle"
 msgid "Add a hyperlink to the selected text."
 msgstr "Seçili metne köprü ekle."
 
+#: src/routes/console.index.tsx:172
 #: src/routes/dashboard.sites.tsx:116
 msgid "Add a site"
 msgstr "Site ekle"
@@ -202,6 +214,8 @@ msgstr "Alta satır ekle"
 msgid "Add row before"
 msgstr "Üste satır ekle"
 
+#: src/routes/console.index.tsx:125
+#: src/routes/console.index.tsx:195
 #: src/routes/dashboard.sites.tsx:75
 #: src/routes/dashboard.sites.tsx:154
 msgid "Add site"
@@ -212,9 +226,18 @@ msgid "Add table"
 msgstr "Tablo ekle"
 
 #: src/components/editor/dialogs.tsx:300
+#: src/routes/console.index.tsx:179
 #: src/routes/dashboard.sites.tsx:124
 msgid "Address"
 msgstr "Adres"
+
+#: src/routes/console.register.tsx:96
+msgid "Agency name"
+msgstr "İşletme adı"
+
+#: src/routes/console.login.tsx:65
+msgid "Agency sign in"
+msgstr "İşletme girişi"
 
 #: src/components/editor/bubble-menus.tsx:362
 #: src/components/editor/extensions/slash-command.tsx:277
@@ -248,6 +271,10 @@ msgstr "Sağa hizala"
 msgid "Alignment"
 msgstr "Hizalama"
 
+#: src/routes/console.register.tsx:154
+msgid "Already have an account? Sign in"
+msgstr "Hesabınız var mı? Giriş yapın"
+
 #: src/components/editor/bubble-menus.tsx:375
 #: src/components/editor/bubble-menus.tsx:378
 #: src/components/editor/dialogs.tsx:188
@@ -270,6 +297,10 @@ msgstr "Uygula"
 #: src/routes/dashboard.plugins_.backup.tsx:294
 msgid "Archives"
 msgstr "Arşivler"
+
+#: src/routes/console.register.tsx:140
+msgid "At least {MINIMUM_PASSWORD} characters."
+msgstr "En az {MINIMUM_PASSWORD} karakter."
 
 #: src/components/setup/setup-wizard.tsx:545
 #: src/components/setup/setup-wizard.tsx:615
@@ -346,6 +377,7 @@ msgstr "Madde listesi"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
+#: src/routes/console.index.tsx:191
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
 #: src/routes/dashboard.index.tsx:253
@@ -486,6 +518,7 @@ msgstr "Dil eklenemedi"
 msgid "Could not add tag"
 msgstr "Etiket eklenemedi"
 
+#: src/routes/console.index.tsx:67
 #: src/routes/dashboard.sites.tsx:50
 msgid "Could not add the site"
 msgstr "Site eklenemedi"
@@ -531,8 +564,18 @@ msgstr "Yedekleme ayarları yüklenemedi"
 msgid "Could not load the sites"
 msgstr "Siteler yüklenemedi"
 
+#: src/routes/console.index.tsx:54
+msgid "Could not load your sites"
+msgstr "Siteleriniz yüklenemedi"
+
+#: src/routes/console.index.tsx:83
+msgid "Could not open the site"
+msgstr "Site açılamadı"
+
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
+#: src/routes/console.login.tsx:38
+#: src/routes/console.register.tsx:51
 #: src/routes/login.tsx:44
 msgid "Could not reach the server. Please try again."
 msgstr "Sunucuya ulaşılamadı. Lütfen tekrar deneyin."
@@ -600,6 +643,10 @@ msgstr "Sıralı liste oluştur"
 #: src/components/editor/extensions/slash-command.tsx:101
 msgid "Create an unordered list"
 msgstr "Sırasız liste oluştur"
+
+#: src/routes/console.register.tsx:148
+msgid "Create the account"
+msgstr "Hesabı oluştur"
 
 #: src/components/setup/setup-wizard.tsx:671
 msgid "Create your administrator account"
@@ -744,6 +791,8 @@ msgid "Editing"
 msgstr "Düzenleme"
 
 #: src/components/setup/setup-wizard.tsx:698
+#: src/routes/console.login.tsx:80
+#: src/routes/console.register.tsx:119
 msgid "Email"
 msgstr "E-posta"
 
@@ -1116,6 +1165,14 @@ msgstr "Varsayılan yap"
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Arşivi belirgin biçimde büyütür. Medya bu makinedeyse değer; zaten bir kovadaysa daha az."
 
+#: src/routes/console.index.tsx:161
+msgid "Manage"
+msgstr "Yönet"
+
+#: src/routes/console.login.tsx:68
+msgid "Manage the sites your agency runs."
+msgstr "İşletmenizin yürüttüğü siteleri yönetin."
+
 #: src/components/editor/extensions/slash-command.tsx:242
 msgid "Mark selection as code"
 msgstr "Seçimi kod olarak işaretle"
@@ -1223,6 +1280,10 @@ msgstr "Henüz yazı yok"
 msgid "No results found"
 msgstr "Sonuç bulunamadı"
 
+#: src/routes/console.index.tsx:135
+msgid "No sites yet"
+msgstr "Henüz site yok"
+
 #: src/routes/dashboard.tags.tsx:184
 msgid "No tags yet"
 msgstr "Henüz etiket yok"
@@ -1246,6 +1307,10 @@ msgstr "Yeni bir arşiv yazılınca eskiler silinir."
 msgid "On the server's disk"
 msgstr "Sunucunun diskinde"
 
+#: src/routes/console.register.tsx:81
+msgid "One account for every site you run. Each site keeps its own content and its own people."
+msgstr "Yürüttüğünüz bütün siteler için tek hesap. Her site kendi içeriğini ve kendi ekibini ayrı tutar."
+
 #: src/routes/dashboard.plugins_.backup.tsx:72
 msgid "Only by hand"
 msgstr "Yalnızca elle"
@@ -1253,6 +1318,11 @@ msgstr "Yalnızca elle"
 #: src/components/editor/bubble-menus.tsx:282
 msgid "Open"
 msgstr "Aç"
+
+#: src/routes/console.login.tsx:113
+#: src/routes/console.register.tsx:78
+msgid "Open an agency account"
+msgstr "İşletme hesabı aç"
 
 #: src/components/editor/dialogs.tsx:320
 msgid "Open in new tab"
@@ -1278,6 +1348,8 @@ msgstr "Paragraf"
 
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
+#: src/routes/console.login.tsx:93
+#: src/routes/console.register.tsx:131
 #: src/routes/login.tsx:98
 msgid "Password"
 msgstr "Parola"
@@ -1325,6 +1397,7 @@ msgstr "Düz metin bloğu"
 msgid "Plugins"
 msgstr "Eklentiler"
 
+#: src/routes/console.index.tsx:174
 #: src/routes/dashboard.sites.tsx:118
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Önce adresi bu sunucuya yönlendirin — site burada verdiğiniz adres üzerinden yanıt verir."
@@ -1584,6 +1657,7 @@ msgstr "Kısayollar"
 msgid "Show password"
 msgstr "Parolayı göster"
 
+#: src/routes/console.login.tsx:107
 #: src/routes/login.tsx:71
 #: src/routes/login.tsx:112
 msgid "Sign in"
@@ -1595,8 +1669,13 @@ msgstr "Sitenizi yönetmek için giriş yapın."
 
 #: src/components/dashboard/dashboard-shell.tsx:83
 #: src/components/editor/mavi-editor.tsx:580
+#: src/routes/console.index.tsx:109
 msgid "Sign out"
 msgstr "Çıkış yap"
+
+#: src/routes/enter.tsx:32
+msgid "Signing you in…"
+msgstr "Girişiniz yapılıyor…"
 
 #: src/components/setup/setup-wizard.tsx:590
 msgid "Site title"
@@ -1658,6 +1737,7 @@ msgstr "Başarılı!"
 msgid "Superscript"
 msgstr "Üst simge"
 
+#: src/routes/console.index.tsx:146
 #: src/routes/dashboard.sites.tsx:105
 msgid "Switched off"
 msgstr "Kapalı"
@@ -1881,6 +1961,14 @@ msgstr "Bunu daha sonra değiştirebilirsiniz."
 #: src/components/setup/setup-wizard.tsx:674
 msgid "You'll use this to sign in and manage your site."
 msgstr "Bunu siteye giriş yapmak ve yönetmek için kullanacaksınız."
+
+#: src/routes/console.register.tsx:108
+msgid "Your name"
+msgstr "Adınız"
+
+#: src/routes/console.index.tsx:119
+msgid "Your sites"
+msgstr "Siteleriniz"
 
 #: src/components/editor/toolbar.tsx:595
 msgid "YouTube"

@@ -96,10 +96,28 @@ at 98 MB resident — unchanged from two hundred — and never hold more than 67
 Postgres connections, however the traffic is spread. Empty sites cost about
 400 KB each in the database.
 
-Managing sites is the server operator's alone. An administrator of a hosted
-site administers that site: they cannot list the other sites on the machine,
-add sites, or reach the database wizard — which restarts the process, and so
-would take every other site down with it.
+### Agencies
+
+Three kinds of account, deliberately separate rather than one with flags:
+
+| | Signs in at | Sees |
+|---|---|---|
+| Whoever runs the server | its own address, **Sites** | every site on the machine |
+| An agency | `/console` | its own sites, and no others |
+| The people who write a site | that site's `/dashboard` | that site |
+
+An agency opens an account at `/console/register`, adds sites up to its limit,
+and opens any of them from the console. That last step does not make the
+agency's password work on the site: the console mints a token good for one use
+and two minutes, and the site trades it for a session of its own. So the
+account an agency writes as on a site has no password at all — closing the
+console account closes every site with it, rather than leaving a working login
+behind on fifty of them.
+
+An administrator of a hosted site administers that site and nothing else: they
+cannot list the other sites on the machine, add sites, reach the console, or
+reach the database wizard — which restarts the process, and so would take every
+other site down with it.
 
 ## Migrating from WordPress
 

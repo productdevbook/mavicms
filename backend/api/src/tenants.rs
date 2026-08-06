@@ -59,6 +59,9 @@ pub struct Tenant {
     /// A database server of its own. Empty — which is the normal case — means
     /// its schema on the server's own database.
     pub database_url: String,
+    /// The agency this site belongs to. Absent on a site the server operator
+    /// made directly, which belongs to nobody but the server.
+    pub organization_id: Option<Uuid>,
     pub active: bool,
 }
 
@@ -93,12 +96,19 @@ impl Registry {
         sites_dir: PathBuf,
     ) -> AppResult<Self> {
         create_table(&control).await?;
+        crate::console::create_tables(&control).await?;
         Ok(Self {
             control,
             base_url,
             sites_dir,
             open: Mutex::new(Vec::new()),
         })
+    }
+
+    /// The server's own database, where the list of sites and the agency
+    /// accounts live.
+    pub fn control(&self) -> &DatabaseConnection {
+        &self.control
     }
 
     /// The site answering on this host, if there is one.
@@ -116,7 +126,7 @@ impl Registry {
             .query_one_raw(Statement::from_sql_and_values(
                 self.control.get_database_backend(),
                 format!(
-                    "SELECT id, host, slug, schema_name, database_url, active \
+                    "SELECT id, host, slug, schema_name, database_url, organization_id, active \
                      FROM tenants WHERE host = {}",
                     placeholder(self.control.get_database_backend(), 1)
                 ),
@@ -132,7 +142,8 @@ impl Registry {
             .control
             .query_all_raw(Statement::from_string(
                 self.control.get_database_backend(),
-                "SELECT id, host, slug, schema_name, database_url, active FROM tenants ORDER BY host",
+                "SELECT id, host, slug, schema_name, database_url, organization_id, active \
+                 FROM tenants ORDER BY host",
             ))
             .await?;
 
@@ -146,7 +157,13 @@ impl Registry {
     /// Anything this creates before something fails is taken back out again. A
     /// half-made site is worse than none: it holds a name nobody can use and
     /// looks like a site that is merely broken.
-    pub async fn create(&self, host: &str, slug: &str, database_url: &str) -> AppResult<Tenant> {
+    pub async fn create(
+        &self,
+        host: &str,
+        slug: &str,
+        database_url: &str,
+        organization_id: Option<Uuid>,
+    ) -> AppResult<Tenant> {
         if self.control.get_database_backend() != DatabaseBackend::Postgres {
             return Err(AppError::Validation(
                 "hosting more than one site needs Postgres — point DATABASE_URL at one".to_string(),
@@ -177,6 +194,7 @@ impl Registry {
             slug,
             schema,
             database_url: database_url.trim().to_string(),
+            organization_id,
             active: true,
         };
 
@@ -212,9 +230,9 @@ impl Registry {
                 self.control.get_database_backend(),
                 format!(
                     "INSERT INTO tenants \
-                     (id, host, slug, schema_name, database_url, active, created_at) \
+                     (id, host, slug, schema_name, database_url, organization_id, active, created_at) \
                      VALUES ({})",
-                    (1..=7)
+                    (1..=8)
                         .map(|n| placeholder(self.control.get_database_backend(), n))
                         .collect::<Vec<_>>()
                         .join(", ")
@@ -225,6 +243,7 @@ impl Registry {
                     tenant.slug.clone().into(),
                     tenant.schema.clone().into(),
                     tenant.database_url.clone().into(),
+                    tenant.organization_id.map(|id| id.to_string()).into(),
                     1.into(),
                     chrono::Utc::now().to_rfc3339().into(),
                 ],
@@ -321,6 +340,11 @@ fn tenant_from_row(row: &sea_orm::QueryResult) -> AppResult<Tenant> {
         slug: row.try_get("", "slug")?,
         schema: row.try_get("", "schema_name")?,
         database_url: row.try_get("", "database_url")?,
+        organization_id: row
+            .try_get::<Option<String>>("", "organization_id")?
+            .map(|value| Uuid::parse_str(&value))
+            .transpose()
+            .map_err(|err| AppError::Internal(format!("bad organization id: {err}")))?,
         active: row.try_get::<i32>("", "active")? != 0,
     })
 }
@@ -383,6 +407,7 @@ async fn create_table(db: &DatabaseConnection) -> AppResult<()> {
             slug TEXT NOT NULL UNIQUE,
             schema_name TEXT NOT NULL,
             database_url TEXT NOT NULL,
+            organization_id TEXT NULL,
             active INTEGER NOT NULL,
             created_at TEXT NOT NULL
         )",

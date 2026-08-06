@@ -101,6 +101,7 @@ pub async fn create_site(
             &payload.host,
             &slug,
             payload.database_url.as_deref().unwrap_or_default(),
+            None,
         )
         .await?;
 

@@ -6,6 +6,7 @@ pub mod media;
 pub mod plugins;
 pub mod posts;
 pub mod setup;
+pub mod console;
 pub mod sites;
 pub mod slug;
 pub mod tags;
@@ -28,7 +29,14 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(setup::setup_status))
         .routes(routes!(setup::run_setup))
         .routes(routes!(setup::configure_database))
-        .routes(routes!(auth::logout));
+        .routes(routes!(auth::logout))
+        .routes(routes!(console::register))
+        .routes(routes!(console::login))
+        .routes(routes!(console::logout))
+        .routes(routes!(console::me))
+        .routes(routes!(console::list_sites, console::create_site))
+        .routes(routes!(console::create_entry))
+        .routes(routes!(console::enter));
 
     let needs_db = OpenApiRouter::new()
         .routes(routes!(auth::login))

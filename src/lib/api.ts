@@ -545,3 +545,72 @@ export function createSite(
     body: JSON.stringify({ host, database_url: databaseUrl }),
   })
 }
+
+export interface ConsoleAccount {
+  name: string
+  email: string
+  organization_name: string
+  site_limit: number
+}
+
+export interface ConsoleSite {
+  id: string
+  host: string
+  slug: string
+  active: boolean
+}
+
+export function consoleRegister(payload: {
+  organization_name: string
+  name: string
+  email: string
+  password: string
+}): Promise<ConsoleAccount> {
+  return request<ConsoleAccount>("/console/register", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function consoleLogin(
+  email: string,
+  password: string
+): Promise<ConsoleAccount> {
+  return request<ConsoleAccount>("/console/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  })
+}
+
+export function consoleLogout(): Promise<void> {
+  return request<void>("/console/logout", { method: "POST" })
+}
+
+export function getConsoleAccount(): Promise<ConsoleAccount> {
+  return request<ConsoleAccount>("/console/me")
+}
+
+export function getConsoleSites(): Promise<ConsoleSite[]> {
+  return request<ConsoleSite[]>("/console/sites")
+}
+
+export function createConsoleSite(host: string): Promise<ConsoleSite> {
+  return request<ConsoleSite>("/console/sites", {
+    method: "POST",
+    body: JSON.stringify({ host }),
+  })
+}
+
+/** A one-time link that opens the site already signed in. */
+export function createSiteEntry(id: string): Promise<{ url: string }> {
+  return request<{ url: string }>(`/console/sites/${id}/entry`, {
+    method: "POST",
+  })
+}
+
+export function enterSite(token: string): Promise<void> {
+  return request<void>("/enter", {
+    method: "POST",
+    body: JSON.stringify({ token }),
+  })
+}

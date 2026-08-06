@@ -65,6 +65,11 @@ msgid "{0} · {1} · {2} · {3}"
 msgstr "{0} · {1} · {2} · {3}"
 
 #. placeholder {0}: site.host
+#: src/routes/console.index.tsx:64
+msgid "{0} is ready"
+msgstr "{0} is ready"
+
+#. placeholder {0}: site.host
 #: src/routes/dashboard.sites.tsx:47
 msgid "{0} is ready. Open it to set it up."
 msgstr "{0} is ready. Open it to set it up."
@@ -74,6 +79,12 @@ msgstr "{0} is ready. Open it to set it up."
 #: src/components/setup/setup-wizard.tsx:838
 msgid "{0} is ready. You're signed in as <0>{1}</0>."
 msgstr "{0} is ready. You're signed in as <0>{1}</0>."
+
+#. placeholder {0}: sites?.length ?? 0
+#. placeholder {1}: account.site_limit
+#: src/routes/console.index.tsx:121
+msgid "{0} of {1} used."
+msgstr "{0} of {1} used."
 
 #. placeholder {0}: hover.rows
 #. placeholder {1}: hover.cols
@@ -153,6 +164,7 @@ msgstr "Add a horizontal rule"
 msgid "Add a hyperlink to the selected text."
 msgstr "Add a hyperlink to the selected text."
 
+#: src/routes/console.index.tsx:172
 #: src/routes/dashboard.sites.tsx:116
 msgid "Add a site"
 msgstr "Add a site"
@@ -202,6 +214,8 @@ msgstr "Add row after"
 msgid "Add row before"
 msgstr "Add row before"
 
+#: src/routes/console.index.tsx:125
+#: src/routes/console.index.tsx:195
 #: src/routes/dashboard.sites.tsx:75
 #: src/routes/dashboard.sites.tsx:154
 msgid "Add site"
@@ -212,9 +226,18 @@ msgid "Add table"
 msgstr "Add table"
 
 #: src/components/editor/dialogs.tsx:300
+#: src/routes/console.index.tsx:179
 #: src/routes/dashboard.sites.tsx:124
 msgid "Address"
 msgstr "Address"
+
+#: src/routes/console.register.tsx:96
+msgid "Agency name"
+msgstr "Agency name"
+
+#: src/routes/console.login.tsx:65
+msgid "Agency sign in"
+msgstr "Agency sign in"
 
 #: src/components/editor/bubble-menus.tsx:362
 #: src/components/editor/extensions/slash-command.tsx:277
@@ -248,6 +271,10 @@ msgstr "Align right"
 msgid "Alignment"
 msgstr "Alignment"
 
+#: src/routes/console.register.tsx:154
+msgid "Already have an account? Sign in"
+msgstr "Already have an account? Sign in"
+
 #: src/components/editor/bubble-menus.tsx:375
 #: src/components/editor/bubble-menus.tsx:378
 #: src/components/editor/dialogs.tsx:188
@@ -270,6 +297,10 @@ msgstr "Apply"
 #: src/routes/dashboard.plugins_.backup.tsx:294
 msgid "Archives"
 msgstr "Archives"
+
+#: src/routes/console.register.tsx:140
+msgid "At least {MINIMUM_PASSWORD} characters."
+msgstr "At least {MINIMUM_PASSWORD} characters."
 
 #: src/components/setup/setup-wizard.tsx:545
 #: src/components/setup/setup-wizard.tsx:615
@@ -346,6 +377,7 @@ msgstr "Bullet list"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
+#: src/routes/console.index.tsx:191
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
 #: src/routes/dashboard.index.tsx:253
@@ -486,6 +518,7 @@ msgstr "Could not add language"
 msgid "Could not add tag"
 msgstr "Could not add tag"
 
+#: src/routes/console.index.tsx:67
 #: src/routes/dashboard.sites.tsx:50
 msgid "Could not add the site"
 msgstr "Could not add the site"
@@ -531,8 +564,18 @@ msgstr "Could not load the backup settings"
 msgid "Could not load the sites"
 msgstr "Could not load the sites"
 
+#: src/routes/console.index.tsx:54
+msgid "Could not load your sites"
+msgstr "Could not load your sites"
+
+#: src/routes/console.index.tsx:83
+msgid "Could not open the site"
+msgstr "Could not open the site"
+
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
+#: src/routes/console.login.tsx:38
+#: src/routes/console.register.tsx:51
 #: src/routes/login.tsx:44
 msgid "Could not reach the server. Please try again."
 msgstr "Could not reach the server. Please try again."
@@ -600,6 +643,10 @@ msgstr "Create an ordered list"
 #: src/components/editor/extensions/slash-command.tsx:101
 msgid "Create an unordered list"
 msgstr "Create an unordered list"
+
+#: src/routes/console.register.tsx:148
+msgid "Create the account"
+msgstr "Create the account"
 
 #: src/components/setup/setup-wizard.tsx:671
 msgid "Create your administrator account"
@@ -748,6 +795,8 @@ msgid "Editing"
 msgstr "Editing"
 
 #: src/components/setup/setup-wizard.tsx:698
+#: src/routes/console.login.tsx:80
+#: src/routes/console.register.tsx:119
 msgid "Email"
 msgstr "Email"
 
@@ -1120,6 +1169,14 @@ msgstr "Make default"
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
+#: src/routes/console.index.tsx:161
+msgid "Manage"
+msgstr "Manage"
+
+#: src/routes/console.login.tsx:68
+msgid "Manage the sites your agency runs."
+msgstr "Manage the sites your agency runs."
+
 #: src/components/editor/extensions/slash-command.tsx:242
 msgid "Mark selection as code"
 msgstr "Mark selection as code"
@@ -1227,6 +1284,10 @@ msgstr "No posts yet"
 msgid "No results found"
 msgstr "No results found"
 
+#: src/routes/console.index.tsx:135
+msgid "No sites yet"
+msgstr "No sites yet"
+
 #: src/routes/dashboard.tags.tsx:184
 msgid "No tags yet"
 msgstr "No tags yet"
@@ -1250,6 +1311,10 @@ msgstr "Older archives are removed once a new one is written."
 msgid "On the server's disk"
 msgstr "On the server's disk"
 
+#: src/routes/console.register.tsx:81
+msgid "One account for every site you run. Each site keeps its own content and its own people."
+msgstr "One account for every site you run. Each site keeps its own content and its own people."
+
 #: src/routes/dashboard.plugins_.backup.tsx:72
 msgid "Only by hand"
 msgstr "Only by hand"
@@ -1257,6 +1322,11 @@ msgstr "Only by hand"
 #: src/components/editor/bubble-menus.tsx:282
 msgid "Open"
 msgstr "Open"
+
+#: src/routes/console.login.tsx:113
+#: src/routes/console.register.tsx:78
+msgid "Open an agency account"
+msgstr "Open an agency account"
 
 #: src/components/editor/dialogs.tsx:320
 msgid "Open in new tab"
@@ -1282,6 +1352,8 @@ msgstr "Paragraph"
 
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
+#: src/routes/console.login.tsx:93
+#: src/routes/console.register.tsx:131
 #: src/routes/login.tsx:98
 msgid "Password"
 msgstr "Password"
@@ -1329,6 +1401,7 @@ msgstr "Plain text block"
 msgid "Plugins"
 msgstr "Plugins"
 
+#: src/routes/console.index.tsx:174
 #: src/routes/dashboard.sites.tsx:118
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Point the address at this server first — the site answers on whichever address you give it here."
@@ -1588,6 +1661,7 @@ msgstr "Shortcuts"
 msgid "Show password"
 msgstr "Show password"
 
+#: src/routes/console.login.tsx:107
 #: src/routes/login.tsx:71
 #: src/routes/login.tsx:112
 msgid "Sign in"
@@ -1599,8 +1673,13 @@ msgstr "Sign in to manage your site."
 
 #: src/components/dashboard/dashboard-shell.tsx:83
 #: src/components/editor/mavi-editor.tsx:580
+#: src/routes/console.index.tsx:109
 msgid "Sign out"
 msgstr "Sign out"
+
+#: src/routes/enter.tsx:32
+msgid "Signing you in…"
+msgstr "Signing you in…"
 
 #: src/components/setup/setup-wizard.tsx:590
 msgid "Site title"
@@ -1662,6 +1741,7 @@ msgstr "Success!"
 msgid "Superscript"
 msgstr "Superscript"
 
+#: src/routes/console.index.tsx:146
 #: src/routes/dashboard.sites.tsx:105
 msgid "Switched off"
 msgstr "Switched off"
@@ -1885,6 +1965,14 @@ msgstr "You can change this later."
 #: src/components/setup/setup-wizard.tsx:674
 msgid "You'll use this to sign in and manage your site."
 msgstr "You'll use this to sign in and manage your site."
+
+#: src/routes/console.register.tsx:108
+msgid "Your name"
+msgstr "Your name"
+
+#: src/routes/console.index.tsx:119
+msgid "Your sites"
+msgstr "Your sites"
 
 #: src/components/editor/toolbar.tsx:595
 msgid "YouTube"

@@ -38,6 +38,14 @@ pub async fn login(
         .await?
         .ok_or_else(invalid)?;
 
+    // An account an agency arrives on through a one-time link has no password
+    // at all. That is a wrong password like any other, not a broken row — and
+    // saying so differently would tell whoever is guessing which accounts
+    // cannot be guessed at.
+    if user.password_hash.is_empty() {
+        return Err(invalid());
+    }
+
     let parsed_hash = PasswordHash::new(&user.password_hash)
         .map_err(|_| AppError::Internal("corrupt password hash".to_string()))?;
     Argon2::default()

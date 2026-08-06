@@ -1,6 +1,7 @@
 mod auth;
 mod backup;
 mod config;
+mod console;
 mod crypto;
 mod db;
 mod dto;
