@@ -92,6 +92,13 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         ))
         .routes(routes!(plugins::run_backup))
         .routes(routes!(plugins::delete_backup))
+        .routes(routes!(plugins::restore_backup))
+        .merge(
+            OpenApiRouter::new()
+                .routes(routes!(plugins::import_backup))
+                // An archive with a site's media in it is not a small file.
+                .layer(DefaultBodyLimit::max(crate::backup::MAX_IMPORT_BYTES)),
+        )
         .routes(routes!(
             publish::get_publish,
             publish::save_publish,

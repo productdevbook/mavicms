@@ -64,7 +64,7 @@ function LoginRoute() {
     setErrorMessage("")
     try {
       await login(username.trim(), password)
-      await navigate({ to: redirectTo ?? "/editor" })
+      await navigate({ to: redirectTo ?? "/dashboard" })
     } catch (error) {
       setErrorMessage(
         error instanceof ApiError

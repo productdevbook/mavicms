@@ -262,3 +262,51 @@ pub async fn test_s3_settings(
 
     Ok((StatusCode::OK, Json(response)))
 }
+
+/// Put a site back the way an archive has it.
+///
+/// One of the archives this site has already written, by name. Uploading a
+/// file from elsewhere is a separate thing and deliberately not this: an
+/// archive that arrived from somewhere else is a file nobody has checked, and
+/// this replaces everything the site has.
+#[utoipa::path(
+    post,
+    path = "/plugins/backup/{name}/restore",
+    tag = "plugins",
+    params(("name" = String, Path, description = "Archive name")),
+    responses(
+        (status = 200, description = "What was put back", body = crate::backup::RestoreReport),
+        (status = 400, description = "Not an archive this can read", body = crate::error::ErrorBody),
+        (status = 404, description = "No such archive", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn restore_backup(
+    Site(state): Site,
+    axum::extract::Path(name): axum::extract::Path<String>,
+) -> AppResult<Json<crate::backup::RestoreReport>> {
+    let (_, config) = crate::backup::config(&state).await?;
+    let bytes = crate::backup::read(&state, &config, &name).await?;
+
+    Ok(Json(crate::backup::restore(&state, &bytes).await?))
+}
+
+/// Put a site back from an archive sent with the request.
+///
+/// This is how a site moves between servers: take a backup there, upload it
+/// here. Everything the site has is replaced by what the file holds.
+#[utoipa::path(
+    post,
+    path = "/plugins/backup/import",
+    tag = "plugins",
+    request_body(content = Vec<u8>, content_type = "application/gzip"),
+    responses(
+        (status = 200, description = "What was put back", body = crate::backup::RestoreReport),
+        (status = 400, description = "Not an archive this can read", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn import_backup(
+    Site(state): Site,
+    body: axum::body::Bytes,
+) -> AppResult<Json<crate::backup::RestoreReport>> {
+    Ok(Json(crate::backup::restore(&state, &body).await?))
+}

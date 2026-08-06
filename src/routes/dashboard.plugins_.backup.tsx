@@ -2,17 +2,28 @@
 import * as React from "react"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useLingui } from "@lingui/react/macro"
-import { ArrowLeft, Download, Loader2, Play, Trash2 } from "lucide-react"
+import {
+  ArrowLeft,
+  Download,
+  Loader2,
+  Play,
+  RotateCcw,
+  Trash2,
+  Upload,
+} from "lucide-react"
 import { toast } from "sonner"
 
 import {
   ApiError,
   deleteBackup,
   getBackupSettings,
+  importBackup,
+  restoreBackup,
   runBackup,
   saveBackupSettings,
   type BackupConfig,
   type BackupSettings,
+  type RestoreReport,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -55,6 +66,11 @@ function BackupSettingsRoute() {
   const [saving, setSaving] = React.useState(false)
   const [running, setRunning] = React.useState(false)
   const [pendingDelete, setPendingDelete] = React.useState<string | null>(null)
+  // A restore replaces everything the site has, so it is asked about by name
+  // and not done by a stray click.
+  const [pendingRestore, setPendingRestore] = React.useState<string | null>(null)
+  const [pendingImport, setPendingImport] = React.useState<File | null>(null)
+  const [restoring, setRestoring] = React.useState(false)
 
   const apply = React.useCallback((next: BackupSettings) => {
     setSettings(next)
@@ -119,6 +135,43 @@ function BackupSettingsRoute() {
       )
     } finally {
       setPendingDelete(null)
+    }
+  }
+
+  const said = (report: RestoreReport) => {
+    const rows = Object.values(report.tables).reduce((sum, n) => sum + n, 0)
+    toast.success(t`Restored: ${rows} rows and ${report.media_files} files`)
+  }
+
+  const confirmRestore = async () => {
+    if (!pendingRestore) return
+    setRestoring(true)
+    try {
+      said(await restoreBackup(pendingRestore))
+      apply(await getBackupSettings())
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError ? error.message : t`The restore failed`
+      )
+    } finally {
+      setRestoring(false)
+      setPendingRestore(null)
+    }
+  }
+
+  const confirmImport = async () => {
+    if (!pendingImport) return
+    setRestoring(true)
+    try {
+      said(await importBackup(pendingImport))
+      apply(await getBackupSettings())
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError ? error.message : t`The restore failed`
+      )
+    } finally {
+      setRestoring(false)
+      setPendingImport(null)
     }
   }
 
@@ -310,6 +363,13 @@ function BackupSettingsRoute() {
                   </div>
                   <Button
                     variant="ghost"
+                    size="sm"
+                    onClick={() => setPendingRestore(file.name)}
+                  >
+                    <RotateCcw /> {t`Restore`}
+                  </Button>
+                  <Button
+                    variant="ghost"
                     size="icon-sm"
                     aria-label={t`Delete`}
                     onClick={() => setPendingDelete(file.name)}
@@ -320,6 +380,30 @@ function BackupSettingsRoute() {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h2 className="text-sm font-medium">{t`Import an archive`}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t`An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds.`}
+          </p>
+          <div>
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-input px-3 py-2 text-sm font-medium shadow-xs hover:bg-muted">
+              <Upload className="size-4" />
+              {t`Choose a file`}
+              <input
+                type="file"
+                accept=".gz,application/gzip"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0]
+                  if (file) setPendingImport(file)
+                  // Cleared, so choosing the same file again still asks.
+                  event.target.value = ""
+                }}
+              />
+            </label>
+          </div>
         </div>
       </div>
 
@@ -338,6 +422,54 @@ function BackupSettingsRoute() {
             <AlertDialogCancel>{t`Cancel`}</AlertDialogCancel>
             <AlertDialogAction onClick={() => void confirmDelete()}>
               {t`Delete`}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={pendingRestore !== null}
+        onOpenChange={(open) => !open && setPendingRestore(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t`Restore this backup?`}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t`Every post, category, tag and account this site has now is replaced by what "${pendingRestore}" holds. This cannot be undone.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t`Cancel`}</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={restoring}
+              onClick={() => void confirmRestore()}
+            >
+              {restoring ? <Loader2 className="animate-spin" /> : null}
+              {t`Restore`}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={pendingImport !== null}
+        onOpenChange={(open) => !open && setPendingImport(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t`Import this archive?`}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t`Every post, category, tag and account this site has now is replaced by what "${pendingImport?.name}" holds. This cannot be undone.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t`Cancel`}</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={restoring}
+              onClick={() => void confirmImport()}
+            >
+              {restoring ? <Loader2 className="animate-spin" /> : null}
+              {t`Import`}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -525,6 +525,38 @@ export function deleteBackup(name: string): Promise<void> {
   })
 }
 
+export interface RestoreReport {
+  taken_at: string
+  /** Rows written, by table. */
+  tables: Record<string, number>
+  media_files: number
+}
+
+export function restoreBackup(name: string): Promise<RestoreReport> {
+  return request<RestoreReport>(
+    `/plugins/backup/${encodeURIComponent(name)}/restore`,
+    { method: "POST" }
+  )
+}
+
+/** Sends an archive taken somewhere else. Replaces everything this site has. */
+export async function importBackup(file: File): Promise<RestoreReport> {
+  const response = await fetch("/api/plugins/backup/import", {
+    method: "POST",
+    headers: { "Content-Type": "application/gzip" },
+    body: file,
+  })
+
+  if (!response.ok) {
+    const body = await response
+      .json()
+      .catch(() => ({ error: response.statusText }))
+    throw new ApiError(response.status, body.error ?? response.statusText)
+  }
+
+  return response.json() as Promise<RestoreReport>
+}
+
 export interface Site {
   id: string
   host: string

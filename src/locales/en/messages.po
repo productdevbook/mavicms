@@ -27,7 +27,7 @@ msgstr "\"{0}\" will be permanently deleted. This cannot be undone."
 msgid "\"{0}\" will be removed from every post that uses it."
 msgstr "\"{0}\" will be removed from every post that uses it."
 
-#: src/routes/dashboard.plugins_.backup.tsx:334
+#: src/routes/dashboard.plugins_.backup.tsx:418
 msgid "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
 msgstr "\"{pendingDelete}\" will be permanently deleted. This cannot be undone."
 
@@ -140,7 +140,7 @@ msgstr "A build gets these from its build variables, which the site's agency set
 #~ msgid "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 #~ msgstr "A file is enough for most sites. A busy one can be given a Postgres or MySQL address instead."
 
-#: src/routes/dashboard.plugins_.backup.tsx:212
+#: src/routes/dashboard.plugins_.backup.tsx:265
 msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
 
@@ -152,7 +152,7 @@ msgstr "A listing leaves the bodies out, because a whole archive in one response
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 
-#: src/routes/dashboard.plugins_.backup.tsx:211
+#: src/routes/dashboard.plugins_.backup.tsx:264
 msgid "A prefix inside the bucket."
 msgstr "A prefix inside the bucket."
 
@@ -308,9 +308,13 @@ msgstr "Already have an account? Sign in"
 msgid "Alt text"
 msgstr "Alt text"
 
-#: src/routes/dashboard.plugins_.backup.tsx:147
+#: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
 msgstr "An archive holding the database, and the uploaded files if you ask for them."
+
+#: src/routes/dashboard.plugins_.backup.tsx:388
+msgid "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
+msgstr "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 
 #: src/components/editor/post-settings.tsx:41
 #~ msgid "Announcement"
@@ -326,7 +330,7 @@ msgstr "API"
 msgid "Apply"
 msgstr "Apply"
 
-#: src/routes/dashboard.plugins_.backup.tsx:294
+#: src/routes/dashboard.plugins_.backup.tsx:347
 msgid "Archives"
 msgstr "Archives"
 
@@ -344,20 +348,20 @@ msgstr "Back"
 msgid "Back to editing"
 msgstr "Back to editing"
 
-#: src/routes/dashboard.plugins_.backup.tsx:284
+#: src/routes/dashboard.plugins_.backup.tsx:337
 msgid "Back up now"
 msgstr "Back up now"
 
-#: src/routes/dashboard.plugins_.backup.tsx:86
+#: src/routes/dashboard.plugins_.backup.tsx:102
 msgid "Backup settings saved"
 msgstr "Backup settings saved"
 
 #. placeholder {0}: file.name
-#: src/routes/dashboard.plugins_.backup.tsx:100
+#: src/routes/dashboard.plugins_.backup.tsx:116
 msgid "Backup written: {0}"
 msgstr "Backup written: {0}"
 
-#: src/routes/dashboard.plugins_.backup.tsx:145
+#: src/routes/dashboard.plugins_.backup.tsx:198
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Backups"
 msgstr "Backups"
@@ -431,7 +435,9 @@ msgstr "Bullet list"
 #: src/routes/dashboard.index.tsx:253
 #: src/routes/dashboard.languages.tsx:194
 #: src/routes/dashboard.media.tsx:144
-#: src/routes/dashboard.plugins_.backup.tsx:338
+#: src/routes/dashboard.plugins_.backup.tsx:422
+#: src/routes/dashboard.plugins_.backup.tsx:442
+#: src/routes/dashboard.plugins_.backup.tsx:466
 #: src/routes/dashboard.sites.tsx:150
 #: src/routes/dashboard.tags.tsx:301
 msgid "Cancel"
@@ -469,6 +475,10 @@ msgstr "Change one."
 #: src/components/editor/extensions/slash-command.tsx:119
 msgid "Checkbox to-do list"
 msgstr "Checkbox to-do list"
+
+#: src/routes/dashboard.plugins_.backup.tsx:393
+msgid "Choose a file"
+msgstr "Choose a file"
 
 #: src/components/editor/dialogs.tsx:513
 #: src/components/editor/toolbar.tsx:452
@@ -604,7 +614,7 @@ msgstr "Could not delete post"
 msgid "Could not delete tag"
 msgstr "Could not delete tag"
 
-#: src/routes/dashboard.plugins_.backup.tsx:118
+#: src/routes/dashboard.plugins_.backup.tsx:134
 msgid "Could not delete the backup"
 msgstr "Could not delete the backup"
 
@@ -616,7 +626,7 @@ msgstr "Could not link tags"
 msgid "Could not load post"
 msgstr "Could not load post"
 
-#: src/routes/dashboard.plugins_.backup.tsx:68
+#: src/routes/dashboard.plugins_.backup.tsx:84
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
 
@@ -663,7 +673,7 @@ msgid "Could not save tag"
 msgstr "Could not save tag"
 
 #: src/routes/console.sites.$siteId.tsx:98
-#: src/routes/dashboard.plugins_.backup.tsx:89
+#: src/routes/dashboard.plugins_.backup.tsx:105
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Could not save the settings"
@@ -776,8 +786,8 @@ msgstr "Default"
 #: src/routes/dashboard.languages.tsx:171
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
-#: src/routes/dashboard.plugins_.backup.tsx:314
-#: src/routes/dashboard.plugins_.backup.tsx:340
+#: src/routes/dashboard.plugins_.backup.tsx:374
+#: src/routes/dashboard.plugins_.backup.tsx:424
 #: src/routes/dashboard.tags.tsx:234
 #: src/routes/dashboard.tags.tsx:303
 msgid "Delete"
@@ -799,7 +809,7 @@ msgstr "Delete row"
 msgid "Delete table"
 msgstr "Delete table"
 
-#: src/routes/dashboard.plugins_.backup.tsx:332
+#: src/routes/dashboard.plugins_.backup.tsx:416
 msgid "Delete this backup?"
 msgstr "Delete this backup?"
 
@@ -889,7 +899,7 @@ msgstr "Embed a video"
 msgid "Emoji"
 msgstr "Emoji"
 
-#: src/routes/dashboard.plugins_.backup.tsx:154
+#: src/routes/dashboard.plugins_.backup.tsx:207
 #: src/routes/dashboard.plugins.tsx:78
 msgid "Enabled"
 msgstr "Enabled"
@@ -910,19 +920,28 @@ msgstr "Enter a valid email address"
 msgid "Enter details"
 msgstr "Enter details"
 
-#: src/routes/dashboard.plugins_.backup.tsx:74
+#: src/routes/dashboard.plugins_.backup.tsx:90
 msgid "Every day"
 msgstr "Every day"
 
-#: src/routes/dashboard.plugins_.backup.tsx:73
+#: src/routes/dashboard.plugins_.backup.tsx:89
 msgid "Every hour"
 msgstr "Every hour"
+
+#. placeholder {0}: pendingImport?.name
+#: src/routes/dashboard.plugins_.backup.tsx:462
+msgid "Every post, category, tag and account this site has now is replaced by what \"{0}\" holds. This cannot be undone."
+msgstr "Every post, category, tag and account this site has now is replaced by what \"{0}\" holds. This cannot be undone."
+
+#: src/routes/dashboard.plugins_.backup.tsx:438
+msgid "Every post, category, tag and account this site has now is replaced by what \"{pendingRestore}\" holds. This cannot be undone."
+msgstr "Every post, category, tag and account this site has now is replaced by what \"{pendingRestore}\" holds. This cannot be undone."
 
 #: src/routes/dashboard.api.tsx:127
 msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 msgstr "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 
-#: src/routes/dashboard.plugins_.backup.tsx:75
+#: src/routes/dashboard.plugins_.backup.tsx:91
 msgid "Every week"
 msgstr "Every week"
 
@@ -957,7 +976,7 @@ msgstr "Focus mode"
 msgid "Foldable details block"
 msgstr "Foldable details block"
 
-#: src/routes/dashboard.plugins_.backup.tsx:202
+#: src/routes/dashboard.plugins_.backup.tsx:255
 msgid "Folder"
 msgstr "Folder"
 
@@ -1083,11 +1102,11 @@ msgstr "Highlighted on the home page"
 msgid "Host"
 msgstr "Host"
 
-#: src/routes/dashboard.plugins_.backup.tsx:254
+#: src/routes/dashboard.plugins_.backup.tsx:307
 msgid "How many to keep"
 msgstr "How many to keep"
 
-#: src/routes/dashboard.plugins_.backup.tsx:231
+#: src/routes/dashboard.plugins_.backup.tsx:284
 msgid "How often"
 msgstr "How often"
 
@@ -1104,6 +1123,7 @@ msgid "Image address"
 msgstr "Image address"
 
 #: src/components/editor/dialogs.tsx:446
+#: src/routes/dashboard.plugins_.backup.tsx:472
 msgid "Import"
 msgstr "Import"
 
@@ -1112,11 +1132,19 @@ msgstr "Import"
 msgid "Import / export"
 msgstr "Import / export"
 
+#: src/routes/dashboard.plugins_.backup.tsx:386
+msgid "Import an archive"
+msgstr "Import an archive"
+
+#: src/routes/dashboard.plugins_.backup.tsx:460
+msgid "Import this archive?"
+msgstr "Import this archive?"
+
 #: src/components/editor/types.ts:27
 msgid "In review"
 msgstr "In review"
 
-#: src/routes/dashboard.plugins_.backup.tsx:218
+#: src/routes/dashboard.plugins_.backup.tsx:271
 msgid "Include the uploaded files"
 msgstr "Include the uploaded files"
 
@@ -1204,7 +1232,7 @@ msgid "Large section heading"
 msgstr "Large section heading"
 
 #. placeholder {0}: new Date(config.last_run_at).toLocaleString()
-#: src/routes/dashboard.plugins_.backup.tsx:288
+#: src/routes/dashboard.plugins_.backup.tsx:341
 msgid "Last run {0}"
 msgstr "Last run {0}"
 
@@ -1262,7 +1290,7 @@ msgstr "Loading…"
 msgid "Make default"
 msgstr "Make default"
 
-#: src/routes/dashboard.plugins_.backup.tsx:220
+#: src/routes/dashboard.plugins_.backup.tsx:273
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
@@ -1343,7 +1371,7 @@ msgstr "New tag"
 msgid "Next"
 msgstr "Next"
 
-#: src/routes/dashboard.plugins_.backup.tsx:297
+#: src/routes/dashboard.plugins_.backup.tsx:350
 msgid "No backups yet"
 msgstr "No backups yet"
 
@@ -1404,12 +1432,12 @@ msgstr "Nothing published yet"
 msgid "Numbered list"
 msgstr "Numbered list"
 
-#: src/routes/dashboard.plugins_.backup.tsx:266
+#: src/routes/dashboard.plugins_.backup.tsx:319
 msgid "Older archives are removed once a new one is written."
 msgstr "Older archives are removed once a new one is written."
 
-#: src/routes/dashboard.plugins_.backup.tsx:177
-#: src/routes/dashboard.plugins_.backup.tsx:182
+#: src/routes/dashboard.plugins_.backup.tsx:230
+#: src/routes/dashboard.plugins_.backup.tsx:235
 msgid "On the server's disk"
 msgstr "On the server's disk"
 
@@ -1433,7 +1461,7 @@ msgstr "One post by its address."
 msgid "One post, with its other languages."
 msgstr "One post, with its other languages."
 
-#: src/routes/dashboard.plugins_.backup.tsx:72
+#: src/routes/dashboard.plugins_.backup.tsx:88
 msgid "Only by hand"
 msgstr "Only by hand"
 
@@ -1525,7 +1553,7 @@ msgid "Plain text block"
 msgstr "Plain text block"
 
 #: src/components/dashboard/dashboard-shell.tsx:35
-#: src/routes/dashboard.plugins_.backup.tsx:141
+#: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.s3.tsx:113
 #: src/routes/dashboard.plugins.tsx:49
 msgid "Plugins"
@@ -1703,18 +1731,32 @@ msgstr "Repository"
 msgid "Request failed"
 msgstr "Request failed"
 
+#: src/routes/dashboard.plugins_.backup.tsx:369
+#: src/routes/dashboard.plugins_.backup.tsx:448
+msgid "Restore"
+msgstr "Restore"
+
+#: src/routes/dashboard.plugins_.backup.tsx:436
+msgid "Restore this backup?"
+msgstr "Restore this backup?"
+
+#. placeholder {0}: report.media_files
+#: src/routes/dashboard.plugins_.backup.tsx:143
+msgid "Restored: {rows} rows and {0} files"
+msgstr "Restored: {rows} rows and {0} files"
+
 #: src/components/editor/bubble-menus.tsx:450
 msgid "Row"
 msgstr "Row"
 
-#: src/routes/dashboard.plugins_.backup.tsx:176
-#: src/routes/dashboard.plugins_.backup.tsx:189
+#: src/routes/dashboard.plugins_.backup.tsx:229
+#: src/routes/dashboard.plugins_.backup.tsx:242
 msgid "S3 bucket"
 msgstr "S3 bucket"
 
 #. placeholder {0}: settings.s3_bucket
-#: src/routes/dashboard.plugins_.backup.tsx:175
-#: src/routes/dashboard.plugins_.backup.tsx:188
+#: src/routes/dashboard.plugins_.backup.tsx:228
+#: src/routes/dashboard.plugins_.backup.tsx:241
 msgid "S3 bucket ({0})"
 msgstr "S3 bucket ({0})"
 
@@ -1726,7 +1768,7 @@ msgstr "S3 compatible storage"
 #: src/components/editor/mavi-editor.tsx:596
 #: src/components/publish-panel.tsx:250
 #: src/routes/dashboard.categories.tsx:290
-#: src/routes/dashboard.plugins_.backup.tsx:280
+#: src/routes/dashboard.plugins_.backup.tsx:333
 #: src/routes/dashboard.plugins_.s3.tsx:238
 msgid "Save"
 msgstr "Save"
@@ -1750,7 +1792,7 @@ msgstr "Saving…"
 msgid "Scheduled"
 msgstr "Scheduled"
 
-#: src/routes/dashboard.plugins_.backup.tsx:156
+#: src/routes/dashboard.plugins_.backup.tsx:209
 msgid "Scheduled backups only run while this is on. You can always back up by hand below."
 msgstr "Scheduled backups only run while this is on. You can always back up by hand below."
 
@@ -1799,7 +1841,7 @@ msgstr "SEO description"
 msgid "SEO title"
 msgstr "SEO title"
 
-#: src/routes/dashboard.plugins_.backup.tsx:196
+#: src/routes/dashboard.plugins_.backup.tsx:249
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Set up the S3 plugin first if you want backups kept off this machine."
 
@@ -2018,7 +2060,7 @@ msgstr "Text shown in search results"
 msgid "The address a title would get."
 msgstr "The address a title would get."
 
-#: src/routes/dashboard.plugins_.backup.tsx:104
+#: src/routes/dashboard.plugins_.backup.tsx:120
 msgid "The backup failed"
 msgstr "The backup failed"
 
@@ -2035,13 +2077,18 @@ msgid "The languages your content can be written in. This is separate from the l
 msgstr "The languages your content can be written in. This is separate from the language of this admin panel."
 
 #. placeholder {0}: config.last_error
-#: src/routes/dashboard.plugins_.backup.tsx:273
+#: src/routes/dashboard.plugins_.backup.tsx:326
 msgid "The last backup failed: {0}"
 msgstr "The last backup failed: {0}"
 
 #: src/components/editor/dialogs.tsx:567
 msgid "The most common shortcuts in the editor."
 msgstr "The most common shortcuts in the editor."
+
+#: src/routes/dashboard.plugins_.backup.tsx:154
+#: src/routes/dashboard.plugins_.backup.tsx:170
+msgid "The restore failed"
+msgstr "The restore failed"
 
 #: src/routes/dashboard.api.tsx:87
 msgid "The same, with each body included."
@@ -2183,7 +2230,7 @@ msgstr "Where readers load the images from (bucket public URL or CDN)"
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Where this site's pages come from, and how the last builds went."
 
-#: src/routes/dashboard.plugins_.backup.tsx:163
+#: src/routes/dashboard.plugins_.backup.tsx:216
 msgid "Where to keep them"
 msgstr "Where to keep them"
 

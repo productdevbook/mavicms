@@ -7,7 +7,10 @@
 
 use chrono::{DateTime, FixedOffset, Utc};
 use flate2::{Compression, write::GzEncoder};
-use sea_orm::{ConnectionTrait, EntityTrait};
+use sea_orm::{
+    ColumnTrait, ConnectionTrait, DatabaseBackend, EntityTrait, QueryFilter, Statement,
+    TransactionTrait,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use utoipa::ToSchema;
@@ -22,6 +25,13 @@ use crate::{
     state::AppState,
     storage::MediaStorage,
 };
+
+/// The largest archive that can be sent to be restored.
+///
+/// A whole site with its pictures, and no more: an upload nobody has checked
+/// is held in memory while it is read, so this is also how much memory one
+/// request can ask for.
+pub const MAX_IMPORT_BYTES: usize = 2 * 1024 * 1024 * 1024;
 
 /// Bumped when the dump's shape changes, so a restore knows what it is holding.
 const FORMAT_VERSION: u32 = 1;
@@ -276,6 +286,42 @@ async fn prune(state: &AppState, settings: &BackupConfig) {
     }
 }
 
+/// A backup name, and nothing that is about to be joined onto a path and
+/// point somewhere else.
+fn clean_name(name: &str) -> AppResult<String> {
+    let refused =
+        name.is_empty() || name.contains('/') || name.contains('\\') || name.contains("..");
+
+    if refused {
+        return Err(AppError::Validation(
+            "that is not a backup name".to_string(),
+        ));
+    }
+    Ok(name.to_string())
+}
+
+/// One archive's contents.
+pub async fn read(state: &AppState, settings: &BackupConfig, name: &str) -> AppResult<Vec<u8>> {
+    let name = clean_name(name)?;
+    let folder = settings.clean_folder();
+
+    let bytes = match settings.destination {
+        Destination::Local => tokio::fs::read(state.data_dir.join(&folder).join(&name))
+            .await
+            .ok(),
+        Destination::S3 => {
+            let stored = load_s3(state.db(), &state.secrets)
+                .await?
+                .ok_or_else(|| AppError::Validation("the S3 plugin is not set up".to_string()))?;
+            MediaStorage::S3(Box::new(stored.config))
+                .read(&format!("{folder}/{name}"))
+                .await
+        }
+    };
+
+    bytes.ok_or_else(|| AppError::NotFound("backup".to_string()))
+}
+
 /// The archives that exist, newest first.
 pub async fn list(state: &AppState, settings: &BackupConfig) -> AppResult<Vec<BackupFile>> {
     let folder = settings.clean_folder();
@@ -329,12 +375,7 @@ pub async fn list(state: &AppState, settings: &BackupConfig) -> AppResult<Vec<Ba
 }
 
 pub async fn delete(state: &AppState, settings: &BackupConfig, name: &str) -> AppResult<()> {
-    // The name comes from the client, and it is about to be joined onto a path.
-    if name.contains('/') || name.contains('\\') || name.contains("..") {
-        return Err(AppError::Validation(
-            "that is not a backup name".to_string(),
-        ));
-    }
+    let name = &clean_name(name)?;
     let folder = settings.clean_folder();
 
     match settings.destination {
@@ -401,4 +442,306 @@ pub fn spawn_scheduler(state: AppState) {
             }
         }
     });
+}
+
+/// What a restore did, so the panel can say it rather than guess.
+#[derive(Debug, Clone, Serialize, ToSchema)]
+pub struct RestoreReport {
+    /// When the archive was taken.
+    pub taken_at: String,
+    /// Rows written, by table.
+    pub tables: std::collections::BTreeMap<String, u64>,
+    /// Uploaded files put back.
+    pub media_files: u64,
+}
+
+/// Puts an archive back into this site.
+///
+/// Everything the site has is removed first and replaced by what the archive
+/// holds — a restore that merged would leave the site as neither what it was
+/// nor what was backed up, and nobody could say which posts came from where.
+///
+/// It is one transaction. A restore that failed halfway would be worse than
+/// the state it was trying to repair, so either the site is what the archive
+/// says or it is untouched.
+pub async fn restore(state: &AppState, bytes: &[u8]) -> AppResult<RestoreReport> {
+    let (dump, media_files) = read_archive(bytes)?;
+
+    let version = dump
+        .get("format_version")
+        .and_then(Value::as_u64)
+        .unwrap_or(0);
+    if version != FORMAT_VERSION as u64 {
+        return Err(AppError::Validation(format!(
+            "this archive is version {version}, and this server reads version {FORMAT_VERSION}"
+        )));
+    }
+
+    let tables = dump
+        .get("tables")
+        .and_then(Value::as_object)
+        .ok_or_else(|| AppError::Validation("this archive has no tables in it".to_string()))?;
+
+    let db = state.db();
+    let transaction = db.begin().await?;
+    let mut written = std::collections::BTreeMap::new();
+
+    // Emptied in the order that leaves nothing pointing at a row that has gone,
+    // and filled in the reverse.
+    for table in EMPTY_ORDER {
+        transaction
+            .execute_raw(Statement::from_string(
+                transaction.get_database_backend(),
+                format!("DELETE FROM {table}"),
+            ))
+            .await?;
+    }
+
+    for table in EMPTY_ORDER.iter().rev() {
+        let rows = tables.get(*table).and_then(Value::as_array);
+        let Some(rows) = rows else { continue };
+        written.insert((*table).to_string(), rows.len() as u64);
+
+        if rows.is_empty() {
+            continue;
+        }
+        let types = column_types(&transaction, table).await?;
+        for row in rows {
+            insert_row(&transaction, table, row, &types).await?;
+        }
+    }
+
+    transaction.commit().await?;
+
+    let restored_media = put_media_back(state, media_files).await;
+
+    Ok(RestoreReport {
+        taken_at: dump
+            .get("taken_at")
+            .and_then(Value::as_str)
+            .unwrap_or("")
+            .to_string(),
+        tables: written,
+        media_files: restored_media,
+    })
+}
+
+/// Emptied in this order, filled in the reverse: the joining tables first, so
+/// nothing is ever left pointing at a row that is no longer there.
+const EMPTY_ORDER: [&str; 10] = [
+    "post_tags",
+    "post_categories",
+    "posts",
+    "tags",
+    "categories",
+    "media",
+    "languages",
+    "plugin_settings",
+    "users",
+    "site_settings",
+];
+
+/// A file out of an archive: where it goes, and what is in it.
+type ArchivedFile = (String, Vec<u8>);
+
+/// The dump and the files, out of the archive.
+fn read_archive(bytes: &[u8]) -> AppResult<(Value, Vec<ArchivedFile>)> {
+    use std::io::Read;
+
+    let mut archive = tar::Archive::new(flate2::read::GzDecoder::new(bytes));
+    let mut dump = None;
+    let mut media = Vec::new();
+
+    let entries = archive
+        .entries()
+        .map_err(|err| AppError::Validation(format!("this is not an archive: {err}")))?;
+
+    for entry in entries {
+        let mut entry =
+            entry.map_err(|err| AppError::Validation(format!("unreadable archive: {err}")))?;
+        let path = entry
+            .path()
+            .map_err(|err| AppError::Validation(format!("unreadable name: {err}")))?
+            .to_string_lossy()
+            .into_owned();
+
+        let mut contents = Vec::new();
+        entry
+            .read_to_end(&mut contents)
+            .map_err(|err| AppError::Validation(format!("could not read {path}: {err}")))?;
+
+        if path == "database.json" {
+            dump = Some(serde_json::from_slice(&contents).map_err(|err| {
+                AppError::Validation(format!("the dump in this archive is unreadable: {err}"))
+            })?);
+        } else if let Some(key) = path.strip_prefix("media/") {
+            // The key becomes a storage key and, on local storage, a file path.
+            if key.split('/').any(|part| part == "..") || key.is_empty() {
+                return Err(AppError::Validation(format!(
+                    "this archive holds a file with a name that points outside it: {path}"
+                )));
+            }
+            media.push((key.to_string(), contents));
+        }
+    }
+
+    let dump =
+        dump.ok_or_else(|| AppError::Validation("this archive has no dump in it".to_string()))?;
+    Ok((dump, media))
+}
+
+/// What each column of a table actually is.
+///
+/// The dump wrote uuids, timestamps and json all as JSON strings, and Postgres
+/// will not read a string into any of them on its own — so the insert has to
+/// say what each one is. SQLite will, and says nothing here.
+async fn column_types(
+    db: &impl ConnectionTrait,
+    table: &str,
+) -> AppResult<std::collections::HashMap<String, String>> {
+    if db.get_database_backend() != DatabaseBackend::Postgres {
+        return Ok(Default::default());
+    }
+
+    let rows = db
+        .query_all_raw(Statement::from_sql_and_values(
+            DatabaseBackend::Postgres,
+            "SELECT column_name, data_type FROM information_schema.columns \
+             WHERE table_schema = current_schema() AND table_name = $1",
+            [table.into()],
+        ))
+        .await?;
+
+    rows.into_iter()
+        .map(|row| {
+            Ok((
+                row.try_get("", "column_name")?,
+                row.try_get("", "data_type")?,
+            ))
+        })
+        .collect()
+}
+
+/// The cast a value needs to land in this column, if it needs one.
+fn cast_for(kind: Option<&String>, value: &Value) -> String {
+    let Some(kind) = kind else {
+        return String::new();
+    };
+    // A number or a boolean is already what it is. Everything else arrives as
+    // text — including a null, which Postgres will not accept as an untyped
+    // one for a column that is not text.
+    if value.is_number() || value.is_boolean() {
+        return String::new();
+    }
+    match kind.as_str() {
+        "uuid" | "json" | "jsonb" | "date" => format!("::{kind}"),
+        "timestamp with time zone" => "::timestamptz".to_string(),
+        "timestamp without time zone" => "::timestamp".to_string(),
+        _ => String::new(),
+    }
+}
+
+async fn insert_row(
+    db: &impl ConnectionTrait,
+    table: &str,
+    row: &Value,
+    types: &std::collections::HashMap<String, String>,
+) -> AppResult<()> {
+    let object = row
+        .as_object()
+        .ok_or_else(|| AppError::Validation(format!("a row in {table} is not a row")))?;
+
+    let backend = db.get_database_backend();
+    let mut columns = Vec::new();
+    let mut placeholders = Vec::new();
+    let mut values: Vec<sea_orm::Value> = Vec::new();
+
+    for (name, value) in object {
+        // The names come from the dump, which this server wrote from its own
+        // entities — but an archive is a file someone can hand you, so a name
+        // that is not a name does not reach the statement.
+        if !name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') || name.is_empty() {
+            return Err(AppError::Validation(format!(
+                "{table} has a column name this cannot use: {name}"
+            )));
+        }
+        columns.push(format!("\"{name}\""));
+        placeholders.push(match backend {
+            DatabaseBackend::Postgres => {
+                format!("${}{}", values.len() + 1, cast_for(types.get(name), value))
+            }
+            _ => "?".to_string(),
+        });
+        values.push(json_to_value(value));
+    }
+
+    if columns.is_empty() {
+        return Ok(());
+    }
+
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "INSERT INTO {table} ({}) VALUES ({})",
+            columns.join(", "),
+            placeholders.join(", ")
+        ),
+        values,
+    ))
+    .await?;
+
+    Ok(())
+}
+
+/// A JSON value as something the database can take.
+///
+/// Everything that is not a number or a boolean goes in as text and is cast by
+/// the column it lands in — which is what the dump did on the way out, since
+/// SeaORM wrote uuids, timestamps and json all as JSON strings.
+fn json_to_value(value: &Value) -> sea_orm::Value {
+    match value {
+        Value::Null => sea_orm::Value::String(None),
+        Value::Bool(inner) => (*inner).into(),
+        Value::Number(inner) => match inner.as_i64() {
+            Some(number) => number.into(),
+            None => inner.as_f64().unwrap_or_default().into(),
+        },
+        Value::String(inner) => inner.clone().into(),
+        other => other.to_string().into(),
+    }
+}
+
+/// Writes the archive's files back wherever this site keeps its media now.
+///
+/// Best effort by design: the rows are already in, and a site with its posts
+/// and a missing picture is a site. Failing the whole restore over one file
+/// would leave nothing.
+async fn put_media_back(state: &AppState, files: Vec<ArchivedFile>) -> u64 {
+    let mut written = 0;
+
+    for (key, bytes) in files {
+        let backend = match media::Entity::find()
+            .filter(media::Column::StorageKey.eq(key.clone()))
+            .one(state.db())
+            .await
+        {
+            Ok(Some(item)) => item.storage_backend,
+            _ => crate::storage::LOCAL.to_string(),
+        };
+
+        let storage = match crate::plugins::storage_for(state, &backend).await {
+            Ok(storage) => storage,
+            Err(err) => {
+                tracing::warn!(error = %err, key, "no storage to put this file back on");
+                continue;
+            }
+        };
+
+        match storage.put(&key, &bytes, "application/octet-stream").await {
+            Ok(_) => written += 1,
+            Err(err) => tracing::warn!(error = %err, key, "could not put a file back"),
+        }
+    }
+
+    written
 }
