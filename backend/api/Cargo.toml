@@ -4,9 +4,21 @@ version = "0.5.0"
 edition.workspace = true
 publish = false
 
+[lib]
+name = "mavicms_api"
+path = "src/lib.rs"
+
 [[bin]]
 name = "mavicms-api"
 path = "src/main.rs"
+
+[[bin]]
+name = "mavicms-builder"
+path = "src/bin/builder.rs"
+
+[[bin]]
+name = "mavicms-edge"
+path = "src/bin/edge.rs"
 
 [dependencies]
 migration = { path = "../migration" }

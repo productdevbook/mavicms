@@ -29,6 +29,13 @@ fn options(database_url: &str) -> ConnectOptions {
     options
 }
 
+/// Opens a database without bringing a site's schema up to date — for
+/// something that only reads the control plane and has no business migrating
+/// anything.
+pub async fn connect_plain(database_url: &str) -> Result<DatabaseConnection, DbErr> {
+    Database::connect(options(database_url)).await
+}
+
 pub async fn connect(database_url: &str) -> Result<DatabaseConnection, DbErr> {
     let db = Database::connect(options(database_url)).await?;
     Migrator::up(&db, None).await?;

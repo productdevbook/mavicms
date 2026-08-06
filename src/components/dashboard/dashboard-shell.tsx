@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   LogOut,
   Plug,
+  Rocket,
   Tags,
 } from "lucide-react"
 
@@ -31,8 +32,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     { to: "/dashboard/tags", label: t`Tags`, icon: Tags },
     { to: "/dashboard/languages", label: t`Languages`, icon: Globe },
     { to: "/dashboard/plugins", label: t`Plugins`, icon: Plug },
-    // Whoever administers a hosted site administers that site; the list of
-    // sites belongs to whoever runs the server.
+    // Publishing is a hosted site's own pages being rebuilt. The server's own
+    // installation has none — its pages are this panel.
+    ...(user.operator
+      ? []
+      : ([{ to: "/dashboard/publish", label: t`Publish`, icon: Rocket }] as const)),
     ...(user.operator
       ? ([{ to: "/dashboard/sites", label: t`Sites`, icon: Server }] as const)
       : []),

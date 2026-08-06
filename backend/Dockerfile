@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && chown mavicms:mavicms /app
 
 COPY --from=builder /app/target/release/mavicms-api /usr/local/bin/mavicms-api
+COPY --from=builder /app/target/release/mavicms-edge /usr/local/bin/mavicms-edge
 
 # A fresh named volume inherits the ownership of the mount point in the image.
 # Without this directory Docker creates it as root and the unprivileged process

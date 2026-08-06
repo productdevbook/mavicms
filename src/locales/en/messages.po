@@ -143,6 +143,10 @@ msgstr "A prefix inside the bucket."
 msgid "Access key ID"
 msgstr "Access key ID"
 
+#: src/routes/dashboard.publish.tsx:211
+msgid "Access token"
+msgstr "Access token"
+
 #: src/routes/dashboard.languages.tsx:148
 msgid "Active"
 msgstr "Active"
@@ -360,9 +364,21 @@ msgstr "Blocks"
 msgid "Bold"
 msgstr "Bold"
 
+#: src/routes/dashboard.publish.tsx:181
+msgid "Branch"
+msgstr "Branch"
+
 #: src/routes/dashboard.plugins_.s3.tsx:161
 msgid "Bucket"
 msgstr "Bucket"
+
+#: src/routes/dashboard.publish.tsx:199
+msgid "Build command"
+msgstr "Build command"
+
+#: src/routes/dashboard.publish.tsx:224
+msgid "Build variables"
+msgstr "Build variables"
 
 #: src/routes/dashboard.plugins.tsx:51
 msgid "Built-in integrations you can switch on and configure."
@@ -397,7 +413,7 @@ msgstr "Canonical URL"
 msgid "Case sensitive"
 msgstr "Case sensitive"
 
-#: src/components/dashboard/dashboard-shell.tsx:30
+#: src/components/dashboard/dashboard-shell.tsx:31
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Categories"
@@ -560,6 +576,10 @@ msgstr "Could not load post"
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
 
+#: src/routes/dashboard.publish.tsx:80
+msgid "Could not load the publishing settings"
+msgstr "Could not load the publishing settings"
+
 #: src/routes/dashboard.sites.tsx:36
 msgid "Could not load the sites"
 msgstr "Could not load the sites"
@@ -597,8 +617,13 @@ msgid "Could not save tag"
 msgstr "Could not save tag"
 
 #: src/routes/dashboard.plugins_.backup.tsx:89
+#: src/routes/dashboard.publish.tsx:120
 msgid "Could not save the settings"
 msgstr "Could not save the settings"
+
+#: src/routes/dashboard.publish.tsx:135
+msgid "Could not start the build"
+msgstr "Could not start the build"
 
 #: src/routes/dashboard.tags.tsx:115
 msgid "Could not unlink tag"
@@ -1066,6 +1091,10 @@ msgstr "Install Mavi CMS"
 msgid "Installing Mavi CMS…"
 msgstr "Installing Mavi CMS…"
 
+#: src/routes/dashboard.publish.tsx:206
+msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
+msgstr "It runs with CMS_API_URL and SITE_URL set to this site's address."
+
 #: src/components/editor/bubble-menus.tsx:127
 #: src/components/editor/dialogs.tsx:508
 #: src/components/editor/toolbar.tsx:299
@@ -1097,7 +1126,7 @@ msgstr "Keyboard shortcuts"
 msgid "Language"
 msgstr "Language"
 
-#: src/components/dashboard/dashboard-shell.tsx:32
+#: src/components/dashboard/dashboard-shell.tsx:33
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Languages"
@@ -1189,7 +1218,7 @@ msgstr "Markdown imported"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS needs a database to store your site."
 
-#: src/components/dashboard/dashboard-shell.tsx:29
+#: src/components/dashboard/dashboard-shell.tsx:30
 msgid "Media"
 msgstr "Media"
 
@@ -1231,7 +1260,7 @@ msgstr "needs translation"
 msgid "New category"
 msgstr "New category"
 
-#: src/components/dashboard/dashboard-shell.tsx:76
+#: src/components/dashboard/dashboard-shell.tsx:80
 #: src/routes/dashboard.index.tsx:153
 msgid "New post"
 msgstr "New post"
@@ -1296,6 +1325,10 @@ msgstr "No tags yet"
 msgid "Not configured"
 msgstr "Not configured"
 
+#: src/routes/dashboard.publish.tsx:251
+msgid "Nothing published yet"
+msgstr "Nothing published yet"
+
 #: src/components/editor/dialogs.tsx:522
 #: src/components/editor/extensions/slash-command.tsx:109
 #: src/components/editor/toolbar.tsx:510
@@ -1315,9 +1348,17 @@ msgstr "On the server's disk"
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "One account for every site you run. Each site keeps its own content and its own people."
 
+#: src/routes/dashboard.publish.tsx:236
+msgid "One NAME=value per line. This is where the build's credentials go."
+msgstr "One NAME=value per line. This is where the build's credentials go."
+
 #: src/routes/dashboard.plugins_.backup.tsx:72
 msgid "Only by hand"
 msgstr "Only by hand"
+
+#: src/routes/dashboard.publish.tsx:218
+msgid "Only for a private repository"
+msgstr "Only for a private repository"
 
 #: src/components/editor/bubble-menus.tsx:282
 msgid "Open"
@@ -1343,6 +1384,10 @@ msgstr "Other sites this server hosts. Each gets its own database schema, accoun
 #: src/routes/dashboard.sites.tsx:71
 #~ msgid "Other sites this server hosts. Each keeps its own content, accounts and uploads."
 #~ msgstr "Other sites this server hosts. Each keeps its own content, accounts and uploads."
+
+#: src/routes/dashboard.publish.tsx:189
+msgid "Output folder"
+msgstr "Output folder"
 
 #: src/components/editor/dialogs.tsx:520
 #: src/components/editor/extensions/slash-command.tsx:55
@@ -1394,7 +1439,7 @@ msgstr "plain text"
 msgid "Plain text block"
 msgstr "Plain text block"
 
-#: src/components/dashboard/dashboard-shell.tsx:33
+#: src/components/dashboard/dashboard-shell.tsx:34
 #: src/routes/dashboard.plugins_.backup.tsx:141
 #: src/routes/dashboard.plugins_.s3.tsx:113
 #: src/routes/dashboard.plugins.tsx:49
@@ -1436,7 +1481,7 @@ msgstr "Post title"
 msgid "post-url"
 msgstr "post-url"
 
-#: src/components/dashboard/dashboard-shell.tsx:28
+#: src/components/dashboard/dashboard-shell.tsx:29
 msgid "Posts"
 msgstr "Posts"
 
@@ -1457,7 +1502,10 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
+#: src/components/dashboard/dashboard-shell.tsx:39
 #: src/components/editor/mavi-editor.tsx:607
+#: src/routes/dashboard.publish.tsx:154
+#: src/routes/dashboard.publish.tsx:164
 msgid "Publish"
 msgstr "Publish"
 
@@ -1468,6 +1516,14 @@ msgstr "Publish date"
 #: src/components/editor/types.ts:29
 msgid "Published"
 msgstr "Published"
+
+#: src/routes/dashboard.publish.tsx:132
+msgid "Publishing — this takes a minute or two"
+msgstr "Publishing — this takes a minute or two"
+
+#: src/routes/dashboard.publish.tsx:164
+msgid "Publishing…"
+msgstr "Publishing…"
 
 #: src/components/editor/dialogs.tsx:524
 #: src/components/editor/extensions/slash-command.tsx:127
@@ -1483,6 +1539,10 @@ msgstr "Raise text above the line"
 #: src/components/editor/post-settings.tsx:353
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
+
+#: src/routes/dashboard.publish.tsx:248
+msgid "Recent builds"
+msgstr "Recent builds"
 
 #: src/components/editor/dialogs.tsx:532
 #: src/components/editor/toolbar.tsx:177
@@ -1535,6 +1595,10 @@ msgstr "Replace content"
 msgid "Replace…"
 msgstr "Replace…"
 
+#: src/routes/dashboard.publish.tsx:170
+msgid "Repository"
+msgstr "Repository"
+
 #: src/routes/dashboard.plugins_.s3.tsx:74
 msgid "Request failed"
 msgstr "Request failed"
@@ -1563,10 +1627,12 @@ msgstr "S3 compatible storage"
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.plugins_.backup.tsx:280
 #: src/routes/dashboard.plugins_.s3.tsx:238
+#: src/routes/dashboard.publish.tsx:243
 msgid "Save"
 msgstr "Save"
 
 #: src/components/editor/status-bar.tsx:113
+#: src/routes/dashboard.publish.tsx:117
 msgid "Saved"
 msgstr "Saved"
 
@@ -1671,7 +1737,7 @@ msgstr "Sign in"
 msgid "Sign in to manage your site."
 msgstr "Sign in to manage your site."
 
-#: src/components/dashboard/dashboard-shell.tsx:83
+#: src/components/dashboard/dashboard-shell.tsx:87
 #: src/components/editor/mavi-editor.tsx:580
 #: src/routes/console.index.tsx:109
 msgid "Sign out"
@@ -1685,7 +1751,7 @@ msgstr "Signing you in…"
 msgid "Site title"
 msgstr "Site title"
 
-#: src/components/dashboard/dashboard-shell.tsx:37
+#: src/components/dashboard/dashboard-shell.tsx:41
 #: src/routes/dashboard.sites.tsx:69
 msgid "Sites"
 msgstr "Sites"
@@ -1713,6 +1779,15 @@ msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, Digi
 #: src/routes/dashboard.plugins_.s3.tsx:177
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
+
+#: src/routes/dashboard.publish.tsx:218
+msgid "Stored — type to replace"
+msgstr "Stored — type to replace"
+
+#. placeholder {0}: config.environment_keys.join(", ")
+#: src/routes/dashboard.publish.tsx:235
+msgid "Stored: {0}. Typing here replaces all of them."
+msgstr "Stored: {0}. Typing here replaces all of them."
 
 #: src/components/editor/bubble-menus.tsx:143
 #: src/components/editor/dialogs.tsx:510
@@ -1768,7 +1843,7 @@ msgstr "Table of contents"
 msgid "Tagline"
 msgstr "Tagline"
 
-#: src/components/dashboard/dashboard-shell.tsx:31
+#: src/components/dashboard/dashboard-shell.tsx:32
 #: src/components/editor/post-settings.tsx:222
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -1854,6 +1929,11 @@ msgstr "This post could not be opened, so it has been left untouched."
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
 msgstr "Today's date"
+
+#. placeholder {0}: Math.max( 1, Math.round( (new Date(build.finished_at).getTime() - new Date(build.started_at).getTime()) / 1000 ) )
+#: src/routes/dashboard.publish.tsx:271
+msgid "took {0} seconds"
+msgstr "took {0} seconds"
 
 #: src/components/editor/mavi-editor.tsx:486
 msgid "Translations"
@@ -1969,6 +2049,10 @@ msgstr "You'll use this to sign in and manage your site."
 #: src/routes/console.register.tsx:108
 msgid "Your name"
 msgstr "Your name"
+
+#: src/routes/dashboard.publish.tsx:156
+msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
+msgstr "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 
 #: src/routes/console.index.tsx:119
 msgid "Your sites"

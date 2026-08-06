@@ -614,3 +614,54 @@ export function enterSite(token: string): Promise<void> {
     body: JSON.stringify({ token }),
   })
 }
+
+export interface BuildConfig {
+  repository: string
+  branch: string
+  build_command: string
+  output_dir: string
+  /** Whether a token is stored; the token itself never comes back. */
+  has_token: boolean
+  /** The names the build runs with. The values stay on the server. */
+  environment_keys: string[]
+}
+
+export type BuildStatus = "queued" | "running" | "succeeded" | "failed"
+
+export interface Build {
+  id: string
+  status: BuildStatus
+  log: string
+  requested_at: string
+  started_at: string | null
+  finished_at: string | null
+}
+
+export interface PublishStatus {
+  config: BuildConfig | null
+  builds: Build[]
+}
+
+export function getPublish(): Promise<PublishStatus> {
+  return request<PublishStatus>("/publish")
+}
+
+export function savePublish(payload: {
+  repository: string
+  branch?: string
+  build_command?: string
+  output_dir?: string
+  /** Left out keeps the stored token; empty removes it. */
+  token?: string
+  /** Left out keeps what is stored. */
+  environment?: Record<string, string>
+}): Promise<BuildConfig> {
+  return request<BuildConfig>("/publish", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function requestPublish(): Promise<Build> {
+  return request<Build>("/publish", { method: "POST" })
+}

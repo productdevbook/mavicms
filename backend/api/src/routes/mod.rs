@@ -7,6 +7,7 @@ pub mod plugins;
 pub mod posts;
 pub mod setup;
 pub mod console;
+pub mod publish;
 pub mod sites;
 pub mod slug;
 pub mod tags;
@@ -86,6 +87,11 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         ))
         .routes(routes!(plugins::run_backup))
         .routes(routes!(plugins::delete_backup))
+        .routes(routes!(
+            publish::get_publish,
+            publish::save_publish,
+            publish::request_publish
+        ))
         .merge(
             OpenApiRouter::new()
                 .routes(routes!(media::list_media, media::upload_media))

@@ -1,23 +1,3 @@
-mod auth;
-mod backup;
-mod config;
-mod console;
-mod crypto;
-mod db;
-mod dto;
-mod entities;
-mod error;
-mod fetch;
-mod languages;
-mod middleware;
-mod openapi;
-mod plugins;
-mod routes;
-mod slug;
-mod state;
-mod tenants;
-mod storage;
-
 use axum::{
     Json, Router,
     http::{HeaderValue, header},
@@ -32,18 +12,18 @@ use utoipa::OpenApi as _;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_scalar::{Scalar, Servable};
 
-use crate::state::AppState;
+use mavicms_api::state::AppState;
 
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
     tracing_subscriber::fmt::init();
 
-    let config = config::Config::from_env();
+    let config = mavicms_api::config::Config::from_env();
 
     let db = match &config.database_url {
         Some(url) => Some(
-            db::connect(url)
+            mavicms_api::db::connect(url)
                 .await
                 .expect("failed to connect to database and run migrations"),
         ),
@@ -55,7 +35,7 @@ async fn main() {
         }
     };
 
-    let secrets = crypto::SecretBox::load_or_create(&config.data_dir)
+    let secrets = mavicms_api::crypto::SecretBox::load_or_create(&config.data_dir)
         .unwrap_or_else(|err| panic!("failed to initialise the master key: {err}"));
 
     let state = AppState {
@@ -67,7 +47,7 @@ async fn main() {
 
     // Started before the state is handed to the router, which consumes it.
     if state.db.is_some() {
-        backup::spawn_scheduler(state.clone());
+        mavicms_api::backup::spawn_scheduler(state.clone());
     }
 
     // The list of sites lives in the server's own database, so it is backed up
@@ -76,20 +56,20 @@ async fn main() {
     // empty and every request falls through to the installation already there.
     let registry = match (&state.db, &config.database_url) {
         (Some(db), Some(url)) => Some(std::sync::Arc::new(
-            tenants::Registry::new(db.clone(), url.clone(), config.data_dir.join("sites"))
+            mavicms_api::tenants::Registry::new(db.clone(), url.clone(), config.data_dir.join("sites"))
                 .await
                 .unwrap_or_else(|err| panic!("failed to prepare the site registry: {err}")),
         )),
         _ => None,
     };
 
-    let hosting = tenants::Hosting {
+    let hosting = mavicms_api::tenants::Hosting {
         registry,
         default_state: state,
     };
 
-    let (router, api) = OpenApiRouter::<tenants::Hosting>::with_openapi(openapi::ApiDoc::openapi())
-        .merge(routes::router(hosting.clone()))
+    let (router, api) = OpenApiRouter::<mavicms_api::tenants::Hosting>::with_openapi(mavicms_api::openapi::ApiDoc::openapi())
+        .merge(mavicms_api::routes::router(hosting.clone()))
         .with_state(hosting)
         .split_for_parts();
 

@@ -97,6 +97,7 @@ impl Registry {
     ) -> AppResult<Self> {
         create_table(&control).await?;
         crate::console::create_tables(&control).await?;
+        crate::publish::create_tables(&control).await?;
         Ok(Self {
             control,
             base_url,
@@ -456,6 +457,12 @@ impl Resolved {
 }
 
 impl Hosting {
+    /// The server's own key, which is what encrypts anything the control
+    /// plane holds — a site's key belongs to that site's data.
+    pub fn secrets(&self) -> &crate::crypto::SecretBox {
+        &self.default_state.secrets
+    }
+
     /// The site the registry is needed for, or a plain explanation of why
     /// there is no registry to ask.
     pub fn registry(&self) -> AppResult<&Registry> {
