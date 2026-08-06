@@ -478,3 +478,175 @@ pub async fn claim_entry(
         name: found.try_get("", "name")?,
     })
 }
+
+/// Changes an agency account's own details.
+///
+/// The current password is asked for even though the session already proves
+/// who this is: a session left open on a shared machine should not be enough
+/// to take the account away from whoever owns it.
+pub async fn update_account(
+    db: &DatabaseConnection,
+    operator_id: Uuid,
+    current_password: &str,
+    name: Option<&str>,
+    email: Option<&str>,
+    new_password: Option<&str>,
+) -> AppResult<Operator> {
+    let backend = db.get_database_backend();
+
+    let (operator, hash, _) = db
+        .query_one_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "SELECT id, organization_id, email, name, password_hash, active \
+                 FROM operators WHERE id = {}",
+                parameter(backend, 1)
+            ),
+            [operator_id.to_string().into()],
+        ))
+        .await?
+        .map(|row| {
+            Ok::<_, AppError>((
+                Operator {
+                    id: operator_id,
+                    organization_id: Uuid::parse_str(
+                        &row.try_get::<String>("", "organization_id")?,
+                    )
+                    .map_err(|err| AppError::Internal(format!("bad organization id: {err}")))?,
+                    email: row.try_get("", "email")?,
+                    name: row.try_get("", "name")?,
+                },
+                row.try_get::<String>("", "password_hash")?,
+                row.try_get::<i32>("", "active")? != 0,
+            ))
+        })
+        .transpose()?
+        .ok_or_else(|| AppError::NotFound("account".to_string()))?;
+
+    let parsed = PasswordHash::new(&hash)
+        .map_err(|_| AppError::Internal("corrupt password hash".to_string()))?;
+    Argon2::default()
+        .verify_password(current_password.as_bytes(), &parsed)
+        .map_err(|_| AppError::Unauthorized("that is not the current password".to_string()))?;
+
+    let name = name.map(str::trim).filter(|value| !value.is_empty());
+    let email = email.map(|value| value.trim().to_lowercase());
+
+    if let Some(email) = &email {
+        if !email.contains('@') || email.len() < 3 {
+            return Err(AppError::Validation(
+                "that does not look like an email address".to_string(),
+            ));
+        }
+        if let Some((other, _, _)) = find_operator_by_email(db, email).await?
+            && other.id != operator_id
+        {
+            return Err(AppError::Conflict(
+                "an account already uses that email address".to_string(),
+            ));
+        }
+    }
+
+    if let Some(password) = new_password
+        && password.chars().count() < 10
+    {
+        return Err(AppError::Validation(
+            "the password must be at least 10 characters".to_string(),
+        ));
+    }
+
+    let updated = Operator {
+        name: name.map(str::to_string).unwrap_or(operator.name),
+        email: email.unwrap_or(operator.email),
+        ..operator
+    };
+
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "UPDATE operators SET name = {}, email = {}, password_hash = {} WHERE id = {}",
+            parameter(backend, 1),
+            parameter(backend, 2),
+            parameter(backend, 3),
+            parameter(backend, 4)
+        ),
+        [
+            updated.name.clone().into(),
+            updated.email.clone().into(),
+            match new_password {
+                Some(password) => hash_password(password)?,
+                None => hash,
+            }
+            .into(),
+            operator_id.to_string().into(),
+        ],
+    ))
+    .await?;
+
+    Ok(updated)
+}
+
+/// Every agency on the server, for whoever runs it.
+pub async fn organizations(db: &DatabaseConnection) -> AppResult<Vec<(Organization, String)>> {
+    let rows = db
+        .query_all_raw(Statement::from_string(
+            db.get_database_backend(),
+            "SELECT o.id, o.name, o.site_limit, o.active, \
+             COALESCE(MIN(op.email), '') AS email \
+             FROM organizations o LEFT JOIN operators op ON op.organization_id = o.id \
+             GROUP BY o.id, o.name, o.site_limit, o.active ORDER BY o.name",
+        ))
+        .await?;
+
+    rows.into_iter()
+        .map(|row| {
+            Ok((
+                Organization {
+                    id: Uuid::parse_str(&row.try_get::<String>("", "id")?)
+                        .map_err(|err| AppError::Internal(format!("bad organization id: {err}")))?,
+                    name: row.try_get("", "name")?,
+                    site_limit: row.try_get("", "site_limit")?,
+                    active: row.try_get::<i32>("", "active")? != 0,
+                },
+                row.try_get("", "email")?,
+            ))
+        })
+        .collect()
+}
+
+/// How many sites an agency may have, and whether it may sign in at all.
+pub async fn set_organization(
+    db: &DatabaseConnection,
+    id: Uuid,
+    site_limit: Option<i32>,
+    active: Option<bool>,
+) -> AppResult<Organization> {
+    let backend = db.get_database_backend();
+    let current = organization(db, id)
+        .await?
+        .ok_or_else(|| AppError::NotFound("agency".to_string()))?;
+
+    let updated = Organization {
+        site_limit: site_limit.unwrap_or(current.site_limit).max(0),
+        active: active.unwrap_or(current.active),
+        ..current
+    };
+
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "UPDATE organizations SET site_limit = {}, active = {} WHERE id = {}",
+            parameter(backend, 1),
+            parameter(backend, 2),
+            parameter(backend, 3)
+        ),
+        [
+            updated.site_limit.into(),
+            i32::from(updated.active).into(),
+            id.to_string().into(),
+        ],
+    ))
+    .await?;
+
+    Ok(updated)
+}

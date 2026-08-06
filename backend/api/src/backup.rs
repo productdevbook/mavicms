@@ -575,19 +575,48 @@ fn read_archive(bytes: &[u8]) -> AppResult<(Value, Vec<ArchivedFile>)> {
                 AppError::Validation(format!("the dump in this archive is unreadable: {err}"))
             })?);
         } else if let Some(key) = path.strip_prefix("media/") {
-            // The key becomes a storage key and, on local storage, a file path.
-            if key.split('/').any(|part| part == "..") || key.is_empty() {
-                return Err(AppError::Validation(format!(
-                    "this archive holds a file with a name that points outside it: {path}"
-                )));
-            }
-            media.push((key.to_string(), contents));
+            media.push((safe_media_key(key)?, contents));
         }
     }
 
     let dump =
         dump.ok_or_else(|| AppError::Validation("this archive has no dump in it".to_string()))?;
     Ok((dump, media))
+}
+
+/// A name out of the archive, checked against what a media key is allowed to
+/// be rather than against the ways it could be dangerous.
+///
+/// This becomes a storage key, and on local storage a path under the media
+/// folder — and `Path::join` given something starting with `/` throws the
+/// folder away and keeps the rest, so an archive could otherwise name a file
+/// anywhere this process can write. Refusing `..` is not enough. What the
+/// uploader actually produces is dates, uuids and extensions, so that is all
+/// this accepts.
+fn safe_media_key(key: &str) -> AppResult<String> {
+    let refused = |reason: &str| {
+        Err(AppError::Validation(format!(
+            "this archive holds a file whose name {reason}: {key}"
+        )))
+    };
+
+    if key.is_empty() {
+        return refused("is empty");
+    }
+
+    for part in key.split('/') {
+        let usable = !part.is_empty()
+            && part != "."
+            && part != ".."
+            && part
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '_' || c == '-');
+        if !usable {
+            return refused("is not one a file of ours would have");
+        }
+    }
+
+    Ok(key.to_string())
 }
 
 /// What each column of a table actually is.
@@ -744,4 +773,44 @@ async fn put_media_back(state: &AppState, files: Vec<ArchivedFile>) -> u64 {
     }
 
     written
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{clean_name, safe_media_key};
+
+    #[test]
+    fn an_ordinary_media_key_is_kept() {
+        assert_eq!(
+            safe_media_key("2026/08/a-b_c.avif").unwrap(),
+            "2026/08/a-b_c.avif"
+        );
+        assert_eq!(safe_media_key("photo.jpg").unwrap(), "photo.jpg");
+    }
+
+    #[test]
+    fn a_media_key_cannot_leave_the_media_folder() {
+        // `Path::join` given an absolute path throws the folder away, so this
+        // is a write to anywhere the process can reach — not merely a wrong
+        // folder.
+        assert!(safe_media_key("/etc/cron.d/anything").is_err());
+        assert!(safe_media_key("../../etc/passwd").is_err());
+        assert!(safe_media_key("a/../../b").is_err());
+        assert!(safe_media_key(r"..\windows\x").is_err());
+        assert!(safe_media_key("C:/windows/x").is_err());
+        assert!(safe_media_key("a//b").is_err());
+        assert!(safe_media_key("").is_err());
+        assert!(safe_media_key("a/./b").is_err());
+    }
+
+    #[test]
+    fn a_backup_name_is_a_name() {
+        assert_eq!(
+            clean_name("mavicms-20260806.tar.gz").unwrap(),
+            "mavicms-20260806.tar.gz"
+        );
+        assert!(clean_name("../secret").is_err());
+        assert!(clean_name("a/b").is_err());
+        assert!(clean_name("").is_err());
+    }
 }

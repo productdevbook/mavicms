@@ -281,11 +281,16 @@ pub async fn test_s3_settings(
     )
 )]
 pub async fn restore_backup(
+    crate::auth::Administrator(who): crate::auth::Administrator,
     Site(state): Site,
     axum::extract::Path(name): axum::extract::Path<String>,
 ) -> AppResult<Json<crate::backup::RestoreReport>> {
     let (_, config) = crate::backup::config(&state).await?;
     let bytes = crate::backup::read(&state, &config, &name).await?;
+
+    // Worth a line in the log: this replaces every row the site has, and a
+    // week later somebody will want to know who did it and when.
+    tracing::warn!(by = %who.username, archive = %name, "restoring a backup");
 
     Ok(Json(crate::backup::restore(&state, &bytes).await?))
 }
@@ -305,8 +310,11 @@ pub async fn restore_backup(
     )
 )]
 pub async fn import_backup(
+    crate::auth::Administrator(who): crate::auth::Administrator,
     Site(state): Site,
     body: axum::body::Bytes,
 ) -> AppResult<Json<crate::backup::RestoreReport>> {
+    tracing::warn!(by = %who.username, bytes = body.len(), "restoring an uploaded archive");
+
     Ok(Json(crate::backup::restore(&state, &body).await?))
 }

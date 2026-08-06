@@ -101,3 +101,35 @@ async fn authenticate(state: &AppState, cookies: &Cookies) -> Result<user::Model
         .await?
         .ok_or_else(|| AppError::Unauthorized("session expired".to_string()))
 }
+
+/// The role every account has today, and the one the dangerous things ask for.
+pub const ADMINISTRATOR: &str = "administrator";
+
+/// Proof that the signed-in account is an administrator of this site.
+///
+/// Everyone is one today, so this changes nothing yet. It is here because the
+/// things it guards — replacing every row a site has — are the things that
+/// must not quietly become available to an editor the day editors exist.
+pub struct Administrator(pub user::Model);
+
+impl<S: Send + Sync> axum::extract::FromRequestParts<S> for Administrator {
+    type Rejection = AppError;
+
+    async fn from_request_parts(
+        parts: &mut axum::http::request::Parts,
+        _state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        let user = parts
+            .extensions
+            .get::<user::Model>()
+            .cloned()
+            .ok_or_else(|| AppError::Unauthorized("not signed in".to_string()))?;
+
+        if user.role != ADMINISTRATOR {
+            return Err(AppError::Forbidden(
+                "only an administrator of this site can do that".to_string(),
+            ));
+        }
+        Ok(Administrator(user))
+    }
+}
