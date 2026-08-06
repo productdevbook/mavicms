@@ -1,9 +1,11 @@
 pub mod auth;
 pub mod categories;
 pub mod console;
+pub mod development;
 pub mod forms;
 pub mod health;
 pub mod languages;
+pub mod llms;
 pub mod mailing;
 pub mod media;
 pub mod plugins;
@@ -79,6 +81,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     // visitor filling in a contact form has none. Kept to its own router so
     // the body limit applies to it and nothing else.
     let open = OpenApiRouter::new()
+        .routes(routes!(llms::llms_txt))
         .routes(routes!(forms::form_schema))
         .routes(routes!(forms::submit_form))
         .routes(routes!(mailing::subscribe))
@@ -130,6 +133,8 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
             languages::update_language,
             languages::delete_language
         ))
+        .routes(routes!(development::list_tokens, development::create_token))
+        .routes(routes!(development::delete_token))
         .routes(routes!(plugins::list_plugins))
         .routes(routes!(
             plugins::get_s3_settings,

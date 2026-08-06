@@ -100,7 +100,7 @@ pub async fn require_auth(
 /// reason to change anything.
 pub const BUILDER: &str = "builder";
 
-async fn authenticate(
+pub(crate) async fn authenticate(
     state: &AppState,
     cookies: &Cookies,
     bearer: Option<&str>,

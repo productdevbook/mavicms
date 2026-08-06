@@ -110,9 +110,42 @@ pub struct LocaleQuery {
     /// Free text to search for in the title, excerpt and body.
     #[serde(default)]
     pub q: Option<String>,
+    /// Comma-separated statuses. Omitted means every status, which is what the
+    /// panel wants and the opposite of what a build does: a site generator
+    /// asks for `published` and would otherwise put somebody's drafts online.
+    #[serde(default)]
+    pub status: Option<String>,
 }
 
 impl LocaleQuery {
+    /// The statuses asked for, as the strings the column holds. A name that is
+    /// not a status is refused rather than ignored, because ignoring it would
+    /// answer a build asking for `publshed` with every draft the site has.
+    pub fn statuses(&self) -> crate::error::AppResult<Option<Vec<String>>> {
+        let Some(raw) = self.status.as_deref() else {
+            return Ok(None);
+        };
+
+        let mut wanted = Vec::new();
+        for name in raw.split(',').map(str::trim).filter(|s| !s.is_empty()) {
+            let status = match name {
+                "draft" => "draft",
+                "review" => "review",
+                "scheduled" => "scheduled",
+                "published" => "published",
+                other => {
+                    return Err(crate::error::AppError::Validation(format!(
+                        "{other} is not a status: draft, review, scheduled or published"
+                    )));
+                }
+            };
+            if !wanted.iter().any(|held| held == status) {
+                wanted.push(status.to_string());
+            }
+        }
+        Ok((!wanted.is_empty()).then_some(wanted))
+    }
+
     pub fn codes(&self) -> Option<Vec<String>> {
         let raw = self.locale.as_deref()?;
         let codes: Vec<String> = raw

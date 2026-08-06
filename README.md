@@ -15,6 +15,9 @@ database — Postgres, MySQL or SQLite — and your own object storage, or none.
   encrypted at rest.
 - **Editor** — Tiptap 3 with slash commands, tables, code blocks, find and
   replace, a table of contents, autosave and Markdown import/export.
+- **[Front ends](#connecting-a-front-end)** — every site publishes an
+  `llms.txt` describing its own API, with a working Astro connection in it,
+  and posts carry a digest so a build only rebuilds what changed.
 - **Moving from WordPress** — a [plugin](#migrating-from-wordpress) that sends
   your posts, taxonomies and images across, keeping dates and permalinks.
 - **[Many sites on one server](#many-sites-on-one-server)** — each on its own
@@ -118,6 +121,40 @@ An administrator of a hosted site administers that site and nothing else: they
 cannot list the other sites on the machine, add sites, reach the console, or
 reach the database wizard — which restarts the process, and so would take every
 other site down with it.
+
+## Connecting a front end
+
+Pages are built somewhere else, out of the API. What that takes is a page of
+documentation, and half of any page of documentation does not apply to your
+installation — so each site writes its own:
+
+```bash
+curl https://your-site/api/llms.txt
+```
+
+That address answers to anybody and holds the whole of it: this site's
+addresses, how to get a read-only token, what a post looks like, and a working
+Astro connection to paste in — a content loader, the collection, the config and
+the page. Fetched with an account it also lists this site's languages and the
+forms it is taking answers on. **API** in the panel has a button that copies it,
+which is the short way to hand a site to an assistant.
+
+Two things make a rebuild cheap:
+
+- Every post carries a **`digest`** — a fingerprint of what it renders to. It
+  changes when the post changes and not when somebody opens it and saves it
+  again, so a build keyed on it rebuilds the pages that moved and restores the
+  rest from its cache. It is on the listing whether or not the bodies were
+  asked for, so finding out what changed does not mean downloading the archive.
+- A listing carries an **`ETag`**. Send it back as `If-None-Match` and an
+  archive that has not changed answers `304` with no body.
+
+The Astro connection in `llms.txt` uses both, and Astro 7.2's
+`experimental.incrementalBuild` with `cacheKey` on top of them. A build after a
+change to one post fetches one post and regenerates one page.
+
+Ask for `status=published` unless you mean not to. Without it, every draft on
+the site is in the answer.
 
 ## Migrating from WordPress
 

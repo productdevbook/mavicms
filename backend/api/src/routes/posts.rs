@@ -157,13 +157,18 @@ async fn siblings_of(
         ("offset" = Option<u64>, Query, description = "How many to skip"),
         ("include" = Option<String>, Query, description = "Comma-separated extras; `content` adds the post body to each item"),
         ("q" = Option<String>, Query, description = "Free text to search for in the title, excerpt and body"),
+        ("status" = Option<String>, Query, description = "Comma-separated statuses; a build wants `published`"),
     ),
-    responses((status = 200, description = "A page of posts", body = PostPage))
+    responses(
+        (status = 200, description = "A page of posts", body = PostPage),
+        (status = 304, description = "Unchanged since the ETag the caller sent"),
+    )
 )]
 pub async fn list_posts(
     Site(state): Site,
     Query(query): Query<LocaleQuery>,
-) -> AppResult<Json<PostPage>> {
+    headers: axum::http::HeaderMap,
+) -> AppResult<axum::response::Response> {
     let db = state.db();
 
     // A whole archive in one response is a multi-megabyte payload that every
@@ -179,6 +184,9 @@ pub async fn list_posts(
     let mut find = post::Entity::find();
     if let Some(codes) = query.codes() {
         find = find.filter(post::Column::Locale.is_in(codes));
+    }
+    if let Some(statuses) = query.statuses()? {
+        find = find.filter(post::Column::Status.is_in(statuses));
     }
     if let Some(slug) = query
         .slug
@@ -283,13 +291,16 @@ pub async fn list_posts(
         })
         .collect();
 
-    Ok(Json(PostPage {
-        items: responses,
-        total,
-        limit,
-        offset,
-        counts,
-    }))
+    crate::etag::conditional(
+        &headers,
+        &PostPage {
+            items: responses,
+            total,
+            limit,
+            offset,
+            counts,
+        },
+    )
 }
 
 /// Fetch a single post, including its sibling language versions.

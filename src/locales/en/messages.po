@@ -250,9 +250,13 @@ msgstr "0 results"
 msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 characters: letters, numbers, _ or -"
 
+#: src/routes/dashboard.api.tsx:230
+msgid "A build does not sign in. It is handed CMS_TOKEN, made below, which can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
+msgstr "A build does not sign in. It is handed CMS_TOKEN, made below, which can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
+
 #: src/routes/dashboard.api.tsx:163
-msgid "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
-msgstr "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
+#~ msgid "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
+#~ msgstr "A build does not sign in. It is handed CMS_TOKEN, which lasts as long as the build and can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
 
 #: src/routes/dashboard.api.tsx:144
 #~ msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
@@ -275,7 +279,7 @@ msgstr "A campaign can go out as any of these. Each one has to be verified in SE
 msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
 
-#: src/routes/dashboard.api.tsx:175
+#: src/routes/dashboard.api.tsx:244
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 
@@ -287,7 +291,7 @@ msgstr "A message that bounced hard, or that somebody reported as spam. Amazon k
 msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 msgstr "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 
-#: src/routes/dashboard.api.tsx:202
+#: src/routes/dashboard.api.tsx:271
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 
@@ -424,7 +428,7 @@ msgstr "Added here counts as confirmed — say so only if they asked to be on it
 
 #: src/components/editor/dialogs.tsx:300
 #: src/routes/console.index.tsx:197
-#: src/routes/dashboard.api.tsx:143
+#: src/routes/dashboard.api.tsx:210
 #: src/routes/dashboard.forms.tsx:264
 #: src/routes/dashboard.sites.tsx:257
 msgid "Address"
@@ -556,7 +560,7 @@ msgid "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever a
 msgstr "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 
 #: src/components/dashboard/dashboard-shell.tsx:87
-#: src/routes/dashboard.api.tsx:135
+#: src/routes/dashboard.api.tsx:200
 msgid "API"
 msgstr "API"
 
@@ -701,13 +705,21 @@ msgstr "Bucket"
 msgid "Build command"
 msgstr "Build command"
 
-#: src/routes/dashboard.api.tsx:116
+#: src/routes/dashboard.api.tsx:181
 msgid "Build this site's pages again."
 msgstr "Build this site's pages again."
+
+#: src/components/build-tokens.tsx:70
+msgid "Build tokens"
+msgstr "Build tokens"
 
 #: src/components/publish-panel.tsx:125
 msgid "Build variables"
 msgstr "Build variables"
+
+#: src/routes/dashboard.api.tsx:290
+msgid "Building only what changed"
+msgstr "Building only what changed"
 
 #: src/routes/dashboard.plugins.tsx:59
 msgid "Built-in integrations you can switch on and configure."
@@ -771,7 +783,7 @@ msgstr "Case sensitive"
 msgid "Categories"
 msgstr "Categories"
 
-#: src/routes/dashboard.api.tsx:97
+#: src/routes/dashboard.api.tsx:162
 msgid "Categories, per language."
 msgstr "Categories, per language."
 
@@ -787,7 +799,7 @@ msgstr "Center the paragraph"
 msgid "Change it"
 msgstr "Change it"
 
-#: src/routes/dashboard.api.tsx:112
+#: src/routes/dashboard.api.tsx:177
 msgid "Change one."
 msgstr "Change one."
 
@@ -887,7 +899,7 @@ msgid "Connection URL"
 msgstr "Connection URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:71
-#: src/routes/dashboard.api.tsx:200
+#: src/routes/dashboard.api.tsx:269
 msgid "Content"
 msgstr "Content"
 
@@ -908,6 +920,10 @@ msgstr "Continue to the dashboard"
 #~ msgid "Continue to the editor"
 #~ msgstr "Continue to the editor"
 
+#: src/routes/dashboard.api.tsx:98
+msgid "Copied"
+msgstr "Copied"
+
 #: src/components/editor/bubble-menus.tsx:317
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
@@ -925,6 +941,11 @@ msgstr "Copy all"
 msgid "Copy code"
 msgstr "Copy code"
 
+#: src/routes/dashboard.api.tsx:98
+msgid "Copy for an assistant"
+msgstr "Copy for an assistant"
+
+#: src/components/build-tokens.tsx:83
 #: src/components/local-env.tsx:159
 msgid "Copy it now"
 msgstr "Copy it now"
@@ -987,6 +1008,7 @@ msgstr "Could not change it"
 #: src/components/local-env.tsx:109
 #: src/components/ses-account.tsx:492
 #: src/components/ses-setup.tsx:109
+#: src/routes/dashboard.api.tsx:79
 #: src/routes/dashboard.forms_.$formId.tsx:41
 msgid "Could not copy it"
 msgstr "Could not copy it"
@@ -1091,6 +1113,10 @@ msgstr "Could not load the storage settings"
 msgid "Could not load the templates"
 msgstr "Could not load the templates"
 
+#: src/components/build-tokens.tsx:35
+msgid "Could not load the tokens"
+msgstr "Could not load the tokens"
+
 #: src/routes/dashboard.mail.tsx:814
 msgid "Could not load what Amazon said"
 msgstr "Could not load what Amazon said"
@@ -1103,6 +1129,7 @@ msgstr "Could not load what was sent"
 msgid "Could not load your sites"
 msgstr "Could not load your sites"
 
+#: src/components/build-tokens.tsx:48
 #: src/components/local-env.tsx:75
 msgid "Could not make a token"
 msgstr "Could not make a token"
@@ -1197,6 +1224,7 @@ msgstr "Could not set it up"
 msgid "Could not start the build"
 msgstr "Could not start the build"
 
+#: src/components/build-tokens.tsx:61
 #: src/components/local-env.tsx:88
 msgid "Could not take it back"
 msgstr "Could not take it back"
@@ -1332,7 +1360,7 @@ msgstr "Delete"
 msgid "Delete column"
 msgstr "Delete column"
 
-#: src/routes/dashboard.api.tsx:113
+#: src/routes/dashboard.api.tsx:178
 msgid "Delete one, and any image left with no owner."
 msgstr "Delete one, and any image left with no owner."
 
@@ -1507,6 +1535,10 @@ msgstr "Every hour"
 msgid "Every list"
 msgstr "Every list"
 
+#: src/routes/dashboard.api.tsx:292
+msgid "Every post carries a <0>digest</0>, which changes when the post changes and not when it is merely saved again. A build that keeps it rebuilds the pages that moved and leaves the rest alone. A listing also carries an <1>ETag</1>: send it back as <2>If-None-Match</2> and an archive that has not changed answers with nothing at all."
+msgstr "Every post carries a <0>digest</0>, which changes when the post changes and not when it is merely saved again. A build that keeps it rebuilds the pages that moved and leaves the rest alone. A listing also carries an <1>ETag</1>: send it back as <2>If-None-Match</2> and an archive that has not changed answers with nothing at all."
+
 #. placeholder {0}: pendingImport?.name
 #: src/routes/dashboard.plugins_.backup.tsx:462
 msgid "Every post, category, tag and account this site has now is replaced by what \"{0}\" holds. This cannot be undone."
@@ -1516,7 +1548,7 @@ msgstr "Every post, category, tag and account this site has now is replaced by w
 msgid "Every post, category, tag and account this site has now is replaced by what \"{pendingRestore}\" holds. This cannot be undone."
 msgstr "Every post, category, tag and account this site has now is replaced by what \"{pendingRestore}\" holds. This cannot be undone."
 
-#: src/routes/dashboard.api.tsx:146
+#: src/routes/dashboard.api.tsx:213
 msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 msgstr "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 
@@ -1525,7 +1557,11 @@ msgstr "Every site has its own, on its own address. The same server answers all 
 msgid "Every week"
 msgstr "Every week"
 
-#: src/routes/dashboard.api.tsx:137
+#: src/routes/dashboard.api.tsx:87
+msgid "Everything below, plus a working Astro connection, as one document written for whatever is doing the wiring. It carries this site's own address, languages and forms — paste it into an assistant and it can build the front end without being told any of this twice."
+msgstr "Everything below, plus a working Astro connection, as one document written for whatever is doing the wiring. It carries this site's own address, languages and forms — paste it into an assistant and it can build the front end without being told any of this twice."
+
+#: src/routes/dashboard.api.tsx:202
 msgid "Everything in this panel is this API. It is what your pages are built from, and what anything else you write can read."
 msgstr "Everything in this panel is this API. It is what your pages are built from, and what anything else you write can read."
 
@@ -1653,6 +1689,10 @@ msgstr "gone for good"
 #: src/components/editor/post-settings.tsx:42
 #~ msgid "Guide"
 #~ msgstr "Guide"
+
+#: src/routes/dashboard.api.tsx:85
+msgid "Handing this to an assistant"
+msgstr "Handing this to an assistant"
 
 #: src/components/editor/bubble-menus.tsx:432
 msgid "Header column"
@@ -1837,9 +1877,13 @@ msgstr "Install Mavi CMS"
 msgid "Installing Mavi CMS…"
 msgstr "Installing Mavi CMS…"
 
-#: src/routes/dashboard.api.tsx:228
+#: src/routes/dashboard.api.tsx:313
 msgid "Interactive docs"
 msgstr "Interactive docs"
+
+#: src/routes/dashboard.api.tsx:108
+msgid "It lives at /api/llms.txt, so anything that can reach this site can read it."
+msgstr "It lives at /api/llms.txt, so anything that can reach this site can read it."
 
 #: src/components/publish-panel.tsx:235
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
@@ -2001,6 +2045,7 @@ msgid "Long text"
 msgstr "Long text"
 
 #. placeholder {0}: new Date(token.created_at).toLocaleString()
+#: src/components/build-tokens.tsx:108
 #: src/components/local-env.tsx:180
 msgid "Made {0}"
 msgstr "Made {0}"
@@ -2016,6 +2061,7 @@ msgstr "Mail"
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Mail this site sends — a notification when somebody fills in one of your forms."
 
+#: src/components/build-tokens.tsx:77
 #: src/components/local-env.tsx:153
 msgid "Make a token"
 msgstr "Make a token"
@@ -2263,6 +2309,7 @@ msgstr "No tags yet"
 msgid "No templates yet — a campaign without one sends just its own body"
 msgstr "No templates yet — a campaign without one sends just its own body"
 
+#: src/components/build-tokens.tsx:99
 #: src/components/local-env.tsx:171
 msgid "No tokens yet"
 msgstr "No tokens yet"
@@ -2369,7 +2416,7 @@ msgstr "On the server's disk"
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "One account for every site you run. Each site keeps its own content and its own people."
 
-#: src/routes/dashboard.api.tsx:92
+#: src/routes/dashboard.api.tsx:157
 msgid "One language, one page at a time."
 msgstr "One language, one page at a time."
 
@@ -2385,11 +2432,11 @@ msgstr "One of a list"
 msgid "One per person. It can read this site and change nothing, lasts 30 days, and can be taken back here."
 msgstr "One per person. It can read this site and change nothing, lasts 30 days, and can be taken back here."
 
-#: src/routes/dashboard.api.tsx:95
+#: src/routes/dashboard.api.tsx:160
 msgid "One post by its address."
 msgstr "One post by its address."
 
-#: src/routes/dashboard.api.tsx:96
+#: src/routes/dashboard.api.tsx:161
 msgid "One post, with its other languages."
 msgstr "One post, with its other languages."
 
@@ -2401,6 +2448,10 @@ msgstr "Only by hand"
 #: src/components/publish-panel.tsx:249
 msgid "Only for a private repository"
 msgstr "Only for a private repository"
+
+#: src/routes/dashboard.api.tsx:147
+msgid "Only what is online. What a build wants."
+msgstr "Only what is online. What a build wants."
 
 #: src/components/editor/bubble-menus.tsx:282
 msgid "Open"
@@ -2419,7 +2470,7 @@ msgstr "Open an agency account"
 msgid "Open in new tab"
 msgstr "Open in new tab"
 
-#: src/routes/dashboard.api.tsx:237
+#: src/routes/dashboard.api.tsx:322
 msgid "OpenAPI document"
 msgstr "OpenAPI document"
 
@@ -2593,7 +2644,7 @@ msgstr "post-url"
 msgid "Posts"
 msgstr "Posts"
 
-#: src/routes/dashboard.api.tsx:83
+#: src/routes/dashboard.api.tsx:143
 msgid "Posts, newest first, in pages."
 msgstr "Posts, newest first, in pages."
 
@@ -2666,15 +2717,19 @@ msgstr "Quote"
 msgid "Raise text above the line"
 msgstr "Raise text above the line"
 
+#: src/routes/dashboard.api.tsx:104
+msgid "Read it"
+msgstr "Read it"
+
 #: src/components/editor/post-settings.tsx:353
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
 
-#: src/routes/dashboard.api.tsx:172
+#: src/routes/dashboard.api.tsx:241
 msgid "Reading"
 msgstr "Reading"
 
-#: src/routes/dashboard.api.tsx:153
+#: src/routes/dashboard.api.tsx:220
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 
@@ -2914,7 +2969,7 @@ msgstr "Search an address or a name"
 msgid "Search engine"
 msgstr "Search engine"
 
-#: src/routes/dashboard.api.tsx:94
+#: src/routes/dashboard.api.tsx:159
 msgid "Search titles, summaries and bodies."
 msgstr "Search titles, summaries and bodies."
 
@@ -2949,7 +3004,7 @@ msgstr "Select your language"
 msgid "Send"
 msgstr "Send"
 
-#: src/routes/dashboard.api.tsx:128
+#: src/routes/dashboard.api.tsx:193
 msgid "Send a form's answers. No account needed."
 msgstr "Send a form's answers. No account needed."
 
@@ -3108,7 +3163,7 @@ msgstr "Sign in"
 msgid "Sign in to manage your site."
 msgstr "Sign in to manage your site."
 
-#: src/routes/dashboard.api.tsx:110
+#: src/routes/dashboard.api.tsx:175
 msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
@@ -3118,7 +3173,7 @@ msgstr "Sign in; sets the session cookie."
 msgid "Sign out"
 msgstr "Sign out"
 
-#: src/routes/dashboard.api.tsx:151
+#: src/routes/dashboard.api.tsx:218
 msgid "Signing in"
 msgstr "Signing in"
 
@@ -3176,6 +3231,7 @@ msgid "Stop all sending"
 msgstr "Stop all sending"
 
 #. placeholder {0}: new Date(token.expires_at).toLocaleString()
+#: src/components/build-tokens.tsx:111
 #: src/components/local-env.tsx:183
 msgid "Stops working {0}"
 msgstr "Stops working {0}"
@@ -3285,10 +3341,11 @@ msgstr "Tags"
 msgid "Tags linked"
 msgstr "Tags linked"
 
-#: src/routes/dashboard.api.tsx:98
+#: src/routes/dashboard.api.tsx:163
 msgid "Tags, per language."
 msgstr "Tags, per language."
 
+#: src/components/build-tokens.tsx:117
 #: src/components/local-env.tsx:189
 msgid "Take it back"
 msgstr "Take it back"
@@ -3342,7 +3399,7 @@ msgstr "Text color"
 msgid "Text shown in search results"
 msgstr "Text shown in search results"
 
-#: src/routes/dashboard.api.tsx:115
+#: src/routes/dashboard.api.tsx:180
 msgid "The address a title would get."
 msgstr "The address a title would get."
 
@@ -3363,11 +3420,11 @@ msgstr "The build runs with these. A name already here is replaced; the others a
 msgid "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
 msgstr "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
 
-#: src/routes/dashboard.api.tsx:101
+#: src/routes/dashboard.api.tsx:166
 msgid "The forms this site accepts answers on."
 msgstr "The forms this site accepts answers on."
 
-#: src/routes/dashboard.api.tsx:99
+#: src/routes/dashboard.api.tsx:164
 msgid "The languages this site writes in."
 msgstr "The languages this site writes in."
 
@@ -3415,7 +3472,7 @@ msgstr "The only honest check. A key without permission, an address SES has not 
 msgid "The restore failed"
 msgstr "The restore failed"
 
-#: src/routes/dashboard.api.tsx:87
+#: src/routes/dashboard.api.tsx:152
 msgid "The same, with each body included."
 msgstr "The same, with each body included."
 
@@ -3431,7 +3488,7 @@ msgstr "The site gets a schema of its own on this server's database. One that ou
 msgid "The usual one"
 msgstr "The usual one"
 
-#: src/routes/dashboard.api.tsx:221
+#: src/routes/dashboard.api.tsx:306
 msgid "The whole of it"
 msgstr "The whole of it"
 
@@ -3439,7 +3496,7 @@ msgstr "The whole of it"
 msgid "Theme"
 msgstr "Theme"
 
-#: src/routes/dashboard.api.tsx:188
+#: src/routes/dashboard.api.tsx:257
 msgid "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
 msgstr "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
 
@@ -3459,6 +3516,7 @@ msgstr "This account is out of the sandbox: it can write to anybody."
 #~ msgid "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
 #~ msgstr "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
 
+#: src/components/build-tokens.tsx:85
 #: src/components/local-env.tsx:161
 msgid "This is the only time it is shown. Leave this page and it cannot be read again — make another one instead."
 msgstr "This is the only time it is shown. Leave this page and it cannot be read again — make another one instead."
@@ -3545,7 +3603,7 @@ msgstr "Untitled post"
 msgid "Upload"
 msgstr "Upload"
 
-#: src/routes/dashboard.api.tsx:114
+#: src/routes/dashboard.api.tsx:179
 msgid "Upload a file (multipart)."
 msgstr "Upload a file (multipart)."
 
@@ -3557,7 +3615,7 @@ msgstr "Upload cover image"
 msgid "Upload image"
 msgstr "Upload image"
 
-#: src/routes/dashboard.api.tsx:100
+#: src/routes/dashboard.api.tsx:165
 msgid "Uploaded files and their addresses."
 msgstr "Uploaded files and their addresses."
 
@@ -3629,6 +3687,10 @@ msgstr "Weak"
 msgid "Website"
 msgstr "Website"
 
+#: src/components/build-tokens.tsx:72
+msgid "What a build or somebody's own machine reads this site with. It can read and change nothing, lasts 30 days, and can be taken back here."
+msgstr "What a build or somebody's own machine reads this site with. It can read and change nothing, lasts 30 days, and can be taken back here."
+
 #: src/components/ses-account.tsx:181
 msgid "What Amazon allows"
 msgstr "What Amazon allows"
@@ -3653,7 +3715,7 @@ msgstr "What comes in is kept as it was sent, so changing the fields later never
 msgid "What Gmail and Yahoo ask for"
 msgstr "What Gmail and Yahoo ask for"
 
-#: src/routes/dashboard.api.tsx:105
+#: src/routes/dashboard.api.tsx:170
 msgid "What has come in, newest first."
 msgstr "What has come in, newest first."
 
@@ -3708,7 +3770,7 @@ msgstr "Where to keep them"
 msgid "Where to send it"
 msgstr "Where to send it"
 
-#: src/routes/dashboard.api.tsx:123
+#: src/routes/dashboard.api.tsx:188
 msgid "Which fields a form takes, and which are required."
 msgstr "Which fields a form takes, and which are required."
 
@@ -3757,7 +3819,7 @@ msgstr "Wire up the events"
 msgid "Wired up. Events go to {0} and arrive here."
 msgstr "Wired up. Events go to {0} and arrive here."
 
-#: src/routes/dashboard.api.tsx:185
+#: src/routes/dashboard.api.tsx:254
 msgid "Without an account"
 msgstr "Without an account"
 
@@ -3773,11 +3835,11 @@ msgstr "Working on this site locally"
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 msgstr "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 
-#: src/routes/dashboard.api.tsx:111
+#: src/routes/dashboard.api.tsx:176
 msgid "Write a post."
 msgstr "Write a post."
 
-#: src/routes/dashboard.api.tsx:180
+#: src/routes/dashboard.api.tsx:249
 msgid "Writing"
 msgstr "Writing"
 
