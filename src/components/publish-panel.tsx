@@ -254,24 +254,21 @@ export function PublishForm({
   )
 }
 
-/** What a site is shown when its agency looks after the wiring. */
-export function ManagedSummary({
-  status,
-}: {
-  status: PublishStatus
-}) {
+/**
+ * What a site is shown when its agency looks after the wiring.
+ *
+ * Who, and nothing else. Where the pages come from is the agency's working
+ * detail — a repository address on somebody's screen is one more thing that
+ * can be read over their shoulder, and knowing it does not help them publish.
+ */
+export function ManagedSummary({ status }: { status: PublishStatus }) {
   const { t } = useLingui()
 
   return (
     <div className="rounded-xl border border-border px-4 py-3 text-sm">
       <p className="text-muted-foreground">
-        {t`${status.managed_by} looks after how this site is built.`}
+        {t`${status.managed_by} looks after how this site is built. Publishing puts what you have written online.`}
       </p>
-      {status.config?.repository && (
-        <p className="mt-1 truncate font-mono text-xs text-muted-foreground">
-          {status.config.repository} · {status.config.branch}
-        </p>
-      )}
     </div>
   )
 }

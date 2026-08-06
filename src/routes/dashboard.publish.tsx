@@ -122,7 +122,7 @@ function PublishRoute() {
           onPublish={() => void publish()}
           publishing={publishing}
           busy={busy}
-          disabled={!config.repository}
+          disabled={!status.configured}
         />
       </div>
 

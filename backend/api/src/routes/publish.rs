@@ -10,14 +10,35 @@ use crate::{
 
 #[derive(Debug, Serialize, ToSchema)]
 pub struct PublishStatus {
-    /// Absent until someone says where the site's pages come from.
+    /// Absent until someone says where the site's pages come from, and
+    /// absent to a site whose agency says it for them.
     pub config: Option<BuildConfig>,
+    /// Whether publishing would have somewhere to build from. Separate from
+    /// `config` so a site that cannot see the settings can still be told
+    /// whether the button will do anything.
+    pub configured: bool,
     /// Most recent first.
     pub builds: Vec<Build>,
     /// The agency that looks after how this site is built, if one does. When
-    /// it is set, the settings below are theirs and this site can publish but
-    /// not rewire.
+    /// it is set, the settings are theirs and this site can publish but not
+    /// rewire.
     pub managed_by: Option<String>,
+}
+
+impl PublishStatus {
+    /// The same, with the agency's working details left out.
+    ///
+    /// A site whose agency wires it up needs to publish and to see how the
+    /// last builds went; the repository address, the build command and the
+    /// names of the build's variables are not its business. Leaving them out
+    /// of the answer rather than out of the page is what actually keeps them
+    /// off a screen somebody is reading over a shoulder.
+    fn withheld(self) -> Self {
+        Self {
+            config: None,
+            ..self
+        }
+    }
 }
 
 /// How many past builds the panel shows. Enough to see a pattern, not enough
@@ -36,8 +57,13 @@ pub async fn status_of(
         None => None,
     };
 
+    let config = publish::config(db, tenant.id).await?;
+
     Ok(PublishStatus {
-        config: publish::config(db, tenant.id).await?,
+        configured: config
+            .as_ref()
+            .is_some_and(|config| !config.repository.is_empty()),
+        config,
         builds: publish::latest(db, tenant.id, HISTORY).await?,
         managed_by,
     })
@@ -69,8 +95,13 @@ pub async fn get_publish(
 ) -> AppResult<Json<PublishStatus>> {
     let tenant = site(&resolved)?;
     let db = hosting.registry()?.control();
+    let status = status_of(db, tenant).await?;
 
-    Ok(Json(status_of(db, tenant).await?))
+    Ok(Json(if status.managed_by.is_some() {
+        status.withheld()
+    } else {
+        status
+    }))
 }
 
 /// Say where this site's pages come from.
