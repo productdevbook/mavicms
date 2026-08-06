@@ -480,27 +480,48 @@ pub async fn enter(
 
 /// The account an agency writes as on one of its sites.
 ///
-/// One per agency per site, found by email and made on first arrival. It
-/// carries no usable password: the only way in is through a fresh entry
-/// token, so revoking the agency's console account closes every site with it
-/// rather than leaving a working login behind on fifty of them.
+/// One per agency per site, made on first arrival. It carries no usable
+/// password: the only way in is through a fresh entry token, so revoking the
+/// agency's console account closes every site with it rather than leaving a
+/// working login behind on fifty of them.
+///
+/// Found by a name built from the agency account's id rather than by its
+/// email, because an agency that changes its email is the same agency — going
+/// by email left the old account behind on every site it had ever opened and
+/// made a second one beside it.
 async fn agency_user(db: &sea_orm::DatabaseConnection, operator: &Operator) -> AppResult<Uuid> {
     use sea_orm::{ActiveModelTrait, ActiveValue::Set, ColumnTrait, EntityTrait, QueryFilter};
 
     use crate::entities::user;
 
-    if let Some(existing) = user::Entity::find()
-        .filter(user::Column::Email.eq(operator.email.clone()))
+    let username = format!(
+        "agency-{}",
+        operator.id.to_string().split('-').next().unwrap_or("0")
+    );
+
+    // By the stable name, or by the email for the accounts made before there
+    // was one — either way there is one account, and it ends up with both.
+    let existing = user::Entity::find()
+        .filter(
+            sea_orm::Condition::any()
+                .add(user::Column::Username.eq(username.clone()))
+                .add(user::Column::Email.eq(operator.email.clone())),
+        )
         .one(db)
-        .await?
-    {
-        return Ok(existing.id);
+        .await?;
+
+    if let Some(found) = existing {
+        let mut changed: user::ActiveModel = found.clone().into();
+        changed.username = Set(username);
+        changed.email = Set(operator.email.clone());
+        changed.update(db).await?;
+        return Ok(found.id);
     }
 
     let id = Uuid::new_v4();
     user::ActiveModel {
         id: Set(id),
-        username: Set(unique_username(db, &operator.email).await?),
+        username: Set(username),
         email: Set(operator.email.clone()),
         // Not a hash of anything: argon2 will not verify it, so no password
         // reaches this account.
@@ -512,38 +533,6 @@ async fn agency_user(db: &sea_orm::DatabaseConnection, operator: &Operator) -> A
     .await?;
 
     Ok(id)
-}
-
-async fn unique_username(db: &sea_orm::DatabaseConnection, email: &str) -> AppResult<String> {
-    use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
-
-    use crate::entities::user;
-
-    let base = crate::slug::slugify(email.split('@').next().unwrap_or("agency"));
-    let base = if base.is_empty() {
-        "agency".to_string()
-    } else {
-        base
-    };
-
-    for attempt in 0..50 {
-        let candidate = if attempt == 0 {
-            base.clone()
-        } else {
-            format!("{base}-{attempt}")
-        };
-        if user::Entity::find()
-            .filter(user::Column::Username.eq(candidate.clone()))
-            .one(db)
-            .await?
-            .is_none()
-        {
-            return Ok(candidate);
-        }
-    }
-    Err(AppError::Conflict(
-        "could not find a free username for the agency".to_string(),
-    ))
 }
 
 #[derive(Debug, Deserialize, ToSchema)]
