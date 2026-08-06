@@ -1239,6 +1239,32 @@ mod tests {
     fn the_pixel_is_a_gif() {
         assert_eq!(&PIXEL[..6], b"GIF89a");
     }
+
+    #[test]
+    fn only_amazon_subscribe_urls_are_followed() {
+        assert!(is_an_sns_url(
+            "https://sns.eu-central-1.amazonaws.com/?Action=ConfirmSubscription"
+        ));
+
+        // The ways past a check written against the front of the string.
+        assert!(!is_an_sns_url("https://sns.made-up.test/.amazonaws.com/"));
+        assert!(!is_an_sns_url("https://sns.x@127.0.0.1/.amazonaws.com/"));
+        assert!(!is_an_sns_url(
+            "https://sns.x@169.254.169.254/latest/meta-data/.amazonaws.com/"
+        ));
+        assert!(!is_an_sns_url(
+            "https://sns.made-up.test/?x=.amazonaws.com/"
+        ));
+        assert!(!is_an_sns_url("https://SNS.MADE-UP.TEST/.amazonaws.com/"));
+
+        // And the ordinary refusals.
+        assert!(!is_an_sns_url("http://sns.eu-central-1.amazonaws.com/"));
+        assert!(!is_an_sns_url("https://sns.amazonaws.com.made-up.test/"));
+        assert!(!is_an_sns_url("https://queue.eu-central-1.amazonaws.com/"));
+        assert!(!is_an_sns_url("http://169.254.169.254/latest/meta-data/"));
+        assert!(!is_an_sns_url(""));
+        assert!(!is_an_sns_url("file:///etc/passwd"));
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1258,6 +1284,20 @@ pub struct SnsEnvelope {
     pub message: String,
     #[serde(rename = "SubscribeURL", default)]
     pub subscribe_url: String,
+}
+
+/// Whether a subscribe URL is one of Amazon's, and so safe to fetch.
+///
+/// The host is taken from a parsed URL rather than from the front of the
+/// string: `https://sns.somewhere-else/…@127.0.0.1/` starts the same way and
+/// ends up somewhere else entirely, and a server that fetches it is a way to
+/// reach inside the cluster from outside.
+pub fn is_an_sns_url(value: &str) -> bool {
+    let Ok(parsed) = reqwest::Url::parse(value) else {
+        return false;
+    };
+    let host = parsed.host_str().unwrap_or_default().to_ascii_lowercase();
+    parsed.scheme() == "https" && host.starts_with("sns.") && host.ends_with(".amazonaws.com")
 }
 
 /// One thing Amazon said happened, read out of the JSON it posts.

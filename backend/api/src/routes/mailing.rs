@@ -1629,8 +1629,9 @@ pub async fn receive_events(
 
     let envelope: mailing::SnsEnvelope = serde_json::from_str(&body).map_err(|_| refused())?;
 
+    // Once a topic is known, every message has to name it — including one that
+    // names no topic at all, which would otherwise be the way around this.
     if !settings.config.events_topic_arn.is_empty()
-        && !envelope.topic_arn.is_empty()
         && envelope.topic_arn != settings.config.events_topic_arn
     {
         return Err(refused());
@@ -1642,15 +1643,16 @@ pub async fn receive_events(
         // Only a real SNS address is fetched. Answering whatever URL a
         // request hands over would make this endpoint a way to have the
         // server fetch anything, from inside the cluster.
-        "SubscriptionConfirmation"
-            if envelope.subscribe_url.starts_with("https://sns.")
-                && envelope.subscribe_url.contains(".amazonaws.com/") =>
-        {
-            let _ = reqwest::Client::new()
-                .get(&envelope.subscribe_url)
+        "SubscriptionConfirmation" if mailing::is_an_sns_url(&envelope.subscribe_url) => {
+            // Redirects are refused as well: the address checked above is only
+            // the first one, and following a hop chosen by whoever answers
+            // would hand the check straight back.
+            let client = reqwest::Client::builder()
+                .redirect(reqwest::redirect::Policy::none())
                 .timeout(std::time::Duration::from_secs(10))
-                .send()
-                .await;
+                .build()
+                .map_err(|_| refused())?;
+            let _ = client.get(&envelope.subscribe_url).send().await;
             tracing::info!("confirmed an SNS subscription");
         }
         "Notification" => {
