@@ -173,8 +173,17 @@ impl Builder {
         let checkout = self.workspace.join(&tenant.slug);
         self.fetch(&checkout, &config.repository, &config.branch, &token, log)
             .await?;
-        self.run_build(&checkout, tenant, &config.build_command, &environment, log)
-            .await?;
+
+        let toolchain = self.toolchain(&checkout, log).await?;
+        self.run_build(
+            &checkout,
+            tenant,
+            &config.build_command,
+            &environment,
+            toolchain.as_deref(),
+            log,
+        )
+        .await?;
 
         let output = checkout.join(&config.output_dir);
         if !output.is_dir() {
@@ -243,12 +252,55 @@ impl Builder {
         run(command, log, "git").await
     }
 
+    /// The bun the project asked for, installed if it is not here yet.
+    ///
+    /// A project says which one it was written against in `packageManager`,
+    /// and it means it: a lockfile written by a newer bun is one an older bun
+    /// refuses to read. Honouring the field is what makes a thousand projects
+    /// with a thousand opinions all build on one worker.
+    async fn toolchain(&self, checkout: &Path, log: &mut String) -> AppResult<Option<PathBuf>> {
+        let Ok(manifest) = tokio::fs::read_to_string(checkout.join("package.json")).await else {
+            return Ok(None);
+        };
+        let Some(version) = bun_version(&manifest) else {
+            return Ok(None);
+        };
+
+        let root = self.workspace.join(".bun").join(&version);
+        let binary = root.join("bin").join("bun");
+        if binary.is_file() {
+            return Ok(Some(root.join("bin")));
+        }
+
+        log.push_str(&format!("\n$ installing bun {version}\n"));
+        let mut command = Command::new("sh");
+        command
+            .current_dir(checkout)
+            .arg("-c")
+            .arg("curl -fsSL https://bun.sh/install | bash -s \"bun-v$BUN_VERSION\"")
+            .env("BUN_VERSION", &version)
+            .env("BUN_INSTALL", &root);
+
+        // A pin that cannot be fetched — a version that was never released, a
+        // registry that is down — is a warning, not a failed publish. The
+        // build carries on with the bun this image has, and says so.
+        if let Err(err) = run(command, log, "installing bun").await {
+            log.push_str(&format!(
+                "\ncould not install bun {version} ({err}); using the one in the image\n"
+            ));
+            return Ok(None);
+        }
+
+        Ok(Some(root.join("bin")))
+    }
+
     async fn run_build(
         &self,
         checkout: &Path,
         tenant: &Tenant,
         build_command: &str,
         environment: &std::collections::BTreeMap<String, String>,
+        toolchain: Option<&Path>,
         log: &mut String,
     ) -> AppResult<()> {
         log.push_str(&format!("\n$ {build_command}\n"));
@@ -266,6 +318,13 @@ impl Builder {
             )
             .env("SITE_URL", format!("{}://{}", self.site_scheme, tenant.host))
             .env("CI", "true");
+
+        // In front of the image's own bun, so the version the project asked
+        // for is the one that runs.
+        if let Some(bin) = toolchain {
+            let existing = std::env::var("PATH").unwrap_or_default();
+            command.env("PATH", format!("{}:{existing}", bin.display()));
+        }
 
         // The site's own variables last, so a project that needs a different
         // address or a different account than the defaults can say so.
@@ -449,4 +508,47 @@ fn published_storage() -> AppResult<MediaStorage> {
     config.validate()?;
 
     Ok(MediaStorage::S3(Box::new(config)))
+}
+
+/// The bun version a `package.json` pins, if it pins one.
+fn bun_version(manifest: &str) -> Option<String> {
+    let value: serde_json::Value = serde_json::from_str(manifest).ok()?;
+    let declared = value.get("packageManager")?.as_str()?;
+    let version = declared.strip_prefix("bun@")?;
+
+    // Only a plain version: this ends up in a URL, and a range or a hash is
+    // not something the installer takes anyway.
+    let usable = !version.is_empty()
+        && version
+            .chars()
+            .all(|c| c.is_ascii_digit() || c == '.' || c.is_ascii_alphanumeric() || c == '-');
+    usable.then(|| version.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::bun_version;
+
+    #[test]
+    fn a_pinned_version_is_read() {
+        assert_eq!(
+            bun_version(r#"{"packageManager": "bun@1.4.0"}"#).unwrap(),
+            "1.4.0"
+        );
+    }
+
+    #[test]
+    fn anything_else_is_left_to_the_image() {
+        assert!(bun_version(r#"{}"#).is_none());
+        assert!(bun_version(r#"{"packageManager": "pnpm@9"}"#).is_none());
+        assert!(bun_version("not json").is_none());
+    }
+
+    #[test]
+    fn a_version_that_is_not_one_is_refused() {
+        // It goes into a URL the installer is handed, so it stays a version.
+        assert!(bun_version(r#"{"packageManager": "bun@1.4.0; rm -rf /"}"#).is_none());
+        assert!(bun_version(r#"{"packageManager": "bun@../../etc"}"#).is_none());
+        assert!(bun_version(r#"{"packageManager": "bun@"}"#).is_none());
+    }
 }
