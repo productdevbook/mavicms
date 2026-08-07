@@ -319,9 +319,33 @@ pub async fn update_form(
 pub async fn delete_form(
     _admin: Administrator,
     Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let db = state.db();
+
+    let existing = form::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("form {id}")))?;
+
+    // What people sent goes with the form. Deleting a contact form is the one
+    // that would hurt most to get wrong: the enquiries are somebody else's
+    // words and there is nowhere else they exist.
+    let submissions = form_submission::Entity::find()
+        .filter(form_submission::Column::FormId.eq(id))
+        .all(db)
+        .await?;
+
+    crate::trash::keep(
+        db,
+        crate::trash::FORM,
+        id,
+        &existing.name,
+        serde_json::json!({ "form": existing, "submissions": submissions }),
+        &user.username,
+    )
+    .await?;
 
     // Not left to the foreign key: SQLite enforces one only when the
     // connection asked it to, so the rows would otherwise outlive the form on
@@ -331,10 +355,7 @@ pub async fn delete_form(
         .exec(db)
         .await?;
 
-    let result = form::Entity::delete_by_id(id).exec(db).await?;
-    if result.rows_affected == 0 {
-        return Err(AppError::NotFound(format!("form {id}")));
-    }
+    form::Entity::delete_by_id(id).exec(db).await?;
     Ok(StatusCode::NO_CONTENT)
 }
 
@@ -441,20 +462,52 @@ pub async fn mark_seen(
 pub async fn delete_submission(
     _admin: Administrator,
     Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
     Path((id, submission_id)): Path<(Uuid, Uuid)>,
 ) -> AppResult<StatusCode> {
-    let result = form_submission::Entity::delete_many()
-        .filter(form_submission::Column::Id.eq(submission_id))
-        // Both halves of the path have to agree, or one form's address could
-        // be used to delete another form's post.
-        .filter(form_submission::Column::FormId.eq(id))
-        .exec(state.db())
-        .await?;
+    let db = state.db();
 
-    if result.rows_affected == 0 {
-        return Err(AppError::NotFound(format!("submission {submission_id}")));
-    }
+    // Both halves of the path have to agree, or one form's address could be
+    // used to delete another form's post.
+    let existing = form_submission::Entity::find_by_id(submission_id)
+        .filter(form_submission::Column::FormId.eq(id))
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("submission {submission_id}")))?;
+
+    crate::trash::keep(
+        db,
+        crate::trash::FORM_SUBMISSION,
+        submission_id,
+        &crate::routes::forms::describe(&existing),
+        serde_json::json!({ "submission": existing }),
+        &user.username,
+    )
+    .await?;
+
+    form_submission::Entity::delete_by_id(submission_id)
+        .exec(db)
+        .await?;
     Ok(StatusCode::NO_CONTENT)
+}
+
+/// A line of a submission, for the bin's list. Whoever is looking for what
+/// they deleted knows the name or the address that was in it, not its id.
+pub fn describe(submission: &form_submission::Model) -> String {
+    let data: serde_json::Value =
+        serde_json::from_str(&submission.data).unwrap_or(serde_json::Value::Null);
+
+    let pick = |name: &str| {
+        data.get(name)
+            .and_then(|value| value.as_str())
+            .map(str::to_string)
+    };
+
+    ["name", "email", "subject", "title", "message"]
+        .into_iter()
+        .filter_map(pick)
+        .find(|value| !value.trim().is_empty())
+        .unwrap_or_else(|| submission.created_at.to_rfc3339())
 }
 
 /// What a form accepts.

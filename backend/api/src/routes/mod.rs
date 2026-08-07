@@ -16,6 +16,7 @@ pub mod setup;
 pub mod sites;
 pub mod slug;
 pub mod tags;
+pub mod trash;
 pub mod users;
 
 use axum::{
@@ -144,6 +145,9 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
             categories::delete_category
         ))
         .routes(routes!(tags::list_tags, tags::create_tag))
+        .routes(routes!(trash::list_trash))
+        .routes(routes!(trash::restore_trash))
+        .routes(routes!(trash::purge_trash))
         .routes(routes!(tags::delete_tag))
         .routes(routes!(tags::set_tag_translation_group))
         .routes(routes!(slug::make_slug))

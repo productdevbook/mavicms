@@ -715,23 +715,66 @@ pub async fn set_translation_group(
         (status = 404, description = "Post not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_post(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
+pub async fn delete_post(
+    Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
+    Path(id): Path<Uuid>,
+) -> AppResult<StatusCode> {
     let db = state.db();
     let existing = post::Entity::find_by_id(id)
         .one(db)
         .await?
         .ok_or_else(|| AppError::NotFound(format!("post {id}")))?;
 
-    let used = referenced_media(&existing);
+    // The rows that only exist because this post does. They go with it and
+    // come back with it; leaving them behind would restore a post with no
+    // categories and no tags, which is not the post that was deleted.
+    let categories: Vec<Uuid> = post_category::Entity::find()
+        .filter(post_category::Column::PostId.eq(id))
+        .all(db)
+        .await?
+        .into_iter()
+        .map(|row| row.category_id)
+        .collect();
+    let tags: Vec<Uuid> = post_tag::Entity::find()
+        .filter(post_tag::Column::PostId.eq(id))
+        .all(db)
+        .await?
+        .into_iter()
+        .map(|row| row.tag_id)
+        .collect();
+
+    let kind = if existing.kind == crate::trash::PAGE {
+        crate::trash::PAGE
+    } else {
+        crate::trash::POST
+    };
+    crate::trash::keep(
+        db,
+        kind,
+        id,
+        &existing.title,
+        serde_json::json!({
+            "post": existing,
+            "categories": categories,
+            "tags": tags,
+        }),
+        &user.username,
+    )
+    .await?;
+
     post::Entity::delete_by_id(id).exec(db).await?;
-    crate::routes::media::drop_unreferenced(&state, used).await;
+
+    // Deliberately not dropping the images the post used. They are what the
+    // post looked like, and a restore that hands back the words without them
+    // is not the post coming back. They go when the bin is emptied.
 
     Ok(StatusCode::NO_CONTENT)
 }
 
 /// Every media address the post pointed at: its cover and everything in its
 /// body.
-fn referenced_media(post: &post::Model) -> Vec<String> {
+pub(crate) fn referenced_media(post: &post::Model) -> Vec<String> {
     let mut urls: Vec<String> = MEDIA_IN_HTML
         .captures_iter(&post.content_html)
         .filter_map(|caps| caps.get(1).map(|m| m.as_str().to_string()))

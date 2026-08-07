@@ -30,3 +30,4 @@ pub mod state;
 pub mod storage;
 pub mod tenants;
 pub mod throttle;
+pub mod trash;

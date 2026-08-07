@@ -352,17 +352,31 @@ pub async fn list_media(Site(state): Site) -> AppResult<Json<Vec<MediaResponse>>
         (status = 404, description = "Media not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_media(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
+pub async fn delete_media(
+    Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
+    Path(id): Path<Uuid>,
+) -> AppResult<StatusCode> {
     let db = state.db();
     let existing = media::Entity::find_by_id(id)
         .one(db)
         .await?
         .ok_or_else(|| AppError::NotFound(format!("media {id}")))?;
 
-    let storage = storage_for(&state, &existing.storage_backend).await?;
-    storage.delete(&existing.storage_key).await;
+    // The bytes stay in the bucket. A restored row pointing at a file that was
+    // deleted the moment the row was is a broken image with a tidy database,
+    // which is the worse of the two failures. They go when the bin is emptied.
+    crate::trash::keep(
+        db,
+        crate::trash::MEDIA,
+        id,
+        &existing.filename,
+        serde_json::json!({ "media": existing }),
+        &user.username,
+    )
+    .await?;
 
-    media::Entity::delete_by_id(id).exec(state.db()).await?;
+    media::Entity::delete_by_id(id).exec(db).await?;
     Ok(StatusCode::NO_CONTENT)
 }
 

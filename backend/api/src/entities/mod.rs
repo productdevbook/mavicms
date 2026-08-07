@@ -20,4 +20,5 @@ pub mod site_settings;
 pub mod subscriber;
 pub mod subscriber_list;
 pub mod tag;
+pub mod trash;
 pub mod user;

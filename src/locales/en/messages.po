@@ -109,6 +109,11 @@ msgstr "{0} confirmed"
 msgid "{0} connects from its own servers, not from this computer, so it cannot reach this address. It will work once the site is on a public address with https. The programs that run on your machine — Codex, Claude Code, Cursor — can connect to it as it is."
 msgstr "{0} connects from its own servers, not from this computer, so it cannot reach this address. It will work once the site is on a public address with https. The programs that run on your machine — Codex, Claude Code, Cursor — can connect to it as it is."
 
+#. placeholder {0}: answer.what
+#: src/routes/dashboard.trash.tsx:86
+msgid "{0} is back"
+msgstr "{0} is back"
+
 #. placeholder {0}: site.host
 #: src/routes/console.index.tsx:65
 msgid "{0} is ready"
@@ -606,6 +611,10 @@ msgstr "An email each time somebody fills this in. Needs Amazon SES switched on 
 msgid "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 msgstr "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 
+#: src/routes/dashboard.trash.tsx:122
+msgid "An image keeps its file while it is here, so a restored post still has its pictures. The file goes when the entry does."
+msgstr "An image keeps its file while it is here, so a restored post still has its pictures. The file goes when the entry does."
+
 #: src/components/editor/post-settings.tsx:41
 #~ msgid "Announcement"
 #~ msgstr "Announcement"
@@ -623,7 +632,7 @@ msgstr "Anybody can be written to, up to the limits above."
 #~ msgid "Anywhere that takes a configuration file:"
 #~ msgstr "Anywhere that takes a configuration file:"
 
-#: src/components/dashboard/dashboard-shell.tsx:89
+#: src/components/dashboard/dashboard-shell.tsx:91
 #: src/routes/dashboard.api.tsx:207
 msgid "API"
 msgstr "API"
@@ -744,6 +753,11 @@ msgstr "Bad addresses stop themselves"
 #: src/components/editor/extensions/slash-command.tsx:93
 msgid "Basic"
 msgstr "Basic"
+
+#: src/components/dashboard/dashboard-shell.tsx:82
+#: src/routes/dashboard.trash.tsx:112
+msgid "Bin"
+msgstr "Bin"
 
 #: src/components/editor/block-handle.tsx:160
 msgid "Block"
@@ -873,7 +887,7 @@ msgstr "Carry on"
 msgid "Case sensitive"
 msgstr "Case sensitive"
 
-#: src/components/dashboard/dashboard-shell.tsx:77
+#: src/components/dashboard/dashboard-shell.tsx:78
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Categories"
@@ -1036,7 +1050,7 @@ msgstr "Connecting with a token instead, from a terminal"
 msgid "Connection URL"
 msgstr "Connection URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:72
+#: src/components/dashboard/dashboard-shell.tsx:73
 #: src/routes/dashboard.api.tsx:300
 msgid "Content"
 msgstr "Content"
@@ -1319,6 +1333,10 @@ msgstr "Could not make it"
 msgid "Could not open the site"
 msgstr "Could not open the site"
 
+#: src/routes/dashboard.trash.tsx:91
+msgid "Could not put it back"
+msgstr "Could not put it back"
+
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
 #: src/routes/console.login.tsx:38
@@ -1406,6 +1424,10 @@ msgstr "Could not start the build"
 #: src/routes/dashboard.sites.tsx:493
 msgid "Could not take it back"
 msgstr "Could not take it back"
+
+#: src/routes/dashboard.trash.tsx:103
+msgid "Could not throw it away"
+msgstr "Could not throw it away"
 
 #: src/components/ses-account.tsx:503
 msgid "Could not unblock it"
@@ -1569,6 +1591,11 @@ msgstr "Delete this post?"
 #: src/routes/dashboard.tags.tsx:295
 msgid "Delete this tag?"
 msgstr "Delete this tag?"
+
+#. placeholder {0}: entry.deleted_by
+#: src/routes/dashboard.trash.tsx:151
+msgid "deleted by {0}"
+msgstr "deleted by {0}"
 
 #: src/routes/dashboard.forms.tsx:157
 msgid "Describe what a form accepts here, then have your own pages post to it."
@@ -1811,6 +1838,10 @@ msgstr "Folder"
 msgid "Font"
 msgstr "Font"
 
+#: src/routes/dashboard.trash.tsx:69
+msgid "form"
+msgstr "form"
+
 #: src/components/editor/extensions/slash-command.tsx:243
 #: src/components/editor/extensions/slash-command.tsx:252
 #: src/components/editor/extensions/slash-command.tsx:261
@@ -1821,7 +1852,7 @@ msgstr "Format"
 msgid "Formatting"
 msgstr "Formatting"
 
-#: src/components/dashboard/dashboard-shell.tsx:79
+#: src/components/dashboard/dashboard-shell.tsx:80
 #: src/routes/dashboard.forms_.$formId.tsx:144
 #: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
@@ -1879,6 +1910,11 @@ msgstr "Give your post a title first"
 #: src/routes/login.tsx:186
 msgid "Go"
 msgstr "Go"
+
+#. placeholder {0}: new Date(entry.purges_at).toLocaleDateString()
+#: src/routes/dashboard.trash.tsx:155
+msgid "Goes for good on {0}"
+msgstr "Goes for good on {0}"
 
 #: src/routes/dashboard.mail.tsx:167
 msgid "Going out"
@@ -2013,6 +2049,10 @@ msgstr "I already have an account"
 #: src/components/ses-setup.tsx:139
 msgid "IAM users"
 msgstr "IAM users"
+
+#: src/routes/dashboard.trash.tsx:68
+msgid "image"
+msgstr "image"
 
 #: src/components/editor/toolbar.tsx:592
 msgid "Image"
@@ -2184,7 +2224,7 @@ msgstr "Label"
 msgid "Language"
 msgstr "Language"
 
-#: src/components/dashboard/dashboard-shell.tsx:86
+#: src/components/dashboard/dashboard-shell.tsx:88
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Languages"
@@ -2307,7 +2347,7 @@ msgstr "Long text"
 msgid "Made {0}"
 msgstr "Made {0}"
 
-#: src/components/dashboard/dashboard-shell.tsx:80
+#: src/components/dashboard/dashboard-shell.tsx:81
 #: src/routes/console.sites.$siteId.tsx:310
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
 #: src/routes/dashboard.mail.tsx:69
@@ -2374,7 +2414,7 @@ msgstr "Markdown imported"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS needs a database to store your site."
 
-#: src/components/dashboard/dashboard-shell.tsx:76
+#: src/components/dashboard/dashboard-shell.tsx:77
 msgid "Media"
 msgstr "Media"
 
@@ -2485,7 +2525,7 @@ msgid "New password"
 msgstr "New password"
 
 #: src/components/dashboard/content-list.tsx:163
-#: src/components/dashboard/dashboard-shell.tsx:164
+#: src/components/dashboard/dashboard-shell.tsx:166
 msgid "New post"
 msgstr "New post"
 
@@ -2634,6 +2674,10 @@ msgstr "Note"
 msgid "Nothing asked for yet"
 msgstr "Nothing asked for yet"
 
+#: src/routes/dashboard.trash.tsx:114
+msgid "Nothing deleted here goes straight away. It waits thirty days, whether a person deleted it or an assistant did, and until then it can be put back exactly as it was."
+msgstr "Nothing deleted here goes straight away. It waits thirty days, whether a person deleted it or an assistant did, and until then it can be put back exactly as it was."
+
 #: src/components/assistant-connection.tsx:170
 msgid "Nothing else. Accounts, credentials, backups, how the site is built and sending a mailing are deliberately not here — nor is deleting a post or a file. Those stay things a person does in this panel."
 msgstr "Nothing else. Accounts, credentials, backups, how the site is built and sending a mailing are deliberately not here — nor is deleting a post or a file. Those stay things a person does in this panel."
@@ -2646,6 +2690,10 @@ msgstr "Nothing else. Accounts, credentials, backups, how the site is built and 
 #: src/components/ses-account.tsx:269
 msgid "Nothing goes out until it is on again. Amazon switches it off itself when an account is in trouble ({0})."
 msgstr "Nothing goes out until it is on again. Amazon switches it off itself when an account is in trouble ({0})."
+
+#: src/routes/dashboard.trash.tsx:136
+msgid "Nothing has been deleted"
+msgstr "Nothing has been deleted"
 
 #: src/routes/oauth.tsx:79
 msgid "Nothing has been given to anybody. You can close this page."
@@ -2840,11 +2888,15 @@ msgstr "Output folder"
 msgid "Ownership and signing"
 msgstr "Ownership and signing"
 
+#: src/routes/dashboard.trash.tsx:67
+msgid "page"
+msgstr "page"
+
 #: src/components/dashboard/content-list.tsx:93
 msgid "Page deleted"
 msgstr "Page deleted"
 
-#: src/components/dashboard/dashboard-shell.tsx:75
+#: src/components/dashboard/dashboard-shell.tsx:76
 msgid "Pages"
 msgstr "Pages"
 
@@ -2899,7 +2951,7 @@ msgstr "Pause"
 msgid "Paused"
 msgstr "Paused"
 
-#: src/components/dashboard/dashboard-shell.tsx:88
+#: src/components/dashboard/dashboard-shell.tsx:90
 #: src/routes/dashboard.mail.tsx:80
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
@@ -2937,7 +2989,7 @@ msgstr "plain text"
 msgid "Plain text block"
 msgstr "Plain text block"
 
-#: src/components/dashboard/dashboard-shell.tsx:87
+#: src/components/dashboard/dashboard-shell.tsx:89
 #: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.email.tsx:118
 #: src/routes/dashboard.plugins_.s3.tsx:111
@@ -2955,6 +3007,7 @@ msgid "Port"
 msgstr "Port"
 
 #: src/components/editor/post-settings.tsx:410
+#: src/routes/dashboard.trash.tsx:66
 msgid "post"
 msgstr "post"
 
@@ -2984,7 +3037,7 @@ msgstr "Post title"
 msgid "post-url"
 msgstr "post-url"
 
-#: src/components/dashboard/dashboard-shell.tsx:74
+#: src/components/dashboard/dashboard-shell.tsx:75
 msgid "Posts"
 msgstr "Posts"
 
@@ -3013,7 +3066,7 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:94
+#: src/components/dashboard/dashboard-shell.tsx:96
 #: src/components/editor/mavi-editor.tsx:622
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:308
@@ -3057,6 +3110,10 @@ msgstr "Publishing…"
 #: src/components/mcp-connection.tsx:119
 msgid "Put a token where the … is. It is shown once, when you make it."
 msgstr "Put a token where the … is. It is shown once, when you make it."
+
+#: src/routes/dashboard.trash.tsx:165
+msgid "Put it back"
+msgstr "Put it back"
 
 #: src/components/local-env.tsx:118
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
@@ -3559,7 +3616,7 @@ msgstr "Sign in, here"
 msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
-#: src/components/dashboard/dashboard-shell.tsx:171
+#: src/components/dashboard/dashboard-shell.tsx:173
 #: src/components/editor/mavi-editor.tsx:595
 #: src/routes/console.index.tsx:119
 msgid "Sign out"
@@ -3589,7 +3646,7 @@ msgstr "Site removed"
 msgid "Site title"
 msgstr "Site title"
 
-#: src/components/dashboard/dashboard-shell.tsx:96
+#: src/components/dashboard/dashboard-shell.tsx:98
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
 msgstr "Sites"
@@ -3729,7 +3786,7 @@ msgstr "Table of contents"
 msgid "Tagline"
 msgstr "Tagline"
 
-#: src/components/dashboard/dashboard-shell.tsx:78
+#: src/components/dashboard/dashboard-shell.tsx:79
 #: src/components/editor/post-settings.tsx:230
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -3970,13 +4027,17 @@ msgstr "This server is by invitation"
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
 msgstr "This signs you in to the server itself. Everyone else signs in somewhere else:"
 
-#: src/components/dashboard/dashboard-shell.tsx:84
+#: src/components/dashboard/dashboard-shell.tsx:86
 msgid "This site"
 msgstr "This site"
 
 #: src/components/assistant-connection.tsx:155
 msgid "This site's tools could not be listed just now."
 msgstr "This site's tools could not be listed just now."
+
+#: src/routes/dashboard.trash.tsx:170
+msgid "Throw it away now"
+msgstr "Throw it away now"
 
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
@@ -4132,6 +4193,10 @@ msgstr "waiting"
 msgid "waiting for DNS"
 msgstr "waiting for DNS"
 
+#: src/routes/dashboard.trash.tsx:120
+msgid "Waiting to be thrown away"
+msgstr "Waiting to be thrown away"
+
 #: src/components/ses-setup.tsx:214
 msgid "Watching how sending is going"
 msgstr "Watching how sending is going"
@@ -4189,6 +4254,10 @@ msgstr "What it is"
 msgid "What it is for"
 msgstr "What it is for"
 
+#: src/routes/dashboard.trash.tsx:70
+msgid "what somebody sent"
+msgstr "what somebody sent"
+
 #: src/components/ses-account.tsx:334
 msgid "What the mail is"
 msgstr "What the mail is"
@@ -4212,6 +4281,10 @@ msgstr "When"
 #: src/components/plugin-forms.tsx:78
 msgid "When off, uploads are stored on the server's disk."
 msgstr "When off, uploads are stored on the server's disk."
+
+#: src/routes/dashboard.trash.tsx:138
+msgid "When something is, it appears here first."
+msgstr "When something is, it appears here first."
 
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:280
 msgid "When to send it"

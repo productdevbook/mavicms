@@ -79,6 +79,12 @@ async fn run(hosting: &Hosting, elsewhere: &mut HashMap<Uuid, DatabaseConnection
             continue;
         }
 
+        // The bin is emptied on the same tick, and before publishing rather
+        // than after: a purge that fails should not stop a post going out.
+        if let Err(err) = empty_the_bin(registry, &tenant).await {
+            tracing::warn!(site = %tenant.slug, error = %err, "could not empty the bin");
+        }
+
         let moved = match due_for(registry, elsewhere, &tenant, now).await {
             Ok(moved) => moved,
             Err(err) => {
@@ -105,6 +111,37 @@ async fn run(hosting: &Hosting, elsewhere: &mut HashMap<Uuid, DatabaseConnection
             }
         }
     }
+}
+
+/// Throws away what has been in the bin longer than anybody is coming back for.
+///
+/// The site is opened for this, which is the one background task worth opening
+/// it for: a deleted image's bytes sit in somebody's bucket costing money until
+/// this runs, and the row that says which bytes they are lives in the site.
+async fn empty_the_bin(
+    registry: &crate::tenants::Registry,
+    tenant: &crate::tenants::Tenant,
+) -> AppResult<()> {
+    let state = registry.state_for(tenant).await?;
+    let Some(db) = state.db.as_ref() else {
+        return Ok(());
+    };
+
+    for entry in crate::trash::expired(db).await? {
+        if let Ok(payload) = serde_json::from_str::<serde_json::Value>(&entry.payload) {
+            match entry.kind.as_str() {
+                crate::trash::MEDIA => crate::trash::drop_the_file(&state, &payload).await,
+                crate::trash::POST | crate::trash::PAGE => {
+                    crate::trash::drop_what_a_purged_post_used(&state, &payload).await
+                }
+                _ => {}
+            }
+        }
+        crate::trash::forget(db, entry.id).await?;
+        tracing::info!(site = %tenant.slug, kind = %entry.kind, "emptied from the bin");
+    }
+
+    Ok(())
 }
 
 async fn due_for(

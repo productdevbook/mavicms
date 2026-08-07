@@ -808,6 +808,28 @@ export function updateConsoleAccount(payload: {
   })
 }
 
+export interface TrashEntry {
+  id: string
+  kind: string
+  subject_id: string
+  title: string
+  deleted_at: string
+  deleted_by: string
+  purges_at: string
+}
+
+export function getTrash(): Promise<TrashEntry[]> {
+  return request<TrashEntry[]>("/trash")
+}
+
+export function restoreFromTrash(id: string): Promise<{ what: string }> {
+  return request<{ what: string }>(`/trash/${id}/restore`, { method: "POST" })
+}
+
+export function purgeFromTrash(id: string): Promise<void> {
+  return request<void>(`/trash/${id}`, { method: "DELETE" })
+}
+
 export interface Agency {
   id: string
   name: string

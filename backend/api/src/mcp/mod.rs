@@ -572,7 +572,11 @@ async fn invoke(
                         .to_string(),
                 )));
             }
-            Some(site::call(hosting, resolved, state, name, arguments).await)
+            // Whose hand it was, and that it arrived through an assistant
+            // rather than through the panel. Somebody reading the bin wants to
+            // know which of the two deleted their post.
+            let who = format!("{} (assistant)", user.username);
+            Some(site::call(hosting, resolved, state, &who, name, arguments).await)
         }
         Caller::Console(operator) => {
             console::TOOLS.iter().find(|tool| tool.name == name)?;

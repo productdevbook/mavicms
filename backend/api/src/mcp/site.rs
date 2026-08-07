@@ -382,9 +382,10 @@ pub const TOOLS: &[Tool] = &[
     Tool {
         name: "form_submission_delete",
         title: "Throw one submission away",
-        description: "Delete one thing somebody sent through a form, by its id. This is the \
-            only tool here that destroys anything and there is no way back from it, so read the \
-            submission first and delete exactly the one you read.",
+        description: "Delete one thing somebody sent through a form, by its id. It goes to the \
+            bin rather than away — trash_list will show it and trash_restore will put it back — \
+            but somebody has to notice, so read the submission first and delete exactly the one \
+            you read.",
         writes: true,
         destroys: true,
         schema: || {
@@ -393,6 +394,34 @@ pub const TOOLS: &[Tool] = &[
                 "additionalProperties": false,
                 "required": ["submission"],
                 "properties": { "submission": { "type": "string", "description": "The submission's id" } }
+            })
+        },
+    },
+    Tool {
+        name: "trash_list",
+        title: "What has been deleted",
+        description: "Everything deleted in the last thirty days and still recoverable: posts, \
+            pages, images, forms, and what people sent through them. Read this before telling \
+            anybody something is gone, and read it first if you think you have deleted the wrong \
+            thing.",
+        writes: false,
+        destroys: false,
+        schema: || json!({ "type": "object", "additionalProperties": false, "properties": {} }),
+    },
+    Tool {
+        name: "trash_restore",
+        title: "Put a deleted thing back",
+        description: "Restore something from the bin by the entry id that trash_list gives. If \
+            its address was taken while it was gone it comes back at a slightly different one, \
+            and the answer says so.",
+        writes: true,
+        destroys: false,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["entry"],
+                "properties": { "entry": { "type": "string", "description": "From trash_list" } }
             })
         },
     },
@@ -412,6 +441,7 @@ pub async fn call(
     hosting: &Hosting,
     resolved: &Resolved,
     state: &AppState,
+    who: &str,
     name: &str,
     arguments: &Value,
 ) -> AppResult<Value> {
@@ -432,7 +462,9 @@ pub async fn call(
         "taxonomy_create" => make_taxonomy(db, arguments).await,
         "forms_create" => make_form(db, arguments).await,
         "form_mark_seen" => mark_seen(db, arguments).await,
-        "form_submission_delete" => throw_away(db, arguments).await,
+        "form_submission_delete" => throw_away(db, who, arguments).await,
+        "trash_list" => in_the_bin(db).await,
+        "trash_restore" => put_back(db, arguments).await,
         "publish_site" => publish(hosting, resolved).await,
         other => Err(AppError::NotFound(format!("tool {other}"))),
     }
@@ -1070,21 +1102,70 @@ async fn mark_seen(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppRe
     Ok(json!({ "marked": result.rows_affected, "seen": seen }))
 }
 
-async fn throw_away(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+/// What has been deleted and can still be got back.
+async fn in_the_bin(db: &sea_orm::DatabaseConnection) -> AppResult<Value> {
+    let entries = crate::trash::list(db).await?;
+    Ok(json!({
+        "entries": entries
+            .iter()
+            .map(|entry| json!({
+                "entry": entry.id,
+                "kind": entry.kind,
+                "title": entry.title,
+                "deleted_at": entry.deleted_at.to_rfc3339(),
+                "deleted_by": entry.deleted_by,
+                "recoverable_until": entry.purges_at.to_rfc3339(),
+            }))
+            .collect::<Vec<_>>(),
+        "count": entries.len(),
+    }))
+}
+
+async fn put_back(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    let id = text(arguments, "entry")
+        .ok_or_else(|| AppError::Validation("say which entry".to_string()))?;
+    let id = Uuid::parse_str(&id)
+        .map_err(|_| AppError::Validation(format!("{id} is not an entry id")))?;
+
+    Ok(json!({ "restored": crate::trash::restore(db, id).await? }))
+}
+
+async fn throw_away(
+    db: &sea_orm::DatabaseConnection,
+    who: &str,
+    arguments: &Value,
+) -> AppResult<Value> {
     let id = text(arguments, "submission")
         .ok_or_else(|| AppError::Validation("say which submission".to_string()))?;
     let id = Uuid::parse_str(&id)
         .map_err(|_| AppError::Validation(format!("{id} is not a submission id")))?;
 
-    let result = form_submission::Entity::delete_many()
-        .filter(form_submission::Column::Id.eq(id))
-        .exec(db)
-        .await?;
+    // Through the bin, exactly as the panel's own delete goes. This is the
+    // path that most needs it: an assistant asked to tidy up deletes at the
+    // speed of a sentence, and this is the one tool it has that destroys.
+    let existing = form_submission::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("submission {id}")))?;
 
-    if result.rows_affected == 0 {
-        return Err(AppError::NotFound(format!("submission {id}")));
-    }
-    Ok(json!({ "deleted": id }))
+    let entry = crate::trash::keep(
+        db,
+        crate::trash::FORM_SUBMISSION,
+        id,
+        &crate::routes::forms::describe(&existing),
+        json!({ "submission": existing }),
+        who,
+    )
+    .await?;
+
+    form_submission::Entity::delete_by_id(id).exec(db).await?;
+
+    Ok(json!({
+        "deleted": id,
+        "recoverable": true,
+        "entry": entry,
+        "note": "It is in the bin for thirty days. trash_restore with this entry puts it back.",
+    }))
 }
 
 async fn publish(hosting: &Hosting, resolved: &Resolved) -> AppResult<Value> {
