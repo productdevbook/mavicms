@@ -1049,6 +1049,54 @@ export function deleteSiteDevelopmentToken(
   })
 }
 
+export interface ConnectionRequest {
+  /** The program's own word for itself. Not something the site can check. */
+  client_name: string
+  redirect_uri: string
+  site_title: string
+  username: string
+}
+
+/**
+ * What a program is asking for, so somebody can be shown it before agreeing.
+ *
+ * The query is passed through untouched rather than parsed and rebuilt: the
+ * server checks it, and a parameter this panel did not know about would
+ * otherwise be silently dropped on the way.
+ */
+export function describeConnectionRequest(
+  query: string
+): Promise<ConnectionRequest> {
+  return request<ConnectionRequest>(`/oauth/request${query}`)
+}
+
+export function approveConnection(
+  query: string
+): Promise<{ redirect: string }> {
+  const asked = new URLSearchParams(query)
+  return request<{ redirect: string }>("/oauth/grant", {
+    method: "POST",
+    body: JSON.stringify(Object.fromEntries(asked)),
+  })
+}
+
+export interface Connection {
+  id: string
+  client_name: string
+  username: string
+  created_at: string
+  renewed_at: string
+}
+
+/** The assistants connected to this site. */
+export function listConnections(): Promise<Connection[]> {
+  return request<Connection[]>("/oauth/connections")
+}
+
+export function disconnect(id: string): Promise<void> {
+  return request<void>(`/oauth/connections/${id}`, { method: "DELETE" })
+}
+
 /** What an agency hands to an assistant. Acts for the agency, not for a site. */
 export function listConsoleTokens(): Promise<DevelopmentToken[]> {
   return request<DevelopmentToken[]>("/console/tokens")

@@ -28,7 +28,9 @@ use crate::{
     get,
     path = "/setup/status",
     tag = "setup",
-    responses((status = 200, description = "Setup status", body = SetupStatusResponse))
+    responses((status = 200, description = "Setup status", body = SetupStatusResponse)),
+    // Answers without a credential.
+    security(())
 )]
 pub async fn setup_status(
     Site(state): Site,
@@ -63,6 +65,8 @@ pub async fn setup_status(
 /// reaching it would take every other site on the machine down with it, and it
 /// has no reason to: a hosted site is given its database when it is created.
 #[utoipa::path(
+    // Answers without a credential.
+    security(()),
     post,
     path = "/setup/database",
     tag = "setup",
@@ -148,6 +152,8 @@ fn require_field<'a>(value: &'a Option<String>, name: &str) -> AppResult<&'a str
 /// Complete first-run setup: create the site record and the initial
 /// administrator account. Fails once the site is already installed.
 #[utoipa::path(
+    // Answers without a credential.
+    security(()),
     post,
     path = "/setup",
     tag = "setup",

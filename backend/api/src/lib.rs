@@ -19,6 +19,7 @@ pub mod mailing;
 pub mod markdown;
 pub mod mcp;
 pub mod middleware;
+pub mod oauth;
 pub mod openapi;
 pub mod plugins;
 pub mod publish;

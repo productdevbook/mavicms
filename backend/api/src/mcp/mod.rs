@@ -427,14 +427,24 @@ async fn caller(
             state: state.clone(),
             user,
         }),
+        // The header is the whole of how a client finds the sign-in flow: it
+        // reads the address out of it, fetches the metadata there, registers
+        // itself and sends somebody to authorize. Without it a connector can
+        // only tell its user that the server said no.
         Err(_) => Err((
             StatusCode::UNAUTHORIZED,
-            [(header::WWW_AUTHENTICATE, "Bearer")],
+            [(
+                header::WWW_AUTHENTICATE,
+                format!(
+                    "Bearer resource_metadata=\"{}/.well-known/oauth-protected-resource\"",
+                    crate::routes::llms::origin(headers)
+                ),
+            )],
             axum::Json(json!({
                 "jsonrpc": "2.0",
                 "error": {
                     "code": -32600,
-                    "message": "send a token: Authorization: Bearer …, made in the panel"
+                    "message": "not signed in: connect through this site, or send a token made in the panel"
                 }
             })),
         )

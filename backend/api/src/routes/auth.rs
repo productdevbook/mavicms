@@ -21,7 +21,9 @@ use crate::{
     responses(
         (status = 200, description = "Signed in", body = UserResponse),
         (status = 401, description = "Invalid username or password", body = crate::error::ErrorBody),
-    )
+    ),
+    // Answers without a credential.
+    security(())
 )]
 pub async fn login(
     Site(state): Site,
@@ -106,6 +108,8 @@ async fn sign_in(
 
 /// Sign out, clearing the session cookie. Always succeeds.
 #[utoipa::path(
+    // Answers without a credential.
+    security(()),
     post,
     path = "/logout",
     tag = "auth",

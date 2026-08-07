@@ -31,7 +31,7 @@ const TEMPLATE: &str = include_str!("llms.txt");
 /// The panel and the API are on the same address as the site, and which site
 /// this is depends entirely on that address, so the answer has to be built
 /// from the request rather than from anything the server holds.
-fn origin(headers: &HeaderMap) -> String {
+pub(crate) fn origin(headers: &HeaderMap) -> String {
     let host = headers
         .get(header::HOST)
         .and_then(|value| value.to_str().ok())
@@ -90,7 +90,9 @@ fn is_somebodys_own_machine(host: &str) -> bool {
     get,
     path = "/llms.txt",
     tag = "development",
-    responses((status = 200, description = "The document", content_type = "text/plain"))
+    responses((status = 200, description = "The document", content_type = "text/plain")),
+    // Answers without a credential.
+    security(())
 )]
 pub async fn llms_txt(
     Site(state): Site,

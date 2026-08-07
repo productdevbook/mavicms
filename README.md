@@ -173,6 +173,20 @@ at `https://your-site/api/mcp`, and so does an agency console at the server's
 own address. Which of the two you get is decided by the address you reach and
 the token you send, the same way everything else here is.
 
+In anything that asks for a URL — Claude's connector dialog, ChatGPT's — paste
+the address and nothing else:
+
+```
+https://your-site/api/mcp
+```
+
+The site is its own authorization server. Whoever is connecting is sent to
+this site to sign in, asked plainly whether to allow it, and the program is
+handed a credential they never see and cannot paste anywhere. **API** in the
+panel lists what is connected, and disconnecting one stops it immediately.
+
+In a terminal, where a header is easier than a browser:
+
 ```bash
 claude mcp add --transport http mavicms https://your-site/api/mcp \
   --header "Authorization: Bearer $CMS_TOKEN"
@@ -196,7 +210,10 @@ Two rules make it safe to leave connected:
   misreads it and removes an archive has not.
 
 Tokens are made in **API** on a site, and on **your account** in the console.
-Both are shown once and can be taken back.
+Both are shown once and can be taken back. A connection made through the
+sign-in flow needs no token at all — which is the point of it: the person
+connecting an assistant to their own site should not have to handle a
+credential, and an agency should not be sending one to a customer.
 
 The protocol is spoken at revision `2026-07-28`, which is stateless — no
 handshake, no session. Clients that still open with `initialize` are answered

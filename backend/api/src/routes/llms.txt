@@ -54,6 +54,12 @@ claude mcp add --transport http mavicms {{base}}/mcp \
   --header "Authorization: Bearer $CMS_TOKEN"
 ```
 
+Somewhere that has no field for a token — Claude's own connector dialog,
+ChatGPT's — paste the address on its own. This site is its own authorization
+server: you will be sent here to sign in and asked whether to allow it, and
+the program is handed a credential you never see. It is listed under **API**
+in the panel afterwards and can be disconnected there.
+
 Nothing there deletes anything.
 
 The rest of this file is for building a front end, which is a different job:
