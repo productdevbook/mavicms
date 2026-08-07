@@ -220,7 +220,7 @@ msgid "{0}: {1} sent, {2} did not arrive"
 msgstr "{0}: {1} gönderildi, {2} ulaşmadı"
 
 #. placeholder {0}: account.organization_name
-#: src/routes/console.account.tsx:83
+#: src/routes/console.account.tsx:84
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. Sitelerinizi açan ve yöneten hesap budur."
 
@@ -252,7 +252,7 @@ msgstr "0 sonuç"
 msgid "3-32 characters: letters, numbers, _ or -"
 msgstr "3-32 karakter: harf, rakam, _ veya -"
 
-#: src/routes/dashboard.api.tsx:230
+#: src/routes/dashboard.api.tsx:231
 msgid "A build does not sign in. It is handed CMS_TOKEN, made below, which can read this site and nothing else — so no password is stored for it and a token in a log costs nothing."
 msgstr "Derleme giriş yapmaz. Kendisine aşağıda üretilen CMS_TOKEN verilir; bu siteyi yalnızca okuyabilir — yani onun için hiçbir parola saklanmaz ve kayda düşen bir jeton hiçbir şeye mal olmaz."
 
@@ -281,7 +281,7 @@ msgstr "Bir kampanya bunlardan herhangi biriyle gidebilir. Her birinin SES'te ay
 msgid "A folder inside the data directory."
 msgstr "Veri dizininin içinde bir klasör."
 
-#: src/routes/dashboard.api.tsx:244
+#: src/routes/dashboard.api.tsx:251
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "Liste, yazıların gövdesini vermez; bütün arşivi tek yanıtta göndermek kimsenin istemediği megabaytlar demek. Gövdeler için include=content ekleyin."
 
@@ -293,7 +293,7 @@ msgstr "Sert şekilde geri dönen ya da birinin spam olarak bildirdiği mesajlar
 msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 msgstr "Yeni bir SES hesabı kum havuzunda başlar; yalnızca aşağıda doğruladığınız adreslere yazabilir. Ziyaretçilerinize yazabilmek için buradan çıkmayı istemeniz gerekir."
 
-#: src/routes/dashboard.api.tsx:271
+#: src/routes/dashboard.api.tsx:278
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
 msgstr "Bir yazı hem <0>content_markdown</0> taşır — yazının kendisi budur — hem de <1>content_html</1>, yani karşılığı. Markdown <2>comark</2> için yazılıyor, böylece bir proje bloklarını kendi bileşenlerine çevirebilir."
 
@@ -438,7 +438,7 @@ msgstr "Buradan eklemek onaylı sayılır — yalnızca listede olmayı kendiler
 
 #: src/components/editor/dialogs.tsx:300
 #: src/routes/console.index.tsx:197
-#: src/routes/dashboard.api.tsx:210
+#: src/routes/dashboard.api.tsx:211
 #: src/routes/dashboard.forms.tsx:264
 #: src/routes/dashboard.sites.tsx:274
 msgid "Address"
@@ -585,8 +585,12 @@ msgstr "Yanıtlar /api/forms/{0}/submit adresine gönderilir. Değiştirirseniz 
 msgid "Anybody can be written to, up to the limits above."
 msgstr "Yukarıdaki sınırlara kadar herkese yazılabilir."
 
+#: src/components/mcp-connection.tsx:90
+msgid "Anywhere that takes a configuration file:"
+msgstr "Ayar dosyası isteyen her yerde:"
+
 #: src/components/dashboard/dashboard-shell.tsx:87
-#: src/routes/dashboard.api.tsx:200
+#: src/routes/dashboard.api.tsx:201
 msgid "API"
 msgstr "API"
 
@@ -621,7 +625,7 @@ msgstr "Kum havuzundan çıkmayı iste"
 msgid "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
 msgstr "Aşağıdaki bölümden kum havuzundan çıkmayı isteyin. Amazon kabul edene kadar SES yalnızca doğruladığınız adreslere yazar — yani iletişim formu denenebilir ama kullanılamaz."
 
-#: src/routes/console.account.tsx:130
+#: src/routes/console.account.tsx:131
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Neyi değiştiriyorsanız değiştirin, sorulur — bir yerde açık kalmış oturum hesabı elinizden almaya yetmemeli."
 
@@ -640,6 +644,10 @@ msgstr "İstendi. Amazon genellikle bir gün içinde yanıtlar."
 #: src/components/ses-health.tsx:289
 msgid "Asking for a bigger quota"
 msgstr "Daha yüksek kota istemek"
+
+#: src/components/mcp-connection.tsx:70
+msgid "Assistants"
+msgstr "Asistanlar"
 
 #: src/routes/console.register.tsx:191
 msgid "At least {MINIMUM_PASSWORD} characters."
@@ -739,7 +747,7 @@ msgstr "Bucket"
 msgid "Build command"
 msgstr "Derleme komutu"
 
-#: src/routes/dashboard.api.tsx:181
+#: src/routes/dashboard.api.tsx:182
 msgid "Build this site's pages again."
 msgstr "Bu sitenin sayfalarını yeniden derler."
 
@@ -751,7 +759,7 @@ msgstr "Derleme jetonları"
 msgid "Build variables"
 msgstr "Derleme değişkenleri"
 
-#: src/routes/dashboard.api.tsx:290
+#: src/routes/dashboard.api.tsx:297
 msgid "Building only what changed"
 msgstr "Yalnızca değişeni derlemek"
 
@@ -821,7 +829,7 @@ msgstr "Büyük/küçük harf duyarlı"
 msgid "Categories"
 msgstr "Kategoriler"
 
-#: src/routes/dashboard.api.tsx:162
+#: src/routes/dashboard.api.tsx:163
 msgid "Categories, per language."
 msgstr "Kategoriler, dile göre."
 
@@ -837,7 +845,7 @@ msgstr "Paragrafı ortala"
 msgid "Change it"
 msgstr "Değiştir"
 
-#: src/routes/dashboard.api.tsx:177
+#: src/routes/dashboard.api.tsx:178
 msgid "Change one."
 msgstr "Bir yazıyı değiştirir."
 
@@ -941,7 +949,7 @@ msgid "Connection URL"
 msgstr "Bağlantı URL'si"
 
 #: src/components/dashboard/dashboard-shell.tsx:71
-#: src/routes/dashboard.api.tsx:269
+#: src/routes/dashboard.api.tsx:276
 msgid "Content"
 msgstr "İçerik"
 
@@ -962,7 +970,7 @@ msgstr "Panele devam et"
 #~ msgid "Continue to the editor"
 #~ msgstr "Editöre git"
 
-#: src/routes/dashboard.api.tsx:98
+#: src/routes/dashboard.api.tsx:99
 msgid "Copied"
 msgstr "Kopyalandı"
 
@@ -983,11 +991,12 @@ msgstr "Hepsini kopyala"
 msgid "Copy code"
 msgstr "Kodu kopyala"
 
-#: src/routes/dashboard.api.tsx:98
+#: src/routes/dashboard.api.tsx:99
 msgid "Copy for an assistant"
 msgstr "Asistan için kopyala"
 
 #: src/components/build-tokens.tsx:83
+#: src/components/console-tokens.tsx:89
 #: src/components/local-env.tsx:159
 msgid "Copy it now"
 msgstr "Şimdi kopyalayın"
@@ -999,6 +1008,18 @@ msgstr "Bağlantıyı kopyala"
 #: src/components/editor/block-handle.tsx:182
 msgid "Copy text"
 msgstr "Metni kopyala"
+
+#: src/components/mcp-connection.tsx:78
+msgid "Copy the address"
+msgstr "Adresi kopyala"
+
+#: src/components/mcp-connection.tsx:86
+msgid "Copy the command"
+msgstr "Komutu kopyala"
+
+#: src/components/mcp-connection.tsx:106
+msgid "Copy the configuration"
+msgstr "Ayarı kopyala"
 
 #: src/components/editor/dialogs.tsx:436
 msgid "Copy your post in different formats, download it, or import Markdown."
@@ -1052,9 +1073,10 @@ msgid "Could not change it"
 msgstr "Değiştirilemedi"
 
 #: src/components/local-env.tsx:109
+#: src/components/mcp-connection.tsx:28
 #: src/components/ses-account.tsx:691
 #: src/components/ses-setup.tsx:112
-#: src/routes/dashboard.api.tsx:79
+#: src/routes/dashboard.api.tsx:80
 #: src/routes/dashboard.forms_.$formId.tsx:41
 #: src/routes/dashboard.sites.tsx:397
 msgid "Could not copy it"
@@ -1161,6 +1183,7 @@ msgid "Could not load the templates"
 msgstr "Şablonlar yüklenemedi"
 
 #: src/components/build-tokens.tsx:35
+#: src/components/console-tokens.tsx:34
 msgid "Could not load the tokens"
 msgstr "Jetonlar yüklenemedi"
 
@@ -1177,6 +1200,7 @@ msgid "Could not load your sites"
 msgstr "Siteleriniz yüklenemedi"
 
 #: src/components/build-tokens.tsx:48
+#: src/components/console-tokens.tsx:47
 #: src/components/local-env.tsx:75
 msgid "Could not make a token"
 msgstr "Jeton üretilemedi"
@@ -1246,7 +1270,7 @@ msgstr "Etiket kaydedilemedi"
 msgid "Could not save the form"
 msgstr "Form kaydedilemedi"
 
-#: src/routes/console.account.tsx:61
+#: src/routes/console.account.tsx:62
 #: src/routes/console.sites.$siteId.tsx:169
 #: src/routes/console.sites.$siteId.tsx:199
 #: src/routes/console.sites.$siteId.tsx:214
@@ -1273,6 +1297,7 @@ msgid "Could not start the build"
 msgstr "Derleme başlatılamadı"
 
 #: src/components/build-tokens.tsx:61
+#: src/components/console-tokens.tsx:60
 #: src/components/local-env.tsx:88
 #: src/routes/dashboard.sites.tsx:493
 msgid "Could not take it back"
@@ -1338,7 +1363,7 @@ msgstr "Yönetici hesabınızı oluşturun"
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Kimlik bilgileri saklanmadan önce şifrelenir ve hiçbir zaman tarayıcıya geri gönderilmez."
 
-#: src/routes/console.account.tsx:122
+#: src/routes/console.account.tsx:123
 #: src/routes/dashboard.users.tsx:218
 msgid "Current password"
 msgstr "Mevcut parola"
@@ -1409,7 +1434,7 @@ msgstr "Sil"
 msgid "Delete column"
 msgstr "Sütunu sil"
 
-#: src/routes/dashboard.api.tsx:178
+#: src/routes/dashboard.api.tsx:179
 msgid "Delete one, and any image left with no owner."
 msgstr "Bir yazıyı ve sahipsiz kalan resimlerini siler."
 
@@ -1528,7 +1553,7 @@ msgstr "Düzenleme"
 
 #: src/components/form-fields-editor.tsx:51
 #: src/components/setup/setup-wizard.tsx:698
-#: src/routes/console.account.tsx:98
+#: src/routes/console.account.tsx:99
 #: src/routes/console.login.tsx:80
 #: src/routes/console.register.tsx:170
 #: src/routes/dashboard.mail.tsx:550
@@ -1588,7 +1613,7 @@ msgstr "Saatte bir"
 msgid "Every list"
 msgstr "Tüm listeler"
 
-#: src/routes/dashboard.api.tsx:292
+#: src/routes/dashboard.api.tsx:299
 msgid "Every post carries a <0>digest</0>, which changes when the post changes and not when it is merely saved again. A build that keeps it rebuilds the pages that moved and leaves the rest alone. A listing also carries an <1>ETag</1>: send it back as <2>If-None-Match</2> and an archive that has not changed answers with nothing at all."
 msgstr "Her yazı bir <0>digest</0> taşır; yazı değiştiğinde değişir, yalnızca yeniden kaydedildiğinde değişmez. Bunu saklayan bir derleme yalnızca kımıldayan sayfaları yeniden üretir, gerisine dokunmaz. Listeler de bir <1>ETag</1> taşır: onu <2>If-None-Match</2> olarak geri gönderdiğinizde değişmemiş bir arşiv hiçbir şey döndürmez."
 
@@ -1601,7 +1626,7 @@ msgstr "Bu sitedeki bütün yazı, kategori, etiket ve hesapların yerine \"{0}\
 msgid "Every post, category, tag and account this site has now is replaced by what \"{pendingRestore}\" holds. This cannot be undone."
 msgstr "Bu sitedeki bütün yazı, kategori, etiket ve hesapların yerine \"{pendingRestore}\" içindekiler geçer. Bu geri alınamaz."
 
-#: src/routes/dashboard.api.tsx:213
+#: src/routes/dashboard.api.tsx:214
 msgid "Every site has its own, on its own address. The same server answers all of them and the address is what decides whose content you get — so this one returns this site's, and nobody else's."
 msgstr "Her sitenin kendi adresinde kendi API'si var. Hepsine aynı sunucu yanıt veriyor ve kimin içeriğini alacağınızı adres belirliyor — bu adres bu sitenin içeriğini döner, başkasınınkini değil."
 
@@ -1610,11 +1635,11 @@ msgstr "Her sitenin kendi adresinde kendi API'si var. Hepsine aynı sunucu yanı
 msgid "Every week"
 msgstr "Haftada bir"
 
-#: src/routes/dashboard.api.tsx:87
+#: src/routes/dashboard.api.tsx:88
 msgid "Everything below, plus a working Astro connection, as one document written for whatever is doing the wiring. It carries this site's own address, languages and forms — paste it into an assistant and it can build the front end without being told any of this twice."
 msgstr "Aşağıdaki her şey, üstüne çalışan bir Astro bağlantısı: bağlantıyı kuran her ne ise onun için yazılmış tek bir belge. Bu sitenin kendi adresini, dillerini ve formlarını taşır — bir asistana yapıştırın, ön yüzü bunların hiçbirini bir daha anlatmadan kursun."
 
-#: src/routes/dashboard.api.tsx:202
+#: src/routes/dashboard.api.tsx:203
 msgid "Everything in this panel is this API. It is what your pages are built from, and what anything else you write can read."
 msgstr "Bu paneldeki her şey bu API. Sayfalarınız bundan derleniyor, yazacağınız başka her şey de bunu okuyabilir."
 
@@ -1690,6 +1715,10 @@ msgstr "Formlar"
 msgid "From address"
 msgstr "Gönderen adresi"
 
+#: src/components/console-tokens.tsx:69
+msgid "From here it answers about every site this agency looks after: which of them built, which did not, what a failing build said, and adding a new one. Writing a post is a question for that site's own address."
+msgstr "Buradan bu ajansın baktığı her siteyi yanıtlar: hangisi derlendi, hangisi derlenmedi, başarısız derleme ne dedi, ve yeni bir site eklemek. Yazı yazmak o sitenin kendi adresine sorulur."
+
 #: src/components/plugin-forms.tsx:365
 msgid "From name"
 msgstr "Gönderen adı"
@@ -1752,7 +1781,7 @@ msgstr "gri: gönderildi · kırmızı: ulaşmadı"
 #~ msgid "Guide"
 #~ msgstr "Rehber"
 
-#: src/routes/dashboard.api.tsx:85
+#: src/routes/dashboard.api.tsx:86
 msgid "Handing this to an assistant"
 msgstr "Bunu bir asistana vermek"
 
@@ -1899,6 +1928,10 @@ msgstr "CSV içe aktar"
 msgid "Import this archive?"
 msgstr "Bu arşiv içe aktarılsın mı?"
 
+#: src/components/mcp-connection.tsx:81
+msgid "In Claude Code, one line:"
+msgstr "Claude Code'da tek satır:"
+
 #: src/components/editor/types.ts:27
 msgid "In review"
 msgstr "İncelemede"
@@ -1943,7 +1976,7 @@ msgstr "Mavi CMS'i kur"
 msgid "Installing Mavi CMS…"
 msgstr "Mavi CMS kuruluyor…"
 
-#: src/routes/dashboard.api.tsx:313
+#: src/routes/dashboard.api.tsx:320
 msgid "Interactive docs"
 msgstr "Etkileşimli belgeler"
 
@@ -1951,7 +1984,11 @@ msgstr "Etkileşimli belgeler"
 msgid "Invitations"
 msgstr "Davetler"
 
-#: src/routes/dashboard.api.tsx:108
+#: src/routes/dashboard.api.tsx:243
+msgid "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
+msgstr "Bu siteyi yanıtlar: yazı bulmak ve okumak, yazmak ve düzeltmek, formlardan geleni görmek, sayfaları derlemek. Derleme jetonuna yalnızca okuyan araçlar açılır."
+
+#: src/routes/dashboard.api.tsx:109
 msgid "It lives at /api/llms.txt, so anything that can reach this site can read it."
 msgstr "/api/llms.txt adresinde durur; bu siteye erişebilen her şey okuyabilir."
 
@@ -2029,7 +2066,7 @@ msgstr "Son çalışma {0}"
 msgid "Leave empty for AWS S3"
 msgstr "AWS S3 için boş bırakın"
 
-#: src/routes/console.account.tsx:117
+#: src/routes/console.account.tsx:118
 msgid "Leave empty to keep the one you have"
 msgstr "Mevcut parolayı korumak için boş bırakın"
 
@@ -2120,6 +2157,7 @@ msgstr "Uzun metin"
 
 #. placeholder {0}: new Date(token.created_at).toLocaleString()
 #: src/components/build-tokens.tsx:108
+#: src/components/console-tokens.tsx:114
 #: src/components/local-env.tsx:180
 msgid "Made {0}"
 msgstr "{0} tarihinde üretildi"
@@ -2140,6 +2178,7 @@ msgid "Make a link"
 msgstr "Bağlantı üret"
 
 #: src/components/build-tokens.tsx:77
+#: src/components/console-tokens.tsx:83
 #: src/components/local-env.tsx:153
 msgid "Make a token"
 msgstr "Jeton üret"
@@ -2290,7 +2329,7 @@ msgstr "Yeni form"
 msgid "New list"
 msgstr "Yeni liste"
 
-#: src/routes/console.account.tsx:111
+#: src/routes/console.account.tsx:112
 #: src/routes/dashboard.users.tsx:227
 #: src/routes/dashboard.users.tsx:321
 msgid "New password"
@@ -2397,6 +2436,7 @@ msgid "No templates yet — a campaign without one sends just its own body"
 msgstr "Henüz şablon yok — şablonsuz bir kampanya yalnızca kendi gövdesini gönderir"
 
 #: src/components/build-tokens.tsx:99
+#: src/components/console-tokens.tsx:105
 #: src/components/local-env.tsx:171
 msgid "No tokens yet"
 msgstr "Henüz jeton yok"
@@ -2512,7 +2552,7 @@ msgstr "Sunucunun diskinde"
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "Yürüttüğünüz bütün siteler için tek hesap. Her site kendi içeriğini ve kendi ekibini ayrı tutar."
 
-#: src/routes/dashboard.api.tsx:157
+#: src/routes/dashboard.api.tsx:158
 msgid "One language, one page at a time."
 msgstr "Tek dil, sayfa sayfa."
 
@@ -2524,15 +2564,19 @@ msgstr "Tek dil, sayfa sayfa."
 msgid "One of a list"
 msgstr "Listeden biri"
 
+#: src/components/console-tokens.tsx:78
+msgid "One per assistant. It acts for this agency, lasts 90 days, and can be taken back here. It is not a way into any site's content."
+msgstr "Asistan başına bir tane. Bu ajans adına davranır, 90 gün yaşar ve buradan geri alınabilir. Hiçbir sitenin içeriğine giriş yolu değildir."
+
 #: src/components/local-env.tsx:148
 msgid "One per person. It can read this site and change nothing, lasts 30 days, and can be taken back here."
 msgstr "Kişi başına bir tane. Bu siteyi okur, hiçbir şeyi değiştiremez, 30 gün geçerlidir ve buradan geri alınabilir."
 
-#: src/routes/dashboard.api.tsx:160
+#: src/routes/dashboard.api.tsx:161
 msgid "One post by its address."
 msgstr "Adresinden tek yazı."
 
-#: src/routes/dashboard.api.tsx:161
+#: src/routes/dashboard.api.tsx:162
 msgid "One post, with its other languages."
 msgstr "Tek yazı, diğer dilleriyle birlikte."
 
@@ -2545,7 +2589,7 @@ msgstr "Yalnızca elle"
 msgid "Only for a private repository"
 msgstr "Yalnızca özel depolar için"
 
-#: src/routes/dashboard.api.tsx:147
+#: src/routes/dashboard.api.tsx:148
 msgid "Only what is online. What a build wants."
 msgstr "Yalnızca yayında olanlar. Derlemenin istediği bu."
 
@@ -2569,7 +2613,7 @@ msgstr "İşletme hesabı aç"
 msgid "Open in new tab"
 msgstr "Yeni sekmede aç"
 
-#: src/routes/dashboard.api.tsx:322
+#: src/routes/dashboard.api.tsx:329
 msgid "OpenAPI document"
 msgstr "OpenAPI belgesi"
 
@@ -2751,7 +2795,7 @@ msgstr "yazi-adresi"
 msgid "Posts"
 msgstr "Yazılar"
 
-#: src/routes/dashboard.api.tsx:143
+#: src/routes/dashboard.api.tsx:144
 msgid "Posts, newest first, in pages."
 msgstr "Yazılar, yeniden eskiye, sayfalanmış."
 
@@ -2813,6 +2857,10 @@ msgstr "Bunları yayınlamak hem alan adının sizin olduğunu kanıtlar hem de 
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
 
+#: src/components/mcp-connection.tsx:111
+msgid "Put a token where the … is. It is shown once, when you make it."
+msgstr "… yerine bir jeton koyun. Jeton yalnızca üretildiği anda gösterilir."
+
 #: src/components/local-env.tsx:118
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 msgstr "Bunu projenin yanına bir .env dosyasına koyun. Canlı siteyi gösterir; tasarımcının kendi makinesinde gördüğü, burada gerçekten yazılmış olandır."
@@ -2828,7 +2876,7 @@ msgstr "Alıntı"
 msgid "Raise text above the line"
 msgstr "Metni üst simge yap"
 
-#: src/routes/dashboard.api.tsx:104
+#: src/routes/dashboard.api.tsx:105
 msgid "Read it"
 msgstr "Oku"
 
@@ -2836,11 +2884,11 @@ msgstr "Oku"
 msgid "Readers can leave comments"
 msgstr "Okurlar yorum yazabilir"
 
-#: src/routes/dashboard.api.tsx:241
+#: src/routes/dashboard.api.tsx:248
 msgid "Reading"
 msgstr "Okuma"
 
-#: src/routes/dashboard.api.tsx:220
+#: src/routes/dashboard.api.tsx:221
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Okumak için bu sitede bir hesap gerekiyor. Bir kez giriş yapıp dönen çerezi kullanın."
 
@@ -3021,7 +3069,7 @@ msgstr "Kum havuzu"
 #: src/components/editor/mavi-editor.tsx:606
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
-#: src/routes/console.account.tsx:144
+#: src/routes/console.account.tsx:145
 #: src/routes/console.sites.$siteId.tsx:381
 #: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
@@ -3037,7 +3085,7 @@ msgstr "Kaydet"
 
 #: src/components/editor/status-bar.tsx:113
 #: src/components/site-mail.tsx:78
-#: src/routes/console.account.tsx:58
+#: src/routes/console.account.tsx:59
 #: src/routes/console.sites.$siteId.tsx:166
 #: src/routes/console.sites.$siteId.tsx:196
 #: src/routes/console.sites.$siteId.tsx:211
@@ -3084,7 +3132,7 @@ msgstr "Adres ya da ad arayın"
 msgid "Search engine"
 msgstr "Arama motoru"
 
-#: src/routes/dashboard.api.tsx:159
+#: src/routes/dashboard.api.tsx:160
 msgid "Search titles, summaries and bodies."
 msgstr "Başlık, özet ve gövdede arar."
 
@@ -3119,7 +3167,7 @@ msgstr "Dilinizi seçin"
 msgid "Send"
 msgstr "Gönder"
 
-#: src/routes/dashboard.api.tsx:193
+#: src/routes/dashboard.api.tsx:194
 msgid "Send a form's answers. No account needed."
 msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
 
@@ -3286,7 +3334,7 @@ msgstr "Giriş yap"
 msgid "Sign in to manage your site."
 msgstr "Sitenizi yönetmek için giriş yapın."
 
-#: src/routes/dashboard.api.tsx:175
+#: src/routes/dashboard.api.tsx:176
 msgid "Sign in; sets the session cookie."
 msgstr "Giriş yapar; oturum çerezini bırakır."
 
@@ -3296,7 +3344,7 @@ msgstr "Giriş yapar; oturum çerezini bırakır."
 msgid "Sign out"
 msgstr "Çıkış yap"
 
-#: src/routes/dashboard.api.tsx:218
+#: src/routes/dashboard.api.tsx:219
 msgid "Signing in"
 msgstr "Giriş"
 
@@ -3360,6 +3408,7 @@ msgstr "Tüm gönderimi durdur"
 
 #. placeholder {0}: new Date(token.expires_at).toLocaleString()
 #: src/components/build-tokens.tsx:111
+#: src/components/console-tokens.tsx:117
 #: src/components/local-env.tsx:183
 msgid "Stops working {0}"
 msgstr "{0} tarihinde geçerliliği biter"
@@ -3469,11 +3518,12 @@ msgstr "Etiketler"
 msgid "Tags linked"
 msgstr "Etiketler bağlandı"
 
-#: src/routes/dashboard.api.tsx:163
+#: src/routes/dashboard.api.tsx:164
 msgid "Tags, per language."
 msgstr "Etiketler, dile göre."
 
 #: src/components/build-tokens.tsx:117
+#: src/components/console-tokens.tsx:123
 #: src/components/local-env.tsx:189
 #: src/routes/dashboard.sites.tsx:489
 msgid "Take it back"
@@ -3532,7 +3582,7 @@ msgstr "Metin rengi"
 msgid "Text shown in search results"
 msgstr "Arama sonuçlarında görünecek metin"
 
-#: src/routes/dashboard.api.tsx:180
+#: src/routes/dashboard.api.tsx:181
 msgid "The address a title would get."
 msgstr "Bir başlığın alacağı adres."
 
@@ -3557,11 +3607,11 @@ msgstr "Bu hesabın bugünkü tavanı. Gönderim buraya gelince sıraya girmez, 
 msgid "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
 msgstr "İlk blok göndermek için gereken her şey; gerisi bu sayfanın okuduğu ve istediği şeyler. Herhangi bir blok çıkarılabilir — yalnızca sayfanın o kısmını kaybedersiniz, başka bir şeyi değil."
 
-#: src/routes/dashboard.api.tsx:166
+#: src/routes/dashboard.api.tsx:167
 msgid "The forms this site accepts answers on."
 msgstr "Bu sitenin yanıt aldığı formlar."
 
-#: src/routes/dashboard.api.tsx:164
+#: src/routes/dashboard.api.tsx:165
 msgid "The languages this site writes in."
 msgstr "Bu sitenin yazdığı diller."
 
@@ -3609,7 +3659,7 @@ msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, SES'in doğrulamadı�
 msgid "The restore failed"
 msgstr "Geri yükleme başarısız oldu"
 
-#: src/routes/dashboard.api.tsx:152
+#: src/routes/dashboard.api.tsx:153
 msgid "The same, with each body included."
 msgstr "Aynısı, gövdeler dahil."
 
@@ -3625,7 +3675,7 @@ msgstr "Site, bu sunucunun veritabanında kendi şemasını alır. Buraya sığm
 msgid "The usual one"
 msgstr "Her zamanki"
 
-#: src/routes/dashboard.api.tsx:306
+#: src/routes/dashboard.api.tsx:313
 msgid "The whole of it"
 msgstr "Tamamı"
 
@@ -3633,7 +3683,7 @@ msgstr "Tamamı"
 msgid "Theme"
 msgstr "Tema"
 
-#: src/routes/dashboard.api.tsx:257
+#: src/routes/dashboard.api.tsx:264
 msgid "These answer to anybody, because a visitor filling in a contact form has no account here. A form is made in this panel, so no fixed API description can say which fields it takes — ask it, then send it. That is also how anything you write, or an assistant working for you, finds out what a form wants."
 msgstr "Bunlar herkese cevap verir; iletişim formunu dolduran ziyaretçinin burada hesabı yok. Form bu panelde oluşturulduğu için sabit bir API tanımı hangi alanları aldığını yazamaz — önce sorun, sonra gönderin. Yazdığınız yazılım ya da sizin için çalışan bir yapay zekâ, bir formun ne istediğini böyle öğrenir."
 
@@ -3649,16 +3699,21 @@ msgstr "Bu siteyi yazabilir, yayınlayabilir ve yönetebilirler."
 msgid "This account is out of the sandbox: it can write to anybody."
 msgstr "Bu hesap kum havuzundan çıkmış: herkese yazabilir."
 
+#: src/components/mcp-connection.tsx:72
+msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
+msgstr "Bu adres Model Context Protocol konuşur; bir asistanı buraya yöneltip nasıl yapılacağını anlatmak yerine işi doğrudan isteyebilirsiniz. Jetonunuzun izin verdiği araçları açar, başkasını değil."
+
 #: src/routes/dashboard.api.tsx:183
 #~ msgid "This is the one address that answers to anybody, because a visitor filling in a contact form has no account here. It takes only the fields the form defines, and refuses anything else."
 #~ msgstr "Herkese açık tek adres burası; iletişim formunu dolduran ziyaretçinin burada hesabı yok. Yalnızca formun tanımladığı alanları alır, gerisini reddeder."
 
 #: src/components/build-tokens.tsx:85
+#: src/components/console-tokens.tsx:91
 #: src/components/local-env.tsx:161
 msgid "This is the only time it is shown. Leave this page and it cannot be read again — make another one instead."
 msgstr "Yalnızca bir kez gösterilir. Bu sayfadan çıkarsanız bir daha okunamaz; yenisini üretmeniz gerekir."
 
-#: src/routes/console.account.tsx:106
+#: src/routes/console.account.tsx:107
 msgid "This is what you sign in with."
 msgstr "Giriş yaparken bunu kullanırsınız."
 
@@ -3682,6 +3737,7 @@ msgstr "Bu site"
 msgid "Today's date"
 msgstr "Bugünün tarihi"
 
+#: src/components/console-tokens.tsx:76
 #: src/components/local-env.tsx:146
 msgid "Tokens"
 msgstr "Jetonlar"
@@ -3748,7 +3804,7 @@ msgstr "Başlıksız yazı"
 msgid "Upload"
 msgstr "Yükle"
 
-#: src/routes/dashboard.api.tsx:179
+#: src/routes/dashboard.api.tsx:180
 msgid "Upload a file (multipart)."
 msgstr "Dosya yükler (multipart)."
 
@@ -3760,7 +3816,7 @@ msgstr "Kapak görseli yükle"
 msgid "Upload image"
 msgstr "Görsel yükle"
 
-#: src/routes/dashboard.api.tsx:165
+#: src/routes/dashboard.api.tsx:166
 msgid "Uploaded files and their addresses."
 msgstr "Yüklenen dosyalar ve adresleri."
 
@@ -3872,7 +3928,7 @@ msgstr "Gelenler gönderildiği gibi saklanır; alanları sonradan değiştirmek
 msgid "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 msgstr "Gmail ve Yahoo'nun 2024'ten beri toplu göndericilerden istediği şey. p=none ile başlar: kimse rapor okumadan reddeden bir politika, bir alan adının kendi postasını sessizce teslim edemez hâle gelmesinin yoludur."
 
-#: src/routes/dashboard.api.tsx:170
+#: src/routes/dashboard.api.tsx:171
 msgid "What has come in, newest first."
 msgstr "Gelenler, en yenisi başta."
 
@@ -3931,7 +3987,7 @@ msgstr "Nerede saklansın"
 msgid "Where to send it"
 msgstr "Nereye gönderilsin"
 
-#: src/routes/dashboard.api.tsx:188
+#: src/routes/dashboard.api.tsx:189
 msgid "Which fields a form takes, and which are required."
 msgstr "Bir formun hangi alanları aldığı ve hangileri zorunlu."
 
@@ -3980,7 +4036,7 @@ msgstr "Olayları bağla"
 msgid "Wired up. Events go to {0} and arrive here."
 msgstr "Bağlandı. Olaylar {0} üzerinden buraya geliyor."
 
-#: src/routes/dashboard.api.tsx:254
+#: src/routes/dashboard.api.tsx:261
 msgid "Without an account"
 msgstr "Hesapsız"
 
@@ -3996,11 +4052,11 @@ msgstr "Bu site üzerinde yerelde çalışmak"
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 msgstr "AWS S3, Cloudflare R2, MinIO ve DigitalOcean Spaces ile çalışır. Mevcut yerel dosyalar yerinde kalır; yalnızca yeni yüklemeler bucket'a gider."
 
-#: src/routes/dashboard.api.tsx:176
+#: src/routes/dashboard.api.tsx:177
 msgid "Write a post."
 msgstr "Yazı yazar."
 
-#: src/routes/dashboard.api.tsx:249
+#: src/routes/dashboard.api.tsx:256
 msgid "Writing"
 msgstr "Yazma"
 
@@ -4024,11 +4080,11 @@ msgstr "Bunu daha sonra değiştirebilirsiniz."
 msgid "You'll use this to sign in and manage your site."
 msgstr "Bunu siteye giriş yapmak ve yönetmek için kullanacaksınız."
 
-#: src/routes/console.account.tsx:81
+#: src/routes/console.account.tsx:82
 msgid "Your account"
 msgstr "Hesabınız"
 
-#: src/routes/console.account.tsx:89
+#: src/routes/console.account.tsx:90
 #: src/routes/console.register.tsx:159
 msgid "Your name"
 msgstr "Adınız"
@@ -4041,7 +4097,7 @@ msgstr "Kendi parolanız"
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Sayfalarınız kendi projenizden derleniyor. Yayınlamak, onları CMS'teki güncel içerikle yeniden derler."
 
-#: src/routes/console.account.tsx:77
+#: src/routes/console.account.tsx:78
 #: src/routes/console.index.tsx:129
 #: src/routes/console.sites.$siteId.tsx:273
 msgid "Your sites"

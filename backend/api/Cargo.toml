@@ -46,6 +46,9 @@ tar = "0.4"
 flate2 = "1"
 slug = "0.1"
 html-escape = "0.2"
+# Markdown that arrives without its HTML has to be rendered by somebody, and
+# CommonMark is a specification with a conformance suite rather than a habit.
+pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
 # Amazon's own SDK rather than a signed request written here: SigV4 is
 # fiddly, and Amazon maintaining it is worth the compile. Apache-2.0, which
 # this project's MIT licence can carry.

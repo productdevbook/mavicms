@@ -40,6 +40,25 @@ contact form or a newsletter box has no account here:
 `GET /forms/{slug}/schema`, `POST /forms/{slug}/submit` and
 `POST /mail/subscribe`.
 
+## If you are an assistant
+
+There is a shorter way in than this document. The same address answers the
+Model Context Protocol at `{{base}}/mcp`, where the site is a set of tools
+rather than an API to read about: finding and reading posts, writing and
+correcting them, what has come in through the forms, and building the pages.
+The tools you are offered depend on the token you send — a build token is
+offered only the ones that read.
+
+```
+claude mcp add --transport http mavicms {{base}}/mcp \
+  --header "Authorization: Bearer $CMS_TOKEN"
+```
+
+Nothing there deletes anything.
+
+The rest of this file is for building a front end, which is a different job:
+a build reads the API directly, at the addresses below.
+
 ## Reading
 
 | Method | Address | What it answers |

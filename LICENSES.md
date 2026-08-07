@@ -22,6 +22,14 @@ Reading it to learn what a mail integration needs is fine — an API's required
 fields are facts, and facts are not copyrightable. Implementations are.
 `backend/api/src/email.rs` is written against Amazon's published API.
 
+## What rendering Markdown uses
+
+`pulldown-cmark`, under **MIT**. The editor renders its own Markdown in the
+browser, so this runs only for writing that arrives without HTML beside it —
+an importer, or an assistant. CommonMark has a specification and a conformance
+suite; a hand-rolled renderer would have neither, and the difference would
+show up as somebody's post with a broken list in it.
+
 ## What the mail plugin uses
 
 Amazon's own SDK, `aws-sdk-sesv2`, under **Apache-2.0** — permissive, and

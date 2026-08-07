@@ -327,30 +327,8 @@ pub async fn create_site(
     cookies: Cookies,
     Json(payload): Json<CreateConsoleSiteRequest>,
 ) -> AppResult<(StatusCode, Json<ConsoleSiteResponse>)> {
-    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
-    let registry = hosting.registry()?;
-
-    let organization = console::organization(db, operator.organization_id)
-        .await?
-        .ok_or_else(|| AppError::Internal("the agency behind this account is gone".to_string()))?;
-
-    let owned = registry
-        .all()
-        .await?
-        .into_iter()
-        .filter(|tenant| tenant.organization_id == Some(operator.organization_id))
-        .count();
-    if owned >= organization.site_limit.max(0) as usize {
-        return Err(AppError::Forbidden(format!(
-            "{} already has its {} sites",
-            organization.name, organization.site_limit
-        )));
-    }
-
-    let slug = payload.host.replace('.', "-");
-    let tenant = registry
-        .create(&payload.host, &slug, "", Some(operator.organization_id))
-        .await?;
+    let (operator, _) = signed_in(&hosting, &resolved, &cookies).await?;
+    let tenant = console::add_site(&hosting, &operator, &payload.host).await?;
 
     Ok((
         StatusCode::CREATED,
@@ -361,6 +339,83 @@ pub async fn create_site(
             active: tenant.active,
         }),
     ))
+}
+
+/// A token an agency gives to an assistant, so it can be asked about the
+/// sites rather than opened fifty times.
+#[utoipa::path(
+    get,
+    path = "/console/tokens",
+    tag = "console",
+    responses((status = 200, description = "Tokens", body = Vec<crate::dto::plugins::DevelopmentToken>))
+)]
+pub async fn list_tokens(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+) -> AppResult<Json<Vec<crate::dto::plugins::DevelopmentToken>>> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+
+    Ok(Json(
+        console::tokens(db, operator.id)
+            .await?
+            .into_iter()
+            .map(
+                |(id, created_at, expires_at)| crate::dto::plugins::DevelopmentToken {
+                    id,
+                    created_at,
+                    expires_at,
+                },
+            )
+            .collect(),
+    ))
+}
+
+/// Make one. It is shown once and kept nowhere it can be read again.
+#[utoipa::path(
+    post,
+    path = "/console/tokens",
+    tag = "console",
+    responses((status = 201, description = "The token, the once", body = crate::dto::plugins::NewDevelopmentToken))
+)]
+pub async fn create_token(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+) -> AppResult<(StatusCode, Json<crate::dto::plugins::NewDevelopmentToken>)> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+    let (token, expires_at) = console::mint_token(db, operator.id).await?;
+
+    Ok((
+        StatusCode::CREATED,
+        Json(crate::dto::plugins::NewDevelopmentToken {
+            token: token.to_string(),
+            expires_at,
+        }),
+    ))
+}
+
+/// Take one back.
+#[utoipa::path(
+    delete,
+    path = "/console/tokens/{id}",
+    tag = "console",
+    params(("id" = String, Path, description = "Token id")),
+    responses((status = 204, description = "Revoked"))
+)]
+pub async fn delete_token(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Path(id): Path<Uuid>,
+) -> AppResult<StatusCode> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+
+    if console::revoke_token(db, operator.id, id).await? {
+        Ok(StatusCode::NO_CONTENT)
+    } else {
+        Err(AppError::NotFound(format!("token {id}")))
+    }
 }
 
 /// A link that opens one of the agency's sites already signed in.

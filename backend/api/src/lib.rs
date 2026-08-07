@@ -16,6 +16,8 @@ pub mod etag;
 pub mod fetch;
 pub mod languages;
 pub mod mailing;
+pub mod markdown;
+pub mod mcp;
 pub mod middleware;
 pub mod openapi;
 pub mod plugins;

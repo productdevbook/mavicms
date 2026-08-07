@@ -1049,6 +1049,24 @@ export function deleteSiteDevelopmentToken(
   })
 }
 
+/** What an agency hands to an assistant. Acts for the agency, not for a site. */
+export function listConsoleTokens(): Promise<DevelopmentToken[]> {
+  return request<DevelopmentToken[]>("/console/tokens")
+}
+
+export function createConsoleToken(): Promise<{
+  token: string
+  expires_at: string
+}> {
+  return request<{ token: string; expires_at: string }>("/console/tokens", {
+    method: "POST",
+  })
+}
+
+export function deleteConsoleToken(id: string): Promise<void> {
+  return request<void>(`/console/tokens/${id}`, { method: "DELETE" })
+}
+
 /** The same tokens, from the site's own panel rather than an agency console. */
 export function listBuildTokens(): Promise<DevelopmentToken[]> {
   return request<DevelopmentToken[]>("/development/tokens")
