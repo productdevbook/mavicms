@@ -187,9 +187,32 @@ pub async fn update_list(
 pub async fn delete_list(
     _admin: Administrator,
     Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let db = state.db();
+
+    let existing = mail_list::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("list {id}")))?;
+    let members = subscriber_list::Entity::find()
+        .filter(subscriber_list::Column::ListId.eq(id))
+        .all(db)
+        .await?;
+    let campaigns = campaign_list::Entity::find()
+        .filter(campaign_list::Column::ListId.eq(id))
+        .all(db)
+        .await?;
+    crate::trash::keep(
+        db,
+        crate::trash::MAIL_LIST,
+        id,
+        &existing.name,
+        serde_json::json!({ "list": existing, "members": members, "campaigns": campaigns }),
+        &user.username,
+    )
+    .await?;
 
     subscriber_list::Entity::delete_many()
         .filter(subscriber_list::Column::ListId.eq(id))
@@ -443,9 +466,34 @@ pub async fn update_subscriber(
 pub async fn delete_subscriber(
     _admin: Administrator,
     Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let db = state.db();
+
+    let existing = subscriber::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("subscriber {id}")))?;
+    let lists = subscriber_list::Entity::find()
+        .filter(subscriber_list::Column::SubscriberId.eq(id))
+        .all(db)
+        .await?;
+    // What was sent to them. Kept because a subscriber restored without it
+    // would be written to again by a campaign that had already reached them.
+    let events = campaign_event::Entity::find()
+        .filter(campaign_event::Column::SubscriberId.eq(id))
+        .all(db)
+        .await?;
+    crate::trash::keep(
+        db,
+        crate::trash::SUBSCRIBER,
+        id,
+        &existing.email,
+        serde_json::json!({ "subscriber": existing, "lists": lists, "events": events }),
+        &user.username,
+    )
+    .await?;
 
     subscriber_list::Entity::delete_many()
         .filter(subscriber_list::Column::SubscriberId.eq(id))
@@ -837,9 +885,31 @@ pub async fn update_template(
 pub async fn delete_template(
     _admin: Administrator,
     Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let db = state.db();
+
+    let existing = mail_template::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("template {id}")))?;
+    let using: Vec<Uuid> = campaign::Entity::find()
+        .filter(campaign::Column::TemplateId.eq(id))
+        .all(db)
+        .await?
+        .into_iter()
+        .map(|row| row.id)
+        .collect();
+    crate::trash::keep(
+        db,
+        crate::trash::MAIL_TEMPLATE,
+        id,
+        &existing.name,
+        serde_json::json!({ "template": existing, "campaigns": using }),
+        &user.username,
+    )
+    .await?;
 
     // A campaign that used it keeps its own body and loses the letterhead,
     // rather than failing to send at all.
@@ -1084,9 +1154,32 @@ pub async fn update_campaign(
 pub async fn delete_campaign(
     _admin: Administrator,
     Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
     Path(id): Path<Uuid>,
 ) -> AppResult<StatusCode> {
     let db = state.db();
+
+    let existing = campaign::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("campaign {id}")))?;
+    let lists = campaign_list::Entity::find()
+        .filter(campaign_list::Column::CampaignId.eq(id))
+        .all(db)
+        .await?;
+    let events = campaign_event::Entity::find()
+        .filter(campaign_event::Column::CampaignId.eq(id))
+        .all(db)
+        .await?;
+    crate::trash::keep(
+        db,
+        crate::trash::CAMPAIGN,
+        id,
+        &existing.name,
+        serde_json::json!({ "campaign": existing, "lists": lists, "events": events }),
+        &user.username,
+    )
+    .await?;
 
     campaign_list::Entity::delete_many()
         .filter(campaign_list::Column::CampaignId.eq(id))

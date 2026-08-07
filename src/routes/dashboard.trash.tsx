@@ -6,7 +6,9 @@ import {
   FileText,
   Image as ImageIcon,
   Inbox,
+  Mails,
   RotateCcw,
+  Tags,
   Trash2,
 } from "lucide-react"
 import { toast } from "sonner"
@@ -68,16 +70,31 @@ function TrashRoute() {
     media: t`image`,
     form: t`form`,
     form_submission: t`what somebody sent`,
+    category: t`category`,
+    tag: t`tag`,
+    mail_list: t`mailing list`,
+    subscriber: t`subscriber`,
+    mail_template: t`letterhead`,
+    campaign: t`campaign`,
   }
 
-  const icon = (kind: string) =>
-    kind === "media" ? (
-      <ImageIcon className="size-4 text-muted-foreground" />
-    ) : kind === "form_submission" || kind === "form" ? (
-      <Inbox className="size-4 text-muted-foreground" />
-    ) : (
-      <FileText className="size-4 text-muted-foreground" />
-    )
+  const icon = (kind: string) => {
+    const glyph =
+      kind === "media"
+        ? ImageIcon
+        : kind === "form" || kind === "form_submission"
+          ? Inbox
+          : kind === "category" || kind === "tag"
+            ? Tags
+            : kind.startsWith("mail_") ||
+                kind === "subscriber" ||
+                kind === "campaign"
+              ? Mails
+              : FileText
+    return React.createElement(glyph, {
+      className: "size-4 text-muted-foreground",
+    })
+  }
 
   const restore = (entry: TrashEntry) => {
     setBusy(entry.id)

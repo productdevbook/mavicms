@@ -110,7 +110,7 @@ msgid "{0} connects from its own servers, not from this computer, so it cannot r
 msgstr "{0} bu bilgisayardan değil kendi sunucularından bağlanır, dolayısıyla bu adrese ulaşamaz. Site https ile herkese açık bir adrese taşındığında çalışacak. Kendi makinenizde çalışan programlar — Codex, Claude Code, Cursor — bu hâliyle bağlanabilir."
 
 #. placeholder {0}: answer.what
-#: src/routes/dashboard.trash.tsx:86
+#: src/routes/dashboard.trash.tsx:103
 msgid "{0} is back"
 msgstr "{0} geri geldi"
 
@@ -633,7 +633,7 @@ msgstr "Bu form her doldurulduğunda bir e-posta. Eklentiler altında Amazon SES
 msgid "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 msgstr "ses:SendEmail yetkisi olan bir IAM kullanıcısı. Göndermek için gereken bu kadar. Aşağıdaki hesap sayfası Amazon'a daha fazlasını sorar ve eksik olan yetkiyi söyler."
 
-#: src/routes/dashboard.trash.tsx:122
+#: src/routes/dashboard.trash.tsx:139
 msgid "An image keeps its file while it is here, so a restored post still has its pictures. The file goes when the entry does."
 msgstr "Bir görsel burada durduğu sürece dosyasını korur; böylece geri alınan bir yazının resimleri de yerinde olur. Dosya, kayıt silindiğinde gider."
 
@@ -781,7 +781,7 @@ msgid "Beyond the title, the text, the picture and the SEO, which everything her
 msgstr "Başlık, metin, görsel ve SEO'nun ötesinde — onlar burada zaten her şeyde var. Gerekli işaretlenmiş bir alan, o şey yayına alınmadan önce doldurulmalı; taslak yarım kalabilir."
 
 #: src/components/dashboard/dashboard-shell.tsx:93
-#: src/routes/dashboard.trash.tsx:112
+#: src/routes/dashboard.trash.tsx:129
 msgid "Bin"
 msgstr "Çöp kutusu"
 
@@ -862,6 +862,10 @@ msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
 msgid "Bullet list"
 msgstr "Madde listesi"
 
+#: src/routes/dashboard.trash.tsx:78
+msgid "campaign"
+msgstr "kampanya"
+
 #: src/routes/dashboard.mail.tsx:78
 msgid "Campaigns"
 msgstr "Kampanyalar"
@@ -922,6 +926,10 @@ msgstr "Kategoriler"
 #: src/routes/dashboard.api.tsx:169
 msgid "Categories, per language."
 msgstr "Kategoriler, dile göre."
+
+#: src/routes/dashboard.trash.tsx:73
+msgid "category"
+msgstr "kategori"
 
 #: src/components/editor/post-settings.tsx:203
 msgid "Category"
@@ -1372,7 +1380,7 @@ msgstr "Oluşturulamadı"
 msgid "Could not open the site"
 msgstr "Site açılamadı"
 
-#: src/routes/dashboard.trash.tsx:91
+#: src/routes/dashboard.trash.tsx:108
 msgid "Could not put it back"
 msgstr "Geri alınamadı"
 
@@ -1466,7 +1474,7 @@ msgstr "Derleme başlatılamadı"
 msgid "Could not take it back"
 msgstr "Geri alınamadı"
 
-#: src/routes/dashboard.trash.tsx:103
+#: src/routes/dashboard.trash.tsx:120
 msgid "Could not throw it away"
 msgstr "Atılamadı"
 
@@ -1642,7 +1650,7 @@ msgid "Delete this tag?"
 msgstr "Bu etiket silinsin mi?"
 
 #. placeholder {0}: entry.deleted_by
-#: src/routes/dashboard.trash.tsx:151
+#: src/routes/dashboard.trash.tsx:168
 msgid "deleted by {0}"
 msgstr "{0} sildi"
 
@@ -1889,7 +1897,7 @@ msgstr "Klasör"
 msgid "Font"
 msgstr "Yazı tipi"
 
-#: src/routes/dashboard.trash.tsx:69
+#: src/routes/dashboard.trash.tsx:71
 msgid "form"
 msgstr "form"
 
@@ -1967,7 +1975,7 @@ msgid "Go"
 msgstr "Git"
 
 #. placeholder {0}: new Date(entry.purges_at).toLocaleDateString()
-#: src/routes/dashboard.trash.tsx:155
+#: src/routes/dashboard.trash.tsx:172
 msgid "Goes for good on {0}"
 msgstr "{0} tarihinde kalıcı olarak silinir"
 
@@ -2105,7 +2113,7 @@ msgstr "Zaten hesabım var"
 msgid "IAM users"
 msgstr "IAM kullanıcıları"
 
-#: src/routes/dashboard.trash.tsx:68
+#: src/routes/dashboard.trash.tsx:70
 msgid "image"
 msgstr "görsel"
 
@@ -2334,6 +2342,10 @@ msgstr "Kum havuzundan çıkmak ilk artıştır. Bu ondan sonraki — Amazon bun
 #~ msgid "Lets Amazon sign as you"
 #~ msgstr "Amazon'un sizin adınıza imzalamasını sağlar"
 
+#: src/routes/dashboard.trash.tsx:77
+msgid "letterhead"
+msgstr "antet"
+
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:306
 msgid "Letterhead"
 msgstr "Antet"
@@ -2412,6 +2424,10 @@ msgstr "Posta"
 #: src/routes/dashboard.plugins_.email.tsx:124
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Bu sitenin gönderdiği postalar — formlarınızdan biri doldurulduğunda bildirim."
+
+#: src/routes/dashboard.trash.tsx:75
+msgid "mailing list"
+msgstr "posta listesi"
 
 #: src/routes/dashboard.sites.tsx:460
 msgid "Make a link"
@@ -2744,7 +2760,7 @@ msgstr "Not"
 msgid "Nothing asked for yet"
 msgstr "Henüz bir başvuru yok"
 
-#: src/routes/dashboard.trash.tsx:114
+#: src/routes/dashboard.trash.tsx:131
 msgid "Nothing deleted here goes straight away. It waits thirty days, whether a person deleted it or an assistant did, and until then it can be put back exactly as it was."
 msgstr "Burada silinen hiçbir şey hemen gitmez. Otuz gün bekler — ister bir kişi silmiş olsun ister bir asistan — ve o zamana kadar olduğu gibi geri alınabilir."
 
@@ -2761,7 +2777,7 @@ msgstr "Başka bir şey yok. Hesaplar, kimlik bilgileri, yedekler, sitenin nası
 msgid "Nothing goes out until it is on again. Amazon switches it off itself when an account is in trouble ({0})."
 msgstr "Yeniden açılana kadar hiçbir şey gitmez. Hesap başı dertteyken Amazon bunu kendisi kapatır ({0})."
 
-#: src/routes/dashboard.trash.tsx:136
+#: src/routes/dashboard.trash.tsx:153
 msgid "Nothing has been deleted"
 msgstr "Hiçbir şey silinmedi"
 
@@ -2962,7 +2978,7 @@ msgstr "Çıktı klasörü"
 msgid "Ownership and signing"
 msgstr "Sahiplik ve imza"
 
-#: src/routes/dashboard.trash.tsx:67
+#: src/routes/dashboard.trash.tsx:69
 msgid "page"
 msgstr "sayfa"
 
@@ -3081,7 +3097,7 @@ msgid "Port"
 msgstr "Port"
 
 #: src/components/editor/post-settings.tsx:427
-#: src/routes/dashboard.trash.tsx:66
+#: src/routes/dashboard.trash.tsx:68
 msgid "post"
 msgstr "yazı"
 
@@ -3185,7 +3201,7 @@ msgstr "Yayınlanıyor…"
 msgid "Put a token where the … is. It is shown once, when you make it."
 msgstr "… yerine bir jeton koyun. Jeton yalnızca üretildiği anda gösterilir."
 
-#: src/routes/dashboard.trash.tsx:165
+#: src/routes/dashboard.trash.tsx:182
 msgid "Put it back"
 msgstr "Geri al"
 
@@ -3815,6 +3831,10 @@ msgstr "İadeler için alt alan adı"
 msgid "Subject"
 msgstr "Konu"
 
+#: src/routes/dashboard.trash.tsx:76
+msgid "subscriber"
+msgstr "abone"
+
 #: src/components/editor/toolbar.tsx:438
 msgid "Subscript"
 msgstr "Alt simge"
@@ -3861,6 +3881,10 @@ msgstr "Tablo"
 #: src/components/editor/mavi-editor.tsx:645
 msgid "Table of contents"
 msgstr "İçindekiler"
+
+#: src/routes/dashboard.trash.tsx:74
+msgid "tag"
+msgstr "etiket"
 
 #: src/components/setup/setup-wizard.tsx:603
 msgid "Tagline"
@@ -4115,7 +4139,7 @@ msgstr "Bu site"
 msgid "This site's tools could not be listed just now."
 msgstr "Bu sitenin araçları şu an listelenemedi."
 
-#: src/routes/dashboard.trash.tsx:170
+#: src/routes/dashboard.trash.tsx:187
 msgid "Throw it away now"
 msgstr "Şimdi kalıcı olarak sil"
 
@@ -4273,7 +4297,7 @@ msgstr "bekliyor"
 msgid "waiting for DNS"
 msgstr "DNS bekleniyor"
 
-#: src/routes/dashboard.trash.tsx:120
+#: src/routes/dashboard.trash.tsx:137
 msgid "Waiting to be thrown away"
 msgstr "Silinmeyi bekleyenler"
 
@@ -4338,7 +4362,7 @@ msgstr "Ne için"
 msgid "What one of these is made of, beyond its title and its text."
 msgstr "Bunlardan birinin, başlığı ve metninin ötesinde nelerden oluştuğu."
 
-#: src/routes/dashboard.trash.tsx:70
+#: src/routes/dashboard.trash.tsx:72
 msgid "what somebody sent"
 msgstr "birinin gönderdiği"
 
@@ -4370,7 +4394,7 @@ msgstr "Ne zaman"
 msgid "When off, uploads are stored on the server's disk."
 msgstr "Kapalıyken yüklemeler sunucunun diskinde saklanır."
 
-#: src/routes/dashboard.trash.tsx:138
+#: src/routes/dashboard.trash.tsx:155
 msgid "When something is, it appears here first."
 msgstr "Bir şey silindiğinde önce burada görünür."
 

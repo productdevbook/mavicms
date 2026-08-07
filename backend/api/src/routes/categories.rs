@@ -310,10 +310,34 @@ pub async fn update_category(
         (status = 404, description = "Category not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_category(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
-    let result = category::Entity::delete_by_id(id).exec(state.db()).await?;
-    if result.rows_affected == 0 {
-        return Err(AppError::NotFound(format!("category {id}")));
-    }
+pub async fn delete_category(
+    Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
+    Path(id): Path<Uuid>,
+) -> AppResult<StatusCode> {
+    let db = state.db();
+    let existing = category::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("category {id}")))?;
+
+    // Which posts were in it. Restoring the category without them would hand
+    // back an empty one, and nobody would know which posts to put back.
+    let posts = crate::entities::post_category::Entity::find()
+        .filter(crate::entities::post_category::Column::CategoryId.eq(id))
+        .all(db)
+        .await?;
+
+    crate::trash::keep(
+        db,
+        crate::trash::CATEGORY,
+        id,
+        &existing.name,
+        serde_json::json!({ "category": existing, "posts": posts }),
+        &user.username,
+    )
+    .await?;
+
+    category::Entity::delete_by_id(id).exec(db).await?;
     Ok(StatusCode::NO_CONTENT)
 }

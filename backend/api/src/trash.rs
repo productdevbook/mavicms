@@ -34,6 +34,12 @@ pub const PAGE: &str = "page";
 pub const MEDIA: &str = "media";
 pub const FORM: &str = "form";
 pub const FORM_SUBMISSION: &str = "form_submission";
+pub const CATEGORY: &str = "category";
+pub const TAG: &str = "tag";
+pub const MAIL_LIST: &str = "mail_list";
+pub const SUBSCRIBER: &str = "subscriber";
+pub const MAIL_TEMPLATE: &str = "mail_template";
+pub const CAMPAIGN: &str = "campaign";
 
 /// How long something stays before it is really gone.
 ///
@@ -157,9 +163,16 @@ pub async fn restore(db: &DatabaseConnection, id: Uuid) -> AppResult<String> {
         MEDIA => restore_media(db, &payload).await?,
         FORM => restore_form(db, &payload).await?,
         FORM_SUBMISSION => restore_submission(db, &payload).await?,
+        CATEGORY => restore_category(db, &payload).await?,
+        TAG => restore_tag(db, &payload).await?,
+        MAIL_LIST => restore_list(db, &payload).await?,
+        SUBSCRIBER => restore_subscriber(db, &payload).await?,
+        MAIL_TEMPLATE => restore_template(db, &payload).await?,
+        CAMPAIGN => restore_campaign(db, &payload).await?,
         // A post, a page, or a kind this site made up. They are one table and
         // one way back, so matching the two names this used to know would have
-        // meant a course going into the bin and never coming out of it.
+        // meant a course going into the bin and never coming out of it. It has
+        // to stay last: everything with a table of its own is named above.
         _ => restore_post(db, &payload).await?,
     };
 
@@ -287,6 +300,244 @@ async fn restore_submission(
     let active: form_submission::ActiveModel = model.into();
     active.insert(db).await?;
     Ok(described)
+}
+
+/// A word that is free to use, given one that is taken.
+fn beside(taken: &str, id: Uuid) -> String {
+    format!("{taken}-{}", &id.simple().to_string()[..6])
+}
+
+async fn restore_category(
+    db: &DatabaseConnection,
+    payload: &serde_json::Value,
+) -> AppResult<String> {
+    use crate::entities::{category, post_category};
+
+    let mut model: category::Model = field(payload, "category")
+        .ok_or_else(|| AppError::Internal("what was kept is not a category".to_string()))?;
+
+    if category::Entity::find()
+        .filter(category::Column::Locale.eq(model.locale.clone()))
+        .filter(category::Column::Slug.eq(model.slug.clone()))
+        .one(db)
+        .await?
+        .is_some()
+    {
+        model.slug = beside(&model.slug, model.id);
+    }
+
+    // Somebody else took its place in the translation group while it was gone.
+    // It comes back on its own rather than not at all; joining it back up is a
+    // click, and the words are what was at stake.
+    if category::Entity::find()
+        .filter(category::Column::TranslationGroupId.eq(model.translation_group_id))
+        .filter(category::Column::Locale.eq(model.locale.clone()))
+        .one(db)
+        .await?
+        .is_some()
+    {
+        model.translation_group_id = model.id;
+    }
+
+    let name = model.name.clone();
+    let id = model.id;
+    let active: category::ActiveModel = model.into();
+    active.insert(db).await?;
+
+    let mut back = 0;
+    for row in field::<Vec<post_category::Model>>(payload, "posts").unwrap_or_default() {
+        // A post deleted while this was in the bin is not a reason to refuse
+        // the category.
+        let active: post_category::ActiveModel = row.into();
+        if active.insert(db).await.is_ok() {
+            back += 1;
+        }
+    }
+    let _ = id;
+
+    Ok(match back {
+        0 => name,
+        n => format!("{name}, back on {n} posts"),
+    })
+}
+
+async fn restore_tag(db: &DatabaseConnection, payload: &serde_json::Value) -> AppResult<String> {
+    use crate::entities::{post_tag, tag};
+
+    let mut model: tag::Model = field(payload, "tag")
+        .ok_or_else(|| AppError::Internal("what was kept is not a tag".to_string()))?;
+
+    if tag::Entity::find()
+        .filter(tag::Column::Locale.eq(model.locale.clone()))
+        .filter(tag::Column::Slug.eq(model.slug.clone()))
+        .one(db)
+        .await?
+        .is_some()
+    {
+        model.slug = beside(&model.slug, model.id);
+    }
+    if tag::Entity::find()
+        .filter(tag::Column::TranslationGroupId.eq(model.translation_group_id))
+        .filter(tag::Column::Locale.eq(model.locale.clone()))
+        .one(db)
+        .await?
+        .is_some()
+    {
+        model.translation_group_id = model.id;
+    }
+
+    let name = model.name.clone();
+    let active: tag::ActiveModel = model.into();
+    active.insert(db).await?;
+
+    let mut back = 0;
+    for row in field::<Vec<post_tag::Model>>(payload, "posts").unwrap_or_default() {
+        let active: post_tag::ActiveModel = row.into();
+        if active.insert(db).await.is_ok() {
+            back += 1;
+        }
+    }
+
+    Ok(match back {
+        0 => name,
+        n => format!("{name}, back on {n} posts"),
+    })
+}
+
+async fn restore_list(db: &DatabaseConnection, payload: &serde_json::Value) -> AppResult<String> {
+    use crate::entities::{campaign_list, mail_list, subscriber_list};
+
+    let mut model: mail_list::Model = field(payload, "list")
+        .ok_or_else(|| AppError::Internal("what was kept is not a list".to_string()))?;
+
+    if mail_list::Entity::find()
+        .filter(mail_list::Column::Slug.eq(model.slug.clone()))
+        .one(db)
+        .await?
+        .is_some()
+    {
+        model.slug = beside(&model.slug, model.id);
+    }
+
+    let name = model.name.clone();
+    let active: mail_list::ActiveModel = model.into();
+    active.insert(db).await?;
+
+    let mut people = 0;
+    for row in field::<Vec<subscriber_list::Model>>(payload, "members").unwrap_or_default() {
+        let active: subscriber_list::ActiveModel = row.into();
+        if active.insert(db).await.is_ok() {
+            people += 1;
+        }
+    }
+    for row in field::<Vec<campaign_list::Model>>(payload, "campaigns").unwrap_or_default() {
+        let active: campaign_list::ActiveModel = row.into();
+        let _ = active.insert(db).await;
+    }
+
+    Ok(match people {
+        0 => name,
+        n => format!("{name}, with {n} back on it"),
+    })
+}
+
+async fn restore_subscriber(
+    db: &DatabaseConnection,
+    payload: &serde_json::Value,
+) -> AppResult<String> {
+    use crate::entities::{campaign_event, subscriber, subscriber_list};
+
+    let model: subscriber::Model = field(payload, "subscriber")
+        .ok_or_else(|| AppError::Internal("what was kept is not a subscriber".to_string()))?;
+
+    // An address is not something a suffix can be added to: it either is the
+    // person's address or it is nobody's. If somebody has signed up again in
+    // the meantime, that record is the live one and this must not shadow it.
+    if subscriber::Entity::find()
+        .filter(subscriber::Column::Email.eq(model.email.clone()))
+        .one(db)
+        .await?
+        .is_some()
+    {
+        return Err(AppError::Conflict(format!(
+            "{} is on the list again already — that record is the one to keep",
+            model.email
+        )));
+    }
+
+    let email = model.email.clone();
+    let active: subscriber::ActiveModel = model.into();
+    active.insert(db).await?;
+
+    for row in field::<Vec<subscriber_list::Model>>(payload, "lists").unwrap_or_default() {
+        let active: subscriber_list::ActiveModel = row.into();
+        let _ = active.insert(db).await;
+    }
+    for row in field::<Vec<campaign_event::Model>>(payload, "events").unwrap_or_default() {
+        let active: campaign_event::ActiveModel = row.into();
+        let _ = active.insert(db).await;
+    }
+
+    Ok(email)
+}
+
+async fn restore_template(
+    db: &DatabaseConnection,
+    payload: &serde_json::Value,
+) -> AppResult<String> {
+    use crate::entities::{campaign, mail_template};
+
+    let model: mail_template::Model = field(payload, "template")
+        .ok_or_else(|| AppError::Internal("what was kept is not a template".to_string()))?;
+    let name = model.name.clone();
+    let id = model.id;
+    let active: mail_template::ActiveModel = model.into();
+    active.insert(db).await?;
+
+    // The campaigns that lost their letterhead when it went get it back, but
+    // only if they have not been given another one since.
+    let mut back = 0;
+    for campaign_id in field::<Vec<Uuid>>(payload, "campaigns").unwrap_or_default() {
+        if let Some(row) = campaign::Entity::find_by_id(campaign_id).one(db).await?
+            && row.template_id.is_none()
+        {
+            let mut changed: campaign::ActiveModel = row.into();
+            changed.template_id = Set(Some(id));
+            changed.update(db).await?;
+            back += 1;
+        }
+    }
+
+    Ok(match back {
+        0 => name,
+        n => format!("{name}, back on {n} campaigns"),
+    })
+}
+
+async fn restore_campaign(
+    db: &DatabaseConnection,
+    payload: &serde_json::Value,
+) -> AppResult<String> {
+    use crate::entities::{campaign, campaign_event, campaign_list};
+
+    let model: campaign::Model = field(payload, "campaign")
+        .ok_or_else(|| AppError::Internal("what was kept is not a campaign".to_string()))?;
+    let name = model.name.clone();
+    let active: campaign::ActiveModel = model.into();
+    active.insert(db).await?;
+
+    for row in field::<Vec<campaign_list::Model>>(payload, "lists").unwrap_or_default() {
+        let active: campaign_list::ActiveModel = row.into();
+        let _ = active.insert(db).await;
+    }
+    // The record of who it went to. Without it a resumed campaign would write
+    // to everybody a second time.
+    for row in field::<Vec<campaign_event::Model>>(payload, "events").unwrap_or_default() {
+        let active: campaign_event::ActiveModel = row.into();
+        let _ = active.insert(db).await;
+    }
+
+    Ok(name)
 }
 
 /// Tidies up after a post that is now gone for good.

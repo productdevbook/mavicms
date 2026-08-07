@@ -6,7 +6,7 @@ use sea_orm::entity::prelude::*;
 /// The "sent" rows are also how a resumed campaign knows where it was. A
 /// unique index on (campaign, subscriber, kind) is what stops anybody being
 /// written to twice.
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, serde::Serialize, serde::Deserialize)]
 #[sea_orm(table_name = "campaign_events")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]

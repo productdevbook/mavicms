@@ -152,11 +152,33 @@ pub async fn create_tag(
         (status = 404, description = "Tag not found", body = crate::error::ErrorBody),
     )
 )]
-pub async fn delete_tag(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
-    let result = tag::Entity::delete_by_id(id).exec(state.db()).await?;
-    if result.rows_affected == 0 {
-        return Err(AppError::NotFound(format!("tag {id}")));
-    }
+pub async fn delete_tag(
+    Site(state): Site,
+    user: axum::Extension<crate::entities::user::Model>,
+    Path(id): Path<Uuid>,
+) -> AppResult<StatusCode> {
+    let db = state.db();
+    let existing = tag::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("tag {id}")))?;
+
+    let posts = crate::entities::post_tag::Entity::find()
+        .filter(crate::entities::post_tag::Column::TagId.eq(id))
+        .all(db)
+        .await?;
+
+    crate::trash::keep(
+        db,
+        crate::trash::TAG,
+        id,
+        &existing.name,
+        serde_json::json!({ "tag": existing, "posts": posts }),
+        &user.username,
+    )
+    .await?;
+
+    tag::Entity::delete_by_id(id).exec(db).await?;
     Ok(StatusCode::NO_CONTENT)
 }
 

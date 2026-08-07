@@ -4,7 +4,7 @@ use sea_orm::entity::prelude::*;
 ///
 /// The status is per list rather than per person: leaving the newsletter is
 /// not leaving the order notifications.
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, serde::Serialize, serde::Deserialize)]
 #[sea_orm(table_name = "subscriber_lists")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
