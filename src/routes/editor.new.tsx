@@ -14,7 +14,12 @@ export const Route = createFileRoute("/editor/new")({
     locale: typeof search.locale === "string" ? search.locale : undefined,
     translationOf:
       typeof search.translationOf === "string" ? search.translationOf : undefined,
-    kind: search.kind === "page" ? "page" : undefined,
+    // Any kind this site publishes, not one of the two there used to be.
+    // This line was written when there were only posts and pages, and it
+    // silently dropped every other kind — so Add on the courses page arrived
+    // at an editor writing a post, with none of a course's fields on it and
+    // nothing to say why.
+    kind: typeof search.kind === "string" && search.kind ? search.kind : undefined,
   }),
   beforeLoad: ({ location }) => requireAuth(location.href),
   component: NewPostRoute,

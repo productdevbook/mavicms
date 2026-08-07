@@ -739,7 +739,7 @@ msgstr "Back"
 msgid "Back in Connectors, create a custom connector and paste the address."
 msgstr "Back in Connectors, create a custom connector and paste the address."
 
-#: src/components/editor/mavi-editor.tsx:568
+#: src/components/editor/mavi-editor.tsx:587
 msgid "Back to editing"
 msgstr "Back to editing"
 
@@ -1425,7 +1425,7 @@ msgstr "Could not remove them"
 msgid "Could not save it"
 msgstr "Could not save it"
 
-#: src/components/editor/mavi-editor.tsx:336
+#: src/components/editor/mavi-editor.tsx:337
 msgid "Could not save post"
 msgstr "Could not save post"
 
@@ -1522,7 +1522,7 @@ msgstr "Cover image"
 msgid "Cover preview"
 msgstr "Cover preview"
 
-#: src/components/editor/mavi-editor.tsx:541
+#: src/components/editor/mavi-editor.tsx:560
 msgid "Create"
 msgstr "Create"
 
@@ -1559,7 +1559,7 @@ msgstr "Custom"
 msgid "Dark"
 msgstr "Dark"
 
-#: src/components/editor/mavi-editor.tsx:484
+#: src/components/editor/mavi-editor.tsx:503
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -1727,7 +1727,7 @@ msgstr "Each language has its own tags. Link them so a post's tag can point at i
 
 #: src/components/dashboard/content-list.tsx:201
 #: src/components/editor/bubble-menus.tsx:323
-#: src/components/editor/mavi-editor.tsx:541
+#: src/components/editor/mavi-editor.tsx:560
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.mail.tsx:311
@@ -1884,7 +1884,7 @@ msgid "Find…"
 msgstr "Find…"
 
 #: src/components/editor/dialogs.tsx:543
-#: src/components/editor/mavi-editor.tsx:560
+#: src/components/editor/mavi-editor.tsx:579
 msgid "Focus mode"
 msgstr "Focus mode"
 
@@ -1942,7 +1942,7 @@ msgid "Full width"
 msgstr "Full width"
 
 #: src/components/editor/dialogs.tsx:544
-#: src/components/editor/mavi-editor.tsx:575
+#: src/components/editor/mavi-editor.tsx:594
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
@@ -2139,7 +2139,7 @@ msgid "Import"
 msgstr "Import"
 
 #: src/components/editor/dialogs.tsx:434
-#: src/components/editor/mavi-editor.tsx:583
+#: src/components/editor/mavi-editor.tsx:602
 msgid "Import / export"
 msgstr "Import / export"
 
@@ -3119,15 +3119,15 @@ msgstr "post"
 msgid "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 msgstr "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 
-#: src/components/editor/mavi-editor.tsx:627
+#: src/components/editor/mavi-editor.tsx:394
 msgid "Post published"
 msgstr "Post published"
 
-#: src/components/editor/mavi-editor.tsx:695
+#: src/components/editor/mavi-editor.tsx:706
 msgid "Post settings"
 msgstr "Post settings"
 
-#: src/components/editor/mavi-editor.tsx:680
+#: src/components/editor/mavi-editor.tsx:691
 #: src/components/editor/post-settings.tsx:430
 msgid "Post title"
 msgstr "Post title"
@@ -3145,7 +3145,7 @@ msgstr "Posts"
 msgid "Posts, newest first, in pages."
 msgstr "Posts, newest first, in pages."
 
-#: src/components/editor/mavi-editor.tsx:568
+#: src/components/editor/mavi-editor.tsx:587
 msgid "Preview"
 msgstr "Preview"
 
@@ -3167,7 +3167,7 @@ msgid "Public base URL"
 msgstr "Public base URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:117
-#: src/components/editor/mavi-editor.tsx:632
+#: src/components/editor/mavi-editor.tsx:643
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:308
 #: src/routes/dashboard.publish.tsx:116
@@ -3429,7 +3429,7 @@ msgstr "S3 compatible storage"
 msgid "Sandbox"
 msgstr "Sandbox"
 
-#: src/components/editor/mavi-editor.tsx:621
+#: src/components/editor/mavi-editor.tsx:640
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
 #: src/routes/console.account.tsx:145
@@ -3659,7 +3659,7 @@ msgstr "Set up the S3 plugin first if you want backups kept off this machine."
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/editor/mavi-editor.tsx:596
+#: src/components/editor/mavi-editor.tsx:615
 msgid "Settings panel"
 msgstr "Settings panel"
 
@@ -3696,7 +3696,7 @@ msgid "Short description shown on listing pages"
 msgstr "Short description shown on listing pages"
 
 #: src/components/editor/dialogs.tsx:545
-#: src/components/editor/mavi-editor.tsx:589
+#: src/components/editor/mavi-editor.tsx:608
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
@@ -3723,7 +3723,7 @@ msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
 #: src/components/dashboard/dashboard-shell.tsx:202
-#: src/components/editor/mavi-editor.tsx:605
+#: src/components/editor/mavi-editor.tsx:624
 #: src/routes/console.index.tsx:119
 msgid "Sign out"
 msgstr "Sign out"
@@ -3887,8 +3887,8 @@ msgstr "System"
 msgid "Table"
 msgstr "Table"
 
-#: src/components/editor/mavi-editor.tsx:553
-#: src/components/editor/mavi-editor.tsx:648
+#: src/components/editor/mavi-editor.tsx:572
+#: src/components/editor/mavi-editor.tsx:659
 msgid "Table of contents"
 msgstr "Table of contents"
 
@@ -4167,7 +4167,7 @@ msgstr "Tokens"
 msgid "took {0} seconds"
 msgstr "took {0} seconds"
 
-#: src/components/editor/mavi-editor.tsx:511
+#: src/components/editor/mavi-editor.tsx:530
 msgid "Translations"
 msgstr "Translations"
 
@@ -4219,8 +4219,8 @@ msgstr "Untitled"
 #~ msgid "Untitled page"
 #~ msgstr "Untitled page"
 
-#: src/components/editor/mavi-editor.tsx:493
-#: src/components/editor/mavi-editor.tsx:678
+#: src/components/editor/mavi-editor.tsx:512
+#: src/components/editor/mavi-editor.tsx:689
 msgid "Untitled post"
 msgstr "Untitled post"
 

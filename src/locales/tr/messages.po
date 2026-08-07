@@ -739,7 +739,7 @@ msgstr "Geri"
 msgid "Back in Connectors, create a custom connector and paste the address."
 msgstr "Bağlayıcılar'a dönüp özel bir bağlayıcı oluşturun ve adresi yapıştırın."
 
-#: src/components/editor/mavi-editor.tsx:568
+#: src/components/editor/mavi-editor.tsx:587
 msgid "Back to editing"
 msgstr "Düzenlemeye dön"
 
@@ -1425,7 +1425,7 @@ msgstr "Kaldırılamadı"
 msgid "Could not save it"
 msgstr "Kaydedilemedi"
 
-#: src/components/editor/mavi-editor.tsx:336
+#: src/components/editor/mavi-editor.tsx:337
 msgid "Could not save post"
 msgstr "Yazı kaydedilemedi"
 
@@ -1522,7 +1522,7 @@ msgstr "Kapak görseli"
 msgid "Cover preview"
 msgstr "Kapak önizlemesi"
 
-#: src/components/editor/mavi-editor.tsx:541
+#: src/components/editor/mavi-editor.tsx:560
 msgid "Create"
 msgstr "Oluştur"
 
@@ -1559,7 +1559,7 @@ msgstr "Özel"
 msgid "Dark"
 msgstr "Koyu"
 
-#: src/components/editor/mavi-editor.tsx:484
+#: src/components/editor/mavi-editor.tsx:503
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -1723,7 +1723,7 @@ msgstr "Her dilin kendi etiketleri vardır. Bir yazının etiketinin başka dild
 
 #: src/components/dashboard/content-list.tsx:201
 #: src/components/editor/bubble-menus.tsx:323
-#: src/components/editor/mavi-editor.tsx:541
+#: src/components/editor/mavi-editor.tsx:560
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.mail.tsx:311
@@ -1880,7 +1880,7 @@ msgid "Find…"
 msgstr "Ara…"
 
 #: src/components/editor/dialogs.tsx:543
-#: src/components/editor/mavi-editor.tsx:560
+#: src/components/editor/mavi-editor.tsx:579
 msgid "Focus mode"
 msgstr "Odak modu"
 
@@ -1938,7 +1938,7 @@ msgid "Full width"
 msgstr "Tam genişlik"
 
 #: src/components/editor/dialogs.tsx:544
-#: src/components/editor/mavi-editor.tsx:575
+#: src/components/editor/mavi-editor.tsx:594
 msgid "Fullscreen"
 msgstr "Tam ekran"
 
@@ -2135,7 +2135,7 @@ msgid "Import"
 msgstr "İçe aktar"
 
 #: src/components/editor/dialogs.tsx:434
-#: src/components/editor/mavi-editor.tsx:583
+#: src/components/editor/mavi-editor.tsx:602
 msgid "Import / export"
 msgstr "İçe / dışa aktar"
 
@@ -3115,15 +3115,15 @@ msgstr "yazı"
 msgid "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 msgstr "Kendi sayfalarınızdan ya da yazılımınızdan bu adrese JSON gönderin. Hesap gerekmez, yalnızca yukarıdaki alanlar kabul edilir."
 
-#: src/components/editor/mavi-editor.tsx:627
+#: src/components/editor/mavi-editor.tsx:394
 msgid "Post published"
 msgstr "Yazı yayınlandı"
 
-#: src/components/editor/mavi-editor.tsx:695
+#: src/components/editor/mavi-editor.tsx:706
 msgid "Post settings"
 msgstr "Yazı ayarları"
 
-#: src/components/editor/mavi-editor.tsx:680
+#: src/components/editor/mavi-editor.tsx:691
 #: src/components/editor/post-settings.tsx:430
 msgid "Post title"
 msgstr "Yazı başlığı"
@@ -3141,7 +3141,7 @@ msgstr "Yazılar"
 msgid "Posts, newest first, in pages."
 msgstr "Yazılar, yeniden eskiye, sayfalanmış."
 
-#: src/components/editor/mavi-editor.tsx:568
+#: src/components/editor/mavi-editor.tsx:587
 msgid "Preview"
 msgstr "Önizleme"
 
@@ -3163,7 +3163,7 @@ msgid "Public base URL"
 msgstr "Genel URL tabanı"
 
 #: src/components/dashboard/dashboard-shell.tsx:117
-#: src/components/editor/mavi-editor.tsx:632
+#: src/components/editor/mavi-editor.tsx:643
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:308
 #: src/routes/dashboard.publish.tsx:116
@@ -3425,7 +3425,7 @@ msgstr "S3 uyumlu depolama"
 msgid "Sandbox"
 msgstr "Kum havuzu"
 
-#: src/components/editor/mavi-editor.tsx:621
+#: src/components/editor/mavi-editor.tsx:640
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
 #: src/routes/console.account.tsx:145
@@ -3655,7 +3655,7 @@ msgstr "Yedeklerin bu makinenin dışında durmasını istiyorsanız önce S3 ek
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: src/components/editor/mavi-editor.tsx:596
+#: src/components/editor/mavi-editor.tsx:615
 msgid "Settings panel"
 msgstr "Ayarlar paneli"
 
@@ -3692,7 +3692,7 @@ msgid "Short description shown on listing pages"
 msgstr "Liste sayfalarında görünecek kısa açıklama"
 
 #: src/components/editor/dialogs.tsx:545
-#: src/components/editor/mavi-editor.tsx:589
+#: src/components/editor/mavi-editor.tsx:608
 msgid "Shortcuts"
 msgstr "Kısayollar"
 
@@ -3719,7 +3719,7 @@ msgid "Sign in; sets the session cookie."
 msgstr "Giriş yapar; oturum çerezini bırakır."
 
 #: src/components/dashboard/dashboard-shell.tsx:202
-#: src/components/editor/mavi-editor.tsx:605
+#: src/components/editor/mavi-editor.tsx:624
 #: src/routes/console.index.tsx:119
 msgid "Sign out"
 msgstr "Çıkış yap"
@@ -3883,8 +3883,8 @@ msgstr "Sistem"
 msgid "Table"
 msgstr "Tablo"
 
-#: src/components/editor/mavi-editor.tsx:553
-#: src/components/editor/mavi-editor.tsx:648
+#: src/components/editor/mavi-editor.tsx:572
+#: src/components/editor/mavi-editor.tsx:659
 msgid "Table of contents"
 msgstr "İçindekiler"
 
@@ -4163,7 +4163,7 @@ msgstr "Jetonlar"
 msgid "took {0} seconds"
 msgstr "{0} saniye sürdü"
 
-#: src/components/editor/mavi-editor.tsx:511
+#: src/components/editor/mavi-editor.tsx:530
 msgid "Translations"
 msgstr "Çeviriler"
 
@@ -4215,8 +4215,8 @@ msgstr "Başlıksız"
 #~ msgid "Untitled page"
 #~ msgstr "Başlıksız sayfa"
 
-#: src/components/editor/mavi-editor.tsx:493
-#: src/components/editor/mavi-editor.tsx:678
+#: src/components/editor/mavi-editor.tsx:512
+#: src/components/editor/mavi-editor.tsx:689
 msgid "Untitled post"
 msgstr "Başlıksız yazı"
 
