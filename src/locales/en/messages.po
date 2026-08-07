@@ -16,7 +16,7 @@ msgstr ""
 #. placeholder {0}: pendingDelete?.filename
 #. placeholder {0}: pendingDelete?.name
 #. placeholder {0}: pendingDelete?.title
-#: src/components/dashboard/content-list.tsx:258
+#: src/components/dashboard/content-list.tsx:269
 #: src/routes/dashboard.categories.tsx:337
 #: src/routes/dashboard.media.tsx:140
 msgid "\"{0}\" will be permanently deleted. This cannot be undone."
@@ -36,17 +36,17 @@ msgid "{{ content }} is where the campaign goes. {{ name }}, {{ email }} and {{ 
 msgstr "{{ content }} is where the campaign goes. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them."
 
 #. placeholder {0}: stats.selected
-#: src/components/editor/status-bar.tsx:55
+#: src/components/editor/status-bar.tsx:58
 msgid "{0, plural, one {# character selected} other {# characters selected}}"
 msgstr "{0, plural, one {# character selected} other {# characters selected}}"
 
 #. placeholder {0}: stats.characters
-#: src/components/editor/status-bar.tsx:47
+#: src/components/editor/status-bar.tsx:50
 msgid "{0, plural, one {# character} other {# characters}}"
 msgstr "{0, plural, one {# character} other {# characters}}"
 
 #. placeholder {0}: stats.headings
-#: src/components/editor/status-bar.tsx:66
+#: src/components/editor/status-bar.tsx:69
 msgid "{0, plural, one {# heading} other {# headings}}"
 msgstr "{0, plural, one {# heading} other {# headings}}"
 
@@ -56,7 +56,7 @@ msgstr "{0, plural, one {# heading} other {# headings}}"
 #~ msgstr "{0, plural, one {# image added} other {# images added}}"
 
 #. placeholder {0}: stats.words
-#: src/components/editor/status-bar.tsx:44
+#: src/components/editor/status-bar.tsx:47
 msgid "{0, plural, one {word} other {words}}"
 msgstr "{0, plural, one {word} other {words}}"
 
@@ -216,14 +216,14 @@ msgid "{0} will no longer be able to sign in. Their posts stay."
 msgstr "{0} will no longer be able to sign in. Their posts stay."
 
 #. placeholder {0}: kind.count
-#: src/routes/dashboard.content-types.tsx:97
+#: src/routes/dashboard.content-types.tsx:100
 msgid "{0} written"
 msgstr "{0} written"
 
 #. placeholder {0}: page.offset + 1
 #. placeholder {1}: Math.min(page.offset + page.limit, page.total)
 #. placeholder {2}: page.total
-#: src/components/dashboard/content-list.tsx:227
+#: src/components/dashboard/content-list.tsx:238
 msgid "{0}–{1} of {2}"
 msgstr "{0}–{1} of {2}"
 
@@ -248,7 +248,7 @@ msgstr "{0}'s own instructions"
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 
-#: src/components/editor/status-bar.tsx:63
+#: src/components/editor/status-bar.tsx:66
 msgid "{minutes, plural, one {# min read} other {# min read}}"
 msgstr "{minutes, plural, one {# min read} other {# min read}}"
 
@@ -310,7 +310,7 @@ msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
 
 #. placeholder {0}: kind.slug
-#: src/routes/dashboard.content-types.tsx:187
+#: src/routes/dashboard.content-types.tsx:194
 msgid "A front end asks for these with ?kind={0}"
 msgstr "A front end asks for these with ?kind={0}"
 
@@ -322,7 +322,7 @@ msgstr "A listing leaves the bodies out, because a whole archive in one response
 msgid "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 msgstr "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 
-#: src/routes/dashboard.content-types.tsx:155
+#: src/routes/dashboard.content-types.tsx:162
 msgid "A new kind"
 msgstr "A new kind"
 
@@ -343,7 +343,7 @@ msgstr "A post carries <0>content_markdown</0>, which is what it is written as, 
 msgid "A prefix inside the bucket."
 msgstr "A prefix inside the bucket."
 
-#: src/components/editor/mavi-editor.tsx:297
+#: src/components/editor/mavi-editor.tsx:326
 msgid "A scheduled post needs a publish date"
 msgstr "A scheduled post needs a publish date"
 
@@ -372,7 +372,7 @@ msgstr "Access token"
 msgid "Account added"
 msgstr "Account added"
 
-#: src/routes/dashboard.languages.tsx:148
+#: src/routes/dashboard.languages.tsx:151
 msgid "Active"
 msgstr "Active"
 
@@ -423,11 +423,11 @@ msgstr "Add an image from a link"
 msgid "Add category"
 msgstr "Add category"
 
-#: src/components/editor/bubble-menus.tsx:429
+#: src/components/editor/bubble-menus.tsx:457
 msgid "Add column after"
 msgstr "Add column after"
 
-#: src/components/editor/bubble-menus.tsx:426
+#: src/components/editor/bubble-menus.tsx:452
 msgid "Add column before"
 msgstr "Add column before"
 
@@ -451,11 +451,11 @@ msgstr "Add image"
 msgid "Add language"
 msgstr "Add language"
 
-#: src/components/editor/bubble-menus.tsx:457
+#: src/components/editor/bubble-menus.tsx:495
 msgid "Add row after"
 msgstr "Add row after"
 
-#: src/components/editor/bubble-menus.tsx:454
+#: src/components/editor/bubble-menus.tsx:490
 msgid "Add row before"
 msgstr "Add row before"
 
@@ -521,15 +521,15 @@ msgstr "Agency name"
 msgid "Agency sign in"
 msgstr "Agency sign in"
 
-#: src/components/editor/bubble-menus.tsx:362
+#: src/components/editor/bubble-menus.tsx:377
 #: src/components/editor/extensions/slash-command.tsx:277
-#: src/components/editor/toolbar.tsx:473
+#: src/components/editor/toolbar.tsx:490
 msgid "Align center"
 msgstr "Align center"
 
-#: src/components/editor/bubble-menus.tsx:355
+#: src/components/editor/bubble-menus.tsx:370
 #: src/components/editor/extensions/slash-command.tsx:268
-#: src/components/editor/toolbar.tsx:465
+#: src/components/editor/toolbar.tsx:482
 msgid "Align left"
 msgstr "Align left"
 
@@ -541,9 +541,9 @@ msgstr "Align paragraph to the left"
 msgid "Align paragraph to the right"
 msgstr "Align paragraph to the right"
 
-#: src/components/editor/bubble-menus.tsx:368
+#: src/components/editor/bubble-menus.tsx:383
 #: src/components/editor/extensions/slash-command.tsx:286
-#: src/components/editor/toolbar.tsx:481
+#: src/components/editor/toolbar.tsx:498
 msgid "Align right"
 msgstr "Align right"
 
@@ -557,8 +557,8 @@ msgstr "Alignment"
 msgid "Already have an account? Sign in"
 msgstr "Already have an account? Sign in"
 
-#: src/components/editor/bubble-menus.tsx:375
-#: src/components/editor/bubble-menus.tsx:378
+#: src/components/editor/bubble-menus.tsx:390
+#: src/components/editor/bubble-menus.tsx:393
 #: src/components/editor/dialogs.tsx:188
 msgid "Alt text"
 msgstr "Alt text"
@@ -659,7 +659,7 @@ msgstr "Anybody can be written to, up to the limits above."
 msgid "API"
 msgstr "API"
 
-#: src/components/editor/bubble-menus.tsx:259
+#: src/components/editor/bubble-menus.tsx:267
 #: src/components/editor/dialogs.tsx:326
 msgid "Apply"
 msgstr "Apply"
@@ -739,7 +739,7 @@ msgstr "Back"
 msgid "Back in Connectors, create a custom connector and paste the address."
 msgstr "Back in Connectors, create a custom connector and paste the address."
 
-#: src/components/editor/mavi-editor.tsx:587
+#: src/components/editor/mavi-editor.tsx:539
 msgid "Back to editing"
 msgstr "Back to editing"
 
@@ -776,7 +776,7 @@ msgstr "Bad addresses stop themselves"
 msgid "Basic"
 msgstr "Basic"
 
-#: src/routes/dashboard.content-types.tsx:194
+#: src/routes/dashboard.content-types.tsx:201
 msgid "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 msgstr "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 
@@ -805,9 +805,14 @@ msgstr "blocked"
 msgid "Blocks"
 msgstr "Blocks"
 
-#: src/components/editor/bubble-menus.tsx:119
+#: src/components/editor/palette.ts:23
+#: src/components/editor/palette.ts:36
+msgid "Blue"
+msgstr "Blue"
+
+#: src/components/editor/bubble-menus.tsx:122
 #: src/components/editor/dialogs.tsx:507
-#: src/components/editor/toolbar.tsx:291
+#: src/components/editor/toolbar.tsx:306
 msgid "Bold"
 msgstr "Bold"
 
@@ -823,6 +828,10 @@ msgstr "bounces to {0}"
 #: src/components/publish-panel.tsx:210
 msgid "Branch"
 msgstr "Branch"
+
+#: src/components/editor/palette.ts:18
+msgid "Brown"
+msgstr "Brown"
 
 #: src/components/plugin-forms.tsx:105
 msgid "Bucket"
@@ -858,7 +867,7 @@ msgstr "Built-in integrations you can switch on and configure."
 
 #: src/components/editor/dialogs.tsx:521
 #: src/components/editor/extensions/slash-command.tsx:100
-#: src/components/editor/toolbar.tsx:502
+#: src/components/editor/toolbar.tsx:519
 msgid "Bullet list"
 msgstr "Bullet list"
 
@@ -874,17 +883,17 @@ msgstr "Campaigns"
 msgid "can send"
 msgstr "can send"
 
-#: src/components/dashboard/content-list.tsx:262
+#: src/components/dashboard/content-list.tsx:273
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
 #: src/routes/console.index.tsx:209
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
-#: src/routes/dashboard.content-types.tsx:205
+#: src/routes/dashboard.content-types.tsx:212
 #: src/routes/dashboard.forms.tsx:327
 #: src/routes/dashboard.forms.tsx:349
-#: src/routes/dashboard.languages.tsx:194
+#: src/routes/dashboard.languages.tsx:198
 #: src/routes/dashboard.mail.tsx:238
 #: src/routes/dashboard.mail.tsx:387
 #: src/routes/dashboard.mail.tsx:597
@@ -980,7 +989,7 @@ msgstr "Clean the list before sending again"
 #~ msgstr "Clean the list before sending again: take off the addresses that bounced, and stop writing to anybody who has not opened anything in a year."
 
 #: src/components/editor/dialogs.tsx:513
-#: src/components/editor/toolbar.tsx:452
+#: src/components/editor/toolbar.tsx:469
 msgid "Clear formatting"
 msgstr "Clear formatting"
 
@@ -997,7 +1006,7 @@ msgstr "Close"
 msgid "CMS_TOKEN is blank until you make one. Without it the site answers nothing, which is the \"why can I not see any posts\" everybody runs into."
 msgstr "CMS_TOKEN is blank until you make one. Without it the site answers nothing, which is the \"why can I not see any posts\" everybody runs into."
 
-#: src/components/editor/bubble-menus.tsx:150
+#: src/components/editor/bubble-menus.tsx:153
 msgid "Code"
 msgstr "Code"
 
@@ -1007,17 +1016,17 @@ msgstr "Code (en, de, pt-BR)"
 
 #: src/components/editor/dialogs.tsx:525
 #: src/components/editor/extensions/slash-command.tsx:136
-#: src/components/editor/toolbar.tsx:98
-#: src/components/editor/toolbar.tsx:555
+#: src/components/editor/toolbar.tsx:110
+#: src/components/editor/toolbar.tsx:572
 msgid "Code block"
 msgstr "Code block"
 
 #: src/components/editor/extensions/slash-command.tsx:145
-#: src/components/editor/toolbar.tsx:563
+#: src/components/editor/toolbar.tsx:580
 msgid "Collapsible section"
 msgstr "Collapsible section"
 
-#: src/components/editor/bubble-menus.tsx:422
+#: src/components/editor/bubble-menus.tsx:446
 msgid "Column"
 msgstr "Column"
 
@@ -1033,7 +1042,7 @@ msgstr "Comments"
 msgid "Configuration set"
 msgstr "Configuration set"
 
-#: src/routes/dashboard.plugins.tsx:105
+#: src/routes/dashboard.plugins.tsx:106
 msgid "Configure"
 msgstr "Configure"
 
@@ -1094,7 +1103,7 @@ msgstr "Connection URL"
 msgid "Content"
 msgstr "Content"
 
-#: src/routes/dashboard.languages.tsx:190
+#: src/routes/dashboard.languages.tsx:194
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
 msgstr "Content already written in this language blocks removal — you'll be told how much there is."
 
@@ -1120,7 +1129,7 @@ msgid "Copied"
 msgstr "Copied"
 
 #: src/components/assistant-clients.tsx:119
-#: src/components/editor/bubble-menus.tsx:317
+#: src/components/editor/bubble-menus.tsx:325
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
 #: src/components/ses-account.tsx:865
@@ -1280,7 +1289,7 @@ msgstr "Could not do it"
 msgid "Could not link tags"
 msgstr "Could not link tags"
 
-#: src/components/editor/mavi-editor.tsx:272
+#: src/components/editor/mavi-editor.tsx:301
 msgid "Could not load post"
 msgstr "Could not load post"
 
@@ -1417,7 +1426,7 @@ msgid "Could not remove them"
 msgstr "Could not remove them"
 
 #: src/components/site-mail.tsx:81
-#: src/routes/dashboard.content-types.tsx:145
+#: src/routes/dashboard.content-types.tsx:152
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:89
 #: src/routes/dashboard.mail.tsx:279
 #: src/routes/dashboard.mail.tsx:646
@@ -1425,7 +1434,7 @@ msgstr "Could not remove them"
 msgid "Could not save it"
 msgstr "Could not save it"
 
-#: src/components/editor/mavi-editor.tsx:337
+#: src/components/editor/mavi-editor.tsx:366
 msgid "Could not save post"
 msgstr "Could not save post"
 
@@ -1506,11 +1515,11 @@ msgstr "Could not upload {0}"
 msgid "Could not upload cover image"
 msgstr "Could not upload cover image"
 
-#: src/routes/dashboard.content-types.tsx:171
+#: src/routes/dashboard.content-types.tsx:178
 msgid "Course"
 msgstr "Course"
 
-#: src/routes/dashboard.content-types.tsx:180
+#: src/routes/dashboard.content-types.tsx:187
 msgid "Courses"
 msgstr "Courses"
 
@@ -1522,7 +1531,8 @@ msgstr "Cover image"
 msgid "Cover preview"
 msgstr "Cover preview"
 
-#: src/components/editor/mavi-editor.tsx:560
+#: src/components/editor/mavi-editor.tsx:672
+#: src/components/editor/mavi-editor.tsx:931
 msgid "Create"
 msgstr "Create"
 
@@ -1551,15 +1561,20 @@ msgstr "Credentials are encrypted before they are stored and are never sent back
 msgid "Current password"
 msgstr "Current password"
 
-#: src/components/editor/toolbar.tsx:378
+#: src/components/editor/palette.ts:57
+msgid "Cursive"
+msgstr "Cursive"
+
+#: src/components/editor/toolbar.tsx:394
 msgid "Custom"
 msgstr "Custom"
 
+#: src/components/editor/mavi-editor.tsx:970
 #: src/components/mode-toggle.tsx:43
 msgid "Dark"
 msgstr "Dark"
 
-#: src/components/editor/mavi-editor.tsx:503
+#: src/components/editor/mavi-editor.tsx:614
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -1583,7 +1598,7 @@ msgstr "Database type"
 msgid "Date"
 msgstr "Date"
 
-#: src/components/editor/toolbar.tsx:526
+#: src/components/editor/toolbar.tsx:543
 msgid "Decrease indent"
 msgstr "Decrease indent"
 
@@ -1591,19 +1606,21 @@ msgstr "Decrease indent"
 msgid "default"
 msgstr "default"
 
-#: src/components/editor/toolbar.tsx:273
-#: src/components/editor/toolbar.tsx:627
-#: src/routes/dashboard.languages.tsx:138
+#: src/components/editor/palette.ts:16
+#: src/components/editor/palette.ts:48
+#: src/components/editor/toolbar.tsx:288
+#: src/components/editor/toolbar.tsx:650
+#: src/routes/dashboard.languages.tsx:141
 msgid "Default"
 msgstr "Default"
 
-#: src/components/dashboard/content-list.tsx:214
-#: src/components/dashboard/content-list.tsx:264
+#: src/components/dashboard/content-list.tsx:225
+#: src/components/dashboard/content-list.tsx:275
 #: src/components/editor/block-handle.tsx:186
-#: src/components/editor/bubble-menus.tsx:395
+#: src/components/editor/bubble-menus.tsx:415
 #: src/routes/dashboard.categories.tsx:317
 #: src/routes/dashboard.categories.tsx:343
-#: src/routes/dashboard.languages.tsx:171
+#: src/routes/dashboard.languages.tsx:175
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
 #: src/routes/dashboard.plugins_.backup.tsx:374
@@ -1613,7 +1630,7 @@ msgstr "Default"
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/editor/bubble-menus.tsx:439
+#: src/components/editor/bubble-menus.tsx:469
 msgid "Delete column"
 msgstr "Delete column"
 
@@ -1621,13 +1638,17 @@ msgstr "Delete column"
 msgid "Delete one, and any image left with no owner."
 msgstr "Delete one, and any image left with no owner."
 
-#: src/components/editor/bubble-menus.tsx:467
+#: src/components/editor/bubble-menus.tsx:507
 msgid "Delete row"
 msgstr "Delete row"
 
-#: src/components/editor/bubble-menus.tsx:487
+#: src/components/editor/bubble-menus.tsx:527
 msgid "Delete table"
 msgstr "Delete table"
+
+#: src/components/dashboard/content-list.tsx:267
+msgid "Delete this {one}?"
+msgstr "Delete this {one}?"
 
 #: src/routes/dashboard.plugins_.backup.tsx:416
 msgid "Delete this backup?"
@@ -1642,8 +1663,8 @@ msgid "Delete this media?"
 msgstr "Delete this media?"
 
 #: src/components/dashboard/content-list.tsx:256
-msgid "Delete this post?"
-msgstr "Delete this post?"
+#~ msgid "Delete this post?"
+#~ msgstr "Delete this post?"
 
 #: src/routes/dashboard.tags.tsx:295
 msgid "Delete this tag?"
@@ -1692,7 +1713,7 @@ msgid "Disconnecting one stops it that moment."
 msgstr "Disconnecting one stops it that moment."
 
 #: src/components/editor/extensions/slash-command.tsx:154
-#: src/components/editor/toolbar.tsx:574
+#: src/components/editor/toolbar.tsx:591
 msgid "Divider"
 msgstr "Divider"
 
@@ -1713,7 +1734,7 @@ msgstr "Download"
 msgid "Draft"
 msgstr "Draft"
 
-#: src/components/editor/mavi-editor.tsx:332
+#: src/components/editor/mavi-editor.tsx:361
 msgid "Draft saved"
 msgstr "Draft saved"
 
@@ -1725,9 +1746,10 @@ msgstr "Duplicate"
 msgid "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
 msgstr "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
 
-#: src/components/dashboard/content-list.tsx:201
-#: src/components/editor/bubble-menus.tsx:323
-#: src/components/editor/mavi-editor.tsx:560
+#: src/components/dashboard/content-list.tsx:212
+#: src/components/editor/bubble-menus.tsx:331
+#: src/components/editor/mavi-editor.tsx:671
+#: src/components/editor/mavi-editor.tsx:931
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.mail.tsx:311
@@ -1864,8 +1886,8 @@ msgid "Featured"
 msgstr "Featured"
 
 #: src/components/form-fields-editor.tsx:76
-#: src/routes/dashboard.content-types.tsx:100
-#: src/routes/dashboard.content-types.tsx:192
+#: src/routes/dashboard.content-types.tsx:107
+#: src/routes/dashboard.content-types.tsx:199
 msgid "Fields"
 msgstr "Fields"
 
@@ -1875,7 +1897,7 @@ msgstr "Fill in the region and the keys above and save them. Everything Amazon k
 
 #: src/components/editor/dialogs.tsx:534
 #: src/components/editor/find-replace.tsx:73
-#: src/components/editor/toolbar.tsx:642
+#: src/components/editor/toolbar.tsx:667
 msgid "Find and replace"
 msgstr "Find and replace"
 
@@ -1884,7 +1906,7 @@ msgid "Find…"
 msgstr "Find…"
 
 #: src/components/editor/dialogs.tsx:543
-#: src/components/editor/mavi-editor.tsx:579
+#: src/components/editor/mavi-editor.tsx:531
 msgid "Focus mode"
 msgstr "Focus mode"
 
@@ -1897,7 +1919,7 @@ msgstr "Foldable details block"
 msgid "Folder"
 msgstr "Folder"
 
-#: src/components/editor/toolbar.tsx:235
+#: src/components/editor/toolbar.tsx:250
 msgid "Font"
 msgstr "Font"
 
@@ -1937,12 +1959,12 @@ msgstr "From name"
 msgid "Full access"
 msgstr "Full access"
 
-#: src/components/editor/bubble-menus.tsx:387
+#: src/components/editor/bubble-menus.tsx:403
 msgid "Full width"
 msgstr "Full width"
 
 #: src/components/editor/dialogs.tsx:544
-#: src/components/editor/mavi-editor.tsx:594
+#: src/components/editor/mavi-editor.tsx:546
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
@@ -1958,7 +1980,7 @@ msgstr "Generate from title"
 msgid "Generate password"
 msgstr "Generate password"
 
-#: src/routes/dashboard.content-types.tsx:160
+#: src/routes/dashboard.content-types.tsx:167
 msgid "Give it a name and say what one is made of. The address it answers on is made from the name and never changes afterwards, because a front end will be asking for it."
 msgstr "Give it a name and say what one is made of. The address it answers on is made from the name and never changes afterwards, because a front end will be asking for it."
 
@@ -1970,7 +1992,7 @@ msgstr "Give it this address"
 msgid "Give it this policy."
 msgstr "Give it this policy."
 
-#: src/components/editor/mavi-editor.tsx:288
+#: src/components/editor/mavi-editor.tsx:317
 msgid "Give your post a title first"
 msgstr "Give your post a title first"
 
@@ -1996,6 +2018,16 @@ msgstr "gone for good"
 msgid "good until {0}"
 msgstr "good until {0}"
 
+#: src/components/editor/palette.ts:17
+#: src/components/editor/palette.ts:40
+msgid "Gray"
+msgstr "Gray"
+
+#: src/components/editor/palette.ts:21
+#: src/components/editor/palette.ts:35
+msgid "Green"
+msgstr "Green"
+
 #: src/components/ses-health.tsx:142
 msgid "grey: sent · red: did not arrive"
 msgstr "grey: sent · red: did not arrive"
@@ -2008,11 +2040,11 @@ msgstr "grey: sent · red: did not arrive"
 msgid "Handing this to an assistant"
 msgstr "Handing this to an assistant"
 
-#: src/components/editor/bubble-menus.tsx:432
+#: src/components/editor/bubble-menus.tsx:462
 msgid "Header column"
 msgstr "Header column"
 
-#: src/components/editor/bubble-menus.tsx:460
+#: src/components/editor/bubble-menus.tsx:500
 msgid "Header row"
 msgstr "Header row"
 
@@ -2022,7 +2054,7 @@ msgid "Heading {0}"
 msgstr "Heading {0}"
 
 #: src/components/editor/extensions/slash-command.tsx:64
-#: src/components/editor/toolbar.tsx:91
+#: src/components/editor/toolbar.tsx:103
 msgid "Heading 1"
 msgstr "Heading 1"
 
@@ -2031,29 +2063,29 @@ msgid "Heading 1–6"
 msgstr "Heading 1–6"
 
 #: src/components/editor/extensions/slash-command.tsx:73
-#: src/components/editor/toolbar.tsx:92
+#: src/components/editor/toolbar.tsx:104
 msgid "Heading 2"
 msgstr "Heading 2"
 
 #: src/components/editor/extensions/slash-command.tsx:82
-#: src/components/editor/toolbar.tsx:93
+#: src/components/editor/toolbar.tsx:105
 msgid "Heading 3"
 msgstr "Heading 3"
 
 #: src/components/editor/extensions/slash-command.tsx:91
-#: src/components/editor/toolbar.tsx:94
+#: src/components/editor/toolbar.tsx:106
 msgid "Heading 4"
 msgstr "Heading 4"
 
-#: src/components/editor/toolbar.tsx:95
+#: src/components/editor/toolbar.tsx:107
 msgid "Heading 5"
 msgstr "Heading 5"
 
-#: src/components/editor/toolbar.tsx:96
+#: src/components/editor/toolbar.tsx:108
 msgid "Heading 6"
 msgstr "Heading 6"
 
-#: src/components/editor/toc-panel.tsx:28
+#: src/components/editor/toc-panel.tsx:37
 msgid "Headings you add will show up here."
 msgstr "Headings you add will show up here."
 
@@ -2061,13 +2093,13 @@ msgstr "Headings you add will show up here."
 msgid "Hide password"
 msgstr "Hide password"
 
-#: src/components/editor/bubble-menus.tsx:165
+#: src/components/editor/bubble-menus.tsx:168
 #: src/components/editor/extensions/slash-command.tsx:250
-#: src/components/editor/toolbar.tsx:407
+#: src/components/editor/toolbar.tsx:423
 msgid "Highlight"
 msgstr "Highlight"
 
-#: src/components/editor/toolbar.tsx:397
+#: src/components/editor/toolbar.tsx:413
 msgid "Highlight color"
 msgstr "Highlight color"
 
@@ -2121,7 +2153,7 @@ msgstr "IAM users"
 msgid "image"
 msgstr "image"
 
-#: src/components/editor/toolbar.tsx:592
+#: src/components/editor/toolbar.tsx:610
 msgid "Image"
 msgstr "Image"
 
@@ -2139,7 +2171,7 @@ msgid "Import"
 msgstr "Import"
 
 #: src/components/editor/dialogs.tsx:434
-#: src/components/editor/mavi-editor.tsx:602
+#: src/components/editor/mavi-editor.tsx:554
 msgid "Import / export"
 msgstr "Import / export"
 
@@ -2168,13 +2200,13 @@ msgstr "In review"
 msgid "Include the uploaded files"
 msgstr "Include the uploaded files"
 
-#: src/components/editor/toolbar.tsx:534
+#: src/components/editor/toolbar.tsx:551
 msgid "Increase indent"
 msgstr "Increase indent"
 
 #: src/components/editor/dialogs.tsx:511
 #: src/components/editor/extensions/slash-command.tsx:241
-#: src/components/editor/toolbar.tsx:323
+#: src/components/editor/toolbar.tsx:338
 msgid "Inline code"
 msgstr "Inline code"
 
@@ -2248,9 +2280,9 @@ msgstr "It will be able to do what you can: read this site's posts, write and ch
 msgid "It will send you to this site to sign in and ask whether you want to allow it. Nothing is connected until you say yes, and the program never sees your password or anything you could paste elsewhere."
 msgstr "It will send you to this site to sign in and ask whether you want to allow it. Nothing is connected until you say yes, and the program never sees your password or anything you could paste elsewhere."
 
-#: src/components/editor/bubble-menus.tsx:127
+#: src/components/editor/bubble-menus.tsx:130
 #: src/components/editor/dialogs.tsx:508
-#: src/components/editor/toolbar.tsx:299
+#: src/components/editor/toolbar.tsx:314
 msgid "Italic"
 msgstr "Italic"
 
@@ -2266,7 +2298,7 @@ msgstr "Its posts, its accounts, its uploads and its database schema all go. The
 msgid "Just another Mavi CMS site"
 msgstr "Just another Mavi CMS site"
 
-#: src/components/editor/toolbar.tsx:489
+#: src/components/editor/toolbar.tsx:506
 msgid "Justify"
 msgstr "Justify"
 
@@ -2287,6 +2319,7 @@ msgid "Label"
 msgstr "Label"
 
 #: src/components/dashboard/content-list.tsx:112
+#: src/components/editor/mavi-editor.tsx:941
 #: src/components/locale-toggle.tsx:23
 msgid "Language"
 msgstr "Language"
@@ -2354,6 +2387,7 @@ msgstr "letterhead"
 msgid "Letterhead"
 msgstr "Letterhead"
 
+#: src/components/editor/mavi-editor.tsx:964
 #: src/components/mode-toggle.tsx:37
 msgid "Light"
 msgstr "Light"
@@ -2362,20 +2396,20 @@ msgstr "Light"
 msgid "Limit"
 msgstr "Limit"
 
-#: src/components/editor/toolbar.tsx:620
+#: src/components/editor/toolbar.tsx:643
 msgid "Line height"
 msgstr "Line height"
 
-#: src/components/editor/bubble-menus.tsx:236
+#: src/components/editor/bubble-menus.tsx:244
 #: src/components/editor/dialogs.tsx:295
 #: src/components/editor/dialogs.tsx:512
 #: src/components/editor/extensions/slash-command.tsx:210
-#: src/components/editor/toolbar.tsx:585
+#: src/components/editor/toolbar.tsx:602
 #: src/components/form-fields-editor.tsx:57
 msgid "Link"
 msgstr "Link"
 
-#: src/components/editor/bubble-menus.tsx:325
+#: src/components/editor/bubble-menus.tsx:333
 msgid "Link address"
 msgstr "Link address"
 
@@ -2451,7 +2485,7 @@ msgstr "Make an access key for that user and paste the two halves above, with th
 msgid "Make an IAM user in the AWS account that owns the sending domain."
 msgstr "Make an IAM user in the AWS account that owns the sending domain."
 
-#: src/routes/dashboard.languages.tsx:166
+#: src/routes/dashboard.languages.tsx:170
 msgid "Make default"
 msgstr "Make default"
 
@@ -2510,7 +2544,7 @@ msgstr "Medium section heading"
 msgid "Mention someone"
 msgstr "Mention someone"
 
-#: src/components/editor/bubble-menus.tsx:475
+#: src/components/editor/bubble-menus.tsx:515
 msgid "Merge cells"
 msgstr "Merge cells"
 
@@ -2525,6 +2559,14 @@ msgstr "Messages a day"
 #: src/components/ses-health.tsx:310
 msgid "Messages a second"
 msgstr "Messages a second"
+
+#: src/components/editor/palette.ts:53
+msgid "Mono"
+msgstr "Mono"
+
+#: src/components/editor/mavi-editor.tsx:901
+msgid "More"
+msgstr "More"
 
 #: src/components/form-fields-editor.tsx:178
 msgid "Move down"
@@ -2560,6 +2602,10 @@ msgstr "Name (optional)"
 #: src/components/plugin-forms.tsx:411
 msgid "Name shown"
 msgstr "Name shown"
+
+#: src/components/editor/palette.ts:24
+msgid "Navy"
+msgstr "Navy"
 
 #: src/components/editor/content-fields.tsx:53
 msgid "Needed to publish"
@@ -2630,7 +2676,7 @@ msgstr "New template"
 msgid "Newsletters and campaigns"
 msgstr "Newsletters and campaigns"
 
-#: src/components/dashboard/content-list.tsx:244
+#: src/components/dashboard/content-list.tsx:255
 #: src/components/editor/find-replace.tsx:112
 msgid "Next"
 msgstr "Next"
@@ -2660,7 +2706,7 @@ msgstr "No categories yet"
 msgid "No emoji found"
 msgstr "No emoji found"
 
-#: src/routes/dashboard.content-types.tsx:92
+#: src/routes/dashboard.content-types.tsx:95
 msgid "no fields of its own"
 msgstr "no fields of its own"
 
@@ -2837,7 +2883,7 @@ msgstr "Number"
 
 #: src/components/editor/dialogs.tsx:522
 #: src/components/editor/extensions/slash-command.tsx:109
-#: src/components/editor/toolbar.tsx:510
+#: src/components/editor/toolbar.tsx:527
 msgid "Numbered list"
 msgstr "Numbered list"
 
@@ -2884,7 +2930,7 @@ msgstr "One language, one page at a time."
 msgid "One of a list"
 msgstr "One of a list"
 
-#: src/routes/dashboard.content-types.tsx:166
+#: src/routes/dashboard.content-types.tsx:173
 msgid "One of them is called"
 msgstr "One of them is called"
 
@@ -2925,7 +2971,7 @@ msgstr "Only what is online. What a build wants."
 msgid "Only you see this"
 msgstr "Only you see this"
 
-#: src/components/editor/bubble-menus.tsx:282
+#: src/components/editor/bubble-menus.tsx:290
 msgid "Open"
 msgstr "Open"
 
@@ -2967,6 +3013,11 @@ msgstr "Optional folder inside the bucket"
 msgid "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two records appear here once it is set."
 msgstr "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two records appear here once it is set."
 
+#: src/components/editor/palette.ts:19
+#: src/components/editor/palette.ts:39
+msgid "Orange"
+msgstr "Orange"
+
 #: src/components/plugin-forms.tsx:375
 msgid "Other addresses you send as"
 msgstr "Other addresses you send as"
@@ -2991,17 +3042,21 @@ msgstr "Ownership and signing"
 msgid "page"
 msgstr "page"
 
+#: src/lib/use-content-types.ts:46
+msgid "Page"
+msgstr "Page"
+
 #: src/components/dashboard/content-list.tsx:93
 #~ msgid "Page deleted"
 #~ msgstr "Page deleted"
 
-#: src/components/dashboard/dashboard-shell.tsx:76
-#~ msgid "Pages"
-#~ msgstr "Pages"
+#: src/lib/use-content-types.ts:46
+msgid "Pages"
+msgstr "Pages"
 
 #: src/components/editor/dialogs.tsx:520
 #: src/components/editor/extensions/slash-command.tsx:55
-#: src/components/editor/toolbar.tsx:90
+#: src/components/editor/toolbar.tsx:102
 msgid "Paragraph"
 msgstr "Paragraph"
 
@@ -3080,6 +3135,11 @@ msgstr "Pick a tag"
 msgid "Pick an image from your computer"
 msgstr "Pick an image from your computer"
 
+#: src/components/editor/palette.ts:26
+#: src/components/editor/palette.ts:38
+msgid "Pink"
+msgstr "Pink"
+
 #: src/components/editor/code-block-view.tsx:41
 msgid "plain text"
 msgstr "plain text"
@@ -3111,6 +3171,10 @@ msgstr "Port"
 msgid "post"
 msgstr "post"
 
+#: src/lib/use-content-types.ts:45
+msgid "Post"
+msgstr "Post"
+
 #: src/components/dashboard/content-list.tsx:93
 #~ msgid "Post deleted"
 #~ msgstr "Post deleted"
@@ -3119,15 +3183,17 @@ msgstr "post"
 msgid "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 msgstr "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 
-#: src/components/editor/mavi-editor.tsx:394
+#: src/components/editor/mavi-editor.tsx:423
 msgid "Post published"
 msgstr "Post published"
 
-#: src/components/editor/mavi-editor.tsx:706
+#: src/components/editor/mavi-editor.tsx:716
+#: src/components/editor/mavi-editor.tsx:798
+#: src/components/editor/mavi-editor.tsx:832
 msgid "Post settings"
 msgstr "Post settings"
 
-#: src/components/editor/mavi-editor.tsx:691
+#: src/components/editor/mavi-editor.tsx:783
 #: src/components/editor/post-settings.tsx:430
 msgid "Post title"
 msgstr "Post title"
@@ -3138,6 +3204,7 @@ msgid "post-url"
 msgstr "post-url"
 
 #: src/components/dashboard/dashboard-shell.tsx:87
+#: src/lib/use-content-types.ts:45
 msgid "Posts"
 msgstr "Posts"
 
@@ -3145,11 +3212,11 @@ msgstr "Posts"
 msgid "Posts, newest first, in pages."
 msgstr "Posts, newest first, in pages."
 
-#: src/components/editor/mavi-editor.tsx:587
+#: src/components/editor/mavi-editor.tsx:539
 msgid "Preview"
 msgstr "Preview"
 
-#: src/components/dashboard/content-list.tsx:236
+#: src/components/dashboard/content-list.tsx:247
 #: src/components/editor/find-replace.tsx:104
 msgid "Previous"
 msgstr "Previous"
@@ -3167,7 +3234,7 @@ msgid "Public base URL"
 msgstr "Public base URL"
 
 #: src/components/dashboard/dashboard-shell.tsx:117
-#: src/components/editor/mavi-editor.tsx:643
+#: src/components/editor/mavi-editor.tsx:735
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:308
 #: src/routes/dashboard.publish.tsx:116
@@ -3207,6 +3274,11 @@ msgstr "Publishing these is what proves the domain is yours, and what lets Amazo
 msgid "Publishing…"
 msgstr "Publishing…"
 
+#: src/components/editor/palette.ts:25
+#: src/components/editor/palette.ts:37
+msgid "Purple"
+msgstr "Purple"
+
 #: src/components/mcp-connection.tsx:119
 msgid "Put a token where the … is. It is shown once, when you make it."
 msgstr "Put a token where the … is. It is shown once, when you make it."
@@ -3221,8 +3293,8 @@ msgstr "Put this in a .env beside the project. It points at the live site, so wh
 
 #: src/components/editor/dialogs.tsx:524
 #: src/components/editor/extensions/slash-command.tsx:127
-#: src/components/editor/toolbar.tsx:97
-#: src/components/editor/toolbar.tsx:547
+#: src/components/editor/toolbar.tsx:109
+#: src/components/editor/toolbar.tsx:564
 msgid "Quote"
 msgstr "Quote"
 
@@ -3251,8 +3323,13 @@ msgstr "Reading needs an account on this site. Sign in once and use the cookie t
 msgid "Recent builds"
 msgstr "Recent builds"
 
+#: src/components/editor/palette.ts:27
+#: src/components/editor/palette.ts:41
+msgid "Red"
+msgstr "Red"
+
 #: src/components/editor/dialogs.tsx:532
-#: src/components/editor/toolbar.tsx:177
+#: src/components/editor/toolbar.tsx:192
 msgid "Redo"
 msgstr "Redo"
 
@@ -3273,18 +3350,18 @@ msgstr "Region"
 msgid "Regular expression"
 msgstr "Regular expression"
 
-#: src/components/editor/bubble-menus.tsx:193
-#: src/components/editor/bubble-menus.tsx:274
+#: src/components/editor/bubble-menus.tsx:201
+#: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
 #: src/components/plugin-forms.tsx:385
 #: src/components/plugin-forms.tsx:393
 #: src/components/publish-panel.tsx:136
 #: src/components/ses-account.tsx:619
-#: src/routes/dashboard.content-types.tsx:106
+#: src/routes/dashboard.content-types.tsx:113
 #: src/routes/dashboard.forms_.$formId.tsx:224
 #: src/routes/dashboard.forms.tsx:211
 #: src/routes/dashboard.forms.tsx:351
-#: src/routes/dashboard.languages.tsx:196
+#: src/routes/dashboard.languages.tsx:200
 #: src/routes/dashboard.mail.tsx:208
 #: src/routes/dashboard.mail.tsx:316
 #: src/routes/dashboard.mail.tsx:529
@@ -3300,11 +3377,11 @@ msgstr "Remove"
 msgid "Remove {tag} tag"
 msgstr "Remove {tag} tag"
 
-#: src/components/editor/toolbar.tsx:432
+#: src/components/editor/toolbar.tsx:449
 msgid "Remove highlight"
 msgstr "Remove highlight"
 
-#: src/components/editor/bubble-menus.tsx:334
+#: src/components/editor/bubble-menus.tsx:347
 msgid "Remove link"
 msgstr "Remove link"
 
@@ -3316,7 +3393,7 @@ msgstr "Remove this account?"
 msgid "Remove this form?"
 msgstr "Remove this form?"
 
-#: src/routes/dashboard.languages.tsx:188
+#: src/routes/dashboard.languages.tsx:192
 msgid "Remove this language?"
 msgstr "Remove this language?"
 
@@ -3393,7 +3470,7 @@ msgstr "Restored: {rows} rows and {0} files"
 msgid "Resume sending"
 msgstr "Resume sending"
 
-#: src/components/editor/bubble-menus.tsx:450
+#: src/components/editor/bubble-menus.tsx:484
 msgid "Row"
 msgstr "Row"
 
@@ -3429,14 +3506,15 @@ msgstr "S3 compatible storage"
 msgid "Sandbox"
 msgstr "Sandbox"
 
-#: src/components/editor/mavi-editor.tsx:640
+#: src/components/editor/mavi-editor.tsx:728
+#: src/components/editor/mavi-editor.tsx:732
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
 #: src/routes/console.account.tsx:145
 #: src/routes/console.sites.$siteId.tsx:381
 #: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
-#: src/routes/dashboard.content-types.tsx:202
+#: src/routes/dashboard.content-types.tsx:209
 #: src/routes/dashboard.forms.tsx:331
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:349
 #: src/routes/dashboard.mail.tsx:390
@@ -3447,7 +3525,7 @@ msgstr "Sandbox"
 msgid "Save"
 msgstr "Save"
 
-#: src/components/editor/status-bar.tsx:113
+#: src/components/editor/status-bar.tsx:116
 #: src/components/site-mail.tsx:78
 #: src/routes/console.account.tsx:59
 #: src/routes/console.sites.$siteId.tsx:166
@@ -3461,11 +3539,11 @@ msgid "Saved"
 msgstr "Saved"
 
 #. placeholder {0}: savedAt.toLocaleTimeString(i18n.locale, { hour: "2-digit", minute: "2-digit", })
-#: src/components/editor/status-bar.tsx:105
+#: src/components/editor/status-bar.tsx:108
 msgid "Saved at {0}"
 msgstr "Saved at {0}"
 
-#: src/components/editor/status-bar.tsx:98
+#: src/components/editor/status-bar.tsx:101
 msgid "Saving…"
 msgstr "Saving…"
 
@@ -3625,6 +3703,10 @@ msgstr "SEO title"
 msgid "Separated by commas"
 msgstr "Separated by commas"
 
+#: src/components/editor/palette.ts:50
+msgid "Serif"
+msgstr "Serif"
+
 #: src/components/ses-setup.tsx:231
 msgid "SES console"
 msgstr "SES console"
@@ -3660,8 +3742,8 @@ msgid "Settings"
 msgstr "Settings"
 
 #: src/components/editor/mavi-editor.tsx:615
-msgid "Settings panel"
-msgstr "Settings panel"
+#~ msgid "Settings panel"
+#~ msgstr "Settings panel"
 
 #: src/routes/dashboard.plugins_.s3.tsx:85
 msgid "Settings saved"
@@ -3683,7 +3765,7 @@ msgstr "Settings, then Tools & MCP, then New MCP Server — which opens the file
 msgid "Setup failed"
 msgstr "Setup failed"
 
-#: src/routes/dashboard.content-types.tsx:175
+#: src/routes/dashboard.content-types.tsx:182
 msgid "Several are called"
 msgstr "Several are called"
 
@@ -3696,7 +3778,7 @@ msgid "Short description shown on listing pages"
 msgstr "Short description shown on listing pages"
 
 #: src/components/editor/dialogs.tsx:545
-#: src/components/editor/mavi-editor.tsx:608
+#: src/components/editor/mavi-editor.tsx:560
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
@@ -3723,7 +3805,8 @@ msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
 #: src/components/dashboard/dashboard-shell.tsx:202
-#: src/components/editor/mavi-editor.tsx:624
+#: src/components/editor/mavi-editor.tsx:695
+#: src/components/editor/mavi-editor.tsx:983
 #: src/routes/console.index.tsx:119
 msgid "Sign out"
 msgstr "Sign out"
@@ -3769,7 +3852,7 @@ msgstr "Small section heading"
 msgid "someone@example.com or example.com"
 msgstr "someone@example.com or example.com"
 
-#: src/components/editor/bubble-menus.tsx:481
+#: src/components/editor/bubble-menus.tsx:521
 msgid "Split cell"
 msgstr "Split cell"
 
@@ -3819,9 +3902,9 @@ msgstr "Stored — type to replace"
 #~ msgid "Stored: {0}. Typing here replaces all of them."
 #~ msgstr "Stored: {0}. Typing here replaces all of them."
 
-#: src/components/editor/bubble-menus.tsx:143
+#: src/components/editor/bubble-menus.tsx:146
 #: src/components/editor/dialogs.tsx:510
-#: src/components/editor/toolbar.tsx:315
+#: src/components/editor/toolbar.tsx:330
 msgid "Strikethrough"
 msgstr "Strikethrough"
 
@@ -3845,7 +3928,7 @@ msgstr "Subject"
 msgid "subscriber"
 msgstr "subscriber"
 
-#: src/components/editor/toolbar.tsx:438
+#: src/components/editor/toolbar.tsx:455
 msgid "Subscript"
 msgstr "Subscript"
 
@@ -3854,7 +3937,7 @@ msgid "Success!"
 msgstr "Success!"
 
 #: src/components/editor/extensions/slash-command.tsx:259
-#: src/components/editor/toolbar.tsx:445
+#: src/components/editor/toolbar.tsx:462
 msgid "Superscript"
 msgstr "Superscript"
 
@@ -3878,17 +3961,20 @@ msgstr "Switching an agency off stops it signing in. Its sites keep serving — 
 msgid "Syntax-highlighted code"
 msgstr "Syntax-highlighted code"
 
+#: src/components/editor/mavi-editor.tsx:976
+#: src/components/editor/palette.ts:56
 #: src/components/mode-toggle.tsx:49
 msgid "System"
 msgstr "System"
 
 #: src/components/editor/extensions/slash-command.tsx:163
-#: src/components/editor/toolbar.tsx:599
+#: src/components/editor/toolbar.tsx:622
 msgid "Table"
 msgstr "Table"
 
-#: src/components/editor/mavi-editor.tsx:572
-#: src/components/editor/mavi-editor.tsx:659
+#: src/components/editor/mavi-editor.tsx:524
+#: src/components/editor/mavi-editor.tsx:751
+#: src/components/editor/mavi-editor.tsx:815
 msgid "Table of contents"
 msgstr "Table of contents"
 
@@ -3931,9 +4017,13 @@ msgstr "Take the database, and the uploaded files if you want them, into a singl
 
 #: src/components/editor/dialogs.tsx:523
 #: src/components/editor/extensions/slash-command.tsx:118
-#: src/components/editor/toolbar.tsx:518
+#: src/components/editor/toolbar.tsx:535
 msgid "Task list"
 msgstr "Task list"
+
+#: src/components/editor/palette.ts:22
+msgid "Teal"
+msgstr "Teal"
 
 #: src/routes/dashboard.forms.tsx:298
 msgid "Tell somebody"
@@ -3965,8 +4055,8 @@ msgstr "Testing connection…"
 msgid "Text"
 msgstr "Text"
 
-#: src/components/editor/toolbar.tsx:339
-#: src/components/editor/toolbar.tsx:352
+#: src/components/editor/toolbar.tsx:354
+#: src/components/editor/toolbar.tsx:367
 msgid "Text color"
 msgstr "Text color"
 
@@ -4079,6 +4169,7 @@ msgstr "The usual one"
 msgid "The whole of it"
 msgstr "The whole of it"
 
+#: src/components/editor/mavi-editor.tsx:957
 #: src/components/mode-toggle.tsx:24
 msgid "Theme"
 msgstr "Theme"
@@ -4129,7 +4220,7 @@ msgstr "This is the whole of it — there is no token to find and no file to edi
 msgid "This is what you sign in with."
 msgstr "This is what you sign in with."
 
-#: src/components/editor/mavi-editor.tsx:259
+#: src/components/editor/mavi-editor.tsx:288
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "This post could not be opened, so it has been left untouched."
 
@@ -4167,7 +4258,8 @@ msgstr "Tokens"
 msgid "took {0} seconds"
 msgstr "took {0} seconds"
 
-#: src/components/editor/mavi-editor.tsx:530
+#: src/components/editor/mavi-editor.tsx:653
+#: src/components/editor/mavi-editor.tsx:922
 msgid "Translations"
 msgstr "Translations"
 
@@ -4187,18 +4279,18 @@ msgstr "Type"
 msgid "Unblock"
 msgstr "Unblock"
 
-#: src/components/dashboard/content-list.tsx:178
+#: src/components/dashboard/content-list.tsx:184
 msgid "Uncategorized"
 msgstr "Uncategorized"
 
-#: src/components/editor/bubble-menus.tsx:135
+#: src/components/editor/bubble-menus.tsx:138
 #: src/components/editor/dialogs.tsx:509
-#: src/components/editor/toolbar.tsx:307
+#: src/components/editor/toolbar.tsx:322
 msgid "Underline"
 msgstr "Underline"
 
 #: src/components/editor/dialogs.tsx:531
-#: src/components/editor/toolbar.tsx:169
+#: src/components/editor/toolbar.tsx:184
 msgid "Undo"
 msgstr "Undo"
 
@@ -4206,12 +4298,12 @@ msgstr "Undo"
 msgid "Unlink"
 msgstr "Unlink"
 
-#: src/components/editor/status-bar.tsx:119
+#: src/components/editor/status-bar.tsx:122
 msgid "Unsaved changes"
 msgstr "Unsaved changes"
 
-#: src/components/dashboard/content-list.tsx:175
-#: src/components/editor/toc-panel.tsx:53
+#: src/components/dashboard/content-list.tsx:181
+#: src/components/editor/toc-panel.tsx:62
 msgid "Untitled"
 msgstr "Untitled"
 
@@ -4219,8 +4311,8 @@ msgstr "Untitled"
 #~ msgid "Untitled page"
 #~ msgstr "Untitled page"
 
-#: src/components/editor/mavi-editor.tsx:512
-#: src/components/editor/mavi-editor.tsx:689
+#: src/components/editor/mavi-editor.tsx:626
+#: src/components/editor/mavi-editor.tsx:781
 msgid "Untitled post"
 msgstr "Untitled post"
 
@@ -4368,7 +4460,7 @@ msgstr "What it is"
 msgid "What it is for"
 msgstr "What it is for"
 
-#: src/routes/dashboard.content-types.tsx:159
+#: src/routes/dashboard.content-types.tsx:166
 msgid "What one of these is made of, beyond its title and its text."
 msgstr "What one of these is made of, beyond its title and its text."
 
@@ -4516,6 +4608,11 @@ msgstr "Write a post."
 msgid "Writing"
 msgstr "Writing"
 
+#: src/components/editor/palette.ts:20
+#: src/components/editor/palette.ts:34
+msgid "Yellow"
+msgstr "Yellow"
+
 #: src/components/form-fields-editor.tsx:54
 msgid "Yes or no"
 msgstr "Yes or no"
@@ -4563,7 +4660,7 @@ msgstr "Your pages are built from your own project. Publishing builds them again
 msgid "Your sites"
 msgstr "Your sites"
 
-#: src/components/editor/toolbar.tsx:595
+#: src/components/editor/toolbar.tsx:616
 msgid "YouTube"
 msgstr "YouTube"
 

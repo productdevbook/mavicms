@@ -509,6 +509,17 @@
   .mavi-focus-mode .mavi-prose > .mavi-focused {
     opacity: 1;
   }
+
+  /* --- yatay kayan şerit --- */
+
+  .mavi-scroll-x {
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .mavi-scroll-x::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* --- highlight.js --- */

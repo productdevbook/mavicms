@@ -16,7 +16,7 @@ msgstr ""
 #. placeholder {0}: pendingDelete?.filename
 #. placeholder {0}: pendingDelete?.name
 #. placeholder {0}: pendingDelete?.title
-#: src/components/dashboard/content-list.tsx:258
+#: src/components/dashboard/content-list.tsx:269
 #: src/routes/dashboard.categories.tsx:337
 #: src/routes/dashboard.media.tsx:140
 msgid "\"{0}\" will be permanently deleted. This cannot be undone."
@@ -36,17 +36,17 @@ msgid "{{ content }} is where the campaign goes. {{ name }}, {{ email }} and {{ 
 msgstr "{{ content }} kampanyanın geleceği yerdir. {{ name }}, {{ email }} ve {{ unsubscribe_url }} her kişi için doldurulur; kişi hakkında tuttuğunuz diğer alanlar da öyle."
 
 #. placeholder {0}: stats.selected
-#: src/components/editor/status-bar.tsx:55
+#: src/components/editor/status-bar.tsx:58
 msgid "{0, plural, one {# character selected} other {# characters selected}}"
 msgstr "{0, plural, one {# karakter seçili} other {# karakter seçili}}"
 
 #. placeholder {0}: stats.characters
-#: src/components/editor/status-bar.tsx:47
+#: src/components/editor/status-bar.tsx:50
 msgid "{0, plural, one {# character} other {# characters}}"
 msgstr "{0, plural, one {# karakter} other {# karakter}}"
 
 #. placeholder {0}: stats.headings
-#: src/components/editor/status-bar.tsx:66
+#: src/components/editor/status-bar.tsx:69
 msgid "{0, plural, one {# heading} other {# headings}}"
 msgstr "{0, plural, one {# başlık} other {# başlık}}"
 
@@ -56,7 +56,7 @@ msgstr "{0, plural, one {# başlık} other {# başlık}}"
 #~ msgstr "{0, plural, one {# görsel eklendi} other {# görsel eklendi}}"
 
 #. placeholder {0}: stats.words
-#: src/components/editor/status-bar.tsx:44
+#: src/components/editor/status-bar.tsx:47
 msgid "{0, plural, one {word} other {words}}"
 msgstr "{0, plural, one {kelime} other {kelime}}"
 
@@ -216,14 +216,14 @@ msgid "{0} will no longer be able to sign in. Their posts stay."
 msgstr "{0} artık giriş yapamaz. Yazıları kalır."
 
 #. placeholder {0}: kind.count
-#: src/routes/dashboard.content-types.tsx:97
+#: src/routes/dashboard.content-types.tsx:100
 msgid "{0} written"
 msgstr "{0} tane yazıldı"
 
 #. placeholder {0}: page.offset + 1
 #. placeholder {1}: Math.min(page.offset + page.limit, page.total)
 #. placeholder {2}: page.total
-#: src/components/dashboard/content-list.tsx:227
+#: src/components/dashboard/content-list.tsx:238
 msgid "{0}–{1} of {2}"
 msgstr "{2} yazıdan {0}–{1}"
 
@@ -248,7 +248,7 @@ msgstr "{0} kendi belgeleri"
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} tanesi · Amazon %{reviewAt} oranında inceler, %{pauseAt} oranında durdurur"
 
-#: src/components/editor/status-bar.tsx:63
+#: src/components/editor/status-bar.tsx:66
 msgid "{minutes, plural, one {# min read} other {# min read}}"
 msgstr "{minutes, plural, one {# dk okuma} other {# dk okuma}}"
 
@@ -310,7 +310,7 @@ msgid "A folder inside the data directory."
 msgstr "Veri dizininin içinde bir klasör."
 
 #. placeholder {0}: kind.slug
-#: src/routes/dashboard.content-types.tsx:187
+#: src/routes/dashboard.content-types.tsx:194
 msgid "A front end asks for these with ?kind={0}"
 msgstr "Ön yüz bunları ?kind={0} ile ister"
 
@@ -322,7 +322,7 @@ msgstr "Liste, yazıların gövdesini vermez; bütün arşivi tek yanıtta gönd
 msgid "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 msgstr "Sert şekilde geri dönen ya da birinin spam olarak bildirdiği mesajlar. Amazon bu listeyi kendi tutar ve bu panel ne yaparsa yapsın ona uyar — iade para götürür, şikâyet hesap kapatır."
 
-#: src/routes/dashboard.content-types.tsx:155
+#: src/routes/dashboard.content-types.tsx:162
 msgid "A new kind"
 msgstr "Yeni bir tür"
 
@@ -343,7 +343,7 @@ msgstr "Bir yazı hem <0>content_markdown</0> taşır — yazının kendisi budu
 msgid "A prefix inside the bucket."
 msgstr "Kovanın içinde bir önek."
 
-#: src/components/editor/mavi-editor.tsx:297
+#: src/components/editor/mavi-editor.tsx:326
 msgid "A scheduled post needs a publish date"
 msgstr "Zamanlanmış bir yazının bir yayın tarihi olmalı"
 
@@ -372,7 +372,7 @@ msgstr "Erişim jetonu"
 msgid "Account added"
 msgstr "Hesap eklendi"
 
-#: src/routes/dashboard.languages.tsx:148
+#: src/routes/dashboard.languages.tsx:151
 msgid "Active"
 msgstr "Etkin"
 
@@ -423,11 +423,11 @@ msgstr "Bağlantıdan görsel ekle"
 msgid "Add category"
 msgstr "Kategori ekle"
 
-#: src/components/editor/bubble-menus.tsx:429
+#: src/components/editor/bubble-menus.tsx:457
 msgid "Add column after"
 msgstr "Sağa sütun ekle"
 
-#: src/components/editor/bubble-menus.tsx:426
+#: src/components/editor/bubble-menus.tsx:452
 msgid "Add column before"
 msgstr "Sola sütun ekle"
 
@@ -451,11 +451,11 @@ msgstr "Görsel ekle"
 msgid "Add language"
 msgstr "Dil ekle"
 
-#: src/components/editor/bubble-menus.tsx:457
+#: src/components/editor/bubble-menus.tsx:495
 msgid "Add row after"
 msgstr "Alta satır ekle"
 
-#: src/components/editor/bubble-menus.tsx:454
+#: src/components/editor/bubble-menus.tsx:490
 msgid "Add row before"
 msgstr "Üste satır ekle"
 
@@ -521,15 +521,15 @@ msgstr "İşletme adı"
 msgid "Agency sign in"
 msgstr "İşletme girişi"
 
-#: src/components/editor/bubble-menus.tsx:362
+#: src/components/editor/bubble-menus.tsx:377
 #: src/components/editor/extensions/slash-command.tsx:277
-#: src/components/editor/toolbar.tsx:473
+#: src/components/editor/toolbar.tsx:490
 msgid "Align center"
 msgstr "Ortala"
 
-#: src/components/editor/bubble-menus.tsx:355
+#: src/components/editor/bubble-menus.tsx:370
 #: src/components/editor/extensions/slash-command.tsx:268
-#: src/components/editor/toolbar.tsx:465
+#: src/components/editor/toolbar.tsx:482
 msgid "Align left"
 msgstr "Sola hizala"
 
@@ -541,9 +541,9 @@ msgstr "Paragrafı sola hizala"
 msgid "Align paragraph to the right"
 msgstr "Paragrafı sağa hizala"
 
-#: src/components/editor/bubble-menus.tsx:368
+#: src/components/editor/bubble-menus.tsx:383
 #: src/components/editor/extensions/slash-command.tsx:286
-#: src/components/editor/toolbar.tsx:481
+#: src/components/editor/toolbar.tsx:498
 msgid "Align right"
 msgstr "Sağa hizala"
 
@@ -557,8 +557,8 @@ msgstr "Hizalama"
 msgid "Already have an account? Sign in"
 msgstr "Hesabınız var mı? Giriş yapın"
 
-#: src/components/editor/bubble-menus.tsx:375
-#: src/components/editor/bubble-menus.tsx:378
+#: src/components/editor/bubble-menus.tsx:390
+#: src/components/editor/bubble-menus.tsx:393
 #: src/components/editor/dialogs.tsx:188
 msgid "Alt text"
 msgstr "Alternatif metin"
@@ -659,7 +659,7 @@ msgstr "Yukarıdaki sınırlara kadar herkese yazılabilir."
 msgid "API"
 msgstr "API"
 
-#: src/components/editor/bubble-menus.tsx:259
+#: src/components/editor/bubble-menus.tsx:267
 #: src/components/editor/dialogs.tsx:326
 msgid "Apply"
 msgstr "Uygula"
@@ -739,7 +739,7 @@ msgstr "Geri"
 msgid "Back in Connectors, create a custom connector and paste the address."
 msgstr "Bağlayıcılar'a dönüp özel bir bağlayıcı oluşturun ve adresi yapıştırın."
 
-#: src/components/editor/mavi-editor.tsx:587
+#: src/components/editor/mavi-editor.tsx:539
 msgid "Back to editing"
 msgstr "Düzenlemeye dön"
 
@@ -776,7 +776,7 @@ msgstr "Kötü adresler kendiliğinden durur"
 msgid "Basic"
 msgstr "Temel"
 
-#: src/routes/dashboard.content-types.tsx:194
+#: src/routes/dashboard.content-types.tsx:201
 msgid "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 msgstr "Başlık, metin, görsel ve SEO'nun ötesinde — onlar burada zaten her şeyde var. Gerekli işaretlenmiş bir alan, o şey yayına alınmadan önce doldurulmalı; taslak yarım kalabilir."
 
@@ -805,9 +805,14 @@ msgstr "engelli"
 msgid "Blocks"
 msgstr "Bloklar"
 
-#: src/components/editor/bubble-menus.tsx:119
+#: src/components/editor/palette.ts:23
+#: src/components/editor/palette.ts:36
+msgid "Blue"
+msgstr "Mavi"
+
+#: src/components/editor/bubble-menus.tsx:122
 #: src/components/editor/dialogs.tsx:507
-#: src/components/editor/toolbar.tsx:291
+#: src/components/editor/toolbar.tsx:306
 msgid "Bold"
 msgstr "Kalın"
 
@@ -823,6 +828,10 @@ msgstr "iadeler {0} adresine"
 #: src/components/publish-panel.tsx:210
 msgid "Branch"
 msgstr "Dal"
+
+#: src/components/editor/palette.ts:18
+msgid "Brown"
+msgstr "Kahverengi"
 
 #: src/components/plugin-forms.tsx:105
 msgid "Bucket"
@@ -858,7 +867,7 @@ msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
 
 #: src/components/editor/dialogs.tsx:521
 #: src/components/editor/extensions/slash-command.tsx:100
-#: src/components/editor/toolbar.tsx:502
+#: src/components/editor/toolbar.tsx:519
 msgid "Bullet list"
 msgstr "Madde listesi"
 
@@ -874,17 +883,17 @@ msgstr "Kampanyalar"
 msgid "can send"
 msgstr "gönderebilir"
 
-#: src/components/dashboard/content-list.tsx:262
+#: src/components/dashboard/content-list.tsx:273
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
 #: src/routes/console.index.tsx:209
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
-#: src/routes/dashboard.content-types.tsx:205
+#: src/routes/dashboard.content-types.tsx:212
 #: src/routes/dashboard.forms.tsx:327
 #: src/routes/dashboard.forms.tsx:349
-#: src/routes/dashboard.languages.tsx:194
+#: src/routes/dashboard.languages.tsx:198
 #: src/routes/dashboard.mail.tsx:238
 #: src/routes/dashboard.mail.tsx:387
 #: src/routes/dashboard.mail.tsx:597
@@ -980,7 +989,7 @@ msgstr "Yeniden göndermeden önce listeyi temizleyin"
 #~ msgstr "Yeniden göndermeden önce listeyi temizleyin: geri dönen adresleri çıkarın ve bir yıldır hiçbir şey açmamış kimseye yazmayı bırakın."
 
 #: src/components/editor/dialogs.tsx:513
-#: src/components/editor/toolbar.tsx:452
+#: src/components/editor/toolbar.tsx:469
 msgid "Clear formatting"
 msgstr "Biçimi temizle"
 
@@ -997,7 +1006,7 @@ msgstr "Kapat"
 msgid "CMS_TOKEN is blank until you make one. Without it the site answers nothing, which is the \"why can I not see any posts\" everybody runs into."
 msgstr "Bir tane üretene kadar CMS_TOKEN boş. O olmadan site hiçbir şey döndürmez — herkesin takıldığı \"neden yazıları göremiyorum\" bu."
 
-#: src/components/editor/bubble-menus.tsx:150
+#: src/components/editor/bubble-menus.tsx:153
 msgid "Code"
 msgstr "Kod"
 
@@ -1007,17 +1016,17 @@ msgstr "Kod (tr, en, de)"
 
 #: src/components/editor/dialogs.tsx:525
 #: src/components/editor/extensions/slash-command.tsx:136
-#: src/components/editor/toolbar.tsx:98
-#: src/components/editor/toolbar.tsx:555
+#: src/components/editor/toolbar.tsx:110
+#: src/components/editor/toolbar.tsx:572
 msgid "Code block"
 msgstr "Kod bloğu"
 
 #: src/components/editor/extensions/slash-command.tsx:145
-#: src/components/editor/toolbar.tsx:563
+#: src/components/editor/toolbar.tsx:580
 msgid "Collapsible section"
 msgstr "Açılır bölüm"
 
-#: src/components/editor/bubble-menus.tsx:422
+#: src/components/editor/bubble-menus.tsx:446
 msgid "Column"
 msgstr "Sütun"
 
@@ -1033,7 +1042,7 @@ msgstr "Yorumlar"
 msgid "Configuration set"
 msgstr "Yapılandırma kümesi"
 
-#: src/routes/dashboard.plugins.tsx:105
+#: src/routes/dashboard.plugins.tsx:106
 msgid "Configure"
 msgstr "Yapılandır"
 
@@ -1094,7 +1103,7 @@ msgstr "Bağlantı URL'si"
 msgid "Content"
 msgstr "İçerik"
 
-#: src/routes/dashboard.languages.tsx:190
+#: src/routes/dashboard.languages.tsx:194
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
 msgstr "Bu dilde yazılmış içerik varsa silme engellenir — ne kadar olduğu size bildirilir."
 
@@ -1120,7 +1129,7 @@ msgid "Copied"
 msgstr "Kopyalandı"
 
 #: src/components/assistant-clients.tsx:119
-#: src/components/editor/bubble-menus.tsx:317
+#: src/components/editor/bubble-menus.tsx:325
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
 #: src/components/ses-account.tsx:865
@@ -1280,7 +1289,7 @@ msgstr "Yapılamadı"
 msgid "Could not link tags"
 msgstr "Etiketler bağlanamadı"
 
-#: src/components/editor/mavi-editor.tsx:272
+#: src/components/editor/mavi-editor.tsx:301
 msgid "Could not load post"
 msgstr "Yazı yüklenemedi"
 
@@ -1417,7 +1426,7 @@ msgid "Could not remove them"
 msgstr "Kaldırılamadı"
 
 #: src/components/site-mail.tsx:81
-#: src/routes/dashboard.content-types.tsx:145
+#: src/routes/dashboard.content-types.tsx:152
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:89
 #: src/routes/dashboard.mail.tsx:279
 #: src/routes/dashboard.mail.tsx:646
@@ -1425,7 +1434,7 @@ msgstr "Kaldırılamadı"
 msgid "Could not save it"
 msgstr "Kaydedilemedi"
 
-#: src/components/editor/mavi-editor.tsx:337
+#: src/components/editor/mavi-editor.tsx:366
 msgid "Could not save post"
 msgstr "Yazı kaydedilemedi"
 
@@ -1506,11 +1515,11 @@ msgstr "{0} yüklenemedi"
 msgid "Could not upload cover image"
 msgstr "Kapak görseli yüklenemedi"
 
-#: src/routes/dashboard.content-types.tsx:171
+#: src/routes/dashboard.content-types.tsx:178
 msgid "Course"
 msgstr "Eğitim"
 
-#: src/routes/dashboard.content-types.tsx:180
+#: src/routes/dashboard.content-types.tsx:187
 msgid "Courses"
 msgstr "Eğitimler"
 
@@ -1522,7 +1531,8 @@ msgstr "Kapak görseli"
 msgid "Cover preview"
 msgstr "Kapak önizlemesi"
 
-#: src/components/editor/mavi-editor.tsx:560
+#: src/components/editor/mavi-editor.tsx:672
+#: src/components/editor/mavi-editor.tsx:931
 msgid "Create"
 msgstr "Oluştur"
 
@@ -1551,15 +1561,20 @@ msgstr "Kimlik bilgileri saklanmadan önce şifrelenir ve hiçbir zaman tarayıc
 msgid "Current password"
 msgstr "Mevcut parola"
 
-#: src/components/editor/toolbar.tsx:378
+#: src/components/editor/palette.ts:57
+msgid "Cursive"
+msgstr "El yazısı"
+
+#: src/components/editor/toolbar.tsx:394
 msgid "Custom"
 msgstr "Özel"
 
+#: src/components/editor/mavi-editor.tsx:970
 #: src/components/mode-toggle.tsx:43
 msgid "Dark"
 msgstr "Koyu"
 
-#: src/components/editor/mavi-editor.tsx:503
+#: src/components/editor/mavi-editor.tsx:614
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -1583,7 +1598,7 @@ msgstr "Veritabanı türü"
 msgid "Date"
 msgstr "Tarih"
 
-#: src/components/editor/toolbar.tsx:526
+#: src/components/editor/toolbar.tsx:543
 msgid "Decrease indent"
 msgstr "Girintiyi azalt"
 
@@ -1591,19 +1606,21 @@ msgstr "Girintiyi azalt"
 msgid "default"
 msgstr "varsayılan"
 
-#: src/components/editor/toolbar.tsx:273
-#: src/components/editor/toolbar.tsx:627
-#: src/routes/dashboard.languages.tsx:138
+#: src/components/editor/palette.ts:16
+#: src/components/editor/palette.ts:48
+#: src/components/editor/toolbar.tsx:288
+#: src/components/editor/toolbar.tsx:650
+#: src/routes/dashboard.languages.tsx:141
 msgid "Default"
 msgstr "Varsayılan"
 
-#: src/components/dashboard/content-list.tsx:214
-#: src/components/dashboard/content-list.tsx:264
+#: src/components/dashboard/content-list.tsx:225
+#: src/components/dashboard/content-list.tsx:275
 #: src/components/editor/block-handle.tsx:186
-#: src/components/editor/bubble-menus.tsx:395
+#: src/components/editor/bubble-menus.tsx:415
 #: src/routes/dashboard.categories.tsx:317
 #: src/routes/dashboard.categories.tsx:343
-#: src/routes/dashboard.languages.tsx:171
+#: src/routes/dashboard.languages.tsx:175
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
 #: src/routes/dashboard.plugins_.backup.tsx:374
@@ -1613,7 +1630,7 @@ msgstr "Varsayılan"
 msgid "Delete"
 msgstr "Sil"
 
-#: src/components/editor/bubble-menus.tsx:439
+#: src/components/editor/bubble-menus.tsx:469
 msgid "Delete column"
 msgstr "Sütunu sil"
 
@@ -1621,13 +1638,17 @@ msgstr "Sütunu sil"
 msgid "Delete one, and any image left with no owner."
 msgstr "Bir yazıyı ve sahipsiz kalan resimlerini siler."
 
-#: src/components/editor/bubble-menus.tsx:467
+#: src/components/editor/bubble-menus.tsx:507
 msgid "Delete row"
 msgstr "Satırı sil"
 
-#: src/components/editor/bubble-menus.tsx:487
+#: src/components/editor/bubble-menus.tsx:527
 msgid "Delete table"
 msgstr "Tabloyu sil"
+
+#: src/components/dashboard/content-list.tsx:267
+msgid "Delete this {one}?"
+msgstr "Bu {one} silinsin mi?"
 
 #: src/routes/dashboard.plugins_.backup.tsx:416
 msgid "Delete this backup?"
@@ -1642,8 +1663,8 @@ msgid "Delete this media?"
 msgstr "Bu medya silinsin mi?"
 
 #: src/components/dashboard/content-list.tsx:256
-msgid "Delete this post?"
-msgstr "Bu yazı silinsin mi?"
+#~ msgid "Delete this post?"
+#~ msgstr "Bu yazı silinsin mi?"
 
 #: src/routes/dashboard.tags.tsx:295
 msgid "Delete this tag?"
@@ -1688,7 +1709,7 @@ msgid "Disconnecting one stops it that moment."
 msgstr "Birinin bağlantısını kesmek onu o anda durdurur."
 
 #: src/components/editor/extensions/slash-command.tsx:154
-#: src/components/editor/toolbar.tsx:574
+#: src/components/editor/toolbar.tsx:591
 msgid "Divider"
 msgstr "Ayraç"
 
@@ -1709,7 +1730,7 @@ msgstr "İndir"
 msgid "Draft"
 msgstr "Taslak"
 
-#: src/components/editor/mavi-editor.tsx:332
+#: src/components/editor/mavi-editor.tsx:361
 msgid "Draft saved"
 msgstr "Taslak kaydedildi"
 
@@ -1721,9 +1742,10 @@ msgstr "Çoğalt"
 msgid "Each language has its own tags. Link them so a post's tag can point at its counterpart in another language."
 msgstr "Her dilin kendi etiketleri vardır. Bir yazının etiketinin başka dildeki karşılığına işaret etmesi için bunları bağlayın."
 
-#: src/components/dashboard/content-list.tsx:201
-#: src/components/editor/bubble-menus.tsx:323
-#: src/components/editor/mavi-editor.tsx:560
+#: src/components/dashboard/content-list.tsx:212
+#: src/components/editor/bubble-menus.tsx:331
+#: src/components/editor/mavi-editor.tsx:671
+#: src/components/editor/mavi-editor.tsx:931
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.mail.tsx:311
@@ -1860,8 +1882,8 @@ msgid "Featured"
 msgstr "Öne çıkar"
 
 #: src/components/form-fields-editor.tsx:76
-#: src/routes/dashboard.content-types.tsx:100
-#: src/routes/dashboard.content-types.tsx:192
+#: src/routes/dashboard.content-types.tsx:107
+#: src/routes/dashboard.content-types.tsx:199
 msgid "Fields"
 msgstr "Alanlar"
 
@@ -1871,7 +1893,7 @@ msgstr "Yukarıdaki bölge ve anahtarları doldurup kaydedin. Amazon'un bu hesap
 
 #: src/components/editor/dialogs.tsx:534
 #: src/components/editor/find-replace.tsx:73
-#: src/components/editor/toolbar.tsx:642
+#: src/components/editor/toolbar.tsx:667
 msgid "Find and replace"
 msgstr "Bul ve değiştir"
 
@@ -1880,7 +1902,7 @@ msgid "Find…"
 msgstr "Ara…"
 
 #: src/components/editor/dialogs.tsx:543
-#: src/components/editor/mavi-editor.tsx:579
+#: src/components/editor/mavi-editor.tsx:531
 msgid "Focus mode"
 msgstr "Odak modu"
 
@@ -1893,7 +1915,7 @@ msgstr "Katlanabilir detay bloğu"
 msgid "Folder"
 msgstr "Klasör"
 
-#: src/components/editor/toolbar.tsx:235
+#: src/components/editor/toolbar.tsx:250
 msgid "Font"
 msgstr "Yazı tipi"
 
@@ -1933,12 +1955,12 @@ msgstr "Gönderen adı"
 msgid "Full access"
 msgstr "Tam erişim"
 
-#: src/components/editor/bubble-menus.tsx:387
+#: src/components/editor/bubble-menus.tsx:403
 msgid "Full width"
 msgstr "Tam genişlik"
 
 #: src/components/editor/dialogs.tsx:544
-#: src/components/editor/mavi-editor.tsx:594
+#: src/components/editor/mavi-editor.tsx:546
 msgid "Fullscreen"
 msgstr "Tam ekran"
 
@@ -1954,7 +1976,7 @@ msgstr "Başlıktan üret"
 msgid "Generate password"
 msgstr "Parola üret"
 
-#: src/routes/dashboard.content-types.tsx:160
+#: src/routes/dashboard.content-types.tsx:167
 msgid "Give it a name and say what one is made of. The address it answers on is made from the name and never changes afterwards, because a front end will be asking for it."
 msgstr "Bir ad verin ve bir tanesinin nelerden oluştuğunu söyleyin. Cevap vereceği adres addan üretilir ve sonradan hiç değişmez, çünkü ön yüz onu isteyecek."
 
@@ -1966,7 +1988,7 @@ msgstr "Ona bu adresi verin"
 msgid "Give it this policy."
 msgstr "Şu politikayı verin."
 
-#: src/components/editor/mavi-editor.tsx:288
+#: src/components/editor/mavi-editor.tsx:317
 msgid "Give your post a title first"
 msgstr "Önce yazıya bir başlık verin"
 
@@ -1992,6 +2014,16 @@ msgstr "kalıcı olarak ulaşılmadı"
 msgid "good until {0}"
 msgstr "{0} tarihine kadar geçerli"
 
+#: src/components/editor/palette.ts:17
+#: src/components/editor/palette.ts:40
+msgid "Gray"
+msgstr "Gri"
+
+#: src/components/editor/palette.ts:21
+#: src/components/editor/palette.ts:35
+msgid "Green"
+msgstr "Yeşil"
+
 #: src/components/ses-health.tsx:142
 msgid "grey: sent · red: did not arrive"
 msgstr "gri: gönderildi · kırmızı: ulaşmadı"
@@ -2004,11 +2036,11 @@ msgstr "gri: gönderildi · kırmızı: ulaşmadı"
 msgid "Handing this to an assistant"
 msgstr "Bunu bir asistana vermek"
 
-#: src/components/editor/bubble-menus.tsx:432
+#: src/components/editor/bubble-menus.tsx:462
 msgid "Header column"
 msgstr "Başlık sütunu"
 
-#: src/components/editor/bubble-menus.tsx:460
+#: src/components/editor/bubble-menus.tsx:500
 msgid "Header row"
 msgstr "Başlık satırı"
 
@@ -2018,7 +2050,7 @@ msgid "Heading {0}"
 msgstr "Başlık {0}"
 
 #: src/components/editor/extensions/slash-command.tsx:64
-#: src/components/editor/toolbar.tsx:91
+#: src/components/editor/toolbar.tsx:103
 msgid "Heading 1"
 msgstr "Başlık 1"
 
@@ -2027,29 +2059,29 @@ msgid "Heading 1–6"
 msgstr "Başlık 1–6"
 
 #: src/components/editor/extensions/slash-command.tsx:73
-#: src/components/editor/toolbar.tsx:92
+#: src/components/editor/toolbar.tsx:104
 msgid "Heading 2"
 msgstr "Başlık 2"
 
 #: src/components/editor/extensions/slash-command.tsx:82
-#: src/components/editor/toolbar.tsx:93
+#: src/components/editor/toolbar.tsx:105
 msgid "Heading 3"
 msgstr "Başlık 3"
 
 #: src/components/editor/extensions/slash-command.tsx:91
-#: src/components/editor/toolbar.tsx:94
+#: src/components/editor/toolbar.tsx:106
 msgid "Heading 4"
 msgstr "Başlık 4"
 
-#: src/components/editor/toolbar.tsx:95
+#: src/components/editor/toolbar.tsx:107
 msgid "Heading 5"
 msgstr "Başlık 5"
 
-#: src/components/editor/toolbar.tsx:96
+#: src/components/editor/toolbar.tsx:108
 msgid "Heading 6"
 msgstr "Başlık 6"
 
-#: src/components/editor/toc-panel.tsx:28
+#: src/components/editor/toc-panel.tsx:37
 msgid "Headings you add will show up here."
 msgstr "Başlık ekledikçe içindekiler burada oluşur."
 
@@ -2057,13 +2089,13 @@ msgstr "Başlık ekledikçe içindekiler burada oluşur."
 msgid "Hide password"
 msgstr "Parolayı gizle"
 
-#: src/components/editor/bubble-menus.tsx:165
+#: src/components/editor/bubble-menus.tsx:168
 #: src/components/editor/extensions/slash-command.tsx:250
-#: src/components/editor/toolbar.tsx:407
+#: src/components/editor/toolbar.tsx:423
 msgid "Highlight"
 msgstr "Vurgu"
 
-#: src/components/editor/toolbar.tsx:397
+#: src/components/editor/toolbar.tsx:413
 msgid "Highlight color"
 msgstr "Vurgu rengi"
 
@@ -2117,7 +2149,7 @@ msgstr "IAM kullanıcıları"
 msgid "image"
 msgstr "görsel"
 
-#: src/components/editor/toolbar.tsx:592
+#: src/components/editor/toolbar.tsx:610
 msgid "Image"
 msgstr "Görsel"
 
@@ -2135,7 +2167,7 @@ msgid "Import"
 msgstr "İçe aktar"
 
 #: src/components/editor/dialogs.tsx:434
-#: src/components/editor/mavi-editor.tsx:602
+#: src/components/editor/mavi-editor.tsx:554
 msgid "Import / export"
 msgstr "İçe / dışa aktar"
 
@@ -2164,13 +2196,13 @@ msgstr "İncelemede"
 msgid "Include the uploaded files"
 msgstr "Yüklenen dosyaları da al"
 
-#: src/components/editor/toolbar.tsx:534
+#: src/components/editor/toolbar.tsx:551
 msgid "Increase indent"
 msgstr "Girintiyi artır"
 
 #: src/components/editor/dialogs.tsx:511
 #: src/components/editor/extensions/slash-command.tsx:241
-#: src/components/editor/toolbar.tsx:323
+#: src/components/editor/toolbar.tsx:338
 msgid "Inline code"
 msgstr "Satır içi kod"
 
@@ -2244,9 +2276,9 @@ msgstr "Sizin yapabildiklerinizi yapabilecek: bu sitenin yazılarını okumak, y
 msgid "It will send you to this site to sign in and ask whether you want to allow it. Nothing is connected until you say yes, and the program never sees your password or anything you could paste elsewhere."
 msgstr "Sizi giriş yapmanız için bu siteye yönlendirir ve izin verip vermeyeceğinizi sorar. Siz evet demeden hiçbir şey bağlanmaz; program parolanızı ya da başka bir yere yapıştırabileceğiniz bir şeyi hiç görmez."
 
-#: src/components/editor/bubble-menus.tsx:127
+#: src/components/editor/bubble-menus.tsx:130
 #: src/components/editor/dialogs.tsx:508
-#: src/components/editor/toolbar.tsx:299
+#: src/components/editor/toolbar.tsx:314
 msgid "Italic"
 msgstr "İtalik"
 
@@ -2262,7 +2294,7 @@ msgstr "Yazıları, hesapları, yüklemeleri ve veritabanı şeması tamamen gid
 msgid "Just another Mavi CMS site"
 msgstr "Sadece bir başka Mavi CMS sitesi"
 
-#: src/components/editor/toolbar.tsx:489
+#: src/components/editor/toolbar.tsx:506
 msgid "Justify"
 msgstr "İki yana yasla"
 
@@ -2283,6 +2315,7 @@ msgid "Label"
 msgstr "Etiket"
 
 #: src/components/dashboard/content-list.tsx:112
+#: src/components/editor/mavi-editor.tsx:941
 #: src/components/locale-toggle.tsx:23
 msgid "Language"
 msgstr "Dil"
@@ -2350,6 +2383,7 @@ msgstr "antet"
 msgid "Letterhead"
 msgstr "Antet"
 
+#: src/components/editor/mavi-editor.tsx:964
 #: src/components/mode-toggle.tsx:37
 msgid "Light"
 msgstr "Açık"
@@ -2358,20 +2392,20 @@ msgstr "Açık"
 msgid "Limit"
 msgstr "Sınır"
 
-#: src/components/editor/toolbar.tsx:620
+#: src/components/editor/toolbar.tsx:643
 msgid "Line height"
 msgstr "Satır aralığı"
 
-#: src/components/editor/bubble-menus.tsx:236
+#: src/components/editor/bubble-menus.tsx:244
 #: src/components/editor/dialogs.tsx:295
 #: src/components/editor/dialogs.tsx:512
 #: src/components/editor/extensions/slash-command.tsx:210
-#: src/components/editor/toolbar.tsx:585
+#: src/components/editor/toolbar.tsx:602
 #: src/components/form-fields-editor.tsx:57
 msgid "Link"
 msgstr "Bağlantı"
 
-#: src/components/editor/bubble-menus.tsx:325
+#: src/components/editor/bubble-menus.tsx:333
 msgid "Link address"
 msgstr "Bağlantı adresi"
 
@@ -2447,7 +2481,7 @@ msgstr "O kullanıcı için bir erişim anahtarı üretin ve iki parçasını yu
 msgid "Make an IAM user in the AWS account that owns the sending domain."
 msgstr "Gönderim alan adının sahibi olan AWS hesabında bir IAM kullanıcısı oluşturun."
 
-#: src/routes/dashboard.languages.tsx:166
+#: src/routes/dashboard.languages.tsx:170
 msgid "Make default"
 msgstr "Varsayılan yap"
 
@@ -2506,7 +2540,7 @@ msgstr "Orta bölüm başlığı"
 msgid "Mention someone"
 msgstr "Kişi etiketle"
 
-#: src/components/editor/bubble-menus.tsx:475
+#: src/components/editor/bubble-menus.tsx:515
 msgid "Merge cells"
 msgstr "Hücreleri birleştir"
 
@@ -2521,6 +2555,14 @@ msgstr "Günde mesaj"
 #: src/components/ses-health.tsx:310
 msgid "Messages a second"
 msgstr "Saniyede mesaj"
+
+#: src/components/editor/palette.ts:53
+msgid "Mono"
+msgstr "Eş aralıklı"
+
+#: src/components/editor/mavi-editor.tsx:901
+msgid "More"
+msgstr "Daha fazla"
 
 #: src/components/form-fields-editor.tsx:178
 msgid "Move down"
@@ -2556,6 +2598,10 @@ msgstr "Ad (isteğe bağlı)"
 #: src/components/plugin-forms.tsx:411
 msgid "Name shown"
 msgstr "Görünen ad"
+
+#: src/components/editor/palette.ts:24
+msgid "Navy"
+msgstr "Lacivert"
 
 #: src/components/editor/content-fields.tsx:53
 msgid "Needed to publish"
@@ -2626,7 +2672,7 @@ msgstr "Yeni şablon"
 msgid "Newsletters and campaigns"
 msgstr "Bültenler ve kampanyalar"
 
-#: src/components/dashboard/content-list.tsx:244
+#: src/components/dashboard/content-list.tsx:255
 #: src/components/editor/find-replace.tsx:112
 msgid "Next"
 msgstr "Sonraki"
@@ -2656,7 +2702,7 @@ msgstr "Henüz kategori yok"
 msgid "No emoji found"
 msgstr "Emoji bulunamadı"
 
-#: src/routes/dashboard.content-types.tsx:92
+#: src/routes/dashboard.content-types.tsx:95
 msgid "no fields of its own"
 msgstr "kendine ait alanı yok"
 
@@ -2833,7 +2879,7 @@ msgstr "Sayı"
 
 #: src/components/editor/dialogs.tsx:522
 #: src/components/editor/extensions/slash-command.tsx:109
-#: src/components/editor/toolbar.tsx:510
+#: src/components/editor/toolbar.tsx:527
 msgid "Numbered list"
 msgstr "Numaralı liste"
 
@@ -2880,7 +2926,7 @@ msgstr "Tek dil, sayfa sayfa."
 msgid "One of a list"
 msgstr "Listeden biri"
 
-#: src/routes/dashboard.content-types.tsx:166
+#: src/routes/dashboard.content-types.tsx:173
 msgid "One of them is called"
 msgstr "Bir tanesinin adı"
 
@@ -2921,7 +2967,7 @@ msgstr "Yalnızca yayında olanlar. Derlemenin istediği bu."
 msgid "Only you see this"
 msgstr "Bunu yalnızca siz görürsünüz"
 
-#: src/components/editor/bubble-menus.tsx:282
+#: src/components/editor/bubble-menus.tsx:290
 msgid "Open"
 msgstr "Aç"
 
@@ -2963,6 +3009,11 @@ msgstr "Bucket içinde isteğe bağlı klasör"
 msgid "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two records appear here once it is set."
 msgstr "İsteğe bağlı ama değer: olmazsa iadeler amazonses.com adresine gider ve alıcı sunucu mesajı gerçekte kimin gönderdiğini daha az bilir. Ayarlandığında burada iki kayıt belirir."
 
+#: src/components/editor/palette.ts:19
+#: src/components/editor/palette.ts:39
+msgid "Orange"
+msgstr "Turuncu"
+
 #: src/components/plugin-forms.tsx:375
 msgid "Other addresses you send as"
 msgstr "Gönderdiğiniz diğer adresler"
@@ -2987,17 +3038,21 @@ msgstr "Sahiplik ve imza"
 msgid "page"
 msgstr "sayfa"
 
+#: src/lib/use-content-types.ts:46
+msgid "Page"
+msgstr "Sayfa"
+
 #: src/components/dashboard/content-list.tsx:93
 #~ msgid "Page deleted"
 #~ msgstr "Sayfa silindi"
 
-#: src/components/dashboard/dashboard-shell.tsx:76
-#~ msgid "Pages"
-#~ msgstr "Sayfalar"
+#: src/lib/use-content-types.ts:46
+msgid "Pages"
+msgstr "Sayfalar"
 
 #: src/components/editor/dialogs.tsx:520
 #: src/components/editor/extensions/slash-command.tsx:55
-#: src/components/editor/toolbar.tsx:90
+#: src/components/editor/toolbar.tsx:102
 msgid "Paragraph"
 msgstr "Paragraf"
 
@@ -3076,6 +3131,11 @@ msgstr "Bir etiket seçin"
 msgid "Pick an image from your computer"
 msgstr "Bilgisayarından görsel seç"
 
+#: src/components/editor/palette.ts:26
+#: src/components/editor/palette.ts:38
+msgid "Pink"
+msgstr "Pembe"
+
 #: src/components/editor/code-block-view.tsx:41
 msgid "plain text"
 msgstr "düz metin"
@@ -3107,6 +3167,10 @@ msgstr "Port"
 msgid "post"
 msgstr "yazı"
 
+#: src/lib/use-content-types.ts:45
+msgid "Post"
+msgstr "Yazı"
+
 #: src/components/dashboard/content-list.tsx:93
 #~ msgid "Post deleted"
 #~ msgstr "Yazı silindi"
@@ -3115,15 +3179,17 @@ msgstr "yazı"
 msgid "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 msgstr "Kendi sayfalarınızdan ya da yazılımınızdan bu adrese JSON gönderin. Hesap gerekmez, yalnızca yukarıdaki alanlar kabul edilir."
 
-#: src/components/editor/mavi-editor.tsx:394
+#: src/components/editor/mavi-editor.tsx:423
 msgid "Post published"
 msgstr "Yazı yayınlandı"
 
-#: src/components/editor/mavi-editor.tsx:706
+#: src/components/editor/mavi-editor.tsx:716
+#: src/components/editor/mavi-editor.tsx:798
+#: src/components/editor/mavi-editor.tsx:832
 msgid "Post settings"
 msgstr "Yazı ayarları"
 
-#: src/components/editor/mavi-editor.tsx:691
+#: src/components/editor/mavi-editor.tsx:783
 #: src/components/editor/post-settings.tsx:430
 msgid "Post title"
 msgstr "Yazı başlığı"
@@ -3134,6 +3200,7 @@ msgid "post-url"
 msgstr "yazi-adresi"
 
 #: src/components/dashboard/dashboard-shell.tsx:87
+#: src/lib/use-content-types.ts:45
 msgid "Posts"
 msgstr "Yazılar"
 
@@ -3141,11 +3208,11 @@ msgstr "Yazılar"
 msgid "Posts, newest first, in pages."
 msgstr "Yazılar, yeniden eskiye, sayfalanmış."
 
-#: src/components/editor/mavi-editor.tsx:587
+#: src/components/editor/mavi-editor.tsx:539
 msgid "Preview"
 msgstr "Önizleme"
 
-#: src/components/dashboard/content-list.tsx:236
+#: src/components/dashboard/content-list.tsx:247
 #: src/components/editor/find-replace.tsx:104
 msgid "Previous"
 msgstr "Önceki"
@@ -3163,7 +3230,7 @@ msgid "Public base URL"
 msgstr "Genel URL tabanı"
 
 #: src/components/dashboard/dashboard-shell.tsx:117
-#: src/components/editor/mavi-editor.tsx:643
+#: src/components/editor/mavi-editor.tsx:735
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:308
 #: src/routes/dashboard.publish.tsx:116
@@ -3203,6 +3270,11 @@ msgstr "Bunları yayınlamak hem alan adının sizin olduğunu kanıtlar hem de 
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
 
+#: src/components/editor/palette.ts:25
+#: src/components/editor/palette.ts:37
+msgid "Purple"
+msgstr "Mor"
+
 #: src/components/mcp-connection.tsx:119
 msgid "Put a token where the … is. It is shown once, when you make it."
 msgstr "… yerine bir jeton koyun. Jeton yalnızca üretildiği anda gösterilir."
@@ -3217,8 +3289,8 @@ msgstr "Bunu projenin yanına bir .env dosyasına koyun. Canlı siteyi gösterir
 
 #: src/components/editor/dialogs.tsx:524
 #: src/components/editor/extensions/slash-command.tsx:127
-#: src/components/editor/toolbar.tsx:97
-#: src/components/editor/toolbar.tsx:547
+#: src/components/editor/toolbar.tsx:109
+#: src/components/editor/toolbar.tsx:564
 msgid "Quote"
 msgstr "Alıntı"
 
@@ -3247,8 +3319,13 @@ msgstr "Okumak için bu sitede bir hesap gerekiyor. Bir kez giriş yapıp dönen
 msgid "Recent builds"
 msgstr "Son derlemeler"
 
+#: src/components/editor/palette.ts:27
+#: src/components/editor/palette.ts:41
+msgid "Red"
+msgstr "Kırmızı"
+
 #: src/components/editor/dialogs.tsx:532
-#: src/components/editor/toolbar.tsx:177
+#: src/components/editor/toolbar.tsx:192
 msgid "Redo"
 msgstr "İleri al"
 
@@ -3269,18 +3346,18 @@ msgstr "Bölge"
 msgid "Regular expression"
 msgstr "Düzenli ifade"
 
-#: src/components/editor/bubble-menus.tsx:193
-#: src/components/editor/bubble-menus.tsx:274
+#: src/components/editor/bubble-menus.tsx:201
+#: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
 #: src/components/plugin-forms.tsx:385
 #: src/components/plugin-forms.tsx:393
 #: src/components/publish-panel.tsx:136
 #: src/components/ses-account.tsx:619
-#: src/routes/dashboard.content-types.tsx:106
+#: src/routes/dashboard.content-types.tsx:113
 #: src/routes/dashboard.forms_.$formId.tsx:224
 #: src/routes/dashboard.forms.tsx:211
 #: src/routes/dashboard.forms.tsx:351
-#: src/routes/dashboard.languages.tsx:196
+#: src/routes/dashboard.languages.tsx:200
 #: src/routes/dashboard.mail.tsx:208
 #: src/routes/dashboard.mail.tsx:316
 #: src/routes/dashboard.mail.tsx:529
@@ -3296,11 +3373,11 @@ msgstr "Kaldır"
 msgid "Remove {tag} tag"
 msgstr "{tag} etiketini kaldır"
 
-#: src/components/editor/toolbar.tsx:432
+#: src/components/editor/toolbar.tsx:449
 msgid "Remove highlight"
 msgstr "Vurguyu kaldır"
 
-#: src/components/editor/bubble-menus.tsx:334
+#: src/components/editor/bubble-menus.tsx:347
 msgid "Remove link"
 msgstr "Bağlantıyı kaldır"
 
@@ -3312,7 +3389,7 @@ msgstr "Bu hesap kaldırılsın mı?"
 msgid "Remove this form?"
 msgstr "Bu form kaldırılsın mı?"
 
-#: src/routes/dashboard.languages.tsx:188
+#: src/routes/dashboard.languages.tsx:192
 msgid "Remove this language?"
 msgstr "Bu dil silinsin mi?"
 
@@ -3389,7 +3466,7 @@ msgstr "Geri yüklendi: {rows} satır ve {0} dosya"
 msgid "Resume sending"
 msgstr "Göndermeyi sürdür"
 
-#: src/components/editor/bubble-menus.tsx:450
+#: src/components/editor/bubble-menus.tsx:484
 msgid "Row"
 msgstr "Satır"
 
@@ -3425,14 +3502,15 @@ msgstr "S3 uyumlu depolama"
 msgid "Sandbox"
 msgstr "Kum havuzu"
 
-#: src/components/editor/mavi-editor.tsx:640
+#: src/components/editor/mavi-editor.tsx:728
+#: src/components/editor/mavi-editor.tsx:732
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
 #: src/routes/console.account.tsx:145
 #: src/routes/console.sites.$siteId.tsx:381
 #: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
-#: src/routes/dashboard.content-types.tsx:202
+#: src/routes/dashboard.content-types.tsx:209
 #: src/routes/dashboard.forms.tsx:331
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:349
 #: src/routes/dashboard.mail.tsx:390
@@ -3443,7 +3521,7 @@ msgstr "Kum havuzu"
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/components/editor/status-bar.tsx:113
+#: src/components/editor/status-bar.tsx:116
 #: src/components/site-mail.tsx:78
 #: src/routes/console.account.tsx:59
 #: src/routes/console.sites.$siteId.tsx:166
@@ -3457,11 +3535,11 @@ msgid "Saved"
 msgstr "Kaydedildi"
 
 #. placeholder {0}: savedAt.toLocaleTimeString(i18n.locale, { hour: "2-digit", minute: "2-digit", })
-#: src/components/editor/status-bar.tsx:105
+#: src/components/editor/status-bar.tsx:108
 msgid "Saved at {0}"
 msgstr "{0} itibarıyla kaydedildi"
 
-#: src/components/editor/status-bar.tsx:98
+#: src/components/editor/status-bar.tsx:101
 msgid "Saving…"
 msgstr "Kaydediliyor…"
 
@@ -3621,6 +3699,10 @@ msgstr "SEO başlığı"
 msgid "Separated by commas"
 msgstr "Virgülle ayırın"
 
+#: src/components/editor/palette.ts:50
+msgid "Serif"
+msgstr "Tırnaklı"
+
 #: src/components/ses-setup.tsx:231
 msgid "SES console"
 msgstr "SES konsolu"
@@ -3656,8 +3738,8 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #: src/components/editor/mavi-editor.tsx:615
-msgid "Settings panel"
-msgstr "Ayarlar paneli"
+#~ msgid "Settings panel"
+#~ msgstr "Ayarlar paneli"
 
 #: src/routes/dashboard.plugins_.s3.tsx:85
 msgid "Settings saved"
@@ -3679,7 +3761,7 @@ msgstr "Ayarlar, sonra Tools & MCP, sonra New MCP Server — aşağıdaki dosyay
 msgid "Setup failed"
 msgstr "Kurulum başarısız oldu"
 
-#: src/routes/dashboard.content-types.tsx:175
+#: src/routes/dashboard.content-types.tsx:182
 msgid "Several are called"
 msgstr "Birkaçının adı"
 
@@ -3692,7 +3774,7 @@ msgid "Short description shown on listing pages"
 msgstr "Liste sayfalarında görünecek kısa açıklama"
 
 #: src/components/editor/dialogs.tsx:545
-#: src/components/editor/mavi-editor.tsx:608
+#: src/components/editor/mavi-editor.tsx:560
 msgid "Shortcuts"
 msgstr "Kısayollar"
 
@@ -3719,7 +3801,8 @@ msgid "Sign in; sets the session cookie."
 msgstr "Giriş yapar; oturum çerezini bırakır."
 
 #: src/components/dashboard/dashboard-shell.tsx:202
-#: src/components/editor/mavi-editor.tsx:624
+#: src/components/editor/mavi-editor.tsx:695
+#: src/components/editor/mavi-editor.tsx:983
 #: src/routes/console.index.tsx:119
 msgid "Sign out"
 msgstr "Çıkış yap"
@@ -3765,7 +3848,7 @@ msgstr "Küçük bölüm başlığı"
 msgid "someone@example.com or example.com"
 msgstr "biri@example.com ya da example.com"
 
-#: src/components/editor/bubble-menus.tsx:481
+#: src/components/editor/bubble-menus.tsx:521
 msgid "Split cell"
 msgstr "Hücreyi böl"
 
@@ -3815,9 +3898,9 @@ msgstr "Kayıtlı — değiştirmek için yazın"
 #~ msgid "Stored: {0}. Typing here replaces all of them."
 #~ msgstr "Kayıtlı: {0}. Buraya yazmak hepsinin yerine geçer."
 
-#: src/components/editor/bubble-menus.tsx:143
+#: src/components/editor/bubble-menus.tsx:146
 #: src/components/editor/dialogs.tsx:510
-#: src/components/editor/toolbar.tsx:315
+#: src/components/editor/toolbar.tsx:330
 msgid "Strikethrough"
 msgstr "Üstü çizili"
 
@@ -3841,7 +3924,7 @@ msgstr "Konu"
 msgid "subscriber"
 msgstr "abone"
 
-#: src/components/editor/toolbar.tsx:438
+#: src/components/editor/toolbar.tsx:455
 msgid "Subscript"
 msgstr "Alt simge"
 
@@ -3850,7 +3933,7 @@ msgid "Success!"
 msgstr "Başarılı!"
 
 #: src/components/editor/extensions/slash-command.tsx:259
-#: src/components/editor/toolbar.tsx:445
+#: src/components/editor/toolbar.tsx:462
 msgid "Superscript"
 msgstr "Üst simge"
 
@@ -3874,17 +3957,20 @@ msgstr "Bir işletmeyi kapatmak girişini durdurur. Siteleri yayında kalır —
 msgid "Syntax-highlighted code"
 msgstr "Sözdizimi vurgulu kod"
 
+#: src/components/editor/mavi-editor.tsx:976
+#: src/components/editor/palette.ts:56
 #: src/components/mode-toggle.tsx:49
 msgid "System"
 msgstr "Sistem"
 
 #: src/components/editor/extensions/slash-command.tsx:163
-#: src/components/editor/toolbar.tsx:599
+#: src/components/editor/toolbar.tsx:622
 msgid "Table"
 msgstr "Tablo"
 
-#: src/components/editor/mavi-editor.tsx:572
-#: src/components/editor/mavi-editor.tsx:659
+#: src/components/editor/mavi-editor.tsx:524
+#: src/components/editor/mavi-editor.tsx:751
+#: src/components/editor/mavi-editor.tsx:815
 msgid "Table of contents"
 msgstr "İçindekiler"
 
@@ -3927,9 +4013,13 @@ msgstr "Veritabanını, istersen yüklenen dosyalarla birlikte, tek bir arşive 
 
 #: src/components/editor/dialogs.tsx:523
 #: src/components/editor/extensions/slash-command.tsx:118
-#: src/components/editor/toolbar.tsx:518
+#: src/components/editor/toolbar.tsx:535
 msgid "Task list"
 msgstr "Görev listesi"
+
+#: src/components/editor/palette.ts:22
+msgid "Teal"
+msgstr "Deniz mavisi"
 
 #: src/routes/dashboard.forms.tsx:298
 msgid "Tell somebody"
@@ -3961,8 +4051,8 @@ msgstr "Bağlantı test ediliyor…"
 msgid "Text"
 msgstr "Metin"
 
-#: src/components/editor/toolbar.tsx:339
-#: src/components/editor/toolbar.tsx:352
+#: src/components/editor/toolbar.tsx:354
+#: src/components/editor/toolbar.tsx:367
 msgid "Text color"
 msgstr "Metin rengi"
 
@@ -4075,6 +4165,7 @@ msgstr "Her zamanki"
 msgid "The whole of it"
 msgstr "Tamamı"
 
+#: src/components/editor/mavi-editor.tsx:957
 #: src/components/mode-toggle.tsx:24
 msgid "Theme"
 msgstr "Tema"
@@ -4125,7 +4216,7 @@ msgstr "Hepsi bu — bulunacak bir jeton ya da düzenlenecek bir dosya yok. Nere
 msgid "This is what you sign in with."
 msgstr "Giriş yaparken bunu kullanırsınız."
 
-#: src/components/editor/mavi-editor.tsx:259
+#: src/components/editor/mavi-editor.tsx:288
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "Bu yazı açılamadı, bu yüzden hiç değiştirilmedi."
 
@@ -4163,7 +4254,8 @@ msgstr "Jetonlar"
 msgid "took {0} seconds"
 msgstr "{0} saniye sürdü"
 
-#: src/components/editor/mavi-editor.tsx:530
+#: src/components/editor/mavi-editor.tsx:653
+#: src/components/editor/mavi-editor.tsx:922
 msgid "Translations"
 msgstr "Çeviriler"
 
@@ -4183,18 +4275,18 @@ msgstr "Tür"
 msgid "Unblock"
 msgstr "Engeli kaldır"
 
-#: src/components/dashboard/content-list.tsx:178
+#: src/components/dashboard/content-list.tsx:184
 msgid "Uncategorized"
 msgstr "Kategorisiz"
 
-#: src/components/editor/bubble-menus.tsx:135
+#: src/components/editor/bubble-menus.tsx:138
 #: src/components/editor/dialogs.tsx:509
-#: src/components/editor/toolbar.tsx:307
+#: src/components/editor/toolbar.tsx:322
 msgid "Underline"
 msgstr "Altı çizili"
 
 #: src/components/editor/dialogs.tsx:531
-#: src/components/editor/toolbar.tsx:169
+#: src/components/editor/toolbar.tsx:184
 msgid "Undo"
 msgstr "Geri al"
 
@@ -4202,12 +4294,12 @@ msgstr "Geri al"
 msgid "Unlink"
 msgstr "Bağlantıyı kaldır"
 
-#: src/components/editor/status-bar.tsx:119
+#: src/components/editor/status-bar.tsx:122
 msgid "Unsaved changes"
 msgstr "Değişiklik bekleniyor"
 
-#: src/components/dashboard/content-list.tsx:175
-#: src/components/editor/toc-panel.tsx:53
+#: src/components/dashboard/content-list.tsx:181
+#: src/components/editor/toc-panel.tsx:62
 msgid "Untitled"
 msgstr "Başlıksız"
 
@@ -4215,8 +4307,8 @@ msgstr "Başlıksız"
 #~ msgid "Untitled page"
 #~ msgstr "Başlıksız sayfa"
 
-#: src/components/editor/mavi-editor.tsx:512
-#: src/components/editor/mavi-editor.tsx:689
+#: src/components/editor/mavi-editor.tsx:626
+#: src/components/editor/mavi-editor.tsx:781
 msgid "Untitled post"
 msgstr "Başlıksız yazı"
 
@@ -4364,7 +4456,7 @@ msgstr "Ne olduğu"
 msgid "What it is for"
 msgstr "Ne için"
 
-#: src/routes/dashboard.content-types.tsx:159
+#: src/routes/dashboard.content-types.tsx:166
 msgid "What one of these is made of, beyond its title and its text."
 msgstr "Bunlardan birinin, başlığı ve metninin ötesinde nelerden oluştuğu."
 
@@ -4512,6 +4604,11 @@ msgstr "Yazı yazar."
 msgid "Writing"
 msgstr "Yazma"
 
+#: src/components/editor/palette.ts:20
+#: src/components/editor/palette.ts:34
+msgid "Yellow"
+msgstr "Sarı"
+
 #: src/components/form-fields-editor.tsx:54
 msgid "Yes or no"
 msgstr "Evet ya da hayır"
@@ -4559,7 +4656,7 @@ msgstr "Sayfalarınız kendi projenizden derleniyor. Yayınlamak, onları CMS'te
 msgid "Your sites"
 msgstr "Siteleriniz"
 
-#: src/components/editor/toolbar.tsx:595
+#: src/components/editor/toolbar.tsx:616
 msgid "YouTube"
 msgstr "YouTube"
 

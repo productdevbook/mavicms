@@ -126,9 +126,12 @@ function LanguagesRoute() {
       ) : (
         <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
           {languages.map((language) => (
-            <div key={language.code} className="flex items-center gap-3 px-4 py-3">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
+            <div
+              key={language.code}
+              className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3"
+            >
+              <div className="min-w-0 basis-full sm:flex-1 sm:basis-0">
+                <div className="flex flex-wrap items-center gap-2">
                   <p className="truncate text-sm font-medium">
                     {language.native_name || language.name}
                   </p>
@@ -144,7 +147,7 @@ function LanguagesRoute() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <span className="text-xs text-muted-foreground">{t`Active`}</span>
                 <Switch
                   checked={language.is_active}
@@ -160,6 +163,7 @@ function LanguagesRoute() {
               <Button
                 variant="ghost"
                 size="sm"
+                className="ml-auto shrink-0"
                 disabled={language.is_default}
                 onClick={() => void patch(language, { is_default: true })}
               >

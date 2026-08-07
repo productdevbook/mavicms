@@ -56,6 +56,9 @@ export function ToolbarGroup({
   ...props
 }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex items-center gap-0.5", className)} {...props} />
+    <div
+      className={cn("flex shrink-0 items-center gap-0.5", className)}
+      {...props}
+    />
   )
 }

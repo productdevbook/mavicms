@@ -38,12 +38,15 @@ export function StatusBar({
   const minutes = readingTimeMinutes(stats.words)
 
   return (
+    // A phone shows the word count and whether the work is safe. The rest is
+    // desk reading, and wrapping it onto three rows costs more screen than it
+    // is worth to somebody typing with a keyboard over half the display.
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border px-4 py-1.5 text-xs text-muted-foreground">
       <span className="tabular-nums">
         <strong className="font-medium text-foreground">{stats.words}</strong>{" "}
         <Plural value={stats.words} one="word" other="words" />
       </span>
-      <span className="tabular-nums">
+      <span className="hidden tabular-nums sm:inline">
         <Plural
           value={stats.characters}
           one="# character"
@@ -51,7 +54,7 @@ export function StatusBar({
         />
       </span>
       {stats.selected > 0 && (
-        <span className="tabular-nums text-primary">
+        <span className="text-primary tabular-nums">
           <Plural
             value={stats.selected}
             one="# character selected"
@@ -59,15 +62,15 @@ export function StatusBar({
           />
         </span>
       )}
-      <span>
+      <span className="hidden sm:inline">
         <Plural value={minutes} one="# min read" other="# min read" />
       </span>
-      <span className="tabular-nums">
+      <span className="hidden tabular-nums sm:inline">
         <Plural value={stats.headings} one="# heading" other="# headings" />
       </span>
 
       {characterLimit && (
-        <span className="flex items-center gap-1.5">
+        <span className="hidden items-center gap-1.5 sm:flex">
           <span
             className={cn(
               "h-1.5 w-24 overflow-hidden rounded-full bg-muted",

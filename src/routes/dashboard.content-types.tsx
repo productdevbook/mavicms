@@ -63,14 +63,14 @@ function ContentTypesRoute() {
 
   return (
     <>
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="mb-6 flex flex-col items-start gap-4 sm:flex-row sm:justify-between">
         <div>
           <h1 className="text-lg font-semibold">{t`What this site publishes`}</h1>
           <p className="text-sm text-muted-foreground">
             {t`Every site has posts and pages. Add a kind of your own when what you publish has facts of its own — a course with a price and a level, a property with rooms — so a page can lay them out instead of hunting for them in a paragraph.`}
           </p>
         </div>
-        <Button onClick={() => setAdding(true)}>
+        <Button className="shrink-0" onClick={() => setAdding(true)}>
           <Plus /> {t`Add a kind`}
         </Button>
       </div>
@@ -82,9 +82,12 @@ function ContentTypesRoute() {
       ) : (
         <div className="flex max-w-3xl flex-col divide-y divide-border rounded-xl border border-border">
           {types.map((kind) => (
-            <div key={kind.id} className="flex items-center gap-3 px-4 py-3">
+            <div
+              key={kind.id}
+              className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3"
+            >
               <Shapes className="size-4 shrink-0 text-muted-foreground" />
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 basis-40">
                 <p className="truncate text-sm font-medium">{kind.plural}</p>
                 <p className="truncate text-xs text-muted-foreground">
                   {kind.slug} ·{" "}
@@ -93,10 +96,14 @@ function ContentTypesRoute() {
                     : kind.fields.map((field) => field.label).join(", ")}
                 </p>
               </div>
-              <span className="text-xs text-muted-foreground">
+              <span className="ml-auto text-xs text-muted-foreground">
                 {t`${kind.count} written`}
               </span>
-              <Button variant="outline" size="sm" onClick={() => setEditing(kind)}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditing(kind)}
+              >
                 {t`Fields`}
               </Button>
               {!kind.built_in && (

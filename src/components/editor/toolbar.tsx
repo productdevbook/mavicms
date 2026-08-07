@@ -57,10 +57,20 @@ import {
 import {
   FONT_SIZES,
   LINE_HEIGHTS,
-  getFontFamilies,
-  getHighlightColors,
-  getTextColors,
+  useFontFamilies,
+  useHighlightColors,
+  useTextColors,
 } from "@/components/editor/palette"
+
+// On a narrow screen the toolbar scrolls sideways, which makes it a clipping
+// ancestor about fourteen hundred pixels wide — so a menu anchored inside it is
+// placed where there is "room", off the side of the phone. The screen is the
+// boundary that matters.
+const onScreen = {
+  collisionBoundary:
+    typeof document === "undefined" ? undefined : document.documentElement,
+  collisionPadding: 8,
+} as const
 
 type BlockValue =
   | "paragraph"
@@ -79,7 +89,9 @@ function applyBlock(editor: Editor, value: BlockValue) {
   if (value === "blockquote") return chain.toggleBlockquote().run()
   if (value === "codeBlock") return chain.toggleCodeBlock().run()
   return chain
-    .setNode("heading", { level: Number(value.slice(1)) as 1 | 2 | 3 | 4 | 5 | 6 })
+    .setNode("heading", {
+      level: Number(value.slice(1)) as 1 | 2 | 3 | 4 | 5 | 6,
+    })
     .run()
 }
 
@@ -98,9 +110,9 @@ export function Toolbar({ editor }: { editor: Editor }) {
     { label: t`Code block`, value: "codeBlock" },
   ]
 
-  const TEXT_COLORS = getTextColors(t)
-  const HIGHLIGHT_COLORS = getHighlightColors(t)
-  const FONT_FAMILIES = getFontFamilies(t)
+  const TEXT_COLORS = useTextColors()
+  const HIGHLIGHT_COLORS = useHighlightColors()
+  const FONT_FAMILIES = useFontFamilies()
 
   const state = useEditorState({
     editor,
@@ -163,7 +175,10 @@ export function Toolbar({ editor }: { editor: Editor }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-x-1 gap-y-1.5 px-3 py-1.5">
+    // Thirty-odd tools wrap to five rows on a phone — a fifth of the screen
+    // gone before a word is typed. One scrolling row instead, and nothing
+    // dropped: everything here is reachable at every width.
+    <div className="mavi-scroll-x flex items-center gap-x-1 gap-y-1.5 overflow-x-auto px-3 py-1.5 *:shrink-0 lg:flex-wrap lg:overflow-x-visible">
       <ToolbarGroup>
         <ToolbarButton
           label={t`Undo`}
@@ -198,7 +213,7 @@ export function Toolbar({ editor }: { editor: Editor }) {
           {activeBlock.label}
           <ChevronDown className="size-3.5" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuContent align="start" className="w-48" {...onScreen}>
           {BLOCK_TYPES.map((item) => (
             <DropdownMenuItem
               key={item.value}
@@ -236,10 +251,10 @@ export function Toolbar({ editor }: { editor: Editor }) {
           </span>
           <ChevronDown className="size-3.5" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-44">
+        <DropdownMenuContent align="start" className="w-44" {...onScreen}>
           {FONT_FAMILIES.map((font) => (
             <DropdownMenuItem
-              key={font.name}
+              key={font.id}
               style={{ fontFamily: font.value || undefined }}
               onClick={() =>
                 font.value
@@ -266,7 +281,7 @@ export function Toolbar({ editor }: { editor: Editor }) {
           {state.fontSize || "16px"}
           <ChevronDown className="size-3.5" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-28">
+        <DropdownMenuContent align="start" className="w-28" {...onScreen}>
           <DropdownMenuItem
             onClick={() => editor.chain().focus().unsetFontSize().run()}
           >
@@ -347,16 +362,17 @@ export function Toolbar({ editor }: { editor: Editor }) {
               style={{ backgroundColor: state.color || "currentColor" }}
             />
           </PopoverTrigger>
-          <PopoverContent className="w-56" align="start">
+          <PopoverContent className="w-56" align="start" {...onScreen}>
             <p className="text-xs font-medium text-muted-foreground">
               {t`Text color`}
             </p>
             <div className="grid grid-cols-6 gap-1">
               {TEXT_COLORS.map((swatch) => (
                 <button
-                  key={swatch.name}
+                  key={swatch.id}
                   type="button"
                   title={swatch.name}
+                  aria-label={swatch.name}
                   onClick={() =>
                     swatch.value
                       ? editor.chain().focus().setColor(swatch.value).run()
@@ -402,16 +418,17 @@ export function Toolbar({ editor }: { editor: Editor }) {
           >
             <Highlighter />
           </PopoverTrigger>
-          <PopoverContent className="w-56" align="start">
+          <PopoverContent className="w-56" align="start" {...onScreen}>
             <p className="text-xs font-medium text-muted-foreground">
               {t`Highlight`}
             </p>
             <div className="grid grid-cols-4 gap-1">
               {HIGHLIGHT_COLORS.map((swatch) => (
                 <button
-                  key={swatch.name}
+                  key={swatch.id}
                   type="button"
                   title={swatch.name}
+                  aria-label={swatch.name}
                   onClick={() =>
                     editor
                       .chain()
@@ -589,10 +606,16 @@ export function Toolbar({ editor }: { editor: Editor }) {
         >
           <Link2 />
         </ToolbarButton>
-        <ToolbarButton label={t`Image`} onClick={() => openEditorDialog("image-url")}>
+        <ToolbarButton
+          label={t`Image`}
+          onClick={() => openEditorDialog("image-url")}
+        >
           <ImageIcon />
         </ToolbarButton>
-        <ToolbarButton label={t`YouTube`} onClick={() => openEditorDialog("youtube")}>
+        <ToolbarButton
+          label={t`YouTube`}
+          onClick={() => openEditorDialog("youtube")}
+        >
           <Video />
         </ToolbarButton>
         <ToolbarButton
@@ -620,7 +643,7 @@ export function Toolbar({ editor }: { editor: Editor }) {
             {t`Line height`}
             <ChevronDown className="size-3.5" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-32">
+          <DropdownMenuContent align="start" className="w-32" {...onScreen}>
             <DropdownMenuItem
               onClick={() => editor.chain().focus().unsetLineHeight().run()}
             >
@@ -630,7 +653,9 @@ export function Toolbar({ editor }: { editor: Editor }) {
             {LINE_HEIGHTS.map((value) => (
               <DropdownMenuItem
                 key={value}
-                onClick={() => editor.chain().focus().setLineHeight(value).run()}
+                onClick={() =>
+                  editor.chain().focus().setLineHeight(value).run()
+                }
               >
                 {value}
               </DropdownMenuItem>

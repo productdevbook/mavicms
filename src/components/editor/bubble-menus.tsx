@@ -39,8 +39,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ToolbarButton, ToolbarSeparator } from "@/components/editor/toolbar-button"
-import { getHighlightColors } from "@/components/editor/palette"
+import {
+  ToolbarButton,
+  ToolbarSeparator,
+} from "@/components/editor/toolbar-button"
+import { useHighlightColors } from "@/components/editor/palette"
 import {
   Popover,
   PopoverContent,
@@ -91,7 +94,7 @@ function showOnTable({ editor }: { editor: Editor }) {
 
 export function TextBubbleMenu({ editor }: { editor: Editor }) {
   const { t } = useLingui()
-  const HIGHLIGHT_COLORS = getHighlightColors(t)
+  const HIGHLIGHT_COLORS = useHighlightColors()
 
   const state = useEditorState({
     editor,
@@ -174,11 +177,16 @@ export function TextBubbleMenu({ editor }: { editor: Editor }) {
           <div className="grid grid-cols-4 gap-1">
             {HIGHLIGHT_COLORS.map((swatch) => (
               <button
-                key={swatch.name}
+                key={swatch.id}
                 type="button"
                 title={swatch.name}
+                aria-label={swatch.name}
                 onClick={() =>
-                  editor.chain().focus().setHighlight({ color: swatch.value }).run()
+                  editor
+                    .chain()
+                    .focus()
+                    .setHighlight({ color: swatch.value })
+                    .run()
                 }
                 className="h-6 rounded-md border border-border"
                 style={{ backgroundColor: swatch.value }}
@@ -324,7 +332,12 @@ export function LinkBubbleMenu({ editor }: { editor: Editor }) {
         onClick={() => {
           const next = window.prompt(t`Link address`, href)
           if (next !== null) {
-            editor.chain().focus().extendMarkRange("link").setLink({ href: next }).run()
+            editor
+              .chain()
+              .focus()
+              .extendMarkRange("link")
+              .setLink({ href: next })
+              .run()
           }
         }}
       >
@@ -332,7 +345,9 @@ export function LinkBubbleMenu({ editor }: { editor: Editor }) {
       </ToolbarButton>
       <ToolbarButton
         label={t`Remove link`}
-        onClick={() => editor.chain().focus().extendMarkRange("link").unsetLink().run()}
+        onClick={() =>
+          editor.chain().focus().extendMarkRange("link").unsetLink().run()
+        }
       >
         <Link2Off />
       </ToolbarButton>
@@ -378,7 +393,8 @@ export function ImageBubbleMenu({ editor }: { editor: Editor }) {
             t`Alt text`,
             (editor.getAttributes("image").alt as string) ?? ""
           )
-          if (alt !== null) editor.chain().focus().updateAttributes("image", { alt }).run()
+          if (alt !== null)
+            editor.chain().focus().updateAttributes("image", { alt }).run()
         }}
       >
         <Pencil />
@@ -386,7 +402,11 @@ export function ImageBubbleMenu({ editor }: { editor: Editor }) {
       <ToolbarButton
         label={t`Full width`}
         onClick={() =>
-          editor.chain().focus().updateAttributes("image", { width: null }).run()
+          editor
+            .chain()
+            .focus()
+            .updateAttributes("image", { width: null })
+            .run()
         }
       >
         <Maximize2 />
@@ -416,19 +436,29 @@ export function TableBubbleMenu({ editor }: { editor: Editor }) {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button variant="ghost" size="sm" className="text-muted-foreground" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
+            />
           }
         >
           <Columns3 /> {t`Column`}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => editor.chain().focus().addColumnBefore().run()}>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().addColumnBefore().run()}
+          >
             {t`Add column before`}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => editor.chain().focus().addColumnAfter().run()}>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().addColumnAfter().run()}
+          >
             {t`Add column after`}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeaderColumn().run()}>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().toggleHeaderColumn().run()}
+          >
             {t`Header column`}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -444,19 +474,29 @@ export function TableBubbleMenu({ editor }: { editor: Editor }) {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button variant="ghost" size="sm" className="text-muted-foreground" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
+            />
           }
         >
           <Rows3 /> {t`Row`}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => editor.chain().focus().addRowBefore().run()}>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().addRowBefore().run()}
+          >
             {t`Add row before`}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => editor.chain().focus().addRowAfter().run()}>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().addRowAfter().run()}
+          >
             {t`Add row after`}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeaderRow().run()}>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().toggleHeaderRow().run()}
+          >
             {t`Header row`}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
