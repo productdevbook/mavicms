@@ -64,8 +64,7 @@ pub const TOOLS: &[Tool] = &[
                     },
                     "kind": {
                         "type": "string",
-                        "enum": ["post", "page"],
-                        "description": "Defaults to post. A page is one that is not in the feed — About, Contact."
+                        "description": "Defaults to post. content_types_list says what this site has."
                     },
                     "limit": { "type": "integer", "description": "Up to 100. Default 20." },
                     "offset": { "type": "integer" }
@@ -90,7 +89,6 @@ pub const TOOLS: &[Tool] = &[
                     "slug": { "type": "string", "description": "Its address, if you do not have the id" },
                     "kind": {
                         "type": "string",
-                        "enum": ["post", "page"],
                         "description": "Defaults to post. Only consulted when looking one up by address."
                     },
                     "locale": { "type": "string", "description": "Which language's copy, when using slug" }
@@ -118,8 +116,11 @@ pub const TOOLS: &[Tool] = &[
                     "slug": { "type": "string", "description": "The address. Made from the title if left out." },
                     "kind": {
                         "type": "string",
-                        "enum": ["post", "page"],
-                        "description": "Defaults to post"
+                        "description": "Defaults to post. Ask content_types_list what this site has."
+                    },
+                    "fields": {
+                        "type": "object",
+                        "description": "The values for that kind's own fields, by field name. What it takes is in content_types_list."
                     },
                     "content_markdown": { "type": "string" },
                     "excerpt": { "type": "string", "description": "One paragraph, for cards and search results" },
@@ -156,6 +157,10 @@ pub const TOOLS: &[Tool] = &[
                     "title": { "type": "string" },
                     "slug": { "type": "string" },
                     "content_markdown": { "type": "string", "description": "Replaces the whole body" },
+                    "fields": {
+                        "type": "object",
+                        "description": "Replaces every value this carries for its kind's fields"
+                    },
                     "excerpt": { "type": "string" },
                     "status": { "type": "string", "enum": ["draft", "review", "scheduled", "published"] },
                     "publish_at": { "type": "string", "description": "RFC 3339" },
@@ -263,6 +268,17 @@ pub const TOOLS: &[Tool] = &[
                 }
             })
         },
+    },
+    Tool {
+        name: "content_types_list",
+        title: "What this site publishes",
+        description: "The kinds of thing this site holds and what each is made of. Every site \
+            has posts and pages; a site may have made others — courses, packages, properties — \
+            each with its own fields. Ask this before writing anything that is not a post, so \
+            that what you write goes in the right fields rather than into the paragraph.",
+        writes: false,
+        destroys: false,
+        schema: || json!({ "type": "object", "additionalProperties": false }),
     },
     Tool {
         name: "taxonomy_create",
@@ -459,6 +475,7 @@ pub async fn call(
         "forms_list" => forms(db).await,
         "form_submissions" => submissions(db, arguments).await,
         "media_upload" => upload(state, arguments).await,
+        "content_types_list" => kinds(db).await,
         "taxonomy_create" => make_taxonomy(db, arguments).await,
         "forms_create" => make_form(db, arguments).await,
         "form_mark_seen" => mark_seen(db, arguments).await,
@@ -507,15 +524,7 @@ async fn overview(hosting: &Hosting, resolved: &Resolved, state: &AppState) -> A
     )
     .await?;
 
-    let pages = crate::routes::posts::page(
-        db,
-        &LocaleQuery {
-            kind: Some(crate::dto::taxonomy::PAGE.to_string()),
-            limit: Some(1),
-            ..Default::default()
-        },
-    )
-    .await?;
+    let kinds = crate::content::described(db).await?;
 
     let languages = crate::languages::all(db).await?;
     let forms = form::Entity::find().all(db).await?;
@@ -543,7 +552,10 @@ async fn overview(hosting: &Hosting, resolved: &Resolved, state: &AppState) -> A
     Ok(json!({
         "posts": counted.counts,
         "total_posts": counted.total,
-        "total_pages": pages.total,
+        "content": kinds
+            .iter()
+            .map(|kind| json!({ "kind": kind.slug, "how_many": kind.count }))
+            .collect::<Vec<_>>(),
         "languages": languages
             .iter()
             .map(|language| json!({ "code": language.code, "default": language.is_default }))
@@ -620,13 +632,11 @@ async fn one_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppRes
             // A post and a page may answer on the same address, so looking
             // one up by address without saying which is a question with two
             // answers. Posts, unless told otherwise.
-            let kind = match text(arguments, "kind") {
-                Some(named) => crate::dto::taxonomy::check_kind(&named)?,
-                None => crate::dto::taxonomy::POST,
-            };
+            let kind = text(arguments, "kind").unwrap_or_else(|| crate::content::POST.to_string());
+            crate::content::by_slug(db, &kind).await?;
             let mut find = post::Entity::find()
                 .filter(post::Column::Slug.eq(&slug))
-                .filter(post::Column::Kind.eq(kind));
+                .filter(post::Column::Kind.eq(&kind));
             if let Some(locale) = text(arguments, "locale") {
                 find = find.filter(post::Column::Locale.eq(locale));
             }
@@ -683,6 +693,7 @@ async fn write_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppR
         content_html: crate::markdown::to_html(&markdown),
         content_markdown: Some(markdown),
         kind: text(arguments, "kind"),
+        fields: arguments.get("fields").cloned(),
         locale: text(arguments, "locale"),
         translation_of: match text(arguments, "translation_of") {
             Some(id) => Some(
@@ -737,6 +748,7 @@ async fn change_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> App
         // comes with it — one rule for every way in.
         content_html: None,
         content_markdown: markdown,
+        fields: arguments.get("fields").cloned(),
     };
 
     described(crate::routes::posts::update(db, id, payload).await?)
@@ -976,6 +988,22 @@ async fn upload(state: &AppState, arguments: &Value) -> AppResult<Value> {
         "mime_type": saved.mime_type,
         "size_bytes": saved.size_bytes,
     }))
+}
+
+async fn kinds(db: &sea_orm::DatabaseConnection) -> AppResult<Value> {
+    Ok(json!(
+        crate::content::described(db)
+            .await?
+            .iter()
+            .map(|kind| json!({
+                "kind": kind.slug,
+                "name": kind.name,
+                "plural": kind.plural,
+                "how_many": kind.count,
+                "fields": kind.fields,
+            }))
+            .collect::<Vec<_>>()
+    ))
 }
 
 async fn make_taxonomy(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {

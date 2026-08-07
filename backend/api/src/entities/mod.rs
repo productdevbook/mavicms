@@ -2,6 +2,7 @@ pub mod campaign;
 pub mod campaign_event;
 pub mod campaign_list;
 pub mod category;
+pub mod content_type;
 pub mod email_log;
 pub mod form;
 pub mod form_submission;

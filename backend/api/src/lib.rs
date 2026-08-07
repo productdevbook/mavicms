@@ -6,6 +6,7 @@ pub mod auth;
 pub mod backup;
 pub mod config;
 pub mod console;
+pub mod content;
 pub mod crypto;
 pub mod db;
 pub mod dto;

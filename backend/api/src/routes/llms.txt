@@ -115,12 +115,11 @@ a build reads the API directly, at the addresses below.
 
 `GET /posts` takes:
 
-- `kind` — `post` or `page`, comma-separated for both. **Left out, you get
-  posts.** A page is one that does not belong in the feed: an About, a
-  Contact, a page of opening hours. It is the same shape as a post in every
-  other way, so a front end renders it the same and merely puts it somewhere
-  else — usually at the root rather than under `/blog/`. The address is unique
-  within a kind, so a post and a page may both answer on `contact`.
+- `kind` — which kind of thing to list, comma-separated for several. **Left
+  out, you get posts.** Every site has `post` and `page`; this one may have
+  others, and `GET /content-types` says which and what each is made of. The
+  address is unique within a kind, so a post and a page may both answer on
+  `contact`.
 - `status` — comma-separated. **A build wants `status=published`.** Left out,
   every status comes back and drafts go online.
 - `locale` — comma-separated language codes. Left out, every language comes
@@ -190,6 +189,47 @@ Worth knowing about the fields:
   it, and the site is asked to build. So a build that asks for `published`
   gets the post the first time it runs after the time the writer picked, and
   nothing has to poll for it.
+
+### More than posts
+
+A site is not always a blog. `GET /content-types` lists the kinds of thing
+this one publishes, and what each is made of:
+
+```json
+[
+  { "slug": "post", "plural": "Posts", "fields": [] },
+  { "slug": "page", "plural": "Pages", "fields": [] },
+  {
+    "slug": "course",
+    "name": "Course",
+    "plural": "Courses",
+    "count": 12,
+    "fields": [
+      { "name": "price", "label": "Price", "type": "number", "required": true },
+      { "name": "level", "label": "Level", "type": "select", "required": true,
+        "options": ["Beginner", "Intermediate", "Advanced"] }
+    ]
+  }
+]
+```
+
+A course is a post in every way that matters — title, body, languages, SEO,
+scheduling, `digest` — and carries its own fields beside them:
+
+```json
+{
+  "title": "Web services in Rust",
+  "slug": "web-services-in-rust",
+  "kind": "course",
+  "fields": { "price": 24000, "level": "Intermediate" },
+  "content_html": "<p>…</p>"
+}
+```
+
+So a front end fetches `?kind=course&status=published&include=content`, lays
+the fields out however that site's course page looks, and needs nothing here
+to know anything about courses. A field marked `required` is required before
+the thing can be published; a draft may be half-written.
 
 ### Asking again, cheaply
 

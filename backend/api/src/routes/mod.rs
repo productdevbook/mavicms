@@ -1,6 +1,7 @@
 pub mod auth;
 pub mod categories;
 pub mod console;
+pub mod content_types;
 pub mod development;
 pub mod forms;
 pub mod health;
@@ -172,6 +173,14 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(development::delete_token))
         .routes(routes!(oauth::connections))
         .routes(routes!(oauth::disconnect))
+        .routes(routes!(
+            content_types::list_content_types,
+            content_types::create_content_type
+        ))
+        .routes(routes!(
+            content_types::update_content_type,
+            content_types::delete_content_type
+        ))
         .routes(routes!(plugins::list_plugins))
         .routes(routes!(
             plugins::get_s3_settings,
