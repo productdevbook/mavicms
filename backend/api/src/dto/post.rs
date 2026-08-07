@@ -83,6 +83,7 @@ pub fn digest(model: &PostModel) -> String {
             .unwrap_or_default()
             .as_bytes(),
     );
+    field(model.kind.as_bytes());
     field(model.locale.as_bytes());
     field(model.translation_group_id.as_bytes());
     field(model.created_at.to_rfc3339().as_bytes());
@@ -122,6 +123,8 @@ pub struct PostSummary {
     pub tags: Vec<String>,
     pub cover_url: String,
     pub featured: bool,
+    /// "post" or "page".
+    pub kind: String,
     pub locale: String,
     pub translation_group_id: Uuid,
     /// Which languages this post exists in, including its own.
@@ -158,6 +161,7 @@ impl PostSummary {
             tags: serde_json::from_value(model.tags).unwrap_or_default(),
             cover_url: model.cover_url,
             featured: model.featured,
+            kind: model.kind,
             locale: model.locale,
             translation_group_id: model.translation_group_id,
             locales,
@@ -244,6 +248,8 @@ pub struct PostResponse {
     pub allow_comments: bool,
     pub content_html: String,
     pub content_markdown: Option<String>,
+    /// "post" or "page".
+    pub kind: String,
     pub locale: String,
     pub translation_group_id: Uuid,
     /// Which languages this post exists in, including its own. Cheap enough to
@@ -302,6 +308,7 @@ impl PostResponse {
             allow_comments: model.allow_comments,
             content_html: model.content_html,
             content_markdown: model.content_markdown,
+            kind: model.kind,
             locale: model.locale,
             translation_group_id: model.translation_group_id,
             locales,
@@ -353,6 +360,9 @@ pub struct CreatePostRequest {
     /// HTML may send that alone.
     #[serde(default)]
     pub content_markdown: Option<String>,
+    /// "post" or "page". A page is one that is not in the feed.
+    #[serde(default)]
+    pub kind: Option<String>,
     /// Defaults to the site's default language.
     #[serde(default)]
     pub locale: Option<String>,
@@ -413,6 +423,7 @@ mod tests {
             allow_comments: true,
             content_html: "<p>A body</p>".to_string(),
             content_markdown: Some("A body".to_string()),
+            kind: "post".to_string(),
             locale: "en".to_string(),
             translation_group_id: uuid::Uuid::now_v7(),
             created_at: now,

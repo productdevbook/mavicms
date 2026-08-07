@@ -9,6 +9,9 @@ database — Postgres, MySQL or SQLite — and your own object storage, or none.
   Migrations run at boot and are tested on all three.
 - **Scheduling** — a post given a date goes out on it, and the site is asked
   to build. Within the minute, whether or not anybody is looking.
+- **Posts and pages** — a page is one that is not in the feed: an About, a
+  Contact. The same editor, languages, SEO and scheduling; `?kind=page` on the
+  API, and a front end puts them where it likes.
 - **Multilingual content** — the same post in as many languages as you like,
   each with its own title, slug, content and SEO, linked to its siblings.
   Categories and tags are translated too.
@@ -207,7 +210,7 @@ claude mcp add --transport http mavicms https://your-site/api/mcp \
   --header "Authorization: Bearer $CMS_TOKEN"
 ```
 
-A site offers finding and reading posts, writing and correcting them, its
+A site offers finding and reading posts and pages, writing and correcting them, its
 categories and languages, uploading a file and listing the ones it has, reading
 what has come in through its forms and marking it dealt with, and building its
 pages. A console offers the questions an agency has about

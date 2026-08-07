@@ -242,6 +242,8 @@ export interface Post {
   content_markdown: string | null
   locale: string
   translation_group_id: string
+  /** "post" or "page". */
+  kind: PostKind
   /** Languages this post exists in, including its own. */
   locales: string[]
   /** Sibling language versions; empty on the list endpoint. */
@@ -261,6 +263,8 @@ export interface PostTranslation {
 export interface PostPayload {
   title: string
   slug: string
+  /** Defaults to a post. */
+  kind?: PostKind
   excerpt?: string
   status?: PostStatus
   publish_at?: string | null
@@ -303,14 +307,18 @@ export interface PostPage {
   counts: Record<PostStatus, number>
 }
 
+/** "post", or "page" for the ones that are not in the feed. */
+export type PostKind = "post" | "page"
+
 export function getPosts(
   locale?: string,
-  options: { limit?: number; offset?: number } = {}
+  options: { limit?: number; offset?: number; kind?: PostKind } = {}
 ): Promise<PostPage> {
   const params = new URLSearchParams()
   if (locale) params.set("locale", locale)
   if (options.limit !== undefined) params.set("limit", String(options.limit))
   if (options.offset !== undefined) params.set("offset", String(options.offset))
+  if (options.kind) params.set("kind", options.kind)
   const query = params.toString()
   return request<PostPage>(`/posts${query ? `?${query}` : ""}`)
 }

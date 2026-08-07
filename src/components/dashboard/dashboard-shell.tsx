@@ -8,6 +8,7 @@ import {
 import { useLingui } from "@lingui/react/macro"
 import {
   Code2,
+  FileText,
   FolderTree,
   Globe,
   Image,
@@ -71,6 +72,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       label: t`Content`,
       links: [
         { to: "/dashboard", label: t`Posts`, icon: LayoutDashboard },
+        { to: "/dashboard/pages", label: t`Pages`, icon: FileText },
         { to: "/dashboard/media", label: t`Media`, icon: Image },
         { to: "/dashboard/categories", label: t`Categories`, icon: FolderTree },
         { to: "/dashboard/tags", label: t`Tags`, icon: Tags },

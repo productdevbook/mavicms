@@ -3,10 +3,11 @@ import { createFileRoute } from "@tanstack/react-router"
 
 import { ContentList } from "@/components/dashboard/content-list"
 
-export const Route = createFileRoute("/dashboard/")({
-  component: PostsRoute,
+export const Route = createFileRoute("/dashboard/pages")({
+  component: PagesRoute,
 })
 
-function PostsRoute() {
-  return <ContentList kind="post" />
+/** The About, the Contact — the ones that are not in the feed. */
+function PagesRoute() {
+  return <ContentList kind="page" />
 }
