@@ -111,12 +111,24 @@ pub fn clean_fields(fields: Vec<FormField>) -> AppResult<Vec<FormField>> {
     Ok(cleaned)
 }
 
+/// Two readers see these: somebody in the editor, who knows the field by the
+/// label above it, and somebody writing the code that posts the JSON, who
+/// knows it by the key. Name both unless they are the same word.
+fn named(field: &FormField) -> String {
+    let label = field.label.trim();
+    if label.is_empty() || label == field.name {
+        format!("\"{}\"", field.name)
+    } else {
+        format!("\"{label}\" ({})", field.name)
+    }
+}
+
 fn missing(field: &FormField) -> AppError {
-    AppError::Validation(format!("\"{}\" is required", field.name))
+    AppError::Validation(format!("{} is required", named(field)))
 }
 
 fn wrong(field: &FormField, wanted: &str) -> AppError {
-    AppError::Validation(format!("\"{}\" must be {wanted}", field.name))
+    AppError::Validation(format!("{} must be {wanted}", named(field)))
 }
 
 /// Whether a value counts as "not filled in".
@@ -363,6 +375,19 @@ mod tests {
         let fields = clean_fields(vec![field("name", FieldKind::Text, false)]).unwrap();
         let error = clean_submission(&fields, sent(&[("wp_admin", Value::from("x"))])).unwrap_err();
         assert!(error.to_string().contains("wp_admin"));
+    }
+
+    #[test]
+    fn a_refusal_names_the_field_the_way_both_readers_know_it() {
+        let mut priced = field("fiyat", FieldKind::Number, true);
+        priced.label = "Fiyat (₺)".to_string();
+        let fields = clean_fields(vec![priced]).unwrap();
+        let error = clean_submission(&fields, sent(&[])).unwrap_err();
+        assert_eq!(error.to_string(), "\"Fiyat (₺)\" (fiyat) is required");
+
+        let plain = clean_fields(vec![field("email", FieldKind::Email, true)]).unwrap();
+        let error = clean_submission(&plain, sent(&[])).unwrap_err();
+        assert_eq!(error.to_string(), "\"email\" is required");
     }
 
     #[test]
