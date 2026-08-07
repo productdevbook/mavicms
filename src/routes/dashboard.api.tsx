@@ -237,15 +237,15 @@ curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
           />
         </section>
 
-        <BuildTokens />
+        <McpConnection origin={window.location.origin} name="mavicms">
+          <p className="text-sm text-muted-foreground">
+            {t`It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages.`}
+          </p>
+        </McpConnection>
 
         <Connections />
 
-        <McpConnection origin={window.location.origin} name="mavicms">
-          <p className="text-sm text-muted-foreground">
-            {t`It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads.`}
-          </p>
-        </McpConnection>
+        <BuildTokens />
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">{t`Reading`}</h2>

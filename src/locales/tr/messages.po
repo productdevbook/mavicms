@@ -264,6 +264,10 @@ msgstr "Derleme giriş yapmaz. Kendisine aşağıda üretilen CMS_TOKEN verilir;
 #~ msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
 #~ msgstr "Derleme bunları, sitenin işletmesinin girdiği derleme değişkenlerinden alır — yani kimlik bilgileri projede değil sunucuda durur."
 
+#: src/components/mcp-connection.tsx:91
+msgid "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
+msgstr "Derleme jetonu bu siteyi okur ve hiçbir şeyi değiştiremez; onunla bağlanan bir asistana yalnızca okuyan araçlar açılır — yazı yazamaz, dosya yükleyemez, yayına alamaz. Burada istediğiniz genelde bu değildir; yukarıdan giriş yapın."
+
 #: src/components/plugin-forms.tsx:427
 msgid "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
 msgstr "Bir kampanya bunlardan herhangi biriyle gidebilir. Her birinin SES'te ayrıca doğrulanmış olması gerekir — Amazon onaylamadan bir adres gönderici olmaz."
@@ -586,8 +590,8 @@ msgid "Anybody can be written to, up to the limits above."
 msgstr "Yukarıdaki sınırlara kadar herkese yazılabilir."
 
 #: src/components/mcp-connection.tsx:90
-msgid "Anywhere that takes a configuration file:"
-msgstr "Ayar dosyası isteyen her yerde:"
+#~ msgid "Anywhere that takes a configuration file:"
+#~ msgstr "Ayar dosyası isteyen her yerde:"
 
 #: src/components/dashboard/dashboard-shell.tsx:87
 #: src/routes/dashboard.api.tsx:202
@@ -968,6 +972,10 @@ msgstr "Bağlandı. Sunucu yeniden başlatılıyor…"
 msgid "Connecting as {0}"
 msgstr "{0} olarak bağlanıyor"
 
+#: src/components/mcp-connection.tsx:86
+msgid "Connecting with a token instead, from a terminal"
+msgstr "Bunun yerine terminalden, jetonla bağlanmak"
+
 #: src/components/setup/setup-wizard.tsx:415
 #: src/components/setup/setup-wizard.tsx:422
 msgid "Connection URL"
@@ -1038,11 +1046,11 @@ msgstr "Metni kopyala"
 msgid "Copy the address"
 msgstr "Adresi kopyala"
 
-#: src/components/mcp-connection.tsx:86
+#: src/components/mcp-connection.tsx:97
 msgid "Copy the command"
 msgstr "Komutu kopyala"
 
-#: src/components/mcp-connection.tsx:106
+#: src/components/mcp-connection.tsx:114
 msgid "Copy the configuration"
 msgstr "Ayarı kopyala"
 
@@ -1966,8 +1974,8 @@ msgid "Import this archive?"
 msgstr "Bu arşiv içe aktarılsın mı?"
 
 #: src/components/mcp-connection.tsx:81
-msgid "In Claude Code, one line:"
-msgstr "Claude Code'da tek satır:"
+#~ msgid "In Claude Code, one line:"
+#~ msgstr "Claude Code'da tek satır:"
 
 #: src/components/editor/types.ts:27
 msgid "In review"
@@ -2021,9 +2029,13 @@ msgstr "Etkileşimli belgeler"
 msgid "Invitations"
 msgstr "Davetler"
 
+#: src/routes/dashboard.api.tsx:242
+msgid "It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages."
+msgstr "Bu siteyi yanıtlar: yazı bulmak ve okumak, yazmak ve düzeltmek, dosya yüklemek, formlardan geleni görmek, sayfaları derlemek."
+
 #: src/routes/dashboard.api.tsx:246
-msgid "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
-msgstr "Bu siteyi yanıtlar: yazı bulmak ve okumak, yazmak ve düzeltmek, formlardan geleni görmek, sayfaları derlemek. Derleme jetonuna yalnızca okuyan araçlar açılır."
+#~ msgid "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
+#~ msgstr "Bu siteyi yanıtlar: yazı bulmak ve okumak, yazmak ve düzeltmek, formlardan geleni görmek, sayfaları derlemek. Derleme jetonuna yalnızca okuyan araçlar açılır."
 
 #. placeholder {0}: asking.client_name
 #: src/routes/oauth.tsx:110
@@ -2752,6 +2764,10 @@ msgstr "Parola değiştirildi — yeniden giriş yapın"
 msgid "Paste an image address, drag and drop one, or pick from your media library."
 msgstr "Bir görsel adresi yapıştırın, sürükleyip bırakın veya medya kütüphanenizden seçin."
 
+#: src/components/mcp-connection.tsx:81
+msgid "Paste it wherever a program asks for a server address and nothing else. You will be sent here to sign in and asked whether to allow it, and it will then be able to do what you can — writing included. This is the way to connect."
+msgstr "Bir program sunucu adresi istediğinde yalnızca bunu yapıştırın. Giriş yapmak üzere buraya yönlendirilir, izin verip vermeyeceğiniz sorulur; ardından sizin yapabildiklerinizi yapabilir — yazmak dahil. Bağlanmanın yolu budur."
+
 #: src/components/editor/dialogs.tsx:227
 msgid "Paste the video link."
 msgstr "Video bağlantısını yapıştır."
@@ -2923,7 +2939,7 @@ msgstr "Bunları yayınlamak hem alan adının sizin olduğunu kanıtlar hem de 
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
 
-#: src/components/mcp-connection.tsx:111
+#: src/components/mcp-connection.tsx:119
 msgid "Put a token where the … is. It is shown once, when you make it."
 msgstr "… yerine bir jeton koyun. Jeton yalnızca üretildiği anda gösterilir."
 
@@ -3770,8 +3786,12 @@ msgid "This account is out of the sandbox: it can write to anybody."
 msgstr "Bu hesap kum havuzundan çıkmış: herkese yazabilir."
 
 #: src/components/mcp-connection.tsx:72
-msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
-msgstr "Bu adres Model Context Protocol konuşur; bir asistanı buraya yöneltip nasıl yapılacağını anlatmak yerine işi doğrudan isteyebilirsiniz. Jetonunuzun izin verdiği araçları açar, başkasını değil."
+msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how."
+msgstr "Bu adres Model Context Protocol konuşur; bir asistanı buraya yöneltip nasıl yapılacağını anlatmak yerine işi doğrudan isteyebilirsiniz."
+
+#: src/components/mcp-connection.tsx:72
+#~ msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
+#~ msgstr "Bu adres Model Context Protocol konuşur; bir asistanı buraya yöneltip nasıl yapılacağını anlatmak yerine işi doğrudan isteyebilirsiniz. Jetonunuzun izin verdiği araçları açar, başkasını değil."
 
 #: src/routes/oauth.tsx:76
 msgid "This cannot be connected"

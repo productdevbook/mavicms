@@ -193,18 +193,21 @@ claude mcp add --transport http mavicms https://your-site/api/mcp \
 ```
 
 A site offers finding and reading posts, writing and correcting them, its
-categories, languages and uploaded files, what has come in through its forms,
-and building its pages. A console offers the questions an agency has about
+categories and languages, uploading a file and listing the ones it has, reading
+what has come in through its forms and marking it dealt with, and building its
+pages. A console offers the questions an agency has about
 fifty sites at once: which built, which did not, what the failing one said,
 and adding a new site.
 
 Two rules make it safe to leave connected:
 
-- **The token decides the tools.** A build token can read a site and change
-  nothing, so it is offered only the tools that read — fewer tools rather than
-  tools that refuse, because a tool an assistant cannot use is one it should
-  not have been told about. An agency's token acts for the agency and is not a
-  way into any site's content.
+- **How you connected decides the tools.** Sign in through the site and an
+  assistant can do what you can. Hand it a build token instead and it is
+  offered only the tools that read — fewer tools rather than tools that
+  refuse, because a tool an assistant cannot use is one it should not have
+  been told about. If an assistant says it cannot write a post, this is
+  almost always why. An agency's token acts for the agency and is not a way
+  into any site's content.
 - **Nothing deletes.** An assistant that misreads an instruction and writes a
   bad paragraph has done something a person can read and undo. One that
   misreads it and removes an archive has not.

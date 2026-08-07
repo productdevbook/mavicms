@@ -206,6 +206,72 @@ pub const TOOLS: &[Tool] = &[
         },
     },
     Tool {
+        name: "media_upload",
+        title: "Put a file on the site",
+        description: "Add an image to this site's files and get the address to use in a post. \
+            Give it a source_url to fetch — which is refused unless it is a public address — or \
+            the bytes themselves as content_base64. Only images, and at most 10MB.",
+        writes: true,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "source_url": {
+                        "type": "string",
+                        "description": "A public address to fetch the image from"
+                    },
+                    "content_base64": {
+                        "type": "string",
+                        "description": "The image itself, base64. Use this when you made the file rather than found it."
+                    },
+                    "filename": { "type": "string", "description": "Worked out from the address if left out" },
+                    "alt_text": {
+                        "type": "string",
+                        "description": "What the image shows, for somebody who cannot see it. Write one."
+                    }
+                }
+            })
+        },
+    },
+    Tool {
+        name: "form_mark_seen",
+        title: "Mark what has come in as read",
+        description: "Say that a form submission has been dealt with, or take that back. Give \
+            one submission, or a form to mark everything unread on it.",
+        writes: true,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "submission": { "type": "string", "description": "One submission's id" },
+                    "form": {
+                        "type": "string",
+                        "description": "A form's address or id: marks everything unread on it"
+                    },
+                    "seen": { "type": "boolean", "description": "Defaults to true; false marks it unread again" }
+                }
+            })
+        },
+    },
+    Tool {
+        name: "form_submission_delete",
+        title: "Throw one submission away",
+        description: "Delete one thing somebody sent through a form, by its id. This is the \
+            only tool here that destroys anything and there is no way back from it, so read the \
+            submission first and delete exactly the one you read.",
+        writes: true,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["submission"],
+                "properties": { "submission": { "type": "string", "description": "The submission's id" } }
+            })
+        },
+    },
+    Tool {
         name: "publish_site",
         title: "Build the site's pages",
         description: "Ask this site to build its pages again, which is what puts written work \
@@ -236,6 +302,9 @@ pub async fn call(
         "media_list" => files(db, arguments).await,
         "forms_list" => forms(db).await,
         "form_submissions" => submissions(db, arguments).await,
+        "media_upload" => upload(state, arguments).await,
+        "form_mark_seen" => mark_seen(db, arguments).await,
+        "form_submission_delete" => throw_away(db, arguments).await,
         "publish_site" => publish(hosting, resolved).await,
         other => Err(AppError::NotFound(format!("tool {other}"))),
     }
@@ -631,20 +700,25 @@ async fn forms(db: &sea_orm::DatabaseConnection) -> AppResult<Value> {
     Ok(json!(described))
 }
 
-async fn submissions(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
-    let named = text(arguments, "form")
-        .ok_or_else(|| AppError::Validation("say which form".to_string()))?;
-
-    let found = match Uuid::parse_str(&named) {
+/// The form meant by an address or an id.
+async fn form_named(db: &sea_orm::DatabaseConnection, named: &str) -> AppResult<form::Model> {
+    let found = match Uuid::parse_str(named) {
         Ok(id) => form::Entity::find_by_id(id).one(db).await?,
         Err(_) => {
             form::Entity::find()
-                .filter(form::Column::Slug.eq(&named))
+                .filter(form::Column::Slug.eq(named))
                 .one(db)
                 .await?
         }
     };
-    let found = found.ok_or_else(|| AppError::NotFound(format!("form {named}")))?;
+    found.ok_or_else(|| AppError::NotFound(format!("form {named}")))
+}
+
+async fn submissions(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    let named = text(arguments, "form")
+        .ok_or_else(|| AppError::Validation("say which form".to_string()))?;
+
+    let found = form_named(db, &named).await?;
 
     let mut find = form_submission::Entity::find()
         .filter(form_submission::Column::FormId.eq(found.id))
@@ -671,6 +745,112 @@ async fn submissions(db: &sea_orm::DatabaseConnection, arguments: &Value) -> App
             }))
             .collect::<Vec<_>>()
     ))
+}
+
+async fn upload(state: &AppState, arguments: &Value) -> AppResult<Value> {
+    let alt_text = text(arguments, "alt_text");
+    let filename = text(arguments, "filename");
+
+    let saved = match (
+        text(arguments, "source_url"),
+        text(arguments, "content_base64"),
+    ) {
+        (Some(_), Some(_)) => {
+            return Err(AppError::Validation(
+                "give the address to fetch or the bytes, not both".to_string(),
+            ));
+        }
+        (Some(url), None) => {
+            crate::routes::media::fetch_and_store(state, &url, filename, alt_text).await?
+        }
+        (None, Some(encoded)) => {
+            use base64::Engine as _;
+            let bytes = base64::engine::general_purpose::STANDARD
+                .decode(encoded.trim())
+                .map_err(|err| {
+                    AppError::Validation(format!("content_base64 is not base64: {err}"))
+                })?;
+
+            crate::routes::media::store_image(
+                state,
+                &bytes,
+                filename.unwrap_or_else(|| "upload".to_string()),
+                alt_text.unwrap_or_default(),
+            )
+            .await?
+        }
+        (None, None) => {
+            return Err(AppError::Validation(
+                "give a source_url to fetch, or the file as content_base64".to_string(),
+            ));
+        }
+    };
+
+    Ok(json!({
+        "id": saved.id,
+        "filename": saved.filename,
+        // What to put in a post. Relative when the site keeps its own files.
+        "url": saved.url_path,
+        "mime_type": saved.mime_type,
+        "size_bytes": saved.size_bytes,
+    }))
+}
+
+async fn mark_seen(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    use sea_orm::sea_query::Expr;
+
+    let seen = arguments
+        .get("seen")
+        .and_then(Value::as_bool)
+        .unwrap_or(true);
+
+    let mut change = form_submission::Entity::update_many()
+        .col_expr(form_submission::Column::Seen, Expr::value(seen));
+
+    match (text(arguments, "submission"), text(arguments, "form")) {
+        (Some(id), _) => {
+            let id = Uuid::parse_str(&id)
+                .map_err(|_| AppError::Validation(format!("{id} is not a submission id")))?;
+            change = change.filter(form_submission::Column::Id.eq(id));
+        }
+        (None, Some(named)) => {
+            let form = form_named(db, &named).await?;
+            change = change
+                .filter(form_submission::Column::FormId.eq(form.id))
+                .filter(form_submission::Column::Seen.eq(!seen));
+        }
+        (None, None) => {
+            return Err(AppError::Validation(
+                "say which submission, or which form".to_string(),
+            ));
+        }
+    }
+
+    let result = change.exec(db).await?;
+    if result.rows_affected == 0 {
+        return Err(AppError::NotFound(
+            "nothing there to mark; it may already be that way".to_string(),
+        ));
+    }
+
+    Ok(json!({ "marked": result.rows_affected, "seen": seen }))
+}
+
+async fn throw_away(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    let id = text(arguments, "submission")
+        .ok_or_else(|| AppError::Validation("say which submission".to_string()))?;
+    let id = Uuid::parse_str(&id)
+        .map_err(|_| AppError::Validation(format!("{id} is not a submission id")))?;
+
+    let result = form_submission::Entity::delete_many()
+        .filter(form_submission::Column::Id.eq(id))
+        .exec(db)
+        .await?;
+
+    if result.rows_affected == 0 {
+        return Err(AppError::NotFound(format!("submission {id}")));
+    }
+    Ok(json!({ "deleted": id }))
 }
 
 async fn publish(hosting: &Hosting, resolved: &Resolved) -> AppResult<Value> {

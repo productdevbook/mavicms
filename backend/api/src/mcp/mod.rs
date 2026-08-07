@@ -383,9 +383,12 @@ fn server_info() -> Value {
 }
 
 const INSTRUCTIONS: &str = "This is a Mavi CMS site. Which site depends on the address you \
-    reached it on, and what you may do depends on the token you sent: a build token can read \
-    and a person's account can also write. Nothing here deletes anything. Read GET /api/llms.txt \
-    on the same address for the shape of the content and how a front end is built from it.";
+    reached it on, and what you may do depends on how you connected. If tools/list offers you \
+    nothing that writes, you are connected with a build token, which can only read — say so \
+    rather than reporting that the site cannot do it: the way to write is to connect to this \
+    same address with no token, which sends somebody here to sign in and allow it. Read \
+    GET /api/llms.txt on the same address for the shape of the content and how a front end is \
+    built from it.";
 
 /// Who is asking, and therefore which set of tools they are offered.
 pub enum Caller {
