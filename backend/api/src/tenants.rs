@@ -605,9 +605,15 @@ pub async fn resolve(
         .map(str::to_string);
 
     match hosting.resolve_host(host.as_deref()).await {
-        Ok((_, Resolved::Unknown)) => {
-            AppError::NotFound("no site answers on this address".to_string()).into_response()
-        }
+        // Not AppError::NotFound, which writes "<what> not found" and would
+        // make a sentence out of a sentence.
+        Ok((_, Resolved::Unknown)) => (
+            axum::http::StatusCode::NOT_FOUND,
+            axum::Json(crate::error::ErrorBody {
+                error: "no site answers on this address".to_string(),
+            }),
+        )
+            .into_response(),
         Ok((state, resolved)) => {
             use tracing::Instrument;
 
