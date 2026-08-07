@@ -594,11 +594,16 @@ export interface ConsoleSite {
   active: boolean
 }
 
+export function registrationIsOpen(): Promise<{ open: boolean }> {
+  return request<{ open: boolean }>("/console/registration")
+}
+
 export function consoleRegister(payload: {
   organization_name: string
   name: string
   email: string
   password: string
+  invite: string
 }): Promise<ConsoleAccount> {
   return request<ConsoleAccount>("/console/register", {
     method: "POST",
@@ -806,6 +811,35 @@ export interface Agency {
 
 export function getAgencies(): Promise<Agency[]> {
   return request<Agency[]>("/agencies")
+}
+
+export interface Invite {
+  token: string
+  site_limit: number
+  note: string
+  created_at: string
+  expires_at: string
+  used: boolean
+  organization: string | null
+}
+
+export function getInvites(): Promise<Invite[]> {
+  return request<Invite[]>("/invites")
+}
+
+export function createInvite(payload: {
+  site_limit?: number
+  note?: string
+  days?: number
+}): Promise<Invite> {
+  return request<Invite>("/invites", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function revokeInvite(token: string): Promise<void> {
+  return request<void>(`/invites/${token}`, { method: "DELETE" })
 }
 
 export function updateAgency(

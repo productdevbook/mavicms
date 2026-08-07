@@ -2,14 +2,27 @@
 import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { useLingui } from "@lingui/react/macro"
-import { Building2, Globe, Loader2, Plus, Trash2 } from "lucide-react"
+import {
+  Building2,
+  Check,
+  Copy,
+  Globe,
+  Link as LinkIcon,
+  Loader2,
+  Plus,
+  Trash2,
+} from "lucide-react"
 import { toast } from "sonner"
 
 import {
   ApiError,
   createSite,
   deleteSite,
+  createInvite,
   getAgencies,
+  getInvites,
+  revokeInvite,
+  type Invite,
   getSites,
   updateAgency,
   updateSite,
@@ -184,6 +197,8 @@ function SitesRoute() {
           </div>
         )}
 
+        <Invites />
+
         {agencies.length > 0 && (
           <div>
             <h2 className="mb-2 text-sm font-medium">{t`Agencies`}</h2>
@@ -195,7 +210,9 @@ function SitesRoute() {
                 >
                   <Building2 className="size-4 shrink-0 text-muted-foreground" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{agency.name}</p>
+                    <p className="truncate text-sm font-medium">
+                      {agency.name}
+                    </p>
                     <p className="truncate text-xs text-muted-foreground">
                       {agency.email} · {t`${agency.sites} sites`}
                     </p>
@@ -282,7 +299,10 @@ function SitesRoute() {
             <Button variant="outline" onClick={() => setAdding(false)}>
               {t`Cancel`}
             </Button>
-            <Button onClick={() => void add()} disabled={!host.trim() || saving}>
+            <Button
+              onClick={() => void add()}
+              disabled={!host.trim() || saving}
+            >
               {saving ? <Loader2 className="animate-spin" /> : null}
               {t`Add site`}
             </Button>
@@ -337,5 +357,148 @@ function SitesRoute() {
         </DialogContent>
       </Dialog>
     </>
+  )
+}
+
+/**
+ * The only way an agency gets onto this server.
+ *
+ * Registration used to be open, which meant anybody at all could take a
+ * database schema and ten sites' worth of migrations off the machine from a
+ * URL. Now the operator makes a link and sends it however they like — the
+ * server never has to know an email address to do it.
+ */
+function Invites() {
+  const { t } = useLingui()
+
+  const [invites, setInvites] = React.useState<Invite[]>([])
+  const [siteLimit, setSiteLimit] = React.useState(10)
+  const [note, setNote] = React.useState("")
+  const [busy, setBusy] = React.useState(false)
+  const [copied, setCopied] = React.useState<string | null>(null)
+
+  const load = React.useCallback(() => {
+    getInvites()
+      .then(setInvites)
+      .catch(() => setInvites([]))
+  }, [])
+
+  React.useEffect(load, [load])
+
+  const linkFor = (token: string) =>
+    `${window.location.origin}/admin/console/register?invite=${token}`
+
+  const copy = (token: string) => {
+    void navigator.clipboard.writeText(linkFor(token)).then(
+      () => {
+        setCopied(token)
+        setTimeout(() => setCopied(null), 2000)
+      },
+      () => toast.error(t`Could not copy it`)
+    )
+  }
+
+  const make = async () => {
+    setBusy(true)
+    try {
+      const made = await createInvite({
+        site_limit: siteLimit,
+        note: note.trim(),
+      })
+      setNote("")
+      load()
+      copy(made.token)
+      toast.success(t`Link copied. It works once.`)
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError ? error.message : t`Could not make it`
+      )
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const waiting = invites.filter((invite) => !invite.used)
+
+  return (
+    <div>
+      <h2 className="mb-2 text-sm font-medium">{t`Invitations`}</h2>
+      <p className="mb-3 text-sm text-muted-foreground">
+        {t`An agency can only be opened from a link you make here. Send it however you like — it works once, and stops working after a fortnight.`}
+      </p>
+
+      <div className="mb-3 flex flex-wrap items-end gap-2">
+        <div className="flex flex-col gap-1">
+          <Label
+            htmlFor="invite-note"
+            className="text-xs"
+          >{t`What it is for`}</Label>
+          <Input
+            id="invite-note"
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            placeholder={t`Only you see this`}
+            className="max-w-xs"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <Label
+            htmlFor="invite-limit"
+            className="text-xs"
+          >{t`Sites allowed`}</Label>
+          <Input
+            id="invite-limit"
+            type="number"
+            min={1}
+            value={siteLimit}
+            onChange={(event) => setSiteLimit(Number(event.target.value))}
+            className="w-24"
+          />
+        </div>
+        <Button variant="outline" onClick={() => void make()} disabled={busy}>
+          {busy ? <Loader2 className="animate-spin" /> : <LinkIcon />}
+          {t`Make a link`}
+        </Button>
+      </div>
+
+      {waiting.length > 0 && (
+        <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
+          {waiting.map((invite) => (
+            <div
+              key={invite.token}
+              className="flex items-center gap-3 px-4 py-2.5"
+            >
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm">{invite.note || t`No note`}</p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {t`${invite.site_limit} sites`} ·{" "}
+                  {t`good until ${new Date(invite.expires_at).toLocaleDateString()}`}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => copy(invite.token)}
+              >
+                {copied === invite.token ? <Check /> : <Copy />}
+                {t`Copy link`}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t`Take it back`}
+                onClick={() =>
+                  void revokeInvite(invite.token)
+                    .then(load)
+                    .catch(() => toast.error(t`Could not take it back`))
+                }
+              >
+                <Trash2 />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

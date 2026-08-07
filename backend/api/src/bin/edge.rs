@@ -265,6 +265,22 @@ fn respond(bytes: Vec<u8>, mime: &str) -> Response {
         .headers_mut()
         .insert(header::CACHE_CONTROL, HeaderValue::from_static(caching));
 
+    // A published site is somebody's public address, reached over TLS the
+    // ingress ends. Framing is left alone here — a site has no session to
+    // steal clicks from, and an owner may well want to embed their own pages.
+    for (name, value) in [
+        (
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains",
+        ),
+        ("x-content-type-options", "nosniff"),
+        ("referrer-policy", "strict-origin-when-cross-origin"),
+    ] {
+        response
+            .headers_mut()
+            .insert(name, HeaderValue::from_static(value));
+    }
+
     response
 }
 

@@ -184,7 +184,9 @@ msgid "{0} rows × {1} columns"
 msgstr "{0} satır × {1} sütun"
 
 #. placeholder {0}: agency.sites
-#: src/routes/dashboard.sites.tsx:200
+#. placeholder {0}: invite.site_limit
+#: src/routes/dashboard.sites.tsx:217
+#: src/routes/dashboard.sites.tsx:474
 msgid "{0} sites"
 msgstr "{0} site"
 
@@ -359,7 +361,7 @@ msgid "Add a hyperlink to the selected text."
 msgstr "Seçili metne köprü ekle."
 
 #: src/routes/console.index.tsx:190
-#: src/routes/dashboard.sites.tsx:249
+#: src/routes/dashboard.sites.tsx:266
 msgid "Add a site"
 msgstr "Site ekle"
 
@@ -410,8 +412,8 @@ msgstr "Üste satır ekle"
 
 #: src/routes/console.index.tsx:135
 #: src/routes/console.index.tsx:213
-#: src/routes/dashboard.sites.tsx:136
-#: src/routes/dashboard.sites.tsx:287
+#: src/routes/dashboard.sites.tsx:149
+#: src/routes/dashboard.sites.tsx:307
 msgid "Add site"
 msgstr "Site ekle"
 
@@ -438,7 +440,7 @@ msgstr "Buradan eklemek onaylı sayılır — yalnızca listede olmayı kendiler
 #: src/routes/console.index.tsx:197
 #: src/routes/dashboard.api.tsx:211
 #: src/routes/dashboard.forms.tsx:264
-#: src/routes/dashboard.sites.tsx:257
+#: src/routes/dashboard.sites.tsx:274
 msgid "Address"
 msgstr "Adres"
 
@@ -446,7 +448,7 @@ msgstr "Adres"
 msgid "Addresses Amazon refuses"
 msgstr "Amazon'un reddettiği adresler"
 
-#: src/routes/dashboard.sites.tsx:189
+#: src/routes/dashboard.sites.tsx:204
 msgid "Agencies"
 msgstr "İşletmeler"
 
@@ -455,6 +457,10 @@ msgid "Agencies → the console"
 msgstr "İşletmeler → konsol"
 
 #: src/routes/console.register.tsx:96
+msgid "Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address."
+msgstr "Ajanslar, bu sunucuyu işletenin gönderdiği bir bağlantıyla açılır. Size bir bağlantı geldiyse onu izleyin — davet adresin içinde taşınır."
+
+#: src/routes/console.register.tsx:147
 msgid "Agency name"
 msgstr "İşletme adı"
 
@@ -494,7 +500,7 @@ msgstr "Sağa hizala"
 msgid "Alignment"
 msgstr "Hizalama"
 
-#: src/routes/console.register.tsx:154
+#: src/routes/console.register.tsx:205
 msgid "Already have an account? Sign in"
 msgstr "Hesabınız var mı? Giriş yapın"
 
@@ -541,6 +547,10 @@ msgstr "Kalıcı olarak ulaşılamayan ya da postayı spam bildiren bir adres, A
 #: src/routes/dashboard.mail.tsx:878
 msgid "An address that goes for good, or reports the mail as spam, stops being written to the moment this arrives."
 msgstr "Kalıcı olarak ulaşılamayan ya da mektubu spam diye bildiren bir adrese, bu bilgi geldiği anda yazılmaz olur."
+
+#: src/routes/dashboard.sites.tsx:427
+msgid "An agency can only be opened from a link you make here. Send it however you like — it works once, and stops working after a fortnight."
+msgstr "Bir ajans yalnızca burada ürettiğiniz bağlantıyla açılabilir. Nasıl isterseniz gönderin — bir kez çalışır ve iki hafta sonra geçersiz olur."
 
 #: src/routes/dashboard.plugins_.backup.tsx:200
 msgid "An archive holding the database, and the uploaded files if you ask for them."
@@ -639,7 +649,7 @@ msgstr "Daha yüksek kota istemek"
 msgid "Assistants"
 msgstr "Asistanlar"
 
-#: src/routes/console.register.tsx:140
+#: src/routes/console.register.tsx:191
 msgid "At least {MINIMUM_PASSWORD} characters."
 msgstr "En az {MINIMUM_PASSWORD} karakter."
 
@@ -789,8 +799,8 @@ msgstr "gönderebilir"
 #: src/routes/dashboard.plugins_.backup.tsx:422
 #: src/routes/dashboard.plugins_.backup.tsx:442
 #: src/routes/dashboard.plugins_.backup.tsx:466
-#: src/routes/dashboard.sites.tsx:283
-#: src/routes/dashboard.sites.tsx:326
+#: src/routes/dashboard.sites.tsx:300
+#: src/routes/dashboard.sites.tsx:346
 #: src/routes/dashboard.tags.tsx:301
 #: src/routes/dashboard.users.tsx:291
 #: src/routes/dashboard.users.tsx:332
@@ -991,6 +1001,10 @@ msgstr "Asistan için kopyala"
 msgid "Copy it now"
 msgstr "Şimdi kopyalayın"
 
+#: src/routes/dashboard.sites.tsx:484
+msgid "Copy link"
+msgstr "Bağlantıyı kopyala"
+
 #: src/components/editor/block-handle.tsx:182
 msgid "Copy text"
 msgstr "Metni kopyala"
@@ -1028,7 +1042,7 @@ msgid "Could not add the account"
 msgstr "Hesap eklenemedi"
 
 #: src/routes/console.index.tsx:68
-#: src/routes/dashboard.sites.tsx:71
+#: src/routes/dashboard.sites.tsx:84
 msgid "Could not add the site"
 msgstr "Site eklenemedi"
 
@@ -1051,8 +1065,8 @@ msgstr "İstek gönderilemedi"
 msgid "Could not ask Amazon"
 msgstr "Amazon'a sorulamadı"
 
-#: src/routes/dashboard.sites.tsx:84
-#: src/routes/dashboard.sites.tsx:113
+#: src/routes/dashboard.sites.tsx:97
+#: src/routes/dashboard.sites.tsx:126
 #: src/routes/dashboard.users.tsx:108
 #: src/routes/dashboard.users.tsx:140
 msgid "Could not change it"
@@ -1064,6 +1078,7 @@ msgstr "Değiştirilemedi"
 #: src/components/ses-setup.tsx:112
 #: src/routes/dashboard.api.tsx:80
 #: src/routes/dashboard.forms_.$formId.tsx:41
+#: src/routes/dashboard.sites.tsx:397
 msgid "Could not copy it"
 msgstr "Kopyalanamadı"
 
@@ -1155,7 +1170,7 @@ msgstr "Kişiler yüklenemedi"
 msgid "Could not load the publishing settings"
 msgstr "Yayın ayarları yüklenemedi"
 
-#: src/routes/dashboard.sites.tsx:52
+#: src/routes/dashboard.sites.tsx:65
 msgid "Could not load the sites"
 msgstr "Siteler yüklenemedi"
 
@@ -1191,6 +1206,7 @@ msgid "Could not make a token"
 msgstr "Jeton üretilemedi"
 
 #: src/routes/dashboard.mail.tsx:158
+#: src/routes/dashboard.sites.tsx:414
 msgid "Could not make it"
 msgstr "Oluşturulamadı"
 
@@ -1202,7 +1218,7 @@ msgstr "Site açılamadı"
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
 #: src/routes/console.login.tsx:38
-#: src/routes/console.register.tsx:51
+#: src/routes/console.register.tsx:65
 #: src/routes/login.tsx:72
 msgid "Could not reach the server. Please try again."
 msgstr "Sunucuya ulaşılamadı. Lütfen tekrar deneyin."
@@ -1217,7 +1233,7 @@ msgstr "Dosya okunamadı"
 #: src/routes/dashboard.mail.tsx:212
 #: src/routes/dashboard.mail.tsx:320
 #: src/routes/dashboard.mail.tsx:687
-#: src/routes/dashboard.sites.tsx:100
+#: src/routes/dashboard.sites.tsx:113
 #: src/routes/dashboard.users.tsx:122
 msgid "Could not remove it"
 msgstr "Kaldırılamadı"
@@ -1283,6 +1299,7 @@ msgstr "Derleme başlatılamadı"
 #: src/components/build-tokens.tsx:61
 #: src/components/console-tokens.tsx:60
 #: src/components/local-env.tsx:88
+#: src/routes/dashboard.sites.tsx:493
 msgid "Could not take it back"
 msgstr "Geri alınamadı"
 
@@ -1334,7 +1351,7 @@ msgstr "Sıralı liste oluştur"
 msgid "Create an unordered list"
 msgstr "Sırasız liste oluştur"
 
-#: src/routes/console.register.tsx:148
+#: src/routes/console.register.tsx:199
 msgid "Create the account"
 msgstr "Hesabı oluştur"
 
@@ -1363,7 +1380,7 @@ msgstr "Koyu"
 msgid "Dashboard"
 msgstr "Panel"
 
-#: src/routes/dashboard.sites.tsx:268
+#: src/routes/dashboard.sites.tsx:285
 msgid "Database"
 msgstr "Veritabanı"
 
@@ -1538,7 +1555,7 @@ msgstr "Düzenleme"
 #: src/components/setup/setup-wizard.tsx:698
 #: src/routes/console.account.tsx:99
 #: src/routes/console.login.tsx:80
-#: src/routes/console.register.tsx:119
+#: src/routes/console.register.tsx:170
 #: src/routes/dashboard.mail.tsx:550
 #: src/routes/dashboard.users.tsx:271
 msgid "Email"
@@ -1751,6 +1768,11 @@ msgstr "Gönderiliyor"
 msgid "gone for good"
 msgstr "kalıcı olarak ulaşılmadı"
 
+#. placeholder {0}: new Date(invite.expires_at).toLocaleDateString()
+#: src/routes/dashboard.sites.tsx:475
+msgid "good until {0}"
+msgstr "{0} tarihine kadar geçerli"
+
 #: src/components/ses-health.tsx:142
 msgid "grey: sent · red: did not arrive"
 msgstr "gri: gönderildi · kırmızı: ulaşmadı"
@@ -1864,6 +1886,10 @@ msgstr "Buraya nasıl gönderilir"
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} ve {{ unsubscribe_url }} her kişi için doldurulur; kişi hakkında tuttuğunuz diğer alanlar da öyle. Düz metin bölümü bundan kendiliğinden üretilir."
 
+#: src/routes/console.register.tsx:99
+msgid "I already have an account"
+msgstr "Zaten hesabım var"
+
 #: src/components/ses-setup.tsx:139
 msgid "IAM users"
 msgstr "IAM kullanıcıları"
@@ -1954,6 +1980,10 @@ msgstr "Mavi CMS kuruluyor…"
 msgid "Interactive docs"
 msgstr "Etkileşimli belgeler"
 
+#: src/routes/dashboard.sites.tsx:425
+msgid "Invitations"
+msgstr "Davetler"
+
 #: src/routes/dashboard.api.tsx:243
 msgid "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
 msgstr "Bu siteyi yanıtlar: yazı bulmak ve okumak, yazmak ve düzeltmek, formlardan geleni görmek, sayfaları derlemek. Derleme jetonuna yalnızca okuyan araçlar açılır."
@@ -1972,11 +2002,11 @@ msgstr "CMS_API_URL ve SITE_URL bu sitenin adresine ayarlı olarak çalışır."
 msgid "Italic"
 msgstr "İtalik"
 
-#: src/routes/dashboard.sites.tsx:161
+#: src/routes/dashboard.sites.tsx:174
 msgid "Its own database server"
 msgstr "Kendi veritabanı sunucusu"
 
-#: src/routes/dashboard.sites.tsx:306
+#: src/routes/dashboard.sites.tsx:326
 msgid "Its posts, its accounts, its uploads and its database schema all go. There is no undo. Type the address to confirm."
 msgstr "Yazıları, hesapları, yüklemeleri ve veritabanı şeması tamamen gider. Geri alınamaz. Onaylamak için adresi yazın."
 
@@ -2044,7 +2074,7 @@ msgstr "Mevcut parolayı korumak için boş bırakın"
 msgid "Leave empty to tell nobody"
 msgstr "Kimseye haber vermemek için boş bırakın"
 
-#: src/routes/dashboard.sites.tsx:273
+#: src/routes/dashboard.sites.tsx:290
 msgid "Leave empty to use this server's database"
 msgstr "Bu sunucunun veritabanını kullanmak için boş bırakın"
 
@@ -2072,7 +2102,7 @@ msgstr "Antet"
 msgid "Light"
 msgstr "Açık"
 
-#: src/routes/dashboard.sites.tsx:208
+#: src/routes/dashboard.sites.tsx:225
 msgid "Limit"
 msgstr "Sınır"
 
@@ -2092,6 +2122,10 @@ msgstr "Bağlantı"
 #: src/components/editor/bubble-menus.tsx:325
 msgid "Link address"
 msgstr "Bağlantı adresi"
+
+#: src/routes/dashboard.sites.tsx:411
+msgid "Link copied. It works once."
+msgstr "Bağlantı kopyalandı. Bir kez çalışır."
 
 #: src/components/editor/dialogs.tsx:315
 msgid "Link text"
@@ -2138,6 +2172,10 @@ msgstr "Posta"
 #: src/routes/dashboard.plugins_.email.tsx:124
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Bu sitenin gönderdiği postalar — formlarınızdan biri doldurulduğunda bildirim."
+
+#: src/routes/dashboard.sites.tsx:460
+msgid "Make a link"
+msgstr "Bağlantı üret"
 
 #: src/components/build-tokens.tsx:77
 #: src/components/console-tokens.tsx:83
@@ -2359,7 +2397,11 @@ msgstr "Henüz liste yok — önce bir tane oluşturun."
 msgid "No media uploaded yet"
 msgstr "Henüz medya yüklenmedi"
 
-#: src/routes/dashboard.sites.tsx:143
+#: src/routes/dashboard.sites.tsx:472
+msgid "No note"
+msgstr "Not yok"
+
+#: src/routes/dashboard.sites.tsx:156
 msgid "No other sites yet"
 msgstr "Henüz başka site yok"
 
@@ -2479,8 +2521,8 @@ msgstr "Sayı"
 msgid "Numbered list"
 msgstr "Numaralı liste"
 
-#: src/routes/dashboard.sites.tsx:167
-#: src/routes/dashboard.sites.tsx:227
+#: src/routes/dashboard.sites.tsx:180
+#: src/routes/dashboard.sites.tsx:244
 msgid "Off"
 msgstr "Kapalı"
 
@@ -2489,8 +2531,8 @@ msgstr "Kapalı"
 msgid "Older archives are removed once a new one is written."
 msgstr "Yeni bir arşiv yazılınca eskiler silinir."
 
-#: src/routes/dashboard.sites.tsx:167
-#: src/routes/dashboard.sites.tsx:227
+#: src/routes/dashboard.sites.tsx:180
+#: src/routes/dashboard.sites.tsx:244
 msgid "On"
 msgstr "Açık"
 
@@ -2506,7 +2548,7 @@ msgstr "{0} listede"
 msgid "On the server's disk"
 msgstr "Sunucunun diskinde"
 
-#: src/routes/console.register.tsx:81
+#: src/routes/console.register.tsx:132
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "Yürüttüğünüz bütün siteler için tek hesap. Her site kendi içeriğini ve kendi ekibini ayrı tutar."
 
@@ -2551,6 +2593,10 @@ msgstr "Yalnızca özel depolar için"
 msgid "Only what is online. What a build wants."
 msgstr "Yalnızca yayında olanlar. Derlemenin istediği bu."
 
+#: src/routes/dashboard.sites.tsx:440
+msgid "Only you see this"
+msgstr "Bunu yalnızca siz görürsünüz"
+
 #: src/components/editor/bubble-menus.tsx:282
 msgid "Open"
 msgstr "Aç"
@@ -2559,8 +2605,7 @@ msgstr "Aç"
 msgid "Open a case at AWS"
 msgstr "AWS'de talep aç"
 
-#: src/routes/console.login.tsx:113
-#: src/routes/console.register.tsx:78
+#: src/routes/console.register.tsx:129
 msgid "Open an agency account"
 msgstr "İşletme hesabı aç"
 
@@ -2598,7 +2643,7 @@ msgstr "İsteğe bağlı ama değer: olmazsa iadeler amazonses.com adresine gide
 msgid "Other addresses you send as"
 msgstr "Gönderdiğiniz diğer adresler"
 
-#: src/routes/dashboard.sites.tsx:132
+#: src/routes/dashboard.sites.tsx:145
 msgid "Other sites this server hosts. Each gets its own database schema, accounts and uploads."
 msgstr "Bu sunucunun barındırdığı diğer siteler. Her birine kendi veritabanı şeması, hesapları ve yüklemeleri verilir."
 
@@ -2623,7 +2668,7 @@ msgstr "Paragraf"
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console.login.tsx:93
-#: src/routes/console.register.tsx:131
+#: src/routes/console.register.tsx:182
 #: src/routes/dashboard.users.tsx:280
 #: src/routes/login.tsx:126
 msgid "Password"
@@ -2708,7 +2753,7 @@ msgid "Plugins"
 msgstr "Eklentiler"
 
 #: src/routes/console.index.tsx:192
-#: src/routes/dashboard.sites.tsx:251
+#: src/routes/dashboard.sites.tsx:268
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Önce adresi bu sunucuya yönlendirin — site burada verdiğiniz adres üzerinden yanıt verir."
 
@@ -2889,8 +2934,8 @@ msgstr "Düzenli ifade"
 #: src/routes/dashboard.mail.tsx:316
 #: src/routes/dashboard.mail.tsx:529
 #: src/routes/dashboard.mail.tsx:683
-#: src/routes/dashboard.sites.tsx:177
-#: src/routes/dashboard.sites.tsx:334
+#: src/routes/dashboard.sites.tsx:190
+#: src/routes/dashboard.sites.tsx:354
 #: src/routes/dashboard.users.tsx:201
 #: src/routes/dashboard.users.tsx:359
 msgid "Remove"
@@ -2920,7 +2965,7 @@ msgstr "Bu form kaldırılsın mı?"
 msgid "Remove this language?"
 msgstr "Bu dil silinsin mi?"
 
-#: src/routes/dashboard.sites.tsx:304
+#: src/routes/dashboard.sites.tsx:324
 msgid "Remove this site?"
 msgstr "Bu site kaldırılsın mı?"
 
@@ -3075,7 +3120,7 @@ msgid "Scheduled backups only run while this is on. You can always back up by ha
 msgstr "Zamanlanmış yedekler yalnızca bu açıkken çalışır. Aşağıdan her zaman elle yedek alabilirsiniz."
 
 #. placeholder {0}: site.schema
-#: src/routes/dashboard.sites.tsx:162
+#: src/routes/dashboard.sites.tsx:175
 msgid "Schema {0}"
 msgstr "Şema {0}"
 
@@ -3311,11 +3356,11 @@ msgstr "Girişiniz yapılıyor…"
 msgid "signs in from the console"
 msgstr "konsoldan giriyor"
 
-#: src/routes/dashboard.sites.tsx:68
+#: src/routes/dashboard.sites.tsx:81
 msgid "Site added"
 msgstr "Site eklendi"
 
-#: src/routes/dashboard.sites.tsx:97
+#: src/routes/dashboard.sites.tsx:110
 msgid "Site removed"
 msgstr "Site kaldırıldı"
 
@@ -3324,9 +3369,13 @@ msgid "Site title"
 msgstr "Site başlığı"
 
 #: src/components/dashboard/dashboard-shell.tsx:94
-#: src/routes/dashboard.sites.tsx:130
+#: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
 msgstr "Siteler"
+
+#: src/routes/dashboard.sites.tsx:448
+msgid "Sites allowed"
+msgstr "İzin verilen site"
 
 #: src/components/editor/extensions/slash-command.tsx:83
 msgid "Small section heading"
@@ -3433,7 +3482,7 @@ msgstr "kapalı"
 msgid "Switched off"
 msgstr "Kapalı"
 
-#: src/routes/dashboard.sites.tsx:240
+#: src/routes/dashboard.sites.tsx:257
 msgid "Switching an agency off stops it signing in. Its sites keep serving — the customers are not the ones who fell out with anybody."
 msgstr "Bir işletmeyi kapatmak girişini durdurur. Siteleri yayında kalır — müşteriler kimseyle küs değil."
 
@@ -3476,6 +3525,7 @@ msgstr "Etiketler, dile göre."
 #: src/components/build-tokens.tsx:117
 #: src/components/console-tokens.tsx:123
 #: src/components/local-env.tsx:189
+#: src/routes/dashboard.sites.tsx:489
 msgid "Take it back"
 msgstr "Geri al"
 
@@ -3617,7 +3667,7 @@ msgstr "Aynısı, gövdeler dahil."
 msgid "The server is taking longer than expected to restart. Reload this page in a moment."
 msgstr "Sunucunun yeniden başlaması beklenenden uzun sürüyor. Bir süre sonra bu sayfayı yenileyin."
 
-#: src/routes/dashboard.sites.tsx:276
+#: src/routes/dashboard.sites.tsx:293
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "Site, bu sunucunun veritabanında kendi şemasını alır. Buraya sığmayan bir siteye burada kendi adresi verilebilir."
 
@@ -3670,6 +3720,10 @@ msgstr "Giriş yaparken bunu kullanırsınız."
 #: src/components/editor/mavi-editor.tsx:245
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "Bu yazı açılamadı, bu yüzden hiç değiştirilmedi."
+
+#: src/routes/console.register.tsx:94
+msgid "This server is by invitation"
+msgstr "Bu sunucuya davetle girilir"
 
 #: src/routes/login.tsx:150
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
@@ -3882,6 +3936,10 @@ msgstr "Gelenler, en yenisi başta."
 msgid "What it is"
 msgstr "Ne olduğu"
 
+#: src/routes/dashboard.sites.tsx:435
+msgid "What it is for"
+msgstr "Ne için"
+
 #: src/components/ses-account.tsx:334
 msgid "What the mail is"
 msgstr "Postanın türü"
@@ -4027,7 +4085,7 @@ msgid "Your account"
 msgstr "Hesabınız"
 
 #: src/routes/console.account.tsx:90
-#: src/routes/console.register.tsx:108
+#: src/routes/console.register.tsx:159
 msgid "Your name"
 msgstr "Adınız"
 

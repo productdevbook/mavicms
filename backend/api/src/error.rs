@@ -28,6 +28,11 @@ pub enum AppError {
     Unauthorized(String),
     #[error("{0}")]
     Forbidden(String),
+    /// Too many wrong answers. Carries the seconds to wait, which goes out as
+    /// `Retry-After` as well as in the sentence — a person reads one and a
+    /// client reads the other.
+    #[error("too many attempts — wait {0} seconds and try again")]
+    TooManyRequests(u64),
 }
 
 #[derive(Serialize, ToSchema)]
@@ -71,6 +76,7 @@ impl IntoResponse for AppError {
             AppError::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::Unauthorized(_) => StatusCode::UNAUTHORIZED,
             AppError::Forbidden(_) => StatusCode::FORBIDDEN,
+            AppError::TooManyRequests(_) => StatusCode::TOO_MANY_REQUESTS,
         };
 
         if let AppError::Database(err) = &self {
@@ -80,13 +86,26 @@ impl IntoResponse for AppError {
             tracing::error!(error = %err, "internal error");
         }
 
-        (
+        let retry_after = match &self {
+            AppError::TooManyRequests(seconds) => Some(*seconds),
+            _ => None,
+        };
+
+        let mut response = (
             status,
             Json(ErrorBody {
                 error: self.to_string(),
             }),
         )
-            .into_response()
+            .into_response();
+
+        if let Some(seconds) = retry_after
+            && let Ok(value) = seconds.to_string().parse()
+        {
+            response.headers_mut().insert("retry-after", value);
+        }
+
+        response
     }
 }
 

@@ -21,7 +21,7 @@ use argon2::{
     password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::OsRng},
 };
 use chrono::{DateTime, Duration, FixedOffset, Utc};
-use sea_orm::{ConnectionTrait, DatabaseBackend, DatabaseConnection, Statement};
+use sea_orm::{ConnectionTrait, DatabaseBackend, DatabaseConnection, Statement, TransactionTrait};
 use uuid::Uuid;
 
 use crate::error::{AppError, AppResult};
@@ -37,6 +37,37 @@ const ENTRY_TTL_SECONDS: i64 = 120;
 
 /// How many sites a new agency may open before someone says otherwise.
 const DEFAULT_SITE_LIMIT: i32 = 10;
+
+/// How long an invitation stands if nobody says otherwise.
+pub const INVITE_TTL_DAYS: i64 = 14;
+
+/// Whether anybody at all may open an agency here.
+///
+/// Off, and an environment variable rather than a setting in the panel: a
+/// server that lets strangers take a database schema is a decision about the
+/// machine, made by whoever runs it, and not something a signed-in account
+/// should be able to change. Somebody running this as a public service turns
+/// it on deliberately; nobody turns it on by clicking through a screen.
+pub fn registration_is_open() -> bool {
+    std::env::var("MAVICMS_OPEN_REGISTRATION")
+        .is_ok_and(|value| matches!(value.trim(), "1" | "true" | "yes"))
+}
+
+/// An invitation to open an agency on this server.
+///
+/// There is no other way in. Registration used to be open, which on a server
+/// somebody runs for their own customers meant anyone at all could take a
+/// schema and ten sites' worth of migrations off it, from a URL, unattended.
+#[derive(Debug, Clone)]
+pub struct Invite {
+    pub token: String,
+    pub site_limit: i32,
+    pub note: String,
+    pub created_at: DateTime<FixedOffset>,
+    pub expires_at: DateTime<FixedOffset>,
+    pub used: bool,
+    pub organization_id: Option<Uuid>,
+}
 
 #[derive(Debug, Clone)]
 pub struct Organization {
@@ -247,6 +278,15 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
             created_at TEXT NOT NULL,
             expires_at TEXT NOT NULL
         )",
+        "CREATE TABLE IF NOT EXISTS console_invites (
+            token TEXT PRIMARY KEY,
+            site_limit INTEGER NOT NULL,
+            note TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            used INTEGER NOT NULL,
+            organization_id TEXT
+        )",
         "CREATE TABLE IF NOT EXISTS site_entries (
             token TEXT PRIMARY KEY,
             tenant_id TEXT NOT NULL,
@@ -293,12 +333,166 @@ fn parse_time(value: &str) -> AppResult<DateTime<FixedOffset>> {
 ///
 /// The two happen together on purpose: an agency with no way to sign in is a
 /// row nobody can reach, and an account with no agency has nothing to own.
+/// Writes an invitation and hands back the token that stands for it.
+///
+/// The token travels in a link somebody pastes into a message, so it is the
+/// only thing standing between a stranger and an agency on this server: it is
+/// good once, and not for ever.
+pub async fn create_invite(
+    db: &DatabaseConnection,
+    site_limit: Option<i32>,
+    note: &str,
+    days: Option<i64>,
+) -> AppResult<Invite> {
+    let backend = db.get_database_backend();
+    let site_limit = site_limit.unwrap_or(DEFAULT_SITE_LIMIT);
+    if site_limit < 1 {
+        return Err(AppError::Validation(
+            "an agency that may open no sites has nothing to sign in for".to_string(),
+        ));
+    }
+
+    let days = days.unwrap_or(INVITE_TTL_DAYS).clamp(1, 365);
+    let invite = Invite {
+        token: Uuid::now_v7().to_string(),
+        site_limit,
+        note: note.trim().chars().take(200).collect(),
+        created_at: Utc::now().into(),
+        expires_at: (Utc::now() + Duration::days(days)).into(),
+        used: false,
+        organization_id: None,
+    };
+
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "INSERT INTO console_invites \
+             (token, site_limit, note, created_at, expires_at, used, organization_id) \
+             VALUES ({})",
+            parameters(backend, 7)
+        ),
+        [
+            invite.token.clone().into(),
+            invite.site_limit.into(),
+            invite.note.clone().into(),
+            invite.created_at.to_rfc3339().into(),
+            invite.expires_at.to_rfc3339().into(),
+            0.into(),
+            sea_orm::Value::String(None),
+        ],
+    ))
+    .await?;
+
+    Ok(invite)
+}
+
+/// Every invitation, newest first, spent ones included — an operator needs to
+/// see that a link was taken as much as that one is waiting.
+pub async fn list_invites(db: &DatabaseConnection) -> AppResult<Vec<Invite>> {
+    let backend = db.get_database_backend();
+    let rows = db
+        .query_all_raw(Statement::from_string(
+            backend,
+            "SELECT token, site_limit, note, created_at, expires_at, used, organization_id \
+             FROM console_invites ORDER BY created_at DESC",
+        ))
+        .await?;
+
+    rows.into_iter()
+        .map(|row| {
+            Ok(Invite {
+                token: row.try_get("", "token")?,
+                site_limit: row.try_get("", "site_limit")?,
+                note: row.try_get("", "note")?,
+                created_at: parse_time(&row.try_get::<String>("", "created_at")?)?,
+                expires_at: parse_time(&row.try_get::<String>("", "expires_at")?)?,
+                used: row.try_get::<i32>("", "used")? != 0,
+                organization_id: row
+                    .try_get::<Option<String>>("", "organization_id")?
+                    .and_then(|id| Uuid::parse_str(&id).ok()),
+            })
+        })
+        .collect()
+}
+
+pub async fn revoke_invite(db: &DatabaseConnection, token: &str) -> AppResult<()> {
+    let backend = db.get_database_backend();
+    let gone = db
+        .execute_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "DELETE FROM console_invites WHERE token = {} AND used = 0",
+                parameter(backend, 1)
+            ),
+            [token.into()],
+        ))
+        .await?;
+
+    if gone.rows_affected() == 0 {
+        // A spent invitation is kept: it is the record of who was let in.
+        return Err(AppError::NotFound(
+            "an invitation waiting to be used".to_string(),
+        ));
+    }
+    Ok(())
+}
+
+/// Spends an invitation, returning how many sites it allows.
+///
+/// The same shape as spending a sign-in link, and for the same reason: two
+/// people opening the link together must not both be let in, so the condition
+/// travels in the update and whoever changes a row is the one who gets in.
+async fn claim_invite(db: &impl ConnectionTrait, token: &str) -> AppResult<i32> {
+    let backend = db.get_database_backend();
+    let refused = || AppError::Forbidden("that invitation is not one this server gave".to_string());
+
+    let row = db
+        .query_one_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "SELECT site_limit, expires_at, used FROM console_invites WHERE token = {}",
+                parameter(backend, 1)
+            ),
+            [token.into()],
+        ))
+        .await?
+        .ok_or_else(refused)?;
+
+    if row.try_get::<i32>("", "used")? != 0
+        || parse_time(&row.try_get::<String>("", "expires_at")?)? < Utc::now()
+    {
+        return Err(refused());
+    }
+
+    let spent = db
+        .execute_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "UPDATE console_invites SET used = 1 WHERE token = {} AND used = 0",
+                parameter(backend, 1)
+            ),
+            [token.into()],
+        ))
+        .await?;
+    if spent.rows_affected() == 0 {
+        return Err(refused());
+    }
+
+    Ok(row.try_get::<i32>("", "site_limit")?)
+}
+
+/// Opens an agency, against an invitation the server gave out.
+///
+/// Claiming the invitation and writing the agency are one transaction: a
+/// half-spent invitation would either lock somebody out of a link that was
+/// meant for them, or let two people through one.
 pub async fn register(
     db: &DatabaseConnection,
     organization_name: &str,
     name: &str,
     email: &str,
     password: &str,
+    invite: &str,
 ) -> AppResult<(Organization, Operator)> {
     let backend = db.get_database_backend();
     let organization_name = organization_name.trim();
@@ -324,27 +518,35 @@ pub async fn register(
         ));
     }
 
+    let transaction = db.begin().await?;
+    let site_limit = if registration_is_open() && invite.trim().is_empty() {
+        DEFAULT_SITE_LIMIT
+    } else {
+        claim_invite(&transaction, invite.trim()).await?
+    };
+
     let organization = Organization {
         id: Uuid::now_v7(),
         name: organization_name.to_string(),
-        site_limit: DEFAULT_SITE_LIMIT,
+        site_limit,
         active: true,
     };
-    db.execute_raw(Statement::from_sql_and_values(
-        backend,
-        format!(
-            "INSERT INTO organizations (id, name, site_limit, active, created_at) VALUES ({})",
-            parameters(backend, 5)
-        ),
-        [
-            organization.id.to_string().into(),
-            organization.name.clone().into(),
-            organization.site_limit.into(),
-            1.into(),
-            Utc::now().to_rfc3339().into(),
-        ],
-    ))
-    .await?;
+    transaction
+        .execute_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "INSERT INTO organizations (id, name, site_limit, active, created_at) VALUES ({})",
+                parameters(backend, 5)
+            ),
+            [
+                organization.id.to_string().into(),
+                organization.name.clone().into(),
+                organization.site_limit.into(),
+                1.into(),
+                Utc::now().to_rfc3339().into(),
+            ],
+        ))
+        .await?;
 
     let operator = Operator {
         id: Uuid::now_v7(),
@@ -356,25 +558,40 @@ pub async fn register(
             name.to_string()
         },
     };
-    db.execute_raw(Statement::from_sql_and_values(
-        backend,
-        format!(
-            "INSERT INTO operators \
+    transaction
+        .execute_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "INSERT INTO operators \
              (id, organization_id, email, name, password_hash, active, created_at) \
              VALUES ({})",
-            parameters(backend, 7)
-        ),
-        [
-            operator.id.to_string().into(),
-            operator.organization_id.to_string().into(),
-            operator.email.clone().into(),
-            operator.name.clone().into(),
-            hash_password(password)?.into(),
-            1.into(),
-            Utc::now().to_rfc3339().into(),
-        ],
-    ))
-    .await?;
+                parameters(backend, 7)
+            ),
+            [
+                operator.id.to_string().into(),
+                operator.organization_id.to_string().into(),
+                operator.email.clone().into(),
+                operator.name.clone().into(),
+                hash_password(password)?.into(),
+                1.into(),
+                Utc::now().to_rfc3339().into(),
+            ],
+        ))
+        .await?;
+
+    transaction
+        .execute_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "UPDATE console_invites SET organization_id = {} WHERE token = {}",
+                parameter(backend, 1),
+                parameter(backend, 2)
+            ),
+            [organization.id.to_string().into(), invite.trim().into()],
+        ))
+        .await?;
+
+    transaction.commit().await?;
 
     Ok((organization, operator))
 }

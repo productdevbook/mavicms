@@ -17,6 +17,9 @@ pub struct RegisterRequest {
     pub name: String,
     pub email: String,
     pub password: String,
+    /// From the link the server's operator sent. There is no way in without
+    /// one.
+    pub invite: String,
 }
 
 #[derive(Debug, Deserialize, ToSchema)]
@@ -115,19 +118,38 @@ async fn signed_in<'a>(
 pub async fn register(
     State(hosting): State<Hosting>,
     axum::Extension(resolved): axum::Extension<Resolved>,
+    headers: axum::http::HeaderMap,
     cookies: Cookies,
     Json(payload): Json<RegisterRequest>,
 ) -> AppResult<(StatusCode, Json<AccountResponse>)> {
     let db = control(&hosting, &resolved)?;
 
-    let (organization, operator) = console::register(
+    // Counted by address alone: there is no account here yet to count against,
+    // and a wrong invitation is a guess like any other.
+    let key = format!("invite:from:{}", crate::throttle::caller(&headers));
+    if let Some(left) = crate::throttle::pause_left(&key) {
+        return Err(AppError::TooManyRequests(left.as_secs().max(1)));
+    }
+
+    let (organization, operator) = match console::register(
         db,
         &payload.organization_name,
         &payload.name,
         &payload.email,
         &payload.password,
+        &payload.invite,
     )
-    .await?;
+    .await
+    {
+        Ok(made) => {
+            crate::throttle::right(&key);
+            made
+        }
+        Err(err) => {
+            crate::throttle::wrong(&key);
+            return Err(err);
+        }
+    };
 
     set_cookie(&cookies, console::create_session(db, operator.id).await?);
 
@@ -156,11 +178,32 @@ pub async fn register(
 pub async fn login(
     State(hosting): State<Hosting>,
     axum::Extension(resolved): axum::Extension<Resolved>,
+    headers: axum::http::HeaderMap,
     cookies: Cookies,
     Json(payload): Json<SignInRequest>,
 ) -> AppResult<Json<AccountResponse>> {
     let db = control(&hosting, &resolved)?;
-    let operator = console::authenticate(db, &payload.email, &payload.password).await?;
+
+    let keys = [
+        format!("console:who:{}", payload.email.trim().to_lowercase()),
+        format!("console:from:{}", crate::throttle::caller(&headers)),
+    ];
+    if let Some(left) = keys.iter().find_map(|key| crate::throttle::pause_left(key)) {
+        return Err(AppError::TooManyRequests(left.as_secs().max(1)));
+    }
+
+    let operator = match console::authenticate(db, &payload.email, &payload.password).await {
+        Ok(operator) => {
+            keys.iter().for_each(|key| crate::throttle::right(key));
+            operator
+        }
+        Err(err) => {
+            keys.iter().for_each(|key| {
+                crate::throttle::wrong(key);
+            });
+            return Err(err);
+        }
+    };
     let organization = console::organization(db, operator.organization_id)
         .await?
         .ok_or_else(|| AppError::Internal("the agency behind this account is gone".to_string()))?;
@@ -686,6 +729,141 @@ pub struct UpdateAgencyRequest {
     /// Switching an agency off leaves its sites serving and stops it signing
     /// in — the customers are not the ones who fell out with anybody.
     pub active: Option<bool>,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct CreateInviteRequest {
+    /// How many sites the agency may open. The usual number if left out.
+    pub site_limit: Option<i32>,
+    /// What the operator wrote it for — a name, a company, whatever helps
+    /// later. Never shown to whoever follows the link.
+    pub note: Option<String>,
+    /// How long the link stands, in days.
+    pub days: Option<i64>,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct InviteResponse {
+    /// Goes on the end of the console's register address.
+    pub token: String,
+    pub site_limit: i32,
+    pub note: String,
+    pub created_at: String,
+    pub expires_at: String,
+    pub used: bool,
+    pub organization: Option<String>,
+}
+
+/// Invites an agency onto this server.
+#[utoipa::path(
+    post,
+    path = "/invites",
+    tag = "sites",
+    request_body = CreateInviteRequest,
+    responses((status = 201, description = "The invitation", body = InviteResponse))
+)]
+pub async fn create_invite(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    Json(payload): Json<CreateInviteRequest>,
+) -> AppResult<(StatusCode, Json<InviteResponse>)> {
+    let db = control(&hosting, &resolved)?;
+    let invite = console::create_invite(
+        db,
+        payload.site_limit,
+        payload.note.as_deref().unwrap_or_default(),
+        payload.days,
+    )
+    .await?;
+
+    Ok((StatusCode::CREATED, Json(shown(invite, &[]))))
+}
+
+/// Every invitation this server has given out.
+#[utoipa::path(
+    get,
+    path = "/invites",
+    tag = "sites",
+    responses((status = 200, description = "The invitations", body = Vec<InviteResponse>))
+)]
+pub async fn list_invites(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+) -> AppResult<Json<Vec<InviteResponse>>> {
+    let db = control(&hosting, &resolved)?;
+    let agencies: Vec<console::Organization> = console::organizations(db)
+        .await?
+        .into_iter()
+        .map(|(organization, _)| organization)
+        .collect();
+    let invites = console::list_invites(db).await?;
+
+    Ok(Json(
+        invites
+            .into_iter()
+            .map(|invite| shown(invite, &agencies))
+            .collect(),
+    ))
+}
+
+/// Takes back an invitation nobody has used yet.
+#[utoipa::path(
+    delete,
+    path = "/invites/{token}",
+    tag = "sites",
+    params(("token" = String, Path, description = "The invitation")),
+    responses((status = 204, description = "Taken back"))
+)]
+pub async fn revoke_invite(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    Path(token): Path<String>,
+) -> AppResult<StatusCode> {
+    let db = control(&hosting, &resolved)?;
+    console::revoke_invite(db, &token).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// An invitation with the agency that took it named rather than numbered.
+fn shown(invite: console::Invite, agencies: &[console::Organization]) -> InviteResponse {
+    InviteResponse {
+        organization: invite.organization_id.and_then(|id| {
+            agencies
+                .iter()
+                .find(|agency| agency.id == id)
+                .map(|agency| agency.name.clone())
+        }),
+        token: invite.token,
+        site_limit: invite.site_limit,
+        note: invite.note,
+        created_at: invite.created_at.to_rfc3339(),
+        expires_at: invite.expires_at.to_rfc3339(),
+        used: invite.used,
+    }
+}
+
+/// Whether this server takes registrations without an invitation.
+///
+/// Asked before the form is drawn: a page that collects a name, an address and
+/// a password and then says "by invitation only" wasted somebody's time.
+#[utoipa::path(
+    get,
+    path = "/console/registration",
+    tag = "console",
+    responses((status = 200, description = "Whether anybody may sign up", body = RegistrationResponse))
+)]
+pub async fn registration() -> Json<RegistrationResponse> {
+    Json(RegistrationResponse {
+        open: console::registration_is_open(),
+    })
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct RegistrationResponse {
+    pub open: bool,
 }
 
 /// Every agency on this server. The operator's view.

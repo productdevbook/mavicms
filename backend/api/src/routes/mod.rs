@@ -37,6 +37,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(setup::configure_database))
         .routes(routes!(auth::logout))
         .routes(routes!(console::register))
+        .routes(routes!(console::registration))
         .routes(routes!(console::login))
         .routes(routes!(console::logout))
         .routes(routes!(console::me))
@@ -137,6 +138,8 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(sites::update_site))
         .routes(routes!(sites::delete_site))
         .routes(routes!(console::list_agencies))
+        .routes(routes!(console::create_invite, console::list_invites))
+        .routes(routes!(console::revoke_invite))
         .routes(routes!(console::update_agency))
         .routes(routes!(media::delete_media))
         .routes(routes!(media::import_media))
@@ -248,6 +251,35 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .layer(from_fn(require_auth))
         .layer(from_fn(require_database));
 
+    /// Headers every answer carries, whatever it is.
+    ///
+    /// The panel and this API answer on the same address, and a browser applies
+    /// these to what it was given rather than to what it asked for — so setting
+    /// them in one place and not the other leaves half the surface bare.
+    async fn security_headers(
+        request: axum::extract::Request,
+        next: axum::middleware::Next,
+    ) -> axum::response::Response {
+        use axum::http::HeaderValue;
+
+        let mut response = next.run(request).await;
+        let headers = response.headers_mut();
+
+        for (name, value) in [
+            (
+                "strict-transport-security",
+                "max-age=31536000; includeSubDomains",
+            ),
+            ("x-content-type-options", "nosniff"),
+            ("referrer-policy", "same-origin"),
+            ("content-security-policy", "frame-ancestors 'none'"),
+        ] {
+            headers.insert(name, HeaderValue::from_static(value));
+        }
+
+        response
+    }
+
     // Resolving the site is the outermost thing that happens: everything
     // below it, authentication included, is a question about one site.
     public
@@ -256,4 +288,5 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .merge(needs_db)
         .merge(protected)
         .layer(from_fn_with_state(hosting, resolve))
+        .layer(from_fn(security_headers))
 }

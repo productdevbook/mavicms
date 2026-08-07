@@ -81,6 +81,11 @@ a build reads the API directly, at the addresses below.
 - `include=content` — adds `content_html` and `content_markdown` to each item.
   A listing leaves the bodies out otherwise, because a whole archive in one
   response is megabytes nobody asked for.
+- `include=seo` — adds `seo_title`, `seo_description` and `canonical`, which
+  are what a page's `<head>` is made of. Without it a listing has no SEO
+  fields at all and reading them gives nothing back rather than an error, so a
+  site can ship with the CMS's titles silently unused. Ask for both at once
+  with `include=content,seo`.
 - `limit` (default 50, maximum 200) and `offset`.
 - `q` — free text across titles, summaries and bodies.
 - `slug` — an exact address, for asking whether one post exists.

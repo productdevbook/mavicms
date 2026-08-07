@@ -181,12 +181,14 @@ async fn siblings_of(
         ("slug" = Option<String>, Query, description = "Exact address to look for"),
         ("limit" = Option<u64>, Query, description = "How many posts to return (default 50, max 200)"),
         ("offset" = Option<u64>, Query, description = "How many to skip"),
-        ("include" = Option<String>, Query, description = "Comma-separated extras; `content` adds the post body to each item"),
+        ("include" = Option<String>, Query, description = "Comma-separated extras: `content` adds the post body to each item, `seo` adds seo_title, seo_description and canonical"),
         ("q" = Option<String>, Query, description = "Free text to search for in the title, excerpt and body"),
         ("status" = Option<String>, Query, description = "Comma-separated statuses; a build wants `published`"),
+        ("If-None-Match" = Option<String>, Header, description = "An ETag from a previous answer. Unchanged listings come back 304 with no body."),
     ),
     responses(
-        (status = 200, description = "A page of posts", body = PostPage),
+        (status = 200, description = "A page of posts", body = PostPage,
+            headers(("ETag" = String, description = "Send it back as If-None-Match next time"))),
         (status = 304, description = "Unchanged since the ETag the caller sent"),
     )
 )]
@@ -209,10 +211,7 @@ pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppR
     // one was asked for.
     let limit = query.limit.unwrap_or(DEFAULT_PAGE).clamp(1, MAX_PAGE);
     let offset = query.offset.unwrap_or(0);
-    let with_content = query
-        .include
-        .as_deref()
-        .is_some_and(|value| value.split(',').any(|part| part.trim() == "content"));
+    let extras = crate::dto::post::Extras::from_include(query.include.as_deref());
 
     let mut find = post::Entity::find();
     if let Some(codes) = query.codes() {
@@ -320,7 +319,7 @@ pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppR
                 .get(&post.translation_group_id)
                 .cloned()
                 .unwrap_or_default();
-            PostSummary::from_model(post, category_ids, locales, with_content)
+            PostSummary::from_model(post, category_ids, locales, extras)
         })
         .collect();
 

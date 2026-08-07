@@ -104,6 +104,16 @@ pub struct PostSummary {
     pub title: String,
     pub slug: String,
     pub excerpt: String,
+    /// The three strings a page's <head> is made of, and only when the listing
+    /// asked with `include=seo`. They are short enough to have lived here
+    /// outright, but a listing is a published shape and adding fields to it
+    /// unasked changes what every existing consumer receives.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub seo_title: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub seo_description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub canonical: Option<String>,
     pub status: PostStatus,
     pub publish_at: Option<DateTime<FixedOffset>>,
     pub author: String,
@@ -127,16 +137,19 @@ impl PostSummary {
         model: PostModel,
         category_ids: Vec<Uuid>,
         locales: Vec<String>,
-        with_content: bool,
+        extras: Extras,
     ) -> Self {
         Self {
             digest: digest(&model),
             id: model.id,
-            content_html: with_content.then_some(model.content_html),
-            content_markdown: with_content.then_some(model.content_markdown).flatten(),
+            content_html: extras.content.then_some(model.content_html),
+            content_markdown: extras.content.then_some(model.content_markdown).flatten(),
             title: model.title,
             slug: model.slug,
             excerpt: model.excerpt,
+            seo_title: extras.seo.then_some(model.seo_title),
+            seo_description: extras.seo.then_some(model.seo_description),
+            canonical: extras.seo.then_some(model.canonical),
             status: PostStatus::from_str_lenient(&model.status),
             publish_at: model.publish_at,
             author: model.author,
@@ -150,6 +163,31 @@ impl PostSummary {
             locales,
             created_at: model.created_at,
             updated_at: model.updated_at,
+        }
+    }
+}
+
+/// What a listing was asked to carry beyond the usual.
+///
+/// Both are opt-in, and for the same reason: a build wants everything in one
+/// answer, and a search index or a sitemap wants none of it. The bodies are
+/// large, the SEO strings are not, and neither belongs in a shape somebody
+/// else is already parsing unless they asked.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct Extras {
+    pub content: bool,
+    pub seo: bool,
+}
+
+impl Extras {
+    /// Reads the `include` query, which is a comma-separated list of names.
+    pub fn from_include(include: Option<&str>) -> Self {
+        let has = |wanted: &str| {
+            include.is_some_and(|value| value.split(',').any(|part| part.trim() == wanted))
+        };
+        Self {
+            content: has("content"),
+            seo: has("seo"),
         }
     }
 }
@@ -353,7 +391,7 @@ pub struct UpdatePostRequest {
 
 #[cfg(test)]
 mod tests {
-    use super::{PostModel, digest};
+    use super::{Extras, PostModel, PostSummary, digest};
 
     fn post() -> PostModel {
         let now = chrono::Utc::now().fixed_offset();
@@ -380,6 +418,48 @@ mod tests {
             created_at: now,
             updated_at: now,
         }
+    }
+
+    #[test]
+    fn a_listing_carries_the_head_of_a_page_only_when_asked() {
+        let mut model = post();
+        model.seo_title = "What the tab says".to_string();
+        model.seo_description = "What the search result says".to_string();
+        model.canonical = "https://example.test/a-title".to_string();
+
+        let listed =
+            |extras| PostSummary::from_model(model.clone(), Vec::new(), Vec::new(), extras);
+
+        // The shape every existing consumer already parses, unchanged.
+        let plain = listed(Extras::default());
+        assert_eq!(plain.seo_title, None);
+        assert_eq!(plain.canonical, None);
+        assert_eq!(plain.content_html, None);
+
+        // Asked for, and the values are the post's own rather than blanks —
+        // reading them from a listing used to give nothing back at all, which
+        // is how a site shipped with the CMS's titles quietly unused.
+        let with_seo = listed(Extras::from_include(Some("seo")));
+        assert_eq!(with_seo.seo_title.as_deref(), Some("What the tab says"));
+        assert_eq!(
+            with_seo.seo_description.as_deref(),
+            Some("What the search result says")
+        );
+        assert_eq!(
+            with_seo.canonical.as_deref(),
+            Some("https://example.test/a-title")
+        );
+        // The bodies are the expensive part and are still not sent.
+        assert_eq!(with_seo.content_html, None);
+
+        let both = listed(Extras::from_include(Some("content, seo")));
+        assert!(both.seo_title.is_some());
+        assert!(both.content_html.is_some());
+
+        // A name nobody defined is not a way to get everything.
+        let neither = listed(Extras::from_include(Some("seotitle,contents")));
+        assert_eq!(neither.seo_title, None);
+        assert_eq!(neither.content_html, None);
     }
 
     #[test]
