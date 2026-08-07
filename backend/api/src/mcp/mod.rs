@@ -383,12 +383,21 @@ fn server_info() -> Value {
 }
 
 const INSTRUCTIONS: &str = "This is a Mavi CMS site. Which site depends on the address you \
-    reached it on, and what you may do depends on how you connected. If tools/list offers you \
-    nothing that writes, you are connected with a build token, which can only read — say so \
-    rather than reporting that the site cannot do it: the way to write is to connect to this \
-    same address with no token, which sends somebody here to sign in and allow it. Read \
-    GET /api/llms.txt on the same address for the shape of the content and how a front end is \
-    built from it.";
+    reached it on. \
+    \
+    If none of the tools you were offered can write, this connection is read-only. Do not ask \
+    for a token — sending one is what made it read-only. Say this instead: connect again using \
+    the address on its own, with no Authorization header, and the site will ask whoever is \
+    connecting to sign in; the connection can then do everything their own account can. \
+    \
+    What this site holds is posts, the categories and tags on them, uploaded files, forms and \
+    what has come in through them, the languages it writes in, and its own title. It does not \
+    hold pages, a footer, a menu or a layout — those live in the project the site's pages are \
+    built from, which is somewhere else and not reachable from here. If you are asked to change \
+    one of those, say where it actually lives rather than looking for a tool for it. \
+    \
+    Read GET /api/llms.txt on the same address for the shape of the content and how a front \
+    end is built from it.";
 
 /// Who is asking, and therefore which set of tools they are offered.
 pub enum Caller {
@@ -541,8 +550,17 @@ async fn invoke(
         Caller::Site { state, user } => {
             let tool = site::TOOLS.iter().find(|tool| tool.name == name)?;
             if tool.writes && user.role == crate::auth::BUILDER {
+                // Naming the credential and stopping there is what this used
+                // to do, and somebody who had just gone and made one was told
+                // what sounded like "you need a token". The way out comes
+                // first, and the fact that a token is the cause rather than
+                // the cure is said outright.
                 return Some(Err(AppError::Forbidden(
-                    "a build token can read this site and nothing else".to_string(),
+                    "this connection can only read. Connect again using the address on its \
+                     own, with no Authorization header, and the site will ask you to sign in \
+                     — after that it can write. Adding a token will not help: sending one is \
+                     what makes a connection read-only."
+                        .to_string(),
                 )));
             }
             Some(site::call(hosting, resolved, state, name, arguments).await)
