@@ -35,13 +35,6 @@ export function ConsoleBuildToken({ stored }: { stored: boolean }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-base font-semibold">{t`Access to your repositories`}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t`Your sites are built from private repositories, and a build needs a token to read them with. Keep one here and every site you look after uses it — a site whose project lives somewhere else can still be given its own, and that one wins.`}
-        </p>
-      </div>
-
       <div className="flex flex-col gap-2">
         <Label htmlFor="build-token">{t`Access token`}</Label>
         <Input

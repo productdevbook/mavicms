@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export const Route = createFileRoute("/console/login")({
+export const Route = createFileRoute("/console_/login")({
   component: ConsoleLoginRoute,
 })
 
@@ -23,7 +23,8 @@ function ConsoleLoginRoute() {
   const [errorMessage, setErrorMessage] = React.useState("")
   const [submitting, setSubmitting] = React.useState(false)
 
-  const canSubmit = email.trim().length > 0 && password.length > 0 && !submitting
+  const canSubmit =
+    email.trim().length > 0 && password.length > 0 && !submitting
 
   const submit = async () => {
     setSubmitting(true)

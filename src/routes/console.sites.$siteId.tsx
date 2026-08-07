@@ -8,7 +8,6 @@ import { toast } from "sonner"
 import {
   ApiError,
   createSiteEntry,
-  getConsoleAccount,
   getConsoleSites,
   getSiteBackup,
   getSitePublish,
@@ -59,9 +58,6 @@ function payloadOf(settings: S3Settings): S3SettingsPayload {
 
 export const Route = createFileRoute("/console/sites/$siteId")({
   beforeLoad: async ({ params }) => {
-    await getConsoleAccount().catch(() => {
-      throw redirect({ to: "/console/login" })
-    })
     // The list is the agency's own, so a site that is not in it is one this
     // page has no business showing.
     const site = (await getConsoleSites()).find((s) => s.id === params.siteId)
@@ -151,7 +147,10 @@ function ConsoleSiteRoute() {
   const saveWith = async (extra: Partial<SavePublish>) => {
     setSaving(true)
     try {
-      const saved = await saveSitePublish.bind(null, siteId)({
+      const saved = await saveSitePublish.bind(
+        null,
+        siteId
+      )({
         repository: config.repository,
         branch: config.branch,
         build_command: config.build_command,
@@ -166,7 +165,9 @@ function ConsoleSiteRoute() {
       toast.success(t`Saved`)
     } catch (error) {
       toast.error(
-        error instanceof ApiError ? error.message : t`Could not save the settings`
+        error instanceof ApiError
+          ? error.message
+          : t`Could not save the settings`
       )
     } finally {
       setSaving(false)
@@ -196,7 +197,9 @@ function ConsoleSiteRoute() {
       toast.success(t`Saved`)
     } catch (error) {
       toast.error(
-        error instanceof ApiError ? error.message : t`Could not save the settings`
+        error instanceof ApiError
+          ? error.message
+          : t`Could not save the settings`
       )
     } finally {
       setSaving(false)
@@ -211,7 +214,9 @@ function ConsoleSiteRoute() {
       toast.success(t`Saved`)
     } catch (error) {
       toast.error(
-        error instanceof ApiError ? error.message : t`Could not save the settings`
+        error instanceof ApiError
+          ? error.message
+          : t`Could not save the settings`
       )
     } finally {
       setSaving(false)
@@ -225,7 +230,9 @@ function ConsoleSiteRoute() {
       toast.success(t`Backup written: ${file.name}`)
       applyBackup(await getSiteBackup(siteId))
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : t`The backup failed`)
+      toast.error(
+        error instanceof ApiError ? error.message : t`The backup failed`
+      )
     } finally {
       setSaving(false)
     }
@@ -262,201 +269,194 @@ function ConsoleSiteRoute() {
   }
 
   return (
-    <div className="surface-bar min-h-svh bg-background">
-      <main className="mx-auto w-full max-w-3xl px-6 py-8">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="mb-4 -ml-2"
-          onClick={() => void navigate({ to: "/console" })}
-        >
-          <ArrowLeft /> {t`Your sites`}
-        </Button>
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="mb-4 -ml-2"
+        onClick={() => void navigate({ to: "/console" })}
+      >
+        <ArrowLeft /> {t`Your sites`}
+      </Button>
 
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-lg font-semibold">{site.host}</h1>
-            <p className="text-sm text-muted-foreground">
-              {t`Where this site's pages come from, and how the last builds went.`}
-            </p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-lg font-semibold">{site.host}</h1>
+          <p className="text-sm text-muted-foreground">
+            {t`Where this site's pages come from, and how the last builds went.`}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => void open()}
+            disabled={opening}
+          >
+            {opening ? <Loader2 className="animate-spin" /> : <ExternalLink />}
+            {t`Manage`}
+          </Button>
+          <PublishButton
+            onPublish={() => void publish()}
+            publishing={publishing}
+            busy={busy}
+            disabled={!config.repository}
+          />
+        </div>
+      </div>
+
+      <div className="mb-6 flex gap-1 border-b border-border">
+        {(
+          [
+            ["publish", t`Publish`],
+            ["storage", t`Storage`],
+            ["mail", t`Mail`],
+            ["backups", t`Backups`],
+            ["local", t`Local`],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setTab(id)}
+            className={cn(
+              "-mb-px border-b-2 px-3 py-2 text-sm font-medium",
+              tab === id
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "publish" &&
+        (!status ? (
+          <div className="flex justify-center py-16">
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => void open()}
-              disabled={opening}
-            >
-              {opening ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <ExternalLink />
-              )}
-              {t`Manage`}
-            </Button>
-            <PublishButton
-              onPublish={() => void publish()}
-              publishing={publishing}
-              busy={busy}
-              disabled={!config.repository}
+        ) : (
+          <div className="flex flex-col gap-6">
+            <PublishForm
+              config={config}
+              onChange={(values) =>
+                setConfig((current) => ({ ...current, ...values }))
+              }
+              token={token}
+              onTokenChange={setToken}
+              onAddVariable={(name, value) =>
+                void saveWith({ environment_set: { [name]: value } })
+              }
+              onRemoveVariable={(name) =>
+                void saveWith({ environment_remove: [name] })
+              }
+              onSave={() => void saveWith({})}
+              saving={saving}
             />
+
+            <div>
+              <h2 className="mb-2 text-sm font-medium">{t`Recent builds`}</h2>
+              <BuildHistory builds={status.builds} />
+            </div>
           </div>
-        </div>
+        ))}
 
-        <div className="mb-6 flex gap-1 border-b border-border">
-          {(
-            [
-              ["publish", t`Publish`],
-              ["storage", t`Storage`],
-              ["mail", t`Mail`],
-              ["backups", t`Backups`],
-              ["local", t`Local`],
-            ] as const
-          ).map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setTab(id)}
-              className={cn(
-                "-mb-px border-b-2 px-3 py-2 text-sm font-medium",
-                tab === id
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {tab === "publish" &&
-          (!status ? (
-            <div className="flex justify-center py-16">
-              <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      {tab === "storage" &&
+        (!s3Form || !s3 ? (
+          <div className="flex justify-center py-16">
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <S3Fields
+              form={s3Form}
+              hasStoredSecret={s3.has_secret_access_key}
+              onChange={(values) =>
+                setS3Form((current) =>
+                  current ? { ...current, ...values } : current
+                )
+              }
+            />
+            <div>
+              <Button onClick={() => void saveStorage()} disabled={saving}>
+                {saving ? <Loader2 className="animate-spin" /> : null}
+                {t`Save`}
+              </Button>
             </div>
-          ) : (
-            <div className="flex flex-col gap-6">
-              <PublishForm
-                config={config}
-                onChange={(values) =>
-                  setConfig((current) => ({ ...current, ...values }))
-                }
-                token={token}
-                onTokenChange={setToken}
-                onAddVariable={(name, value) =>
-                  void saveWith({ environment_set: { [name]: value } })
-                }
-                onRemoveVariable={(name) =>
-                  void saveWith({ environment_remove: [name] })
-                }
-                onSave={() => void saveWith({})}
-                saving={saving}
-              />
+          </div>
+        ))}
 
-              <div>
-                <h2 className="mb-2 text-sm font-medium">{t`Recent builds`}</h2>
-                <BuildHistory builds={status.builds} />
-              </div>
+      {tab === "backups" &&
+        (!backup || !backupConfig ? (
+          <div className="flex justify-center py-16">
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            <BackupFields
+              settings={backup}
+              config={backupConfig}
+              enabled={backupEnabled}
+              onEnabledChange={setBackupEnabled}
+              onChange={(values) =>
+                setBackupConfig((current) =>
+                  current ? { ...current, ...values } : current
+                )
+              }
+            />
+
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={() => void saveBackups()} disabled={saving}>
+                {saving ? <Loader2 className="animate-spin" /> : null}
+                {t`Save`}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => void backUpNow()}
+                disabled={saving}
+              >
+                <Play /> {t`Back up now`}
+              </Button>
             </div>
-          ))}
 
-        {tab === "storage" &&
-          (!s3Form || !s3 ? (
-            <div className="flex justify-center py-16">
-              <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              <S3Fields
-                form={s3Form}
-                hasStoredSecret={s3.has_secret_access_key}
-                onChange={(values) =>
-                  setS3Form((current) =>
-                    current ? { ...current, ...values } : current
-                  )
-                }
-              />
-              <div>
-                <Button onClick={() => void saveStorage()} disabled={saving}>
-                  {saving ? <Loader2 className="animate-spin" /> : null}
-                  {t`Save`}
-                </Button>
-              </div>
-            </div>
-          ))}
-
-        {tab === "backups" &&
-          (!backup || !backupConfig ? (
-            <div className="flex justify-center py-16">
-              <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : (
-            <div className="flex flex-col gap-6">
-              <BackupFields
-                settings={backup}
-                config={backupConfig}
-                enabled={backupEnabled}
-                onEnabledChange={setBackupEnabled}
-                onChange={(values) =>
-                  setBackupConfig((current) =>
-                    current ? { ...current, ...values } : current
-                  )
-                }
-              />
-
-              <div className="flex flex-wrap gap-2">
-                <Button onClick={() => void saveBackups()} disabled={saving}>
-                  {saving ? <Loader2 className="animate-spin" /> : null}
-                  {t`Save`}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => void backUpNow()}
-                  disabled={saving}
-                >
-                  <Play /> {t`Back up now`}
-                </Button>
-              </div>
-
-              <div>
-                <h2 className="mb-2 text-sm font-medium">{t`Archives`}</h2>
-                {backup.backups.length === 0 ? (
-                  <p className="rounded-xl border border-dashed border-border py-10 text-center text-sm text-muted-foreground">
-                    {t`No backups yet`}
-                  </p>
-                ) : (
-                  <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
-                    {backup.backups.map((file) => (
-                      <div
-                        key={file.name}
-                        className="flex items-center gap-3 px-4 py-2.5"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm">{file.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {(file.size_bytes / 1024).toFixed(0)} KB ·{" "}
-                            {new Date(file.created_at).toLocaleString()}
-                          </p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          disabled={saving}
-                          onClick={() => void restore(file.name)}
-                        >
-                          <RotateCcw /> {t`Restore`}
-                        </Button>
+            <div>
+              <h2 className="mb-2 text-sm font-medium">{t`Archives`}</h2>
+              {backup.backups.length === 0 ? (
+                <p className="rounded-xl border border-dashed border-border py-10 text-center text-sm text-muted-foreground">
+                  {t`No backups yet`}
+                </p>
+              ) : (
+                <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
+                  {backup.backups.map((file) => (
+                    <div
+                      key={file.name}
+                      className="flex items-center gap-3 px-4 py-2.5"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm">{file.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {(file.size_bytes / 1024).toFixed(0)} KB ·{" "}
+                          {new Date(file.created_at).toLocaleString()}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={saving}
+                        onClick={() => void restore(file.name)}
+                      >
+                        <RotateCcw /> {t`Restore`}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
-        {tab === "mail" && <SiteMail siteId={siteId} />}
+          </div>
+        ))}
+      {tab === "mail" && <SiteMail siteId={siteId} />}
 
-        {tab === "local" && <LocalEnv siteId={siteId} />}
-
-      </main>
-    </div>
+      {tab === "local" && <LocalEnv siteId={siteId} />}
+    </>
   )
 }

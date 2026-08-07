@@ -1,22 +1,18 @@
 /* eslint-disable react-refresh/only-export-components -- file-based route convention */
 import * as React from "react"
-import { Link, createFileRoute, redirect, useNavigate } from "@tanstack/react-router"
+import { Link, createFileRoute } from "@tanstack/react-router"
 import { useLingui } from "@lingui/react/macro"
-import { ExternalLink, Globe, Loader2, LogOut, Plus, Settings } from "lucide-react"
+import { ExternalLink, Globe, Loader2, Plus, Settings } from "lucide-react"
 import { toast } from "sonner"
 
 import {
   ApiError,
-  consoleLogout,
   createConsoleSite,
   createSiteEntry,
-  getConsoleAccount,
   getConsoleSites,
-  type ConsoleAccount,
   type ConsoleSite,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
-import { applySurface } from "@/lib/surface"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -29,19 +25,12 @@ import {
 } from "@/components/ui/dialog"
 
 export const Route = createFileRoute("/console/")({
-  beforeLoad: async () => {
-    const account = await getConsoleAccount().catch(() => {
-      throw redirect({ to: "/console/login" })
-    })
-    return { account }
-  },
   component: ConsoleRoute,
 })
 
 function ConsoleRoute() {
   const { t } = useLingui()
-  const navigate = useNavigate()
-  const { account } = Route.useRouteContext() as { account: ConsoleAccount }
+  const { account } = Route.useRouteContext()
 
   const [sites, setSites] = React.useState<ConsoleSite[] | null>(null)
   const [adding, setAdding] = React.useState(false)
@@ -88,102 +77,68 @@ function ConsoleRoute() {
     }
   }
 
-  const signOut = async () => {
-    await consoleLogout().catch(() => undefined)
-    await navigate({ to: "/console/login" })
-  }
-
-  React.useEffect(() => {
-    applySurface({ kind: "console", name: account.organization_name })
-  }, [account.organization_name])
-
   const atLimit = (sites?.length ?? 0) >= account.site_limit
 
   return (
-    <div className="surface-bar min-h-svh bg-background">
-      <header className="flex items-center gap-3 border-b border-border px-4 py-2">
-        <span className="surface-mark flex size-7 items-center justify-center rounded-lg text-sm font-bold text-white">
-          K
-        </span>
-        <span className="text-sm font-semibold">{account.organization_name}</span>
-        <div className="flex-1" />
-        <Link
-          to="/console/account"
-          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-        >
-          {account.email}
-        </Link>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={t`Sign out`}
-          onClick={() => void signOut()}
-        >
-          <LogOut />
-        </Button>
-      </header>
-
-      <main className="mx-auto w-full max-w-3xl px-6 py-8">
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-lg font-semibold">{t`Your sites`}</h1>
-            <p className="text-sm text-muted-foreground">
-              {t`${sites?.length ?? 0} of ${account.site_limit} used.`}
-            </p>
-          </div>
-          <Button onClick={() => setAdding(true)} disabled={atLimit}>
-            <Plus /> {t`Add site`}
-          </Button>
-        </div>
-
-        {!sites ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-          </div>
-        ) : sites.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
-            {t`No sites yet`}
+    <>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-lg font-semibold">{t`Your sites`}</h1>
+          <p className="text-sm text-muted-foreground">
+            {t`${sites?.length ?? 0} of ${account.site_limit} used.`}
           </p>
-        ) : (
-          <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
-            {sites.map((site) => (
-              <div key={site.id} className="flex items-center gap-3 px-4 py-3">
-                <Globe className="size-4 shrink-0 text-muted-foreground" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{site.host}</p>
-                  {!site.active && (
-                    <p className="text-xs text-muted-foreground">
-                      {t`Switched off`}
-                    </p>
-                  )}
-                </div>
-                <Link
-                  to="/console/sites/$siteId"
-                  params={{ siteId: site.id }}
-                  className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <Settings className="size-4" />
-                  {t`Settings`}
-                </Link>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => void open(site)}
-                  disabled={opening === site.id || !site.active}
-                >
-                  {opening === site.id ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <ExternalLink />
-                  )}
-                  {t`Manage`}
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
+        </div>
+        <Button onClick={() => setAdding(true)} disabled={atLimit}>
+          <Plus /> {t`Add site`}
+        </Button>
+      </div>
 
+      {!sites ? (
+        <div className="flex justify-center py-16">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </div>
+      ) : sites.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
+          {t`No sites yet`}
+        </p>
+      ) : (
+        <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
+          {sites.map((site) => (
+            <div key={site.id} className="flex items-center gap-3 px-4 py-3">
+              <Globe className="size-4 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{site.host}</p>
+                {!site.active && (
+                  <p className="text-xs text-muted-foreground">
+                    {t`Switched off`}
+                  </p>
+                )}
+              </div>
+              <Link
+                to="/console/sites/$siteId"
+                params={{ siteId: site.id }}
+                className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                <Settings className="size-4" />
+                {t`Settings`}
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => void open(site)}
+                disabled={opening === site.id || !site.active}
+              >
+                {opening === site.id ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <ExternalLink />
+                )}
+                {t`Manage`}
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
       <Dialog open={adding} onOpenChange={setAdding}>
         <DialogContent>
           <DialogHeader>
@@ -208,13 +163,16 @@ function ConsoleRoute() {
             <Button variant="outline" onClick={() => setAdding(false)}>
               {t`Cancel`}
             </Button>
-            <Button onClick={() => void add()} disabled={!host.trim() || saving}>
+            <Button
+              onClick={() => void add()}
+              disabled={!host.trim() || saving}
+            >
               {saving ? <Loader2 className="animate-spin" /> : null}
               {t`Add site`}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   )
 }

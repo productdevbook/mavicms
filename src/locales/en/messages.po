@@ -115,7 +115,7 @@ msgid "{0} is back"
 msgstr "{0} is back"
 
 #. placeholder {0}: site.host
-#: src/routes/console.index.tsx:65
+#: src/routes/console.index.tsx:54
 msgid "{0} is ready"
 msgstr "{0} is ready"
 
@@ -167,7 +167,7 @@ msgstr "{0} of {1} sent, {2} refused, {3} opened, {4} clicked"
 
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
-#: src/routes/console.index.tsx:131
+#: src/routes/console.index.tsx:88
 msgid "{0} of {1} used."
 msgstr "{0} of {1} used."
 
@@ -235,7 +235,7 @@ msgid "{0}: {1} sent, {2} did not arrive"
 msgstr "{0}: {1} sent, {2} did not arrive"
 
 #. placeholder {0}: account.organization_name
-#: src/routes/console.account.tsx:85
+#: src/routes/console.account.tsx:58
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. This is the account that opens and manages your sites."
 
@@ -365,13 +365,21 @@ msgid "Access key ID"
 msgstr "Access key ID"
 
 #: src/components/console-build-token.tsx:39
-msgid "Access to your repositories"
-msgstr "Access to your repositories"
+#~ msgid "Access to your repositories"
+#~ msgstr "Access to your repositories"
 
-#: src/components/console-build-token.tsx:46
+#: src/components/console-build-token.tsx:39
 #: src/components/publish-panel.tsx:240
 msgid "Access token"
 msgstr "Access token"
+
+#: src/components/console/console-shell.tsx:62
+msgid "Access tokens"
+msgstr "Access tokens"
+
+#: src/components/console/console-shell.tsx:63
+msgid "Account"
+msgstr "Account"
 
 #: src/routes/dashboard.users.tsx:87
 msgid "Account added"
@@ -410,7 +418,7 @@ msgstr "Add a hyperlink to the selected text."
 msgid "Add a kind"
 msgstr "Add a kind"
 
-#: src/routes/console.index.tsx:190
+#: src/routes/console.index.tsx:145
 #: src/routes/dashboard.sites.tsx:266
 msgid "Add a site"
 msgstr "Add a site"
@@ -464,8 +472,8 @@ msgstr "Add row after"
 msgid "Add row before"
 msgstr "Add row before"
 
-#: src/routes/console.index.tsx:135
-#: src/routes/console.index.tsx:213
+#: src/routes/console.index.tsx:92
+#: src/routes/console.index.tsx:171
 #: src/routes/dashboard.sites.tsx:149
 #: src/routes/dashboard.sites.tsx:307
 msgid "Add site"
@@ -491,7 +499,7 @@ msgid "Added here counts as confirmed — say so only if they asked to be on it.
 msgstr "Added here counts as confirmed — say so only if they asked to be on it."
 
 #: src/components/editor/dialogs.tsx:300
-#: src/routes/console.index.tsx:197
+#: src/routes/console.index.tsx:152
 #: src/routes/dashboard.api.tsx:243
 #: src/routes/dashboard.forms.tsx:264
 #: src/routes/dashboard.sites.tsx:274
@@ -514,15 +522,15 @@ msgstr "Agencies"
 msgid "Agencies → the console"
 msgstr "Agencies → the console"
 
-#: src/routes/console.register.tsx:96
+#: src/routes/console_.register.tsx:96
 msgid "Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address."
 msgstr "Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address."
 
-#: src/routes/console.register.tsx:147
+#: src/routes/console_.register.tsx:150
 msgid "Agency name"
 msgstr "Agency name"
 
-#: src/routes/console.login.tsx:65
+#: src/routes/console_.login.tsx:66
 msgid "Agency sign in"
 msgstr "Agency sign in"
 
@@ -558,7 +566,7 @@ msgstr "Align right"
 msgid "Alignment"
 msgstr "Alignment"
 
-#: src/routes/console.register.tsx:205
+#: src/routes/console_.register.tsx:208
 msgid "Already have an account? Sign in"
 msgstr "Already have an account? Sign in"
 
@@ -669,7 +677,7 @@ msgstr "API"
 msgid "Apply"
 msgstr "Apply"
 
-#: src/routes/console.sites.$siteId.tsx:421
+#: src/routes/console.sites.$siteId.tsx:423
 #: src/routes/dashboard.plugins_.backup.tsx:347
 msgid "Archives"
 msgstr "Archives"
@@ -701,7 +709,7 @@ msgstr "Ask to leave the sandbox"
 msgid "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
 msgstr "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
 
-#: src/routes/console.account.tsx:132
+#: src/routes/console.account.tsx:105
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 
@@ -726,7 +734,7 @@ msgstr "Asking for a bigger quota"
 msgid "Assistants"
 msgstr "Assistants"
 
-#: src/routes/console.register.tsx:191
+#: src/routes/console_.register.tsx:194
 msgid "At least {MINIMUM_PASSWORD} characters."
 msgstr "At least {MINIMUM_PASSWORD} characters."
 
@@ -748,7 +756,7 @@ msgstr "Back in Connectors, create a custom connector and paste the address."
 msgid "Back to editing"
 msgstr "Back to editing"
 
-#: src/routes/console.sites.$siteId.tsx:416
+#: src/routes/console.sites.$siteId.tsx:418
 #: src/routes/dashboard.plugins_.backup.tsx:337
 msgid "Back up now"
 msgstr "Back up now"
@@ -758,12 +766,12 @@ msgid "Backup settings saved"
 msgstr "Backup settings saved"
 
 #. placeholder {0}: file.name
-#: src/routes/console.sites.$siteId.tsx:225
+#: src/routes/console.sites.$siteId.tsx:230
 #: src/routes/dashboard.plugins_.backup.tsx:116
 msgid "Backup written: {0}"
 msgstr "Backup written: {0}"
 
-#: src/routes/console.sites.$siteId.tsx:311
+#: src/routes/console.sites.$siteId.tsx:313
 #: src/routes/dashboard.plugins_.backup.tsx:198
 #: src/routes/dashboard.plugins.tsx:34
 msgid "Backups"
@@ -892,7 +900,7 @@ msgstr "can send"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/routes/console.index.tsx:209
+#: src/routes/console.index.tsx:164
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
 #: src/routes/dashboard.content-types.tsx:212
@@ -1202,7 +1210,7 @@ msgstr "Could not add tag"
 msgid "Could not add the account"
 msgstr "Could not add the account"
 
-#: src/routes/console.index.tsx:68
+#: src/routes/console.index.tsx:57
 #: src/routes/dashboard.sites.tsx:84
 msgid "Could not add the site"
 msgstr "Could not add the site"
@@ -1302,7 +1310,7 @@ msgstr "Could not load post"
 msgid "Could not load the accounts"
 msgstr "Could not load the accounts"
 
-#: src/routes/console.sites.$siteId.tsx:130
+#: src/routes/console.sites.$siteId.tsx:126
 #: src/routes/dashboard.plugins_.backup.tsx:84
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
@@ -1344,7 +1352,7 @@ msgstr "Could not load the mail settings"
 msgid "Could not load the people"
 msgstr "Could not load the people"
 
-#: src/routes/console.sites.$siteId.tsx:137
+#: src/routes/console.sites.$siteId.tsx:133
 #: src/routes/dashboard.publish.tsx:48
 msgid "Could not load the publishing settings"
 msgstr "Could not load the publishing settings"
@@ -1353,7 +1361,7 @@ msgstr "Could not load the publishing settings"
 msgid "Could not load the sites"
 msgstr "Could not load the sites"
 
-#: src/routes/console.sites.$siteId.tsx:125
+#: src/routes/console.sites.$siteId.tsx:121
 msgid "Could not load the storage settings"
 msgstr "Could not load the storage settings"
 
@@ -1374,7 +1382,7 @@ msgstr "Could not load what Amazon said"
 msgid "Could not load what was sent"
 msgstr "Could not load what was sent"
 
-#: src/routes/console.index.tsx:55
+#: src/routes/console.index.tsx:44
 msgid "Could not load your sites"
 msgstr "Could not load your sites"
 
@@ -1389,8 +1397,8 @@ msgstr "Could not make a token"
 msgid "Could not make it"
 msgstr "Could not make it"
 
-#: src/routes/console.index.tsx:84
-#: src/routes/console.sites.$siteId.tsx:257
+#: src/routes/console.index.tsx:73
+#: src/routes/console.sites.$siteId.tsx:264
 msgid "Could not open the site"
 msgstr "Could not open the site"
 
@@ -1400,8 +1408,8 @@ msgstr "Could not put it back"
 
 #: src/components/setup/setup-wizard.tsx:103
 #: src/components/setup/setup-wizard.tsx:348
-#: src/routes/console.login.tsx:38
-#: src/routes/console.register.tsx:65
+#: src/routes/console_.login.tsx:39
+#: src/routes/console_.register.tsx:65
 #: src/routes/login.tsx:72
 msgid "Could not reach the server. Please try again."
 msgstr "Could not reach the server. Please try again."
@@ -1455,10 +1463,10 @@ msgstr "Could not save tag"
 msgid "Could not save the form"
 msgstr "Could not save the form"
 
-#: src/routes/console.account.tsx:63
-#: src/routes/console.sites.$siteId.tsx:169
-#: src/routes/console.sites.$siteId.tsx:199
-#: src/routes/console.sites.$siteId.tsx:214
+#: src/routes/console.account.tsx:46
+#: src/routes/console.sites.$siteId.tsx:170
+#: src/routes/console.sites.$siteId.tsx:202
+#: src/routes/console.sites.$siteId.tsx:219
 #: src/routes/dashboard.plugins_.backup.tsx:105
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
@@ -1480,7 +1488,7 @@ msgstr "Could not set it"
 msgid "Could not set it up"
 msgstr "Could not set it up"
 
-#: src/routes/console.sites.$siteId.tsx:184
+#: src/routes/console.sites.$siteId.tsx:185
 #: src/routes/dashboard.publish.tsx:97
 msgid "Could not start the build"
 msgstr "Could not start the build"
@@ -1553,7 +1561,7 @@ msgstr "Create an ordered list"
 msgid "Create an unordered list"
 msgstr "Create an unordered list"
 
-#: src/routes/console.register.tsx:199
+#: src/routes/console_.register.tsx:202
 msgid "Create the account"
 msgstr "Create the account"
 
@@ -1565,7 +1573,7 @@ msgstr "Create your administrator account"
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Credentials are encrypted before they are stored and are never sent back to the browser."
 
-#: src/routes/console.account.tsx:124
+#: src/routes/console.account.tsx:97
 #: src/routes/dashboard.users.tsx:218
 msgid "Current password"
 msgstr "Current password"
@@ -1784,9 +1792,9 @@ msgstr "Editing"
 
 #: src/components/form-fields-editor.tsx:51
 #: src/components/setup/setup-wizard.tsx:698
-#: src/routes/console.account.tsx:100
-#: src/routes/console.login.tsx:80
-#: src/routes/console.register.tsx:170
+#: src/routes/console_.login.tsx:81
+#: src/routes/console_.register.tsx:173
+#: src/routes/console.account.tsx:73
 #: src/routes/dashboard.mail.tsx:550
 #: src/routes/dashboard.users.tsx:271
 msgid "Email"
@@ -2146,11 +2154,15 @@ msgstr "How to get these keys"
 msgid "How to send to it"
 msgstr "How to send to it"
 
+#: src/routes/console.repositories.tsx:20
+#~ msgid "How your sites are read when they are built."
+#~ msgstr "How your sites are read when they are built."
+
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:341
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 
-#: src/routes/console.register.tsx:99
+#: src/routes/console_.register.tsx:102
 msgid "I already have an account"
 msgstr "I already have an account"
 
@@ -2360,7 +2372,7 @@ msgstr "Last run {0}"
 msgid "Leave empty for AWS S3"
 msgstr "Leave empty for AWS S3"
 
-#: src/routes/console.account.tsx:119
+#: src/routes/console.account.tsx:92
 msgid "Leave empty to keep the one you have"
 msgstr "Leave empty to keep the one you have"
 
@@ -2446,7 +2458,7 @@ msgstr "Lists"
 msgid "Loading…"
 msgstr "Loading…"
 
-#: src/routes/console.sites.$siteId.tsx:312
+#: src/routes/console.sites.$siteId.tsx:314
 msgid "Local"
 msgstr "Local"
 
@@ -2462,7 +2474,7 @@ msgid "Made {0}"
 msgstr "Made {0}"
 
 #: src/components/dashboard/dashboard-shell.tsx:101
-#: src/routes/console.sites.$siteId.tsx:310
+#: src/routes/console.sites.$siteId.tsx:312
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
 #: src/routes/dashboard.mail.tsx:69
 msgid "Mail"
@@ -2507,12 +2519,12 @@ msgstr "Make it"
 msgid "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 msgstr "Makes the archive much larger. Worth it when media sits on this machine; less so when it is already in a bucket."
 
-#: src/routes/console.index.tsx:179
-#: src/routes/console.sites.$siteId.tsx:294
+#: src/routes/console.index.tsx:136
+#: src/routes/console.sites.$siteId.tsx:296
 msgid "Manage"
 msgstr "Manage"
 
-#: src/routes/console.login.tsx:68
+#: src/routes/console_.login.tsx:69
 msgid "Manage the sites your agency runs."
 msgstr "Manage the sites your agency runs."
 
@@ -2661,7 +2673,7 @@ msgstr "New list"
 #~ msgid "New page"
 #~ msgstr "New page"
 
-#: src/routes/console.account.tsx:113
+#: src/routes/console.account.tsx:86
 #: src/routes/dashboard.users.tsx:227
 #: src/routes/dashboard.users.tsx:321
 msgid "New password"
@@ -2698,7 +2710,7 @@ msgstr "No"
 msgid "No {many} yet"
 msgstr "No {many} yet"
 
-#: src/routes/console.sites.$siteId.tsx:424
+#: src/routes/console.sites.$siteId.tsx:426
 #: src/routes/dashboard.plugins_.backup.tsx:350
 msgid "No backups yet"
 msgstr "No backups yet"
@@ -2770,7 +2782,7 @@ msgstr "No people found"
 msgid "No results found"
 msgstr "No results found"
 
-#: src/routes/console.index.tsx:145
+#: src/routes/console.index.tsx:102
 msgid "No sites yet"
 msgstr "No sites yet"
 
@@ -2812,7 +2824,7 @@ msgstr "Not connected yet"
 msgid "Not sent yet"
 msgstr "Not sent yet"
 
-#: src/components/console-build-token.tsx:53
+#: src/components/console-build-token.tsx:46
 msgid "Not set"
 msgstr "Not set"
 
@@ -2927,7 +2939,7 @@ msgstr "on {0} lists"
 msgid "On the server's disk"
 msgstr "On the server's disk"
 
-#: src/routes/console.register.tsx:132
+#: src/routes/console_.register.tsx:135
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "One account for every site you run. Each site keeps its own content and its own people."
 
@@ -2992,7 +3004,7 @@ msgstr "Open"
 msgid "Open a case at AWS"
 msgstr "Open a case at AWS"
 
-#: src/routes/console.register.tsx:129
+#: src/routes/console_.register.tsx:132
 msgid "Open an agency account"
 msgstr "Open an agency account"
 
@@ -3075,8 +3087,8 @@ msgstr "Paragraph"
 
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
-#: src/routes/console.login.tsx:93
-#: src/routes/console.register.tsx:182
+#: src/routes/console_.login.tsx:94
+#: src/routes/console_.register.tsx:185
 #: src/routes/dashboard.users.tsx:280
 #: src/routes/login.tsx:126
 msgid "Password"
@@ -3169,7 +3181,7 @@ msgstr "Plain text block"
 msgid "Plugins"
 msgstr "Plugins"
 
-#: src/routes/console.index.tsx:192
+#: src/routes/console.index.tsx:147
 #: src/routes/dashboard.sites.tsx:268
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Point the address at this server first — the site answers on whichever address you give it here."
@@ -3249,7 +3261,7 @@ msgstr "Public base URL"
 #: src/components/dashboard/dashboard-shell.tsx:117
 #: src/components/editor/mavi-editor.tsx:735
 #: src/components/publish-panel.tsx:306
-#: src/routes/console.sites.$siteId.tsx:308
+#: src/routes/console.sites.$siteId.tsx:310
 #: src/routes/dashboard.publish.tsx:116
 msgid "Publish"
 msgstr "Publish"
@@ -3274,7 +3286,7 @@ msgstr "published"
 msgid "Published"
 msgstr "Published"
 
-#: src/routes/console.sites.$siteId.tsx:181
+#: src/routes/console.sites.$siteId.tsx:182
 #: src/routes/dashboard.publish.tsx:94
 msgid "Publishing — this takes a minute or two"
 msgstr "Publishing — this takes a minute or two"
@@ -3319,7 +3331,7 @@ msgstr "Raise text above the line"
 msgid "Read it"
 msgstr "Read it"
 
-#: src/components/console-build-token.tsx:56
+#: src/components/console-build-token.tsx:49
 msgid "Read-only access to the contents of the repositories you build, and nothing else. It is stored encrypted and never shown again."
 msgstr "Read-only access to the contents of the repositories you build, and nothing else. It is stored encrypted and never shown again."
 
@@ -3335,7 +3347,7 @@ msgstr "Reading"
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 
-#: src/routes/console.sites.$siteId.tsx:356
+#: src/routes/console.sites.$siteId.tsx:358
 #: src/routes/dashboard.publish.tsx:152
 msgid "Recent builds"
 msgstr "Recent builds"
@@ -3367,7 +3379,7 @@ msgstr "Region"
 msgid "Regular expression"
 msgstr "Regular expression"
 
-#: src/components/console-build-token.tsx:74
+#: src/components/console-build-token.tsx:67
 #: src/components/editor/bubble-menus.tsx:201
 #: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
@@ -3460,6 +3472,11 @@ msgstr "Reported as spam"
 msgid "Reported it as spam"
 msgstr "Reported it as spam"
 
+#: src/components/console/console-shell.tsx:59
+#: src/routes/console.repositories.tsx:18
+msgid "Repositories"
+msgstr "Repositories"
+
 #: src/components/publish-panel.tsx:199
 msgid "Repository"
 msgstr "Repository"
@@ -3472,7 +3489,7 @@ msgstr "Request failed"
 msgid "Requests opened from this page appear here with Amazon's answer."
 msgstr "Requests opened from this page appear here with Amazon's answer."
 
-#: src/routes/console.sites.$siteId.tsx:446
+#: src/routes/console.sites.$siteId.tsx:448
 #: src/routes/dashboard.plugins_.backup.tsx:369
 #: src/routes/dashboard.plugins_.backup.tsx:448
 msgid "Restore"
@@ -3483,7 +3500,7 @@ msgid "Restore this backup?"
 msgstr "Restore this backup?"
 
 #. placeholder {0}: report.media_files
-#: src/routes/console.sites.$siteId.tsx:239
+#: src/routes/console.sites.$siteId.tsx:246
 #: src/routes/dashboard.plugins_.backup.tsx:143
 msgid "Restored: {rows} rows and {0} files"
 msgstr "Restored: {rows} rows and {0} files"
@@ -3528,14 +3545,14 @@ msgstr "S3 compatible storage"
 msgid "Sandbox"
 msgstr "Sandbox"
 
-#: src/components/console-build-token.tsx:66
+#: src/components/console-build-token.tsx:59
 #: src/components/editor/mavi-editor.tsx:728
 #: src/components/editor/mavi-editor.tsx:732
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
-#: src/routes/console.account.tsx:146
-#: src/routes/console.sites.$siteId.tsx:381
-#: src/routes/console.sites.$siteId.tsx:409
+#: src/routes/console.account.tsx:119
+#: src/routes/console.sites.$siteId.tsx:383
+#: src/routes/console.sites.$siteId.tsx:411
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.content-types.tsx:209
 #: src/routes/dashboard.forms.tsx:331
@@ -3551,10 +3568,10 @@ msgstr "Save"
 #: src/components/console-build-token.tsx:26
 #: src/components/editor/status-bar.tsx:116
 #: src/components/site-mail.tsx:78
-#: src/routes/console.account.tsx:60
-#: src/routes/console.sites.$siteId.tsx:166
-#: src/routes/console.sites.$siteId.tsx:196
-#: src/routes/console.sites.$siteId.tsx:211
+#: src/routes/console.account.tsx:41
+#: src/routes/console.sites.$siteId.tsx:165
+#: src/routes/console.sites.$siteId.tsx:197
+#: src/routes/console.sites.$siteId.tsx:214
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:86
 #: src/routes/dashboard.plugins_.email.tsx:78
@@ -3761,7 +3778,7 @@ msgstr "Set it up"
 msgid "Set up the S3 plugin first if you want backups kept off this machine."
 msgstr "Set up the S3 plugin first if you want backups kept off this machine."
 
-#: src/routes/console.index.tsx:166
+#: src/routes/console.index.tsx:123
 msgid "Settings"
 msgstr "Settings"
 
@@ -3810,7 +3827,7 @@ msgstr "Shortcuts"
 msgid "Show password"
 msgstr "Show password"
 
-#: src/routes/console.login.tsx:107
+#: src/routes/console_.login.tsx:108
 #: src/routes/login.tsx:99
 #: src/routes/login.tsx:140
 msgid "Sign in"
@@ -3828,10 +3845,10 @@ msgstr "Sign in, here"
 msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
+#: src/components/console/console-shell.tsx:144
 #: src/components/dashboard/dashboard-shell.tsx:202
 #: src/components/editor/mavi-editor.tsx:695
 #: src/components/editor/mavi-editor.tsx:983
-#: src/routes/console.index.tsx:119
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -3859,6 +3876,7 @@ msgstr "Site removed"
 msgid "Site title"
 msgstr "Site title"
 
+#: src/components/console/console-shell.tsx:51
 #: src/components/dashboard/dashboard-shell.tsx:119
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
@@ -3904,7 +3922,7 @@ msgstr "Stop all sending"
 msgid "Stops working {0}"
 msgstr "Stops working {0}"
 
-#: src/routes/console.sites.$siteId.tsx:309
+#: src/routes/console.sites.$siteId.tsx:311
 msgid "Storage"
 msgstr "Storage"
 
@@ -3916,7 +3934,7 @@ msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, Digi
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
-#: src/components/console-build-token.tsx:53
+#: src/components/console-build-token.tsx:46
 #: src/components/plugin-forms.tsx:340
 #: src/components/publish-panel.tsx:248
 msgid "Stored — type to replace"
@@ -3974,7 +3992,7 @@ msgstr "Support cases, which a quota increase is"
 msgid "switched off"
 msgstr "switched off"
 
-#: src/routes/console.index.tsx:156
+#: src/routes/console.index.tsx:113
 msgid "Switched off"
 msgstr "Switched off"
 
@@ -4101,7 +4119,7 @@ msgstr "The address a title would get."
 msgid "the agency's, not this site's"
 msgstr "the agency's, not this site's"
 
-#: src/routes/console.sites.$siteId.tsx:228
+#: src/routes/console.sites.$siteId.tsx:234
 #: src/routes/dashboard.plugins_.backup.tsx:120
 msgid "The backup failed"
 msgstr "The backup failed"
@@ -4164,7 +4182,7 @@ msgstr "The one your SES identities are verified in. Verification does not cross
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 
-#: src/routes/console.sites.$siteId.tsx:243
+#: src/routes/console.sites.$siteId.tsx:250
 #: src/routes/dashboard.plugins_.backup.tsx:154
 #: src/routes/dashboard.plugins_.backup.tsx:170
 msgid "The restore failed"
@@ -4241,7 +4259,7 @@ msgstr "This is the only time it is shown. Leave this page and it cannot be read
 msgid "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
 msgstr "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
 
-#: src/routes/console.account.tsx:108
+#: src/routes/console.account.tsx:81
 msgid "This is what you sign in with."
 msgstr "This is what you sign in with."
 
@@ -4249,7 +4267,7 @@ msgstr "This is what you sign in with."
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "This post could not be opened, so it has been left untouched."
 
-#: src/routes/console.register.tsx:94
+#: src/routes/console_.register.tsx:94
 msgid "This server is by invitation"
 msgstr "This server is by invitation"
 
@@ -4541,7 +4559,7 @@ msgstr "Where a browser is awkward, a build token works as a bearer header — b
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Where readers load the images from (bucket public URL or CDN)"
 
-#: src/routes/console.sites.$siteId.tsx:280
+#: src/routes/console.sites.$siteId.tsx:286
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Where this site's pages come from, and how the last builds went."
 
@@ -4662,12 +4680,16 @@ msgstr "You can disconnect it later from API in the panel."
 msgid "You'll use this to sign in and manage your site."
 msgstr "You'll use this to sign in and manage your site."
 
-#: src/routes/console.account.tsx:83
+#: src/routes/console.account.tsx:56
 msgid "Your account"
 msgstr "Your account"
 
-#: src/routes/console.account.tsx:91
-#: src/routes/console.register.tsx:159
+#: src/components/console/console-shell.tsx:55
+msgid "Your agency"
+msgstr "Your agency"
+
+#: src/routes/console_.register.tsx:162
+#: src/routes/console.account.tsx:64
 msgid "Your name"
 msgstr "Your name"
 
@@ -4679,13 +4701,13 @@ msgstr "Your own password"
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 
-#: src/routes/console.account.tsx:79
-#: src/routes/console.index.tsx:129
-#: src/routes/console.sites.$siteId.tsx:273
+#: src/components/console/console-shell.tsx:52
+#: src/routes/console.index.tsx:86
+#: src/routes/console.sites.$siteId.tsx:279
 msgid "Your sites"
 msgstr "Your sites"
 
-#: src/components/console-build-token.tsx:41
+#: src/routes/console.repositories.tsx:20
 msgid "Your sites are built from private repositories, and a build needs a token to read them with. Keep one here and every site you look after uses it — a site whose project lives somewhere else can still be given its own, and that one wins."
 msgstr "Your sites are built from private repositories, and a build needs a token to read them with. Keep one here and every site you look after uses it — a site whose project lives somewhere else can still be given its own, and that one wins."
 

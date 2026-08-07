@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export const Route = createFileRoute("/console/register")({
+export const Route = createFileRoute("/console_/register")({
   component: ConsoleRegisterRoute,
   validateSearch: (search: Record<string, unknown>) => ({
     invite: typeof search.invite === "string" ? search.invite : "",
@@ -95,7 +95,10 @@ function ConsoleRegisterRoute() {
               <p className="text-sm text-muted-foreground">
                 {t`Agencies are opened from a link whoever runs this server sends out. If you were sent one, follow it — the invitation travels in the address.`}
               </p>
-              <Link to="/console/login" className="text-sm underline underline-offset-4">
+              <Link
+                to="/console/login"
+                className="text-sm underline underline-offset-4"
+              >
                 {t`I already have an account`}
               </Link>
             </CardContent>
