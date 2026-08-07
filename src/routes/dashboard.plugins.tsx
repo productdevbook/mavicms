@@ -68,7 +68,7 @@ function PluginsRoute() {
         <div className="flex flex-col gap-3">
           {plugins.map((plugin) => (
             <Card key={plugin.id}>
-              <CardContent className="flex items-start gap-4 pt-6">
+              <CardContent className="flex flex-wrap items-start gap-x-4 gap-y-3 pt-6">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
                   {plugin.id === "backup" ? (
                     <Archive className="size-5" />
@@ -76,8 +76,8 @@ function PluginsRoute() {
                     <HardDrive className="size-5" />
                   )}
                 </span>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1 basis-48">
+                  <div className="flex flex-wrap items-center gap-2">
                     <p className="font-medium">
                       {LOCALIZED[plugin.id]?.name ?? plugin.name}
                     </p>
@@ -96,6 +96,7 @@ function PluginsRoute() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="ml-auto shrink-0"
                   onClick={() =>
                     navigate({
                       to: SETTINGS_PATH[plugin.id] ?? "/dashboard/plugins/s3",

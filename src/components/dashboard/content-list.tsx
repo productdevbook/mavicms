@@ -45,7 +45,7 @@ import { useStatusLabels } from "@/components/editor/types"
  * rather than two that would drift apart a fix at a time.
  */
 export function ContentList({ kind }: { kind: PostKind }) {
-  const { t } = useLingui()
+  const { t, i18n } = useLingui()
   const { find } = useContentTypes()
   const of_kind = find(kind)
   // Until the list of kinds arrives, the slug is a better label than nothing.
@@ -117,7 +117,7 @@ export function ContentList({ kind }: { kind: PostKind }) {
               setOffset(0)
             }}
           >
-            <SelectTrigger className="w-52">
+            <SelectTrigger className="w-full max-w-52">
               <SelectValue>{(code: string) => label(code)}</SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -165,20 +165,30 @@ export function ContentList({ kind }: { kind: PostKind }) {
       ) : (
         <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
           {posts.map((post) => (
-            <div key={post.id} className="flex items-center gap-3 px-4 py-3">
-              <div className="min-w-0 flex-1">
+            <div
+              key={post.id}
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3"
+            >
+              {/* The title takes the whole width on a phone and the status and
+                  the two buttons drop below it, rather than squeezing a date
+                  into the forty pixels left over. */}
+              <div className="min-w-0 basis-full sm:flex-1 sm:basis-0">
                 <Link
                   to="/editor/$postId"
                   params={{ postId: post.id }}
-                  className="truncate text-sm font-medium hover:underline"
+                  className="block truncate text-sm font-medium hover:underline"
                 >
                   {post.title || t`Untitled`}
                 </Link>
                 <p className="truncate text-xs text-muted-foreground">
                   {post.category || t`Uncategorized`} ·{" "}
-                  {new Date(
-                    post.publish_at ?? post.updated_at
-                  ).toLocaleString()}
+                  {new Date(post.publish_at ?? post.updated_at).toLocaleString(
+                    i18n.locale,
+                    {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    }
+                  )}
                   {post.locales.length > 1 && (
                     <>
                       {" · "}
@@ -192,6 +202,7 @@ export function ContentList({ kind }: { kind: PostKind }) {
               </div>
               <Badge
                 variant={post.status === "published" ? "default" : "secondary"}
+                className="ml-auto sm:ml-0"
               >
                 {STATUS_LABELS[post.status]}
               </Badge>
@@ -253,7 +264,7 @@ export function ContentList({ kind }: { kind: PostKind }) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t`Delete this post?`}</AlertDialogTitle>
+            <AlertDialogTitle>{t`Delete this ${one}?`}</AlertDialogTitle>
             <AlertDialogDescription>
               {t`"${pendingDelete?.title}" will be permanently deleted. This cannot be undone.`}
             </AlertDialogDescription>

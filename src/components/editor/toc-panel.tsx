@@ -8,16 +8,25 @@ import { cn } from "@/lib/utils"
 export function TocPanel({
   editor,
   items,
+  onNavigate,
 }: {
   editor: Editor
   items: TableOfContentData
+  /// Set where the list is a drawer over the writing, which would otherwise
+  /// stay in front of the heading it just jumped to.
+  onNavigate?: () => void
 }) {
   const { t } = useLingui()
 
   const goTo = (id: string, pos: number) => {
     const element = editor.view.dom.querySelector(`[data-toc-id="${id}"]`)
     element?.scrollIntoView({ behavior: "smooth", block: "start" })
-    editor.chain().setTextSelection(pos + 1).focus().run()
+    editor
+      .chain()
+      .setTextSelection(pos + 1)
+      .focus()
+      .run()
+    onNavigate?.()
   }
 
   if (!items.length) {
