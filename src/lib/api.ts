@@ -1049,6 +1049,63 @@ export function deleteSiteDevelopmentToken(
   })
 }
 
+export interface AssistantTool {
+  name: string
+  title: string
+  description: string
+  reads: boolean
+  destroys: boolean
+}
+
+/**
+ * What an assistant connected to this site would be able to do.
+ *
+ * Asked of the MCP endpoint rather than written out here, over the session
+ * this panel already has. A list kept in the panel would be a second copy of
+ * the tools, and the copy that is wrong is always the one somebody reads.
+ */
+export async function listAssistantTools(): Promise<AssistantTool[]> {
+  const response = await fetch("/api/mcp", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "MCP-Protocol-Version": "2026-07-28",
+      "Mcp-Method": "tools/list",
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/list",
+      params: {
+        _meta: { "io.modelcontextprotocol/protocolVersion": "2026-07-28" },
+      },
+    }),
+  })
+
+  if (!response.ok) {
+    throw new ApiError(response.status, response.statusText)
+  }
+
+  const body = (await response.json()) as {
+    result?: {
+      tools?: {
+        name: string
+        title?: string
+        description: string
+        annotations?: { readOnlyHint?: boolean; destructiveHint?: boolean }
+      }[]
+    }
+  }
+
+  return (body.result?.tools ?? []).map((tool) => ({
+    name: tool.name,
+    title: tool.title ?? tool.name,
+    description: tool.description,
+    reads: tool.annotations?.readOnlyHint ?? false,
+    destroys: tool.annotations?.destructiveHint ?? false,
+  }))
+}
+
 export interface ConnectionRequest {
   /** The program's own word for itself. Not something the site can check. */
   client_name: string

@@ -487,6 +487,9 @@ pub struct Tool {
     /// Whether using it changes anything. A credential that may not write is
     /// not shown these at all.
     pub writes: bool,
+    /// Whether it destroys something there is no way back from. One tool does.
+    /// Clients show this differently, and so does the panel.
+    pub destroys: bool,
     pub schema: fn() -> Value,
 }
 
@@ -505,6 +508,16 @@ fn listing(caller: &Caller) -> Value {
                 "title": tool.title,
                 "description": tool.description,
                 "inputSchema": (tool.schema)(),
+                // The hints a client uses to decide what to confirm with
+                // somebody before running. They are hints and not permissions
+                // — what a caller may actually do is settled above, by which
+                // tools it was offered at all.
+                "annotations": {
+                    "title": tool.title,
+                    "readOnlyHint": !tool.writes,
+                    "destructiveHint": tool.destroys,
+                    "idempotentHint": !tool.writes || tool.destroys,
+                },
             })
         })
         .collect();

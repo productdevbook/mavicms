@@ -6,10 +6,15 @@ import { Bot, Check, Copy, ExternalLink, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { getLlmsText } from "@/lib/api"
+import { AssistantConnection } from "@/components/assistant-connection"
 import { BuildTokens } from "@/components/build-tokens"
-import { Connections } from "@/components/connections"
-import { McpConnection } from "@/components/mcp-connection"
 import { Button } from "@/components/ui/button"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 
 export const Route = createFileRoute("/dashboard/api")({
   component: ApiRoute,
@@ -205,8 +210,34 @@ function ApiRoute() {
         </p>
       </div>
 
-      <div className="flex max-w-3xl flex-col gap-8">
-        <ForAnAssistant />
+      <Tabs defaultValue="assistants" className="max-w-3xl gap-6">
+        <TabsList>
+          <TabsTrigger value="assistants">{t`Assistants`}</TabsTrigger>
+          <TabsTrigger value="front-end">{t`Building a front end`}</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="assistants" className="flex flex-col gap-8">
+          <AssistantConnection origin={window.location.origin} />
+
+          <details className="rounded-xl border border-border px-4 py-3">
+            <summary className="cursor-pointer text-sm font-medium">
+              {t`Connecting from a terminal instead`}
+            </summary>
+            <div className="flex flex-col gap-4 pt-4">
+              <p className="text-sm text-muted-foreground">
+                {t`Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant.`}
+              </p>
+              <Snippet
+                text={`claude mcp add --transport http mavicms ${window.location.origin}/api/mcp \\
+  --header "Authorization: Bearer $CMS_TOKEN"`}
+              />
+              <BuildTokens />
+            </div>
+          </details>
+        </TabsContent>
+
+        <TabsContent value="front-end" className="flex flex-col gap-8">
+          <ForAnAssistant />
 
         <section className="flex flex-col gap-2">
           <h2 className="text-sm font-medium">{t`Address`}</h2>
@@ -236,16 +267,6 @@ curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
   '${base}/posts?status=published&include=content&limit=100'`}
           />
         </section>
-
-        <McpConnection origin={window.location.origin} name="mavicms">
-          <p className="text-sm text-muted-foreground">
-            {t`It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages.`}
-          </p>
-        </McpConnection>
-
-        <Connections />
-
-        <BuildTokens />
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-medium">{t`Reading`}</h2>
@@ -333,7 +354,8 @@ curl -X POST ${base}/forms/contact/submit \\
             </Button>
           </div>
         </section>
-      </div>
+        </TabsContent>
+      </Tabs>
     </>
   )
 }

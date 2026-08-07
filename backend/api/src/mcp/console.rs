@@ -26,6 +26,7 @@ pub const TOOLS: &[Tool] = &[
             and how its last build went. This is the morning's question — which of these needs \
             attention — in one call.",
         writes: false,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -45,6 +46,7 @@ pub const TOOLS: &[Tool] = &[
         description: "The recent builds of one site, newest first, with how long each took and \
             what it said. Use it after sites_list says one is failing.",
         writes: false,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -63,6 +65,7 @@ pub const TOOLS: &[Tool] = &[
         description: "Ask one site to build again. A build already waiting is returned rather \
             than a second one queued.",
         writes: true,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -79,6 +82,7 @@ pub const TOOLS: &[Tool] = &[
             starts empty: whoever opens it runs the setup wizard and makes the first account. \
             Adding a site counts against what this agency is allowed.",
         writes: true,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
