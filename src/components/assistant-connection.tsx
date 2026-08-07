@@ -167,7 +167,7 @@ export function AssistantConnection({ origin }: { origin: string }) {
                 tools={reading}
               />
               <p className="text-sm text-muted-foreground">
-                {t`Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel.`}
+                {t`Nothing else. Accounts, credentials, backups, how the site is built and sending a mailing are deliberately not here — nor is deleting a post or a file. Those stay things a person does in this panel.`}
               </p>
             </div>
           )}

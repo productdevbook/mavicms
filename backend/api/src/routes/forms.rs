@@ -150,7 +150,19 @@ pub async fn create_form(
     Site(state): Site,
     Json(payload): Json<SaveFormRequest>,
 ) -> AppResult<(StatusCode, Json<FormResponse>)> {
-    let db = state.db();
+    Ok((
+        StatusCode::CREATED,
+        Json(create(state.db(), payload).await?),
+    ))
+}
+
+/// Making a form, as the endpoint does it. Separate from the handler because
+/// an assistant makes them too, and two implementations of "which field names
+/// are usable" would eventually disagree.
+pub async fn create(
+    db: &sea_orm::DatabaseConnection,
+    payload: SaveFormRequest,
+) -> AppResult<FormResponse> {
     let name = payload.name.trim().to_string();
     if name.is_empty() {
         return Err(AppError::Validation("the form needs a name".to_string()));
@@ -180,7 +192,7 @@ pub async fn create_form(
     .insert(db)
     .await?;
 
-    Ok((StatusCode::CREATED, Json(row(created, 0, 0)?)))
+    row(created, 0, 0)
 }
 
 /// How many submissions one form holds, and how many are still unread.

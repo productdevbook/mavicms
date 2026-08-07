@@ -2635,8 +2635,12 @@ msgid "Nothing asked for yet"
 msgstr "Nothing asked for yet"
 
 #: src/components/assistant-connection.tsx:170
-msgid "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
-msgstr "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
+msgid "Nothing else. Accounts, credentials, backups, how the site is built and sending a mailing are deliberately not here — nor is deleting a post or a file. Those stay things a person does in this panel."
+msgstr "Nothing else. Accounts, credentials, backups, how the site is built and sending a mailing are deliberately not here — nor is deleting a post or a file. Those stay things a person does in this panel."
+
+#: src/components/assistant-connection.tsx:170
+#~ msgid "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
+#~ msgstr "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
 
 #. placeholder {0}: account.enforcement_status
 #: src/components/ses-account.tsx:269

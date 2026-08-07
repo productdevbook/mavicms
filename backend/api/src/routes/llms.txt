@@ -93,6 +93,11 @@ site in it — and nothing here can reach them. A contact form is a good example
 of the split: the CMS decides which fields it takes and receives the answers,
 and where the form appears is the front end's business.
 
+Nor is it a way to administer the site. Accounts, credentials, backups, how the
+site is built, and sending a mailing are all deliberately outside what an
+assistant is offered: they are things a person does in the panel, with
+consequences an assistant is not in a position to weigh.
+
 The rest of this file is for building a front end, which is a different job:
 a build reads the API directly, at the addresses below.
 
