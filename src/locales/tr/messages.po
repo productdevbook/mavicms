@@ -235,7 +235,7 @@ msgid "{0}: {1} sent, {2} did not arrive"
 msgstr "{0}: {1} gönderildi, {2} ulaşmadı"
 
 #. placeholder {0}: account.organization_name
-#: src/routes/console.account.tsx:84
+#: src/routes/console.account.tsx:85
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. Sitelerinizi açan ve yöneten hesap budur."
 
@@ -364,6 +364,11 @@ msgstr "Kabul ettiği"
 msgid "Access key ID"
 msgstr "Erişim anahtarı (Access key ID)"
 
+#: src/components/console-build-token.tsx:39
+msgid "Access to your repositories"
+msgstr "Depolarınıza erişim"
+
+#: src/components/console-build-token.tsx:46
 #: src/components/publish-panel.tsx:240
 msgid "Access token"
 msgstr "Erişim jetonu"
@@ -696,7 +701,7 @@ msgstr "Kum havuzundan çıkmayı iste"
 msgid "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
 msgstr "Aşağıdaki bölümden kum havuzundan çıkmayı isteyin. Amazon kabul edene kadar SES yalnızca doğruladığınız adreslere yazar — yani iletişim formu denenebilir ama kullanılamaz."
 
-#: src/routes/console.account.tsx:131
+#: src/routes/console.account.tsx:132
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Neyi değiştiriyorsanız değiştirin, sorulur — bir yerde açık kalmış oturum hesabı elinizden almaya yetmemeli."
 
@@ -1450,7 +1455,7 @@ msgstr "Etiket kaydedilemedi"
 msgid "Could not save the form"
 msgstr "Form kaydedilemedi"
 
-#: src/routes/console.account.tsx:62
+#: src/routes/console.account.tsx:63
 #: src/routes/console.sites.$siteId.tsx:169
 #: src/routes/console.sites.$siteId.tsx:199
 #: src/routes/console.sites.$siteId.tsx:214
@@ -1458,6 +1463,10 @@ msgstr "Form kaydedilemedi"
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Ayarlar kaydedilemedi"
+
+#: src/components/console-build-token.tsx:29
+msgid "Could not save the token"
+msgstr "Jeton kaydedilemedi"
 
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:124
 msgid "Could not send it"
@@ -1556,7 +1565,7 @@ msgstr "Yönetici hesabınızı oluşturun"
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Kimlik bilgileri saklanmadan önce şifrelenir ve hiçbir zaman tarayıcıya geri gönderilmez."
 
-#: src/routes/console.account.tsx:123
+#: src/routes/console.account.tsx:124
 #: src/routes/dashboard.users.tsx:218
 msgid "Current password"
 msgstr "Mevcut parola"
@@ -1771,7 +1780,7 @@ msgstr "Düzenleme"
 
 #: src/components/form-fields-editor.tsx:51
 #: src/components/setup/setup-wizard.tsx:698
-#: src/routes/console.account.tsx:99
+#: src/routes/console.account.tsx:100
 #: src/routes/console.login.tsx:80
 #: src/routes/console.register.tsx:170
 #: src/routes/dashboard.mail.tsx:550
@@ -2347,7 +2356,7 @@ msgstr "Son çalışma {0}"
 msgid "Leave empty for AWS S3"
 msgstr "AWS S3 için boş bırakın"
 
-#: src/routes/console.account.tsx:118
+#: src/routes/console.account.tsx:119
 msgid "Leave empty to keep the one you have"
 msgstr "Mevcut parolayı korumak için boş bırakın"
 
@@ -2648,7 +2657,7 @@ msgstr "Yeni liste"
 #~ msgid "New page"
 #~ msgstr "Yeni sayfa"
 
-#: src/routes/console.account.tsx:112
+#: src/routes/console.account.tsx:113
 #: src/routes/dashboard.users.tsx:227
 #: src/routes/dashboard.users.tsx:321
 msgid "New password"
@@ -2798,6 +2807,10 @@ msgstr "Henüz bağlanmadı"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:159
 msgid "Not sent yet"
 msgstr "Henüz gönderilmedi"
+
+#: src/components/console-build-token.tsx:53
+msgid "Not set"
+msgstr "Tanımlı değil"
 
 #: src/components/plugin-forms.tsx:340
 msgid "Not set yet"
@@ -3302,6 +3315,10 @@ msgstr "Metni üst simge yap"
 msgid "Read it"
 msgstr "Oku"
 
+#: src/components/console-build-token.tsx:56
+msgid "Read-only access to the contents of the repositories you build, and nothing else. It is stored encrypted and never shown again."
+msgstr "Yalnızca derlediğiniz depoların içeriğini okuma yetkisi, başka hiçbir şey değil. Şifreli saklanır ve bir daha gösterilmez."
+
 #: src/components/editor/post-settings.tsx:378
 msgid "Readers can leave comments"
 msgstr "Okurlar yorum yazabilir"
@@ -3346,6 +3363,7 @@ msgstr "Bölge"
 msgid "Regular expression"
 msgstr "Düzenli ifade"
 
+#: src/components/console-build-token.tsx:74
 #: src/components/editor/bubble-menus.tsx:201
 #: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
@@ -3396,6 +3414,10 @@ msgstr "Bu dil silinsin mi?"
 #: src/routes/dashboard.sites.tsx:324
 msgid "Remove this site?"
 msgstr "Bu site kaldırılsın mı?"
+
+#: src/components/console-build-token.tsx:26
+msgid "Removed"
+msgstr "Kaldırıldı"
 
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:358
 msgid "Rendered exactly as a subscriber would get it, unsubscribe link and all."
@@ -3502,11 +3524,12 @@ msgstr "S3 uyumlu depolama"
 msgid "Sandbox"
 msgstr "Kum havuzu"
 
+#: src/components/console-build-token.tsx:66
 #: src/components/editor/mavi-editor.tsx:728
 #: src/components/editor/mavi-editor.tsx:732
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
-#: src/routes/console.account.tsx:145
+#: src/routes/console.account.tsx:146
 #: src/routes/console.sites.$siteId.tsx:381
 #: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
@@ -3521,9 +3544,10 @@ msgstr "Kum havuzu"
 msgid "Save"
 msgstr "Kaydet"
 
+#: src/components/console-build-token.tsx:26
 #: src/components/editor/status-bar.tsx:116
 #: src/components/site-mail.tsx:78
-#: src/routes/console.account.tsx:59
+#: src/routes/console.account.tsx:60
 #: src/routes/console.sites.$siteId.tsx:166
 #: src/routes/console.sites.$siteId.tsx:196
 #: src/routes/console.sites.$siteId.tsx:211
@@ -3888,6 +3912,7 @@ msgstr "Yüklenen medyayı yerel disk yerine bir S3 bucket'ında saklar (AWS S3,
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Kayıtlı — değiştirmemek için boş bırakın"
 
+#: src/components/console-build-token.tsx:53
 #: src/components/plugin-forms.tsx:340
 #: src/components/publish-panel.tsx:248
 msgid "Stored — type to replace"
@@ -4212,7 +4237,7 @@ msgstr "Yalnızca bir kez gösterilir. Bu sayfadan çıkarsanız bir daha okunam
 msgid "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
 msgstr "Hepsi bu — bulunacak bir jeton ya da düzenlenecek bir dosya yok. Nereye yapıştırılacağı programa göre değişiyor:"
 
-#: src/routes/console.account.tsx:107
+#: src/routes/console.account.tsx:108
 msgid "This is what you sign in with."
 msgstr "Giriş yaparken bunu kullanırsınız."
 
@@ -4633,11 +4658,11 @@ msgstr "Sonradan panelde API bölümünden bağlantıyı kesebilirsiniz."
 msgid "You'll use this to sign in and manage your site."
 msgstr "Bunu siteye giriş yapmak ve yönetmek için kullanacaksınız."
 
-#: src/routes/console.account.tsx:82
+#: src/routes/console.account.tsx:83
 msgid "Your account"
 msgstr "Hesabınız"
 
-#: src/routes/console.account.tsx:90
+#: src/routes/console.account.tsx:91
 #: src/routes/console.register.tsx:159
 msgid "Your name"
 msgstr "Adınız"
@@ -4650,11 +4675,15 @@ msgstr "Kendi parolanız"
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Sayfalarınız kendi projenizden derleniyor. Yayınlamak, onları CMS'teki güncel içerikle yeniden derler."
 
-#: src/routes/console.account.tsx:78
+#: src/routes/console.account.tsx:79
 #: src/routes/console.index.tsx:129
 #: src/routes/console.sites.$siteId.tsx:273
 msgid "Your sites"
 msgstr "Siteleriniz"
+
+#: src/components/console-build-token.tsx:41
+msgid "Your sites are built from private repositories, and a build needs a token to read them with. Keep one here and every site you look after uses it — a site whose project lives somewhere else can still be given its own, and that one wins."
+msgstr "Siteleriniz özel depolardan derleniyor ve derlemenin bunları okuyabilmesi için bir jeton gerekiyor. Buraya bir tane koyun, baktığınız her site onu kullansın — projesi başka bir yerde duran bir siteye yine kendi jetonu verilebilir, o öncelikli olur."
 
 #: src/components/editor/toolbar.tsx:616
 msgid "YouTube"

@@ -49,6 +49,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::logout))
         .routes(routes!(console::me))
         .routes(routes!(console::update_account))
+        .routes(routes!(console::save_organization_build_token))
         .routes(routes!(console::list_sites, console::create_site))
         .routes(routes!(console::create_entry))
         .routes(routes!(

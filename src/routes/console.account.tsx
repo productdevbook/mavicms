@@ -12,6 +12,7 @@ import {
   type ConsoleAccount,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { ConsoleBuildToken } from "@/components/console-build-token"
 import { ConsoleTokens } from "@/components/console-tokens"
 import { applySurface } from "@/lib/surface"
 import { Input } from "@/components/ui/input"
@@ -145,6 +146,10 @@ function ConsoleAccountRoute() {
               {t`Save`}
             </Button>
           </div>
+        </div>
+
+        <div className="mt-10 border-t border-border pt-8">
+          <ConsoleBuildToken stored={account.has_build_token} />
         </div>
 
         <div className="mt-10 border-t border-border pt-8">

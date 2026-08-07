@@ -235,7 +235,7 @@ msgid "{0}: {1} sent, {2} did not arrive"
 msgstr "{0}: {1} sent, {2} did not arrive"
 
 #. placeholder {0}: account.organization_name
-#: src/routes/console.account.tsx:84
+#: src/routes/console.account.tsx:85
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. This is the account that opens and manages your sites."
 
@@ -364,6 +364,11 @@ msgstr "Accepts"
 msgid "Access key ID"
 msgstr "Access key ID"
 
+#: src/components/console-build-token.tsx:39
+msgid "Access to your repositories"
+msgstr "Access to your repositories"
+
+#: src/components/console-build-token.tsx:46
 #: src/components/publish-panel.tsx:240
 msgid "Access token"
 msgstr "Access token"
@@ -696,7 +701,7 @@ msgstr "Ask to leave the sandbox"
 msgid "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
 msgstr "Ask to leave the sandbox, from the section below. Until Amazon agrees, SES will only write to addresses you have verified — so a contact form can be tested but not used."
 
-#: src/routes/console.account.tsx:131
+#: src/routes/console.account.tsx:132
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 
@@ -1450,7 +1455,7 @@ msgstr "Could not save tag"
 msgid "Could not save the form"
 msgstr "Could not save the form"
 
-#: src/routes/console.account.tsx:62
+#: src/routes/console.account.tsx:63
 #: src/routes/console.sites.$siteId.tsx:169
 #: src/routes/console.sites.$siteId.tsx:199
 #: src/routes/console.sites.$siteId.tsx:214
@@ -1458,6 +1463,10 @@ msgstr "Could not save the form"
 #: src/routes/dashboard.publish.tsx:82
 msgid "Could not save the settings"
 msgstr "Could not save the settings"
+
+#: src/components/console-build-token.tsx:29
+msgid "Could not save the token"
+msgstr "Could not save the token"
 
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:124
 msgid "Could not send it"
@@ -1556,7 +1565,7 @@ msgstr "Create your administrator account"
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Credentials are encrypted before they are stored and are never sent back to the browser."
 
-#: src/routes/console.account.tsx:123
+#: src/routes/console.account.tsx:124
 #: src/routes/dashboard.users.tsx:218
 msgid "Current password"
 msgstr "Current password"
@@ -1775,7 +1784,7 @@ msgstr "Editing"
 
 #: src/components/form-fields-editor.tsx:51
 #: src/components/setup/setup-wizard.tsx:698
-#: src/routes/console.account.tsx:99
+#: src/routes/console.account.tsx:100
 #: src/routes/console.login.tsx:80
 #: src/routes/console.register.tsx:170
 #: src/routes/dashboard.mail.tsx:550
@@ -2351,7 +2360,7 @@ msgstr "Last run {0}"
 msgid "Leave empty for AWS S3"
 msgstr "Leave empty for AWS S3"
 
-#: src/routes/console.account.tsx:118
+#: src/routes/console.account.tsx:119
 msgid "Leave empty to keep the one you have"
 msgstr "Leave empty to keep the one you have"
 
@@ -2652,7 +2661,7 @@ msgstr "New list"
 #~ msgid "New page"
 #~ msgstr "New page"
 
-#: src/routes/console.account.tsx:112
+#: src/routes/console.account.tsx:113
 #: src/routes/dashboard.users.tsx:227
 #: src/routes/dashboard.users.tsx:321
 msgid "New password"
@@ -2802,6 +2811,10 @@ msgstr "Not connected yet"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:159
 msgid "Not sent yet"
 msgstr "Not sent yet"
+
+#: src/components/console-build-token.tsx:53
+msgid "Not set"
+msgstr "Not set"
 
 #: src/components/plugin-forms.tsx:340
 msgid "Not set yet"
@@ -3306,6 +3319,10 @@ msgstr "Raise text above the line"
 msgid "Read it"
 msgstr "Read it"
 
+#: src/components/console-build-token.tsx:56
+msgid "Read-only access to the contents of the repositories you build, and nothing else. It is stored encrypted and never shown again."
+msgstr "Read-only access to the contents of the repositories you build, and nothing else. It is stored encrypted and never shown again."
+
 #: src/components/editor/post-settings.tsx:378
 msgid "Readers can leave comments"
 msgstr "Readers can leave comments"
@@ -3350,6 +3367,7 @@ msgstr "Region"
 msgid "Regular expression"
 msgstr "Regular expression"
 
+#: src/components/console-build-token.tsx:74
 #: src/components/editor/bubble-menus.tsx:201
 #: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
@@ -3400,6 +3418,10 @@ msgstr "Remove this language?"
 #: src/routes/dashboard.sites.tsx:324
 msgid "Remove this site?"
 msgstr "Remove this site?"
+
+#: src/components/console-build-token.tsx:26
+msgid "Removed"
+msgstr "Removed"
 
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:358
 msgid "Rendered exactly as a subscriber would get it, unsubscribe link and all."
@@ -3506,11 +3528,12 @@ msgstr "S3 compatible storage"
 msgid "Sandbox"
 msgstr "Sandbox"
 
+#: src/components/console-build-token.tsx:66
 #: src/components/editor/mavi-editor.tsx:728
 #: src/components/editor/mavi-editor.tsx:732
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
-#: src/routes/console.account.tsx:145
+#: src/routes/console.account.tsx:146
 #: src/routes/console.sites.$siteId.tsx:381
 #: src/routes/console.sites.$siteId.tsx:409
 #: src/routes/dashboard.categories.tsx:290
@@ -3525,9 +3548,10 @@ msgstr "Sandbox"
 msgid "Save"
 msgstr "Save"
 
+#: src/components/console-build-token.tsx:26
 #: src/components/editor/status-bar.tsx:116
 #: src/components/site-mail.tsx:78
-#: src/routes/console.account.tsx:59
+#: src/routes/console.account.tsx:60
 #: src/routes/console.sites.$siteId.tsx:166
 #: src/routes/console.sites.$siteId.tsx:196
 #: src/routes/console.sites.$siteId.tsx:211
@@ -3892,6 +3916,7 @@ msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, Digi
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
+#: src/components/console-build-token.tsx:53
 #: src/components/plugin-forms.tsx:340
 #: src/components/publish-panel.tsx:248
 msgid "Stored — type to replace"
@@ -4216,7 +4241,7 @@ msgstr "This is the only time it is shown. Leave this page and it cannot be read
 msgid "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
 msgstr "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
 
-#: src/routes/console.account.tsx:107
+#: src/routes/console.account.tsx:108
 msgid "This is what you sign in with."
 msgstr "This is what you sign in with."
 
@@ -4637,11 +4662,11 @@ msgstr "You can disconnect it later from API in the panel."
 msgid "You'll use this to sign in and manage your site."
 msgstr "You'll use this to sign in and manage your site."
 
-#: src/routes/console.account.tsx:82
+#: src/routes/console.account.tsx:83
 msgid "Your account"
 msgstr "Your account"
 
-#: src/routes/console.account.tsx:90
+#: src/routes/console.account.tsx:91
 #: src/routes/console.register.tsx:159
 msgid "Your name"
 msgstr "Your name"
@@ -4654,11 +4679,15 @@ msgstr "Your own password"
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 
-#: src/routes/console.account.tsx:78
+#: src/routes/console.account.tsx:79
 #: src/routes/console.index.tsx:129
 #: src/routes/console.sites.$siteId.tsx:273
 msgid "Your sites"
 msgstr "Your sites"
+
+#: src/components/console-build-token.tsx:41
+msgid "Your sites are built from private repositories, and a build needs a token to read them with. Keep one here and every site you look after uses it — a site whose project lives somewhere else can still be given its own, and that one wins."
+msgstr "Your sites are built from private repositories, and a build needs a token to read them with. Keep one here and every site you look after uses it — a site whose project lives somewhere else can still be given its own, and that one wins."
 
 #: src/components/editor/toolbar.tsx:616
 msgid "YouTube"

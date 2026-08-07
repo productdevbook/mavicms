@@ -75,6 +75,10 @@ pub struct Organization {
     pub name: String,
     pub site_limit: i32,
     pub active: bool,
+    /// Whether the agency has stored a token its sites can build with. Not the
+    /// token: which sites can read which repositories is worth showing, and
+    /// the credential itself is not worth sending back out.
+    pub has_build_token: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -252,7 +256,8 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
             name TEXT NOT NULL,
             site_limit INTEGER NOT NULL,
             active INTEGER NOT NULL,
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            build_token TEXT NOT NULL DEFAULT ''
         )",
         "CREATE TABLE IF NOT EXISTS operators (
             id TEXT PRIMARY KEY,
@@ -298,6 +303,18 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
         db.execute_raw(Statement::from_string(db.get_database_backend(), statement))
             .await?;
     }
+
+    // For an agency that existed before it could keep one token for all of its
+    // sites. Adding a column that is already there is an error on every
+    // database and means nothing here, so the answer is ignored rather than
+    // guarded with a dialect-specific catalogue query.
+    let _ = db
+        .execute_raw(Statement::from_string(
+            db.get_database_backend(),
+            "ALTER TABLE organizations ADD COLUMN build_token TEXT NOT NULL DEFAULT ''",
+        ))
+        .await;
+
     Ok(())
 }
 
@@ -530,6 +547,7 @@ pub async fn register(
         name: organization_name.to_string(),
         site_limit,
         active: true,
+        has_build_token: false,
     };
     transaction
         .execute_raw(Statement::from_sql_and_values(
@@ -740,7 +758,7 @@ pub async fn organization(db: &DatabaseConnection, id: Uuid) -> AppResult<Option
         .query_one_raw(Statement::from_sql_and_values(
             backend,
             format!(
-                "SELECT id, name, site_limit, active FROM organizations WHERE id = {}",
+                "SELECT id, name, site_limit, active, build_token FROM organizations WHERE id = {}",
                 parameter(backend, 1)
             ),
             [id.to_string().into()],
@@ -754,9 +772,73 @@ pub async fn organization(db: &DatabaseConnection, id: Uuid) -> AppResult<Option
             name: row.try_get("", "name")?,
             site_limit: row.try_get("", "site_limit")?,
             active: row.try_get::<i32>("", "active")? != 0,
+            has_build_token: !row.try_get::<String>("", "build_token")?.is_empty(),
         })
     })
     .transpose()
+}
+
+/// The token an agency's sites build with when they have none of their own.
+///
+/// An agency's sites are usually its own repositories under one account, so a
+/// token per site was the same token typed over and over — and rotating it
+/// meant finding every site that had a copy. Stored encrypted with the
+/// server's key, like a site's own.
+pub async fn build_token(
+    db: &DatabaseConnection,
+    secrets: &crate::crypto::SecretBox,
+    organization_id: Uuid,
+) -> AppResult<String> {
+    let backend = db.get_database_backend();
+    let row = db
+        .query_one_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "SELECT build_token FROM organizations WHERE id = {}",
+                parameter(backend, 1)
+            ),
+            [organization_id.to_string().into()],
+        ))
+        .await?;
+
+    let Some(row) = row else {
+        return Ok(String::new());
+    };
+    let stored: String = row.try_get("", "build_token")?;
+    if stored.is_empty() {
+        return Ok(String::new());
+    }
+    secrets.decrypt(&stored)
+}
+
+/// Keeps one, or takes it away. An empty token means the agency stops having
+/// one, and its sites fall back to whatever they carry themselves.
+pub async fn set_build_token(
+    db: &DatabaseConnection,
+    secrets: &crate::crypto::SecretBox,
+    organization_id: Uuid,
+    token: &str,
+) -> AppResult<()> {
+    let token = token.trim();
+    let stored = if token.is_empty() {
+        String::new()
+    } else {
+        secrets.encrypt(token)?
+    };
+
+    let backend = db.get_database_backend();
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "UPDATE organizations SET build_token = {} WHERE id = {}",
+            parameter(backend, 1),
+            parameter(backend, 2)
+        ),
+        [stored.into(), organization_id.to_string().into()],
+    ))
+    .await?;
+
+    Ok(())
 }
 
 /// Mints the one-time token that lets an agency walk into one of its sites.
@@ -975,10 +1057,10 @@ pub async fn organizations(db: &DatabaseConnection) -> AppResult<Vec<(Organizati
     let rows = db
         .query_all_raw(Statement::from_string(
             db.get_database_backend(),
-            "SELECT o.id, o.name, o.site_limit, o.active, \
+            "SELECT o.id, o.name, o.site_limit, o.active, o.build_token, \
              COALESCE(MIN(op.email), '') AS email \
              FROM organizations o LEFT JOIN operators op ON op.organization_id = o.id \
-             GROUP BY o.id, o.name, o.site_limit, o.active ORDER BY o.name",
+             GROUP BY o.id, o.name, o.site_limit, o.active, o.build_token ORDER BY o.name",
         ))
         .await?;
 
@@ -991,6 +1073,7 @@ pub async fn organizations(db: &DatabaseConnection) -> AppResult<Vec<(Organizati
                     name: row.try_get("", "name")?,
                     site_limit: row.try_get("", "site_limit")?,
                     active: row.try_get::<i32>("", "active")? != 0,
+                    has_build_token: !row.try_get::<String>("", "build_token")?.is_empty(),
                 },
                 row.try_get("", "email")?,
             ))

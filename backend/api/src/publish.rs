@@ -172,10 +172,31 @@ pub async fn config(db: &DatabaseConnection, tenant_id: Uuid) -> AppResult<Optio
 
 /// The access token for a private repository, in the clear.
 ///
+/// A site's own comes first and the agency's stands behind it, so an agency
+/// keeping one token for all of its repositories does not stop a site whose
+/// repository is somewhere else from carrying its own.
+///
 /// Only the builder has any business calling this, and only at the moment it
-/// clones. It is stored encrypted with the server's key, so a copy of the
+/// clones. Both are stored encrypted with the server's key, so a copy of the
 /// database on its own does not hand over anybody's repositories.
 pub async fn token(
+    db: &DatabaseConnection,
+    secrets: &SecretBox,
+    tenant_id: Uuid,
+    organization_id: Option<Uuid>,
+) -> AppResult<String> {
+    let own = site_token(db, secrets, tenant_id).await?;
+    if !own.is_empty() {
+        return Ok(own);
+    }
+    match organization_id {
+        Some(organization) => crate::console::build_token(db, secrets, organization).await,
+        None => Ok(String::new()),
+    }
+}
+
+/// What this site was given, ignoring what the agency has.
+async fn site_token(
     db: &DatabaseConnection,
     secrets: &SecretBox,
     tenant_id: Uuid,
@@ -303,7 +324,10 @@ pub async fn save_config(
         ));
     }
 
-    let existing = token(db, secrets, tenant_id).await.unwrap_or_default();
+    // The site's own, not what token() would fall back to: leaving the field
+    // untouched must not copy the agency's token into this row, where rotating
+    // the agency's would then leave a stale one behind.
+    let existing = site_token(db, secrets, tenant_id).await.unwrap_or_default();
     let stored_token = match payload.token.as_deref().map(str::trim) {
         None => existing,
         Some("") => String::new(),
@@ -635,7 +659,145 @@ pub async fn finish(
 
 #[cfg(test)]
 mod tests {
-    use super::clean_output;
+    use super::{clean_output, token};
+    use crate::console::set_build_token;
+    use crate::crypto::SecretBox;
+    use sea_orm::{ConnectionTrait, Database, Statement};
+    use uuid::Uuid;
+
+    fn secrets() -> SecretBox {
+        let dir = std::env::temp_dir().join(format!("mavicms-publish-{}", Uuid::now_v7()));
+        std::fs::create_dir_all(&dir).unwrap();
+        SecretBox::load_or_create(&dir).unwrap()
+    }
+
+    /// A control plane with one agency and one of its sites, and nothing else.
+    async fn control(
+        secrets: &SecretBox,
+        site_token: &str,
+    ) -> (sea_orm::DatabaseConnection, Uuid, Uuid) {
+        let db = Database::connect("sqlite::memory:").await.unwrap();
+        crate::console::create_tables(&db).await.unwrap();
+        super::create_tables(&db).await.unwrap();
+
+        let organization = Uuid::now_v7();
+        let tenant = Uuid::now_v7();
+        for statement in [
+            format!(
+                "INSERT INTO organizations (id, name, site_limit, active, created_at, build_token) \
+                 VALUES ('{organization}', 'An Agency', 10, 1, '', '')"
+            ),
+            format!(
+                "INSERT INTO site_builds \
+                 (tenant_id, repository, branch, build_command, output_dir, token, environment, updated_at) \
+                 VALUES ('{tenant}', 'https://example.invalid/site.git', 'main', 'x', 'dist', '{}', '', '')",
+                if site_token.is_empty() {
+                    String::new()
+                } else {
+                    secrets.encrypt(site_token).unwrap()
+                }
+            ),
+        ] {
+            db.execute_raw(Statement::from_string(db.get_database_backend(), statement))
+                .await
+                .unwrap();
+        }
+
+        (db, tenant, organization)
+    }
+
+    #[tokio::test]
+    async fn a_site_without_a_token_of_its_own_builds_with_the_agencys() {
+        let secrets = secrets();
+        let (db, tenant, organization) = control(&secrets, "").await;
+        set_build_token(&db, &secrets, organization, "agency-token")
+            .await
+            .unwrap();
+
+        assert_eq!(
+            token(&db, &secrets, tenant, Some(organization))
+                .await
+                .unwrap(),
+            "agency-token"
+        );
+    }
+
+    #[tokio::test]
+    async fn a_site_with_its_own_token_keeps_it() {
+        // The site's repository can be somewhere the agency's token cannot
+        // read, so its own has to win rather than merely exist.
+        let secrets = secrets();
+        let (db, tenant, organization) = control(&secrets, "site-token").await;
+        set_build_token(&db, &secrets, organization, "agency-token")
+            .await
+            .unwrap();
+
+        assert_eq!(
+            token(&db, &secrets, tenant, Some(organization))
+                .await
+                .unwrap(),
+            "site-token"
+        );
+    }
+
+    #[tokio::test]
+    async fn no_token_anywhere_is_no_token_rather_than_an_error() {
+        // git then asks for a username, which in a container nobody answers —
+        // but that is a build failing, not the server failing.
+        let secrets = secrets();
+        let (db, tenant, organization) = control(&secrets, "").await;
+
+        assert_eq!(
+            token(&db, &secrets, tenant, Some(organization))
+                .await
+                .unwrap(),
+            ""
+        );
+        assert_eq!(token(&db, &secrets, tenant, None).await.unwrap(), "");
+    }
+
+    #[tokio::test]
+    async fn taking_the_agencys_token_away_leaves_the_sites_own() {
+        let secrets = secrets();
+        let (db, tenant, organization) = control(&secrets, "site-token").await;
+        set_build_token(&db, &secrets, organization, "agency-token")
+            .await
+            .unwrap();
+        set_build_token(&db, &secrets, organization, "")
+            .await
+            .unwrap();
+
+        assert_eq!(
+            token(&db, &secrets, tenant, Some(organization))
+                .await
+                .unwrap(),
+            "site-token"
+        );
+    }
+
+    #[tokio::test]
+    async fn the_agencys_token_is_not_stored_in_the_clear() {
+        // A copy of the database on its own must not hand over the
+        // repositories it can read.
+        let secrets = secrets();
+        let (db, _, organization) = control(&secrets, "").await;
+        set_build_token(&db, &secrets, organization, "agency-token")
+            .await
+            .unwrap();
+
+        let row = db
+            .query_one_raw(Statement::from_string(
+                db.get_database_backend(),
+                format!("SELECT build_token FROM organizations WHERE id = '{organization}'"),
+            ))
+            .await
+            .unwrap()
+            .unwrap();
+        let stored: String = row.try_get("", "build_token").unwrap();
+
+        assert!(!stored.is_empty());
+        assert!(!stored.contains("agency-token"));
+    }
 
     #[test]
     fn an_output_folder_stays_inside_the_project() {

@@ -650,6 +650,7 @@ export interface ConsoleAccount {
   email: string
   organization_name: string
   site_limit: number
+  has_build_token: boolean
 }
 
 export interface ConsoleSite {
@@ -862,6 +863,15 @@ export function updateConsoleAccount(payload: {
   return request<ConsoleAccount>("/console/me", {
     method: "PUT",
     body: JSON.stringify(payload),
+  })
+}
+
+export function saveOrganizationBuildToken(
+  token: string
+): Promise<ConsoleAccount> {
+  return request<ConsoleAccount>("/console/organization/build-token", {
+    method: "PUT",
+    body: JSON.stringify({ token }),
   })
 }
 

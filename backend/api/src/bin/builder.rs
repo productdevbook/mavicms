@@ -285,7 +285,13 @@ impl Builder {
         let config = publish::config(&self.control, tenant.id)
             .await?
             .ok_or_else(|| AppError::Validation("the site has no project".to_string()))?;
-        let token = publish::token(&self.control, &self.secrets, tenant.id).await?;
+        let token = publish::token(
+            &self.control,
+            &self.secrets,
+            tenant.id,
+            tenant.organization_id,
+        )
+        .await?;
         let environment = publish::environment(&self.control, &self.secrets, tenant.id).await?;
 
         let checkout = self.workspace.join(&tenant.slug);

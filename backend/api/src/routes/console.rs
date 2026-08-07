@@ -35,6 +35,9 @@ pub struct AccountResponse {
     pub organization_name: String,
     /// How many sites this agency may have in total.
     pub site_limit: i32,
+    /// Whether a token is kept here for all of this agency's sites to build
+    /// with. Never the token itself.
+    pub has_build_token: bool,
 }
 
 #[derive(Debug, Serialize, ToSchema)]
@@ -162,6 +165,7 @@ pub async fn register(
             email: operator.email,
             organization_name: organization.name,
             site_limit: organization.site_limit,
+            has_build_token: organization.has_build_token,
         }),
     ))
 }
@@ -225,6 +229,7 @@ pub async fn login(
         email: operator.email,
         organization_name: organization.name,
         site_limit: organization.site_limit,
+        has_build_token: organization.has_build_token,
     }))
 }
 
@@ -279,6 +284,7 @@ pub async fn me(
         email: operator.email,
         organization_name: organization.name,
         site_limit: organization.site_limit,
+        has_build_token: organization.has_build_token,
     }))
 }
 
@@ -675,6 +681,57 @@ pub struct UpdateAccountRequest {
     pub new_password: Option<String>,
 }
 
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct BuildTokenRequest {
+    /// Empty takes the agency's token away, and its sites fall back to
+    /// whatever each of them was given.
+    pub token: String,
+}
+
+/// Keep one access token for every site this agency builds.
+///
+/// The agency's own, not a site's and not another agency's: there is no id in
+/// the path, so the only organization this can be pointed at is the one whose
+/// account made the request.
+#[utoipa::path(
+    put,
+    path = "/console/organization/build-token",
+    tag = "console",
+    request_body = BuildTokenRequest,
+    responses(
+        (status = 200, description = "Kept, or taken away", body = AccountResponse),
+        (status = 401, description = "Not signed in", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn save_organization_build_token(
+    State(hosting): State<Hosting>,
+    axum::Extension(resolved): axum::Extension<Resolved>,
+    cookies: Cookies,
+    Json(payload): Json<BuildTokenRequest>,
+) -> AppResult<Json<AccountResponse>> {
+    let (operator, db) = signed_in(&hosting, &resolved, &cookies).await?;
+
+    console::set_build_token(
+        db,
+        hosting.secrets(),
+        operator.organization_id,
+        &payload.token,
+    )
+    .await?;
+
+    let organization = console::organization(db, operator.organization_id)
+        .await?
+        .ok_or_else(|| AppError::Internal("the agency behind this account is gone".to_string()))?;
+
+    Ok(Json(AccountResponse {
+        name: operator.name,
+        email: operator.email,
+        organization_name: organization.name,
+        site_limit: organization.site_limit,
+        has_build_token: organization.has_build_token,
+    }))
+}
+
 /// Change this agency account's own name, address or password.
 #[utoipa::path(
     put,
@@ -713,6 +770,7 @@ pub async fn update_account(
         email: updated.email,
         organization_name: organization.name,
         site_limit: organization.site_limit,
+        has_build_token: organization.has_build_token,
     }))
 }
 
