@@ -2631,8 +2631,12 @@ msgid "Nothing asked for yet"
 msgstr "Henüz bir başvuru yok"
 
 #: src/components/assistant-connection.tsx:170
-msgid "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
-msgstr "Başka bir şey yok. Burada bir yazıyı ya da dosyayı silen bir araç yok — o, bir insanın bu panelde yaptığı şey olarak kalıyor."
+msgid "Nothing else. Accounts, credentials, backups, how the site is built and sending a mailing are deliberately not here — nor is deleting a post or a file. Those stay things a person does in this panel."
+msgstr "Başka bir şey yok. Hesaplar, kimlik bilgileri, yedekler, sitenin nasıl derlendiği ve posta göndermek bilerek burada değil — bir yazıyı ya da dosyayı silmek de öyle. Bunlar bir insanın bu panelde yaptığı şeyler olarak kalıyor."
+
+#: src/components/assistant-connection.tsx:170
+#~ msgid "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
+#~ msgstr "Başka bir şey yok. Burada bir yazıyı ya da dosyayı silen bir araç yok — o, bir insanın bu panelde yaptığı şey olarak kalıyor."
 
 #. placeholder {0}: account.enforcement_status
 #: src/components/ses-account.tsx:269

@@ -265,6 +265,99 @@ pub const TOOLS: &[Tool] = &[
         },
     },
     Tool {
+        name: "taxonomy_create",
+        title: "Add a category or a tag",
+        description: "Add one, in one language. Read taxonomy_list first: a site with \
+            \"Recipes\" does not want \"recipes\" beside it, and a near-duplicate is harder to \
+            undo than to avoid. A category may sit under another; a tag may not. To add the \
+            same one in a second language, give translation_of with the first one's id, or the \
+            two will not be linked and a reader switching languages will lose their place.",
+        writes: true,
+        destroys: false,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind", "name"],
+                "properties": {
+                    "kind": { "type": "string", "enum": ["category", "tag"] },
+                    "name": { "type": "string" },
+                    "description": { "type": "string", "description": "Categories only" },
+                    "parent": {
+                        "type": "string",
+                        "description": "Id of the category this sits under. Categories only."
+                    },
+                    "locale": { "type": "string", "description": "Defaults to the site's own language" },
+                    "translation_of": {
+                        "type": "string",
+                        "description": "Id of the one in another language that this translates"
+                    }
+                }
+            })
+        },
+    },
+    Tool {
+        name: "forms_create",
+        title: "Make a form",
+        description: "Add a form this site takes answers on. Decide the fields with whoever \
+            asked — every one you add is a question somebody has to answer before they can \
+            send anything, so ask for what will actually be read. The form answers at \
+            /forms/{slug}/schema and /forms/{slug}/submit straight away, and where it appears \
+            on a page is the front end's business, not this site's.",
+        writes: true,
+        destroys: false,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "fields"],
+                "properties": {
+                    "name": { "type": "string", "description": "What it is called in the panel" },
+                    "slug": {
+                        "type": "string",
+                        "description": "The address it answers on. Made from the name if left out."
+                    },
+                    "description": { "type": "string" },
+                    "notify": {
+                        "type": "string",
+                        "description": "An email address to tell when something comes in. Nobody, if left out."
+                    },
+                    "active": { "type": "boolean", "description": "Taking answers. Defaults to true." },
+                    "fields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "What it asks for, in the order it asks",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": ["name", "label", "type"],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The key in the submitted JSON: letters, numbers, _ or -"
+                                },
+                                "label": { "type": "string", "description": "What the person filling it in reads" },
+                                "type": {
+                                    "type": "string",
+                                    "enum": [
+                                        "text", "textarea", "email", "phone",
+                                        "number", "checkbox", "select", "date", "url"
+                                    ]
+                                },
+                                "required": { "type": "boolean" },
+                                "options": {
+                                    "type": "array",
+                                    "items": { "type": "string" },
+                                    "description": "The choices, for a select. Ignored by every other type."
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        },
+    },
+    Tool {
         name: "form_mark_seen",
         title: "Mark what has come in as read",
         description: "Say that a form submission has been dealt with, or take that back. Give \
@@ -336,6 +429,8 @@ pub async fn call(
         "forms_list" => forms(db).await,
         "form_submissions" => submissions(db, arguments).await,
         "media_upload" => upload(state, arguments).await,
+        "taxonomy_create" => make_taxonomy(db, arguments).await,
+        "forms_create" => make_form(db, arguments).await,
         "form_mark_seen" => mark_seen(db, arguments).await,
         "form_submission_delete" => throw_away(db, arguments).await,
         "publish_site" => publish(hosting, resolved).await,
@@ -848,6 +943,90 @@ async fn upload(state: &AppState, arguments: &Value) -> AppResult<Value> {
         "url": saved.url_path,
         "mime_type": saved.mime_type,
         "size_bytes": saved.size_bytes,
+    }))
+}
+
+async fn make_taxonomy(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    let name = text(arguments, "name")
+        .ok_or_else(|| AppError::Validation("it needs a name".to_string()))?;
+    let locale = text(arguments, "locale");
+
+    let sibling = match text(arguments, "translation_of") {
+        Some(id) => Some(
+            Uuid::parse_str(&id).map_err(|_| AppError::Validation(format!("{id} is not an id")))?,
+        ),
+        None => None,
+    };
+
+    match text(arguments, "kind").as_deref() {
+        Some("category") => {
+            let parent = match text(arguments, "parent") {
+                Some(id) => Some(
+                    Uuid::parse_str(&id)
+                        .map_err(|_| AppError::Validation(format!("{id} is not a category id")))?,
+                ),
+                None => None,
+            };
+
+            let made = crate::routes::categories::create(
+                db,
+                crate::dto::taxonomy::CreateCategoryRequest {
+                    name,
+                    parent_id: parent,
+                    description: arguments
+                        .get("description")
+                        .and_then(Value::as_str)
+                        .unwrap_or_default()
+                        .to_string(),
+                    locale,
+                    translation_of: sibling,
+                },
+            )
+            .await?;
+
+            Ok(json!({
+                "kind": "category",
+                "id": made.id,
+                "name": made.name,
+                "slug": made.slug,
+                "locale": made.locale,
+            }))
+        }
+        Some("tag") => {
+            let locale = crate::languages::resolve(db, locale.as_deref()).await?;
+            let (made, _) = crate::routes::tags::get_or_create_tag(db, &name, &locale).await?;
+
+            Ok(json!({
+                "kind": "tag",
+                "id": made.id,
+                "name": made.name,
+                "slug": made.slug,
+                "locale": made.locale,
+            }))
+        }
+        _ => Err(AppError::Validation(
+            "say which: category or tag".to_string(),
+        )),
+    }
+}
+
+async fn make_form(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    // Deserialised into the endpoint's own request rather than read field by
+    // field: the field names, the types and which of them may be empty are
+    // decided in one place, and this is that place asking.
+    let payload: crate::dto::forms::SaveFormRequest = serde_json::from_value(arguments.clone())
+        .map_err(|err| AppError::Validation(format!("that is not a form: {err}")))?;
+
+    let made = crate::routes::forms::create(db, payload).await?;
+
+    Ok(json!({
+        "id": made.id,
+        "name": made.name,
+        "slug": made.slug,
+        "taking_answers": made.active,
+        "fields": made.fields,
+        "schema_at": format!("/api/forms/{}/schema", made.slug),
+        "submit_to": format!("/api/forms/{}/submit", made.slug),
     }))
 }
 

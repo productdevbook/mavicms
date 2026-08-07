@@ -210,10 +210,14 @@ claude mcp add --transport http mavicms https://your-site/api/mcp \
   --header "Authorization: Bearer $CMS_TOKEN"
 ```
 
-A site offers finding and reading posts and pages, writing and correcting them, its
-categories and languages, uploading a file and listing the ones it has, reading
-what has come in through its forms and marking it dealt with, and building its
-pages. A console offers the questions an agency has about
+A site offers finding and reading posts and pages, writing and correcting them,
+adding a category or a tag, uploading a file and listing the ones it has,
+making a form and reading and triaging what has come in through it, and
+building its pages.
+
+It deliberately offers nothing for accounts, credentials, backups, how the site
+is built, or sending a mailing. Those are administration rather than writing:
+the consequences are ones a person should weigh, and they stay in the panel. A console offers the questions an agency has about
 fifty sites at once: which built, which did not, what the failing one said,
 and adding a new site.
 

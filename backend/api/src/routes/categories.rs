@@ -139,7 +139,18 @@ pub async fn create_category(
     Site(state): Site,
     Json(payload): Json<CreateCategoryRequest>,
 ) -> AppResult<(StatusCode, Json<CategoryResponse>)> {
-    let db = state.db();
+    Ok((
+        StatusCode::CREATED,
+        Json(create(state.db(), payload).await?),
+    ))
+}
+
+/// Making a category, as the endpoint does it — see `posts::page` for why the
+/// working-out lives outside the handler.
+pub async fn create(
+    db: &sea_orm::DatabaseConnection,
+    payload: CreateCategoryRequest,
+) -> AppResult<CategoryResponse> {
     let name = payload.name.trim();
     if name.is_empty() {
         return Err(AppError::Validation("name must not be empty".to_string()));
@@ -187,7 +198,7 @@ pub async fn create_category(
                 "a category with this name already exists".to_string(),
             ));
         }
-        return Ok((StatusCode::OK, Json(existing.into())));
+        return Ok(existing.into());
     }
 
     let model = category::ActiveModel {
@@ -203,7 +214,7 @@ pub async fn create_category(
     };
 
     let saved = model.insert(db).await?;
-    Ok((StatusCode::CREATED, Json(saved.into())))
+    Ok(saved.into())
 }
 
 /// Update a category.

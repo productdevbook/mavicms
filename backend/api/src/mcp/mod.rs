@@ -390,11 +390,20 @@ const INSTRUCTIONS: &str = "This is a Mavi CMS site. Which site depends on the a
     the address on its own, with no Authorization header, and the site will ask whoever is \
     connecting to sign in; the connection can then do everything their own account can. \
     \
-    What this site holds is posts, the categories and tags on them, uploaded files, forms and \
-    what has come in through them, the languages it writes in, and its own title. It does not \
-    hold pages, a footer, a menu or a layout — those live in the project the site's pages are \
-    built from, which is somewhere else and not reachable from here. If you are asked to change \
-    one of those, say where it actually lives rather than looking for a tool for it. \
+    What this site holds is posts and pages, the categories and tags on them, uploaded files, \
+    forms and what has come in through them, and the languages it writes in. A page is one that \
+    is not in the feed — an About, a Contact — and posts_create takes kind: \"page\" for it. \
+    \
+    It does not hold a footer, a menu, or anything about how the site looks. Those are in the \
+    project the site's pages are built from, which is somewhere else and not reachable from \
+    here. If you are asked to change one, say where it actually lives rather than looking for a \
+    tool for it. \
+    \
+    There are also things this deliberately cannot do, and no tool for them will appear: making \
+    or changing accounts, reading or setting any credential, running or restoring a backup, \
+    rewiring how the site is built, and sending a mailing to anybody. Those are administration \
+    rather than writing, and a person does them in the panel. If you are asked for one, say so \
+    plainly instead of looking for a way round it. \
     \
     Read GET /api/llms.txt on the same address for the shape of the content and how a front \
     end is built from it.";
