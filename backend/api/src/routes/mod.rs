@@ -33,8 +33,12 @@ use crate::{
 };
 
 pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
+    // Outside the site resolution below: a health check is a question about
+    // the process, and the kubelet asks it at the pod's address, which belongs
+    // to no site and would be turned away with one.
+    let liveness = OpenApiRouter::new().routes(routes!(health::health));
+
     let public = OpenApiRouter::new()
-        .routes(routes!(health::health))
         .routes(routes!(setup::setup_status))
         .routes(routes!(setup::run_setup))
         .routes(routes!(setup::configure_database))
@@ -317,5 +321,6 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .merge(needs_db)
         .merge(protected)
         .layer(from_fn_with_state(hosting, resolve))
+        .merge(liveness)
         .layer(from_fn(security_headers))
 }

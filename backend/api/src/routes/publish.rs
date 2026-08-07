@@ -92,7 +92,7 @@ pub async fn status_of(
 fn site(resolved: &Resolved) -> AppResult<&crate::tenants::Tenant> {
     match resolved {
         Resolved::Tenant(tenant) => Ok(tenant),
-        Resolved::Host => Err(AppError::Validation(
+        Resolved::Host | Resolved::Unknown => Err(AppError::Validation(
             "publishing belongs to a hosted site, not to the server itself".to_string(),
         )),
     }

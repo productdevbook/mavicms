@@ -13,6 +13,13 @@ pub struct Config {
     pub media_root: PathBuf,
     pub host: String,
     pub port: u16,
+    /// The addresses the server's own panel answers on, if it has been said.
+    ///
+    /// Empty means the old behaviour: an address belonging to no site is the
+    /// server's own. That is right for a server reached at one address and
+    /// wrong for one that catches every address pointed at it, where an
+    /// unrelated domain would be handed the operator's panel.
+    pub console_hosts: Vec<String>,
 }
 
 impl Config {
@@ -42,12 +49,20 @@ impl Config {
             .and_then(|value| value.parse().ok())
             .unwrap_or(8080);
 
+        let console_hosts = env::var("MAVICMS_CONSOLE_HOST")
+            .unwrap_or_default()
+            .split(',')
+            .map(|name| name.trim().to_ascii_lowercase())
+            .filter(|name| !name.is_empty())
+            .collect();
+
         Self {
             database_url,
             data_dir,
             media_root,
             host,
             port,
+            console_hosts,
         }
     }
 }

@@ -919,7 +919,7 @@ pub async fn setup_email_events(
 ) -> AppResult<Json<PipelineResponse>> {
     let host = match &resolved {
         crate::tenants::Resolved::Tenant(tenant) => tenant.host.clone(),
-        crate::tenants::Resolved::Host => {
+        crate::tenants::Resolved::Host | crate::tenants::Resolved::Unknown => {
             return Err(AppError::Validation(
                 "events belong to a hosted site".to_string(),
             ));

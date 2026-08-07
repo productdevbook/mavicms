@@ -70,6 +70,7 @@ async fn main() {
     let hosting = mavicms_api::tenants::Hosting {
         registry,
         default_state: state,
+        console_hosts: config.console_hosts.clone().into(),
     };
 
     mavicms_api::schedule::spawn(hosting.clone());

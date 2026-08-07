@@ -1363,7 +1363,7 @@ pub async fn test_campaign(
 
     let host = match &resolved {
         Resolved::Tenant(tenant) => tenant.host.clone(),
-        Resolved::Host => "localhost".to_string(),
+        Resolved::Host | Resolved::Unknown => "localhost".to_string(),
     };
     let site_url = format!("https://{host}");
 
@@ -1507,7 +1507,7 @@ pub async fn subscribe(
 
     let host = match &resolved {
         Resolved::Tenant(tenant) => tenant.host.clone(),
-        Resolved::Host => "localhost".to_string(),
+        Resolved::Host | Resolved::Unknown => "localhost".to_string(),
     };
     let api_base = format!("https://{host}/api");
 

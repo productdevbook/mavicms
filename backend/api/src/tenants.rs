@@ -491,6 +491,9 @@ pub struct Hosting {
     /// installation that was already there — keeping it means a server hosting
     /// one site behaves exactly as it did before it could host more.
     pub default_state: AppState,
+    /// The addresses the server's own panel answers on. Empty leaves the
+    /// fallback above in charge, which is what a single-address server wants.
+    pub console_hosts: Arc<[String]>,
 }
 
 /// Which of the sites on this server a request turned out to be for.
@@ -500,6 +503,10 @@ pub enum Resolved {
     Host,
     /// One of the sites being hosted.
     Tenant(Box<Tenant>),
+    /// An address that belongs to nothing here. Only reachable once the panel's
+    /// own addresses have been named; until then an unknown address is the
+    /// server's own.
+    Unknown,
 }
 
 impl Resolved {
@@ -516,6 +523,7 @@ impl Resolved {
         match self {
             Resolved::Host => "host",
             Resolved::Tenant(tenant) => &tenant.slug,
+            Resolved::Unknown => "unknown",
         }
     }
 }
@@ -550,9 +558,33 @@ impl Hosting {
             Some(_) => Err(AppError::Unavailable(
                 "this site has been switched off".to_string(),
             )),
+            None if is_a_stranger(&self.console_hosts, host) => {
+                Ok((self.default_state.clone(), Resolved::Unknown))
+            }
             None => Ok((self.default_state.clone(), Resolved::Host)),
         }
     }
+}
+
+/// Whether an address belonging to no site is not the panel's either.
+///
+/// Answers false while no panel address has been named, which is what keeps a
+/// server reached at a single address working as it always did. Once they are
+/// named it is the only thing standing between a domain somebody pointed here
+/// and the operator's own panel.
+fn is_a_stranger(console_hosts: &[String], host: &str) -> bool {
+    if console_hosts.is_empty() {
+        return false;
+    }
+    // The header carries a port when a browser is talking to a development
+    // server, and whatever case the address was typed in.
+    let asked = host
+        .split(':')
+        .next()
+        .unwrap_or(host)
+        .trim()
+        .to_ascii_lowercase();
+    !console_hosts.iter().any(|name| name == &asked)
 }
 
 /// Resolves the site a request is for and hands its state to the handlers.
@@ -573,6 +605,9 @@ pub async fn resolve(
         .map(str::to_string);
 
     match hosting.resolve_host(host.as_deref()).await {
+        Ok((_, Resolved::Unknown)) => {
+            AppError::NotFound("no site answers on this address".to_string()).into_response()
+        }
         Ok((state, resolved)) => {
             use tracing::Instrument;
 
@@ -635,7 +670,44 @@ impl<S: Send + Sync> axum::extract::FromRequestParts<S> for Operator {
 
 #[cfg(test)]
 mod tests {
-    use super::{clean_slug, schema_name};
+    use super::{clean_slug, is_a_stranger, schema_name};
+
+    fn named(hosts: &[&str]) -> Vec<String> {
+        hosts.iter().map(|name| name.to_string()).collect()
+    }
+
+    #[test]
+    fn with_no_panel_address_named_nothing_is_a_stranger() {
+        // A server reached at one address has no list, and every address that
+        // belongs to no site is still its own.
+        assert!(!is_a_stranger(&[], "example.test"));
+    }
+
+    #[test]
+    fn an_address_nobody_here_answers_on_is_a_stranger() {
+        let panel = named(&["panel.example.test"]);
+        assert!(is_a_stranger(&panel, "somebody-elses.test"));
+        assert!(!is_a_stranger(&panel, "panel.example.test"));
+    }
+
+    #[test]
+    fn the_panel_is_recognised_however_it_was_typed() {
+        // A browser sends the port on a development server, and the header
+        // carries whatever case somebody typed.
+        let panel = named(&["panel.example.test"]);
+        assert!(!is_a_stranger(&panel, "PANEL.example.test"));
+        assert!(!is_a_stranger(&panel, "panel.example.test:8080"));
+        assert!(!is_a_stranger(&panel, " panel.example.test "));
+    }
+
+    #[test]
+    fn a_name_that_merely_contains_the_panels_is_a_stranger() {
+        // "panel.example.test.evil.test" ends up at this server the moment
+        // somebody points it here, and it is not the panel.
+        let panel = named(&["panel.example.test"]);
+        assert!(is_a_stranger(&panel, "panel.example.test.evil.test"));
+        assert!(is_a_stranger(&panel, "evil.test"));
+    }
 
     #[test]
     fn keeps_an_ordinary_name() {
