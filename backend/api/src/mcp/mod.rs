@@ -565,10 +565,12 @@ async fn invoke(
                 // first, and the fact that a token is the cause rather than
                 // the cure is said outright.
                 return Some(Err(AppError::Forbidden(
-                    "this connection can only read. Connect again using the address on its \
-                     own, with no Authorization header, and the site will ask you to sign in \
-                     — after that it can write. Adding a token will not help: sending one is \
-                     what makes a connection read-only."
+                    "this connection can only read, because it was made with a build token, \
+                     which is the read-only kind. There are two ways to one that writes: \
+                     connect again using the address on its own, with no Authorization \
+                     header, and the site will ask you to sign in; or ask whoever the site \
+                     belongs to for an assistant key, made in the panel under API, and send \
+                     that in the header instead."
                         .to_string(),
                 )));
             }

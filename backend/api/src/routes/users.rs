@@ -51,6 +51,7 @@ fn managed(username: &str) -> bool {
     username.starts_with("agency-")
         || username == "build"
         || username == crate::routes::console::LOCAL_READER
+        || username == crate::routes::assistant::ASSISTANT_ACCOUNT
 }
 
 #[derive(Debug, Deserialize, ToSchema)]

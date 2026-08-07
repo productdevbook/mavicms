@@ -1,3 +1,4 @@
+pub mod assistant;
 pub mod auth;
 pub mod categories;
 pub mod console;
@@ -176,6 +177,9 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         ))
         .routes(routes!(development::list_tokens, development::create_token))
         .routes(routes!(development::delete_token))
+        .routes(routes!(assistant::list_keys))
+        .routes(routes!(assistant::handover))
+        .routes(routes!(assistant::delete_key))
         .routes(routes!(oauth::connections))
         .routes(routes!(oauth::disconnect))
         .routes(routes!(

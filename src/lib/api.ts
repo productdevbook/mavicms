@@ -1287,6 +1287,31 @@ export function deleteBuildToken(tokenId: string): Promise<void> {
   return request<void>(`/development/tokens/${tokenId}`, { method: "DELETE" })
 }
 
+/** A key that writes, for a day. Unlike a build token, which only reads. */
+export interface AssistantKey {
+  id: string
+  created_at: string
+  expires_at: string
+}
+
+export interface Handover extends Omit<AssistantKey, "created_at"> {
+  token: string
+  /** The document with the key in front of it. What gets copied. */
+  text: string
+}
+
+export function listAssistantKeys(): Promise<AssistantKey[]> {
+  return request<AssistantKey[]>("/assistant/keys")
+}
+
+export function createHandover(): Promise<Handover> {
+  return request<Handover>("/assistant/handover", { method: "POST" })
+}
+
+export function deleteAssistantKey(id: string): Promise<void> {
+  return request<void>(`/assistant/keys/${id}`, { method: "DELETE" })
+}
+
 /**
  * What this site tells a program about itself, as text.
  *

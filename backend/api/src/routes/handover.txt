@@ -1,0 +1,44 @@
+# A key for this site
+
+You have been handed a working key, not only a description of one. The site is
+{{title}}. Send the key as a bearer token on every request below and you can do
+the work rather than describe it: write posts, correct them, upload images,
+make a form and read what comes in through it, add a kind of content with
+fields of its own, and build the site's pages when you are done.
+
+```
+{{token}}
+```
+
+Put it in the environment rather than in a file you will commit:
+
+```
+export CMS_TOKEN='{{token}}'
+curl -H "Authorization: Bearer $CMS_TOKEN" '{{base}}/posts?limit=5'
+```
+
+It stops working by itself at {{expires}}.
+
+Whoever gave it to you can take it back sooner, from the panel under **API**.
+Once it has gone you will get a 401 saying the session expired; ask for a new
+one rather than looking for another way in.
+
+Four things it deliberately cannot do, so that you do not spend a turn finding
+out: it cannot touch accounts or invitations, cannot make another key of any
+kind, cannot read the storage and mail settings or the backups, and cannot
+empty the bin or send a mail campaign. Everything it refuses says why in the
+body of the 403. Take the refusal at face value — there is no second route to
+any of it, and looking for one is the wrong thing to be doing with somebody
+else's site.
+
+Two habits worth having with a key like this. Write drafts rather than
+publishing, unless publishing is what you were asked for: `status` defaults to
+`draft`, and somebody looking at the result before the world does is cheap.
+And when you delete, know that it goes to the bin for thirty days and can be
+taken back — which is why you can delete at all.
+
+The rest of this document is how the API is shaped. It is the same document
+served at {{base}}/llms.txt, without the key.
+
+---
+
