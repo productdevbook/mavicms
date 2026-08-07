@@ -81,6 +81,18 @@ programs that run on that machine have no such trouble.
 
 Nothing there deletes anything.
 
+### What this site does not hold
+
+Posts, categories and tags, uploaded files, forms and what has come in through
+them, the languages it writes in, and its own title and tagline. That is the
+whole of it.
+
+It does not hold pages, a footer, a menu, or anything about how the site looks.
+Those are in the project the pages are built from — the repository with the
+Astro site in it — and nothing here can reach them. A contact form is a good
+example of the split: the CMS decides which fields it takes and receives the
+answers, and where the form appears on the page is the front end's business.
+
 The rest of this file is for building a front end, which is a different job:
 a build reads the API directly, at the addresses below.
 

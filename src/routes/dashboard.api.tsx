@@ -225,7 +225,7 @@ function ApiRoute() {
             </summary>
             <div className="flex flex-col gap-4 pt-4">
               <p className="text-sm text-muted-foreground">
-                {t`Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant.`}
+                {t`Where a browser is awkward, a build token works as a bearer header — but it makes the connection read-only, which is the thing to know before using it. An assistant connected this way cannot write a post, upload anything or publish, and it will not appear in the list above, because nothing was allowed. If one is already stuck this way, remove it in the program and add the address again without the header.`}
               </p>
               <Snippet
                 text={`claude mcp add --transport http mavicms ${window.location.origin}/api/mcp \\

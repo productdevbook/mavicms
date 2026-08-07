@@ -586,6 +586,10 @@ msgstr "An archive holding the database, and the uploaded files if you ask for t
 msgid "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 msgstr "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 
+#: src/components/assistant-connection.tsx:191
+msgid "An assistant given a build token instead will not appear here — nothing was allowed, and it can only read."
+msgstr "An assistant given a build token instead will not appear here — nothing was allowed, and it can only read."
+
 #: src/components/assistant-connection.tsx:131
 msgid "An assistant pointed at this site can be asked to do the work rather than told how to do it — find a post and correct it, tell you what came in through the forms this week, put a piece online."
 msgstr "An assistant pointed at this site can be asked to do the work rather than told how to do it — find a post and correct it, tell you what came in through the forms this week, put a piece online."
@@ -641,7 +645,7 @@ msgstr "arrived"
 
 #. placeholder {0}: connection.username
 #. placeholder {1}: new Date(connection.created_at).toLocaleDateString()
-#: src/components/assistant-connection.tsx:202
+#: src/components/assistant-connection.tsx:205
 msgid "As {0}, since {1}"
 msgstr "As {0}, since {1}"
 
@@ -1591,11 +1595,11 @@ msgstr "Did not arrive"
 msgid "Disabled"
 msgstr "Disabled"
 
-#: src/components/assistant-connection.tsx:208
+#: src/components/assistant-connection.tsx:211
 msgid "Disconnect"
 msgstr "Disconnect"
 
-#: src/components/assistant-connection.tsx:220
+#: src/components/assistant-connection.tsx:223
 msgid "Disconnecting one stops it that moment."
 msgstr "Disconnecting one stops it that moment."
 
@@ -4186,8 +4190,12 @@ msgid "When to send it"
 msgstr "When to send it"
 
 #: src/routes/dashboard.api.tsx:228
-msgid "Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant."
-msgstr "Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant."
+msgid "Where a browser is awkward, a build token works as a bearer header — but it makes the connection read-only, which is the thing to know before using it. An assistant connected this way cannot write a post, upload anything or publish, and it will not appear in the list above, because nothing was allowed. If one is already stuck this way, remove it in the program and add the address again without the header."
+msgstr "Where a browser is awkward, a build token works as a bearer header — but it makes the connection read-only, which is the thing to know before using it. An assistant connected this way cannot write a post, upload anything or publish, and it will not appear in the list above, because nothing was allowed. If one is already stuck this way, remove it in the program and add the address again without the header."
+
+#: src/routes/dashboard.api.tsx:228
+#~ msgid "Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant."
+#~ msgstr "Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant."
 
 #: src/components/plugin-forms.tsx:128
 msgid "Where readers load the images from (bucket public URL or CDN)"

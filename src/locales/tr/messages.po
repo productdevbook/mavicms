@@ -586,6 +586,10 @@ msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
 msgid "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 msgstr "Başka bir sunucuda alınmış arşiv. Bir site böyle taşınır — buradaki her şeyin yerine dosyadakiler geçer."
 
+#: src/components/assistant-connection.tsx:191
+msgid "An assistant given a build token instead will not appear here — nothing was allowed, and it can only read."
+msgstr "Bunun yerine derleme jetonu verilmiş bir asistan burada görünmez — izin verilen bir şey yok ve yalnızca okuyabilir."
+
 #: src/components/assistant-connection.tsx:131
 msgid "An assistant pointed at this site can be asked to do the work rather than told how to do it — find a post and correct it, tell you what came in through the forms this week, put a piece online."
 msgstr "Bu siteye yöneltilmiş bir asistandan, nasıl yapılacağını anlatmak yerine işi doğrudan isteyebilirsiniz — bir yazıyı bulup düzeltmek, bu hafta formlardan ne geldiğini söylemek, bir yazıyı yayına almak."
@@ -641,7 +645,7 @@ msgstr "ulaştı"
 
 #. placeholder {0}: connection.username
 #. placeholder {1}: new Date(connection.created_at).toLocaleDateString()
-#: src/components/assistant-connection.tsx:202
+#: src/components/assistant-connection.tsx:205
 msgid "As {0}, since {1}"
 msgstr "{0} olarak, {1} tarihinden beri"
 
@@ -1587,11 +1591,11 @@ msgstr "Ulaşmadı"
 msgid "Disabled"
 msgstr "Devre dışı"
 
-#: src/components/assistant-connection.tsx:208
+#: src/components/assistant-connection.tsx:211
 msgid "Disconnect"
 msgstr "Bağlantıyı kes"
 
-#: src/components/assistant-connection.tsx:220
+#: src/components/assistant-connection.tsx:223
 msgid "Disconnecting one stops it that moment."
 msgstr "Birinin bağlantısını kesmek onu o anda durdurur."
 
@@ -4182,8 +4186,12 @@ msgid "When to send it"
 msgstr "Ne zaman gönderilsin"
 
 #: src/routes/dashboard.api.tsx:228
-msgid "Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant."
-msgstr "Tarayıcının zahmetli olduğu yerlerde derleme jetonu bearer başlığı olarak iş görür. Bu siteyi okur ve hiçbir şeyi değiştirmez; yani böyle bağlanan bir asistana yalnızca okuyan araçlar açılır — okumaktan ibaret bir şey istemiyorsanız aradığınız bu değildir."
+msgid "Where a browser is awkward, a build token works as a bearer header — but it makes the connection read-only, which is the thing to know before using it. An assistant connected this way cannot write a post, upload anything or publish, and it will not appear in the list above, because nothing was allowed. If one is already stuck this way, remove it in the program and add the address again without the header."
+msgstr "Tarayıcının zahmetli olduğu yerlerde derleme jetonu bearer başlığı olarak iş görür — ama bağlantıyı salt-okunur yapar; kullanmadan önce bilinmesi gereken şey bu. Böyle bağlanan bir asistan yazı yazamaz, dosya yükleyemez, yayına alamaz ve yukarıdaki listede görünmez, çünkü izin verilen bir şey yok. Biri hâlihazırda böyle takıldıysa programdan kaldırın ve adresi başlıksız olarak yeniden ekleyin."
+
+#: src/routes/dashboard.api.tsx:228
+#~ msgid "Where a browser is awkward, a build token works as a bearer header. It reads this site and changes nothing, so an assistant connected this way is offered only the tools that read — which is not what you want unless reading is all you meant."
+#~ msgstr "Tarayıcının zahmetli olduğu yerlerde derleme jetonu bearer başlığı olarak iş görür. Bu siteyi okur ve hiçbir şeyi değiştirmez; yani böyle bağlanan bir asistana yalnızca okuyan araçlar açılır — okumaktan ibaret bir şey istemiyorsanız aradığınız bu değildir."
 
 #: src/components/plugin-forms.tsx:128
 msgid "Where readers load the images from (bucket public URL or CDN)"

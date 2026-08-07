@@ -187,6 +187,9 @@ export function AssistantConnection({ origin }: { origin: string }) {
             <p className="text-sm text-muted-foreground">
               {t`Nothing is connected yet. Follow the three steps above and whatever you allowed will appear here.`}
             </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t`An assistant given a build token instead will not appear here — nothing was allowed, and it can only read.`}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
