@@ -47,7 +47,8 @@ pub const TOOLS: &[Tool] = &[
         title: "Find posts",
         description: "Posts, newest first. Every language and every status unless you narrow \
             it. Bodies are left out — this is for finding the post you want; posts_get returns \
-            one in full.",
+            one in full. Pages are not posts and are not in this answer unless you ask with \
+            kind: \"page\".",
         writes: false,
         destroys: false,
         schema: || {
@@ -61,6 +62,11 @@ pub const TOOLS: &[Tool] = &[
                         "type": "string",
                         "description": "draft, review, scheduled or published; several separated by commas"
                     },
+                    "kind": {
+                        "type": "string",
+                        "enum": ["post", "page"],
+                        "description": "Defaults to post. A page is one that is not in the feed — About, Contact."
+                    },
                     "limit": { "type": "integer", "description": "Up to 100. Default 20." },
                     "offset": { "type": "integer" }
                 }
@@ -70,8 +76,9 @@ pub const TOOLS: &[Tool] = &[
     Tool {
         name: "posts_get",
         title: "Read one post",
-        description: "One post in full, including its Markdown body and the other languages it \
-            exists in. Give the id, or the address it answers on.",
+        description: "One post or page in full, including its Markdown body and the other \
+            languages it exists in. Give the id, or the address it answers on — and when using \
+            an address, say which kind, since a post and a page may share one.",
         writes: false,
         destroys: false,
         schema: || {
@@ -81,6 +88,11 @@ pub const TOOLS: &[Tool] = &[
                 "properties": {
                     "id": { "type": "string", "description": "The post's id" },
                     "slug": { "type": "string", "description": "Its address, if you do not have the id" },
+                    "kind": {
+                        "type": "string",
+                        "enum": ["post", "page"],
+                        "description": "Defaults to post. Only consulted when looking one up by address."
+                    },
                     "locale": { "type": "string", "description": "Which language's copy, when using slug" }
                 }
             })
@@ -89,9 +101,11 @@ pub const TOOLS: &[Tool] = &[
     Tool {
         name: "posts_create",
         title: "Write a post",
-        description: "Add a post. It is a draft unless you say otherwise, which is usually what \
-            you want — somebody should read it before it is online. Give content_markdown; the \
-            HTML is rendered from it. A scheduled post needs publish_at.",
+        description: "Add a post, or a page. It is a draft unless you say otherwise, which is \
+            usually what you want — somebody should read it before it is online. Give \
+            content_markdown; the HTML is rendered from it. A scheduled post needs publish_at. \
+            Use kind: \"page\" for something that is not in the feed: an About, a Contact, a \
+            page of opening hours.",
         writes: true,
         destroys: false,
         schema: || {
@@ -102,6 +116,11 @@ pub const TOOLS: &[Tool] = &[
                 "properties": {
                     "title": { "type": "string" },
                     "slug": { "type": "string", "description": "The address. Made from the title if left out." },
+                    "kind": {
+                        "type": "string",
+                        "enum": ["post", "page"],
+                        "description": "Defaults to post"
+                    },
                     "content_markdown": { "type": "string" },
                     "excerpt": { "type": "string", "description": "One paragraph, for cards and search results" },
                     "status": {
@@ -361,6 +380,16 @@ async fn overview(hosting: &Hosting, resolved: &Resolved, state: &AppState) -> A
     )
     .await?;
 
+    let pages = crate::routes::posts::page(
+        db,
+        &LocaleQuery {
+            kind: Some(crate::dto::taxonomy::PAGE.to_string()),
+            limit: Some(1),
+            ..Default::default()
+        },
+    )
+    .await?;
+
     let languages = crate::languages::all(db).await?;
     let forms = form::Entity::find().all(db).await?;
 
@@ -387,6 +416,7 @@ async fn overview(hosting: &Hosting, resolved: &Resolved, state: &AppState) -> A
     Ok(json!({
         "posts": counted.counts,
         "total_posts": counted.total,
+        "total_pages": pages.total,
         "languages": languages
             .iter()
             .map(|language| json!({ "code": language.code, "default": language.is_default }))
@@ -417,6 +447,7 @@ fn publishing<'a>(
 
 async fn search(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
     let query = LocaleQuery {
+        kind: text(arguments, "kind"),
         locale: text(arguments, "locale"),
         slug: None,
         limit: Some(rows(arguments, 20)),
@@ -459,7 +490,16 @@ async fn one_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppRes
                     "say which post: an id, or the address it answers on".to_string(),
                 )
             })?;
-            let mut find = post::Entity::find().filter(post::Column::Slug.eq(&slug));
+            // A post and a page may answer on the same address, so looking
+            // one up by address without saying which is a question with two
+            // answers. Posts, unless told otherwise.
+            let kind = match text(arguments, "kind") {
+                Some(named) => crate::dto::taxonomy::check_kind(&named)?,
+                None => crate::dto::taxonomy::POST,
+            };
+            let mut find = post::Entity::find()
+                .filter(post::Column::Slug.eq(&slug))
+                .filter(post::Column::Kind.eq(kind));
             if let Some(locale) = text(arguments, "locale") {
                 find = find.filter(post::Column::Locale.eq(locale));
             }
@@ -515,6 +555,7 @@ async fn write_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppR
         allow_comments: true,
         content_html: crate::markdown::to_html(&markdown),
         content_markdown: Some(markdown),
+        kind: text(arguments, "kind"),
         locale: text(arguments, "locale"),
         translation_of: match text(arguments, "translation_of") {
             Some(id) => Some(

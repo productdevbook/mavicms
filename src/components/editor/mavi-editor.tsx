@@ -47,6 +47,7 @@ import {
 import {
   ApiError,
   createPost,
+  type PostKind,
   getPost,
   getSlug,
   logout,
@@ -160,10 +161,13 @@ export function MaviEditor({
   postId,
   locale: initialLocale,
   translationOf,
+  kind,
 }: {
   postId: string | null
   locale?: string
   translationOf?: string
+  /** Set when what is being written is a page rather than a post. */
+  kind?: PostKind
 }) {
   const { t } = useLingui()
   const navigate = useNavigate()
@@ -302,6 +306,7 @@ export function MaviEditor({
           const saved = await createPost({
             ...payload,
             locale,
+            kind,
             translation_of: translationOf,
           })
           setCurrentPostId(saved.id)
@@ -322,7 +327,7 @@ export function MaviEditor({
         )
       }
     },
-    [editor, currentPostId, navigate, t, locale, translationOf]
+    [editor, currentPostId, navigate, t, locale, translationOf, kind]
   )
 
   const scheduleSave = React.useCallback(

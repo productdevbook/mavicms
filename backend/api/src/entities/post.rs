@@ -24,6 +24,9 @@ pub struct Model {
     /// The canonical form since the move to Markdown. `None` on posts that
     /// predate it and have not been rewritten.
     pub content_markdown: Option<String>,
+    /// "post" or "page". A page is one that does not belong in the feed —
+    /// the About, the Contact — and is otherwise the same thing.
+    pub kind: String,
     pub locale: String,
     /// Rows sharing this id are translations of one another. Nullable in the
     /// schema only because a uuid column cannot take a portable NOT NULL

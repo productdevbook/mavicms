@@ -217,6 +217,7 @@ pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppR
     if let Some(codes) = query.codes() {
         find = find.filter(post::Column::Locale.is_in(codes));
     }
+    find = find.filter(post::Column::Kind.is_in(query.kinds()?));
     if let Some(statuses) = query.statuses()? {
         find = find.filter(post::Column::Status.is_in(statuses));
     }
@@ -432,15 +433,20 @@ pub async fn create(
 
     // Checked up front so a re-run over content that is already there says
     // which post is in the way, instead of a bare unique-index conflict.
+    let wanted_kind = match payload.kind.as_deref() {
+        Some(named) => crate::dto::taxonomy::check_kind(named)?,
+        None => crate::dto::taxonomy::POST,
+    };
     if post::Entity::find()
         .filter(post::Column::Locale.eq(&locale))
+        .filter(post::Column::Kind.eq(wanted_kind))
         .filter(post::Column::Slug.eq(payload.slug.trim()))
         .one(db)
         .await?
         .is_some()
     {
         return Err(AppError::Conflict(format!(
-            "a {locale} post with the address \"{}\" already exists",
+            "a {locale} {wanted_kind} with the address \"{}\" already exists",
             payload.slug.trim()
         )));
     }
@@ -451,6 +457,7 @@ pub async fn create(
 
     let model = post::ActiveModel {
         id: Set(id),
+        kind: Set(wanted_kind.to_string()),
         title: Set(payload.title),
         slug: Set(payload.slug),
         excerpt: Set(payload.excerpt),
