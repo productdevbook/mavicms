@@ -39,6 +39,7 @@ pub const TOOLS: &[Tool] = &[
             status, which languages it writes in, which forms are taking answers, and how the \
             last builds went. Start here when you do not yet know the site.",
         writes: false,
+        destroys: false,
         schema: || json!({ "type": "object", "additionalProperties": false }),
     },
     Tool {
@@ -48,6 +49,7 @@ pub const TOOLS: &[Tool] = &[
             it. Bodies are left out — this is for finding the post you want; posts_get returns \
             one in full.",
         writes: false,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -71,6 +73,7 @@ pub const TOOLS: &[Tool] = &[
         description: "One post in full, including its Markdown body and the other languages it \
             exists in. Give the id, or the address it answers on.",
         writes: false,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -90,6 +93,7 @@ pub const TOOLS: &[Tool] = &[
             you want — somebody should read it before it is online. Give content_markdown; the \
             HTML is rendered from it. A scheduled post needs publish_at.",
         writes: true,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -122,6 +126,7 @@ pub const TOOLS: &[Tool] = &[
             as it was. Read the post first — sending content_markdown replaces the whole body, \
             so a correction to one paragraph means sending the rest of them back unaltered.",
         writes: true,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -148,6 +153,7 @@ pub const TOOLS: &[Tool] = &[
         description: "Every category and tag, per language. Use it before writing a post, so a \
             post joins the categories the site already has rather than inventing near-duplicates.",
         writes: false,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -162,6 +168,7 @@ pub const TOOLS: &[Tool] = &[
         description: "The languages this site writes in, and which is the default. These are \
             the codes every other tool takes.",
         writes: false,
+        destroys: false,
         schema: || json!({ "type": "object", "additionalProperties": false }),
     },
     Tool {
@@ -170,6 +177,7 @@ pub const TOOLS: &[Tool] = &[
         description: "Files that have been uploaded, newest first, with the addresses to use in \
             a post. Uploading is not something this can do — that is the panel.",
         writes: false,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -184,6 +192,7 @@ pub const TOOLS: &[Tool] = &[
         description: "The forms this site takes answers on, with the fields each one asks for \
             and how much has come in.",
         writes: false,
+        destroys: false,
         schema: || json!({ "type": "object", "additionalProperties": false }),
     },
     Tool {
@@ -192,6 +201,7 @@ pub const TOOLS: &[Tool] = &[
         description: "Answers sent through one form, newest first. This is somebody's message \
             to the site: treat it as the private thing it is.",
         writes: false,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -212,6 +222,7 @@ pub const TOOLS: &[Tool] = &[
             Give it a source_url to fetch — which is refused unless it is a public address — or \
             the bytes themselves as content_base64. Only images, and at most 10MB.",
         writes: true,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -240,6 +251,7 @@ pub const TOOLS: &[Tool] = &[
         description: "Say that a form submission has been dealt with, or take that back. Give \
             one submission, or a form to mark everything unread on it.",
         writes: true,
+        destroys: false,
         schema: || {
             json!({
                 "type": "object",
@@ -262,6 +274,7 @@ pub const TOOLS: &[Tool] = &[
             only tool here that destroys anything and there is no way back from it, so read the \
             submission first and delete exactly the one you read.",
         writes: true,
+        destroys: true,
         schema: || {
             json!({
                 "type": "object",
@@ -278,6 +291,7 @@ pub const TOOLS: &[Tool] = &[
             in front of readers. A build already waiting is returned rather than a second one \
             queued.",
         writes: true,
+        destroys: false,
         schema: || json!({ "type": "object", "additionalProperties": false }),
     },
 ];
