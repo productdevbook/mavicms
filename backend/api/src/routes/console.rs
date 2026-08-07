@@ -106,6 +106,8 @@ async fn signed_in<'a>(
 
 /// Open an agency account and sign in with it.
 #[utoipa::path(
+    // Answers without a credential.
+    security(()),
     post,
     path = "/console/register",
     tag = "console",
@@ -166,6 +168,8 @@ pub async fn register(
 
 /// Sign in to the console.
 #[utoipa::path(
+    // Answers without a credential.
+    security(()),
     post,
     path = "/console/login",
     tag = "console",

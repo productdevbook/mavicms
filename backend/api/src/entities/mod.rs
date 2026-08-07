@@ -10,6 +10,7 @@ pub mod mail_event;
 pub mod mail_list;
 pub mod mail_template;
 pub mod media;
+pub mod oauth;
 pub mod plugin_setting;
 pub mod post;
 pub mod post_category;

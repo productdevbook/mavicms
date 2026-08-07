@@ -461,7 +461,9 @@ pub async fn delete_submission(
     responses(
         (status = 200, description = "The fields this form accepts", body = FormSchema),
         (status = 404, description = "No form answers there", body = crate::error::ErrorBody),
-    )
+    ),
+    // Answers without a credential.
+    security(())
 )]
 pub async fn form_schema(
     Site(state): Site,
@@ -496,6 +498,8 @@ async fn active_form(db: &sea_orm::DatabaseConnection, slug: &str) -> AppResult<
 /// What it accepts is exactly what `/forms/{slug}/schema` lists and nothing
 /// else — a key the form does not define is refused rather than kept.
 #[utoipa::path(
+    // Answers without a credential.
+    security(()),
     post,
     path = "/forms/{slug}/submit",
     tag = "forms",

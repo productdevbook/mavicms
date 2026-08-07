@@ -101,7 +101,9 @@ async fn counted(
 }
 
 /// The site's lists.
-#[utoipa::path(get, path = "/mail/lists", tag = "mail",
+#[utoipa::path(
+    // Answers without a credential.
+    security(()),get, path = "/mail/lists", tag = "mail",
     responses((status = 200, description = "Lists", body = Vec<ListResponse>)))]
 pub async fn list_lists(Site(state): Site) -> AppResult<Json<Vec<ListResponse>>> {
     let db = state.db();
@@ -1357,7 +1359,9 @@ pub async fn list_log(Site(state): Site) -> AppResult<Json<Vec<LogEntry>>> {
 /// A public list only, and on a double opt-in list nothing is sent until the
 /// address answers. That is the difference between a mailing list and a list
 /// of people somebody typed in.
-#[utoipa::path(post, path = "/mail/subscribe", tag = "mail",
+#[utoipa::path(
+    // Answers without a credential.
+    security(()),post, path = "/mail/subscribe", tag = "mail",
     request_body = crate::mailing::SubscribeRequest,
     responses(
         (status = 202, description = "Taken; a confirmation may have been sent"),
@@ -1489,7 +1493,9 @@ fn page(title: &str, body: &str) -> Response {
 }
 
 /// The link in a confirmation message.
-#[utoipa::path(get, path = "/mail/confirm/{token}", tag = "mail",
+#[utoipa::path(
+    // Answers without a credential.
+    security(()),get, path = "/mail/confirm/{token}", tag = "mail",
     params(("token" = String, Path, description = "From the confirmation message")),
     responses((status = 200, description = "A page saying what happened")))]
 pub async fn confirm(Site(state): Site, Path(token): Path<String>) -> AppResult<Response> {
@@ -1529,7 +1535,9 @@ pub async fn confirm(Site(state): Site, Path(token): Path<String>) -> AppResult<
 /// token never has to be written into the HTML, and a token shaped like
 /// `"><script>` has nowhere to land. Escaping would also have worked; not
 /// interpolating cannot be got wrong later.
-#[utoipa::path(get, path = "/mail/unsubscribe/{token}", tag = "mail",
+#[utoipa::path(
+    // Answers without a credential.
+    security(()),get, path = "/mail/unsubscribe/{token}", tag = "mail",
     params(("token" = String, Path, description = "From the message")),
     responses((status = 200, description = "A page with a button on it")))]
 pub async fn unsubscribe_page(Site(state): Site, Path(token): Path<String>) -> Response {
@@ -1558,7 +1566,9 @@ pub async fn unsubscribe_page(Site(state): Site, Path(token): Path<String>) -> R
 /// Also what a mail client posts to when it offers its own unsubscribe button
 /// through the List-Unsubscribe header, which is why it takes a POST with no
 /// body and no session.
-#[utoipa::path(post, path = "/mail/unsubscribe/{token}", tag = "mail",
+#[utoipa::path(
+    // Answers without a credential.
+    security(()),post, path = "/mail/unsubscribe/{token}", tag = "mail",
     params(("token" = String, Path, description = "From the message")),
     responses((status = 200, description = "A page saying it is done")))]
 pub async fn unsubscribe(Site(state): Site, Path(token): Path<String>) -> AppResult<Response> {
@@ -1667,7 +1677,9 @@ pub async fn receive_events(
 }
 
 /// The pixel at the bottom of a message.
-#[utoipa::path(get, path = "/mail/open/{token}", tag = "mail",
+#[utoipa::path(
+    // Answers without a credential.
+    security(()),get, path = "/mail/open/{token}", tag = "mail",
     params(("token" = String, Path, description = "Signed, from the message")),
     responses((status = 200, description = "A one-pixel image")))]
 pub async fn open_pixel(Site(state): Site, Path(token): Path<String>) -> Response {
@@ -1719,7 +1731,9 @@ fn read_open(secrets: &crate::crypto::SecretBox, token: &str) -> Option<(Uuid, U
 }
 
 /// A link in a message: counted, then followed.
-#[utoipa::path(get, path = "/mail/click/{token}", tag = "mail",
+#[utoipa::path(
+    // Answers without a credential.
+    security(()),get, path = "/mail/click/{token}", tag = "mail",
     params(("token" = String, Path, description = "Signed, from the message")),
     responses((status = 303, description = "On to where it was going")))]
 pub async fn click(Site(state): Site, Path(token): Path<String>) -> Response {

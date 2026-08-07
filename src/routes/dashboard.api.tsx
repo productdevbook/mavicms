@@ -7,6 +7,7 @@ import { toast } from "sonner"
 
 import { getLlmsText } from "@/lib/api"
 import { BuildTokens } from "@/components/build-tokens"
+import { Connections } from "@/components/connections"
 import { McpConnection } from "@/components/mcp-connection"
 import { Button } from "@/components/ui/button"
 
@@ -237,6 +238,8 @@ curl -b cookies.txt '${base}/posts?include=content&limit=10'`}
         </section>
 
         <BuildTokens />
+
+        <Connections />
 
         <McpConnection origin={window.location.origin} name="mavicms">
           <p className="text-sm text-muted-foreground">

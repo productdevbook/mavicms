@@ -38,6 +38,7 @@ password-hash = { version = "0.5", features = ["getrandom"] }
 aes-gcm = { version = "0.11", features = ["getrandom"] }
 base64 = "0.23"
 percent-encoding = "2"
+form_urlencoded = "1"
 rust-s3 = { version = "0.37", default-features = false, features = ["tokio-rustls-tls"] }
 # rustls to match rust-s3 and sea-orm: pulling native-tls would add OpenSSL to the image.
 # SigV4 for object deletion, which rust-s3 signs in a way R2 rejects.
@@ -65,6 +66,10 @@ aws-sdk-support = { version = "1", default-features = false, features = ["rt-tok
 # is the one step this panel exists to remove.
 aws-smithy-types = "1"
 aws-sdk-sns = { version = "1", default-features = false, features = ["rt-tokio", "rustls", "behavior-version-latest"] }
+# The randomness behind an authorization code and a refresh token, taken from
+# the operating system rather than from a uuid — those carry the minute they
+# were made, and these travel through browser histories and client settings.
+getrandom = "0.3"
 hmac = "0.12"
 sha2 = "0.10"
 hex = "0.4"

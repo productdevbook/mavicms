@@ -12,7 +12,9 @@ pub struct HealthResponse {
     get,
     path = "/health",
     tag = "health",
-    responses((status = 200, description = "Service is healthy", body = HealthResponse))
+    responses((status = 200, description = "Service is healthy", body = HealthResponse)),
+    // Answers without a credential.
+    security(())
 )]
 pub async fn health() -> Json<HealthResponse> {
     Json(HealthResponse { status: "ok" })

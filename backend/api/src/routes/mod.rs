@@ -8,6 +8,7 @@ pub mod languages;
 pub mod llms;
 pub mod mailing;
 pub mod media;
+pub mod oauth;
 pub mod plugins;
 pub mod posts;
 pub mod publish;
@@ -96,6 +97,18 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .layer(DefaultBodyLimit::max(crate::mcp::MAX_MESSAGE_BYTES))
         .layer(from_fn(require_database));
 
+    // Answering to anybody, because that is what they are for: a client that
+    // has not been given anything yet reads these to find out how to ask.
+    let discovery = OpenApiRouter::new()
+        .routes(routes!(oauth::protected_resource))
+        .routes(routes!(oauth::authorization_server))
+        .routes(routes!(oauth::register))
+        .routes(routes!(oauth::authorize))
+        .routes(routes!(oauth::request))
+        .routes(routes!(oauth::grant))
+        .routes(routes!(oauth::token))
+        .layer(from_fn(require_database));
+
     let open = OpenApiRouter::new()
         .routes(routes!(llms::llms_txt))
         .routes(routes!(forms::form_schema))
@@ -153,6 +166,8 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         ))
         .routes(routes!(development::list_tokens, development::create_token))
         .routes(routes!(development::delete_token))
+        .routes(routes!(oauth::connections))
+        .routes(routes!(oauth::disconnect))
         .routes(routes!(plugins::list_plugins))
         .routes(routes!(
             plugins::get_s3_settings,
@@ -283,6 +298,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     // Resolving the site is the outermost thing that happens: everything
     // below it, authentication included, is a question about one site.
     public
+        .merge(discovery)
         .merge(mcp)
         .merge(open)
         .merge(needs_db)

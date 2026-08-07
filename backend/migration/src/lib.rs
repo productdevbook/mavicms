@@ -14,6 +14,7 @@ mod m20260111_000001_form_notify;
 mod m20260112_000001_mailing;
 mod m20260113_000001_campaign_sender;
 mod m20260114_000001_mail_events;
+mod m20260115_000001_oauth;
 
 pub struct Migrator;
 
@@ -35,6 +36,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260112_000001_mailing::Migration),
             Box::new(m20260113_000001_campaign_sender::Migration),
             Box::new(m20260114_000001_mail_events::Migration),
+            Box::new(m20260115_000001_oauth::Migration),
         ]
     }
 }
