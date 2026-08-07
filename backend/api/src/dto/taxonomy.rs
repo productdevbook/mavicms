@@ -122,29 +122,27 @@ pub struct LocaleQuery {
     pub status: Option<String>,
 }
 
-/// The two things a post can be.
-pub const POST: &str = "post";
-pub const PAGE: &str = "page";
-
 impl LocaleQuery {
-    /// Which kinds were asked for. Nothing asked means posts.
-    pub fn kinds(&self) -> crate::error::AppResult<Vec<String>> {
+    /// The kinds asked for, as written. Nothing asked means posts. Whether
+    /// they exist is a question for the site, which is asked separately —
+    /// this type has no way to know what kinds somebody has made.
+    pub fn kinds(&self) -> Vec<String> {
         let Some(raw) = self.kind.as_deref() else {
-            return Ok(vec![POST.to_string()]);
+            return vec![crate::content::POST.to_string()];
         };
 
-        let mut wanted = Vec::new();
-        for name in raw.split(',').map(str::trim).filter(|s| !s.is_empty()) {
-            let kind = check_kind(name)?;
-            if !wanted.iter().any(|held| held == kind) {
-                wanted.push(kind.to_string());
-            }
-        }
-        Ok(if wanted.is_empty() {
-            vec![POST.to_string()]
+        let wanted: Vec<String> = raw
+            .split(',')
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+            .map(str::to_string)
+            .collect();
+
+        if wanted.is_empty() {
+            vec![crate::content::POST.to_string()]
         } else {
             wanted
-        })
+        }
     }
 
     /// The statuses asked for, as the strings the column holds. A name that is
@@ -183,18 +181,5 @@ impl LocaleQuery {
             .filter(|c| !c.is_empty())
             .collect();
         (!codes.is_empty()).then_some(codes)
-    }
-}
-
-/// A name that is one of the two, refused rather than ignored: a listing that
-/// quietly answered with posts because "pgae" was misspelt would look like a
-/// site with no pages on it.
-pub fn check_kind(name: &str) -> crate::error::AppResult<&'static str> {
-    match name {
-        POST => Ok(POST),
-        PAGE => Ok(PAGE),
-        other => Err(crate::error::AppError::Validation(format!(
-            "{other} is not a kind: post or page"
-        ))),
     }
 }

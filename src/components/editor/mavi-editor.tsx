@@ -103,6 +103,8 @@ const BLANK_META: PostMeta = {
   canonical: "",
   featured: false,
   allowComments: true,
+  kind: "post",
+  fields: {},
 }
 
 function toLocalDateTimeInput(iso: string): string {
@@ -128,6 +130,8 @@ function postToMeta(post: Post): PostMeta {
     canonical: post.canonical,
     featured: post.featured,
     allowComments: post.allow_comments,
+    kind: post.kind,
+    fields: post.fields ?? {},
   }
 }
 
@@ -154,6 +158,7 @@ function metaToPayload(
     allow_comments: meta.allowComments,
     content_html: contentHtml,
     content_markdown: contentMarkdown,
+    fields: meta.fields,
   }
 }
 
@@ -172,7 +177,9 @@ export function MaviEditor({
   const { t } = useLingui()
   const navigate = useNavigate()
   const STATUS_LABELS = useStatusLabels()
-  const [meta, setMeta] = React.useState<PostMeta>(BLANK_META)
+  const [meta, setMeta] = React.useState<PostMeta>(
+    kind ? { ...BLANK_META, kind } : BLANK_META
+  )
   const [currentPostId, setCurrentPostId] = React.useState<string | null>(
     postId
   )
@@ -306,7 +313,7 @@ export function MaviEditor({
           const saved = await createPost({
             ...payload,
             locale,
-            kind,
+            kind: nextMeta.kind,
             translation_of: translationOf,
           })
           setCurrentPostId(saved.id)
@@ -327,7 +334,7 @@ export function MaviEditor({
         )
       }
     },
-    [editor, currentPostId, navigate, t, locale, translationOf, kind]
+    [editor, currentPostId, navigate, t, locale, translationOf]
   )
 
   const scheduleSave = React.useCallback(

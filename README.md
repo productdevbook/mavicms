@@ -9,9 +9,11 @@ database — Postgres, MySQL or SQLite — and your own object storage, or none.
   Migrations run at boot and are tested on all three.
 - **Scheduling** — a post given a date goes out on it, and the site is asked
   to build. Within the minute, whether or not anybody is looking.
-- **Posts and pages** — a page is one that is not in the feed: an About, a
-  Contact. The same editor, languages, SEO and scheduling; `?kind=page` on the
-  API, and a front end puts them where it likes.
+- **[Whatever the site publishes](#more-than-posts)** — posts and pages, and
+  any kind of thing a site makes up: a course with a price and a level, a
+  property with rooms. Each carries its own fields beside the title and the
+  body, and everything else — the editor, languages, SEO, scheduling — comes
+  with it.
 - **Multilingual content** — the same post in as many languages as you like,
   each with its own title, slug, content and SEO, linked to its siblings.
   Categories and tags are translated too.
@@ -129,6 +131,28 @@ An administrator of a hosted site administers that site and nothing else: they
 cannot list the other sites on the machine, add sites, reach the console, or
 reach the database wizard — which restarts the process, and so would take every
 other site down with it.
+
+## More than posts
+
+A site is not always a blog. **Content types** in the panel say what this one
+publishes: every site has posts and pages, and a site adds its own when what it
+publishes has facts of its own.
+
+A training company adds **Course**, with a price, a length and a level. A
+letting agent adds **Property**, with rooms and a floor. What you get is not a
+new half-built content system — it is a post: the same editor, the same
+languages and translations, the same SEO, scheduling and `digest`, with the
+extra fields beside them.
+
+The fields are the ones a form already has — text, long text, number, date,
+yes-or-no, one-of-a-list, email, phone, link — because describing what
+something is made of is the same question a form asks.
+
+A front end fetches `?kind=course` and lays the fields out. Nothing in the CMS
+knows what a course is, which is why it works for the next sector too.
+
+A field marked as needed has to be filled in before the thing can be published.
+A draft may be half-written, which is what a draft is.
 
 ## Connecting a front end
 

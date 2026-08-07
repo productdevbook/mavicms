@@ -27,6 +27,10 @@ pub struct Model {
     /// "post" or "page". A page is one that does not belong in the feed —
     /// the About, the Contact — and is otherwise the same thing.
     pub kind: String,
+    /// What this carries for its kind's own fields, as JSON. "{}" for a kind
+    /// that has none, which is every post written before there were kinds.
+    #[sea_orm(column_type = "Text")]
+    pub fields: String,
     pub locale: String,
     /// Rows sharing this id are translations of one another. Nullable in the
     /// schema only because a uuid column cannot take a portable NOT NULL

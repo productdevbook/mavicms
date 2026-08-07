@@ -10,6 +10,7 @@ import {
   Code2,
   FileText,
   FolderTree,
+  Shapes,
   Globe,
   Image,
   Inbox,
@@ -26,6 +27,7 @@ import {
 
 import { logout } from "@/lib/api"
 import { applySurface, surfaceLabel } from "@/lib/surface"
+import { useContentTypes } from "@/lib/use-content-types"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { LocaleToggle } from "@/components/locale-toggle"
@@ -59,6 +61,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const matchRoute = useMatchRoute()
   const { user, site } = useRouteContext({ from: "/dashboard" })
+  const { types } = useContentTypes()
 
   // The server's own installation and a hosted site are the same panel; which
   // one this is decides the colour, the icon and what the tab is called.
@@ -73,7 +76,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       label: t`Content`,
       links: [
         { to: "/dashboard", label: t`Posts`, icon: LayoutDashboard },
-        { to: "/dashboard/pages", label: t`Pages`, icon: FileText },
+        // Everything else the site says it publishes. Posts keep the first
+        // place and their own address, which is where every link already goes.
+        ...types
+          .filter((one) => one.slug !== "post")
+          .map((one) => ({
+            to: `/dashboard/content/${one.slug}`,
+            label: one.plural,
+            icon: FileText,
+          })),
         { to: "/dashboard/media", label: t`Media`, icon: Image },
         { to: "/dashboard/categories", label: t`Categories`, icon: FolderTree },
         { to: "/dashboard/tags", label: t`Tags`, icon: Tags },
@@ -85,6 +96,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     {
       label: t`This site`,
       links: [
+        { to: "/dashboard/content-types", label: t`Content types`, icon: Shapes },
         { to: "/dashboard/languages", label: t`Languages`, icon: Globe },
         { to: "/dashboard/plugins", label: t`Plugins`, icon: Plug },
         { to: "/dashboard/users", label: t`People`, icon: UsersRound },

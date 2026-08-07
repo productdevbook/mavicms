@@ -18,6 +18,9 @@ export interface PostMeta {
   canonical: string
   featured: boolean
   allowComments: boolean
+  /** Which kind of thing this is, and what it carries for that kind. */
+  kind: string
+  fields: Record<string, unknown>
 }
 
 export function useStatusLabels(): Record<PostStatus, string> {

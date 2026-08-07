@@ -131,10 +131,10 @@ async fn empty_the_bin(
         if let Ok(payload) = serde_json::from_str::<serde_json::Value>(&entry.payload) {
             match entry.kind.as_str() {
                 crate::trash::MEDIA => crate::trash::drop_the_file(&state, &payload).await,
-                crate::trash::POST | crate::trash::PAGE => {
-                    crate::trash::drop_what_a_purged_post_used(&state, &payload).await
-                }
-                _ => {}
+                crate::trash::FORM | crate::trash::FORM_SUBMISSION => {}
+                // Everything else in here is a piece of content, of whatever
+                // kind this site publishes.
+                _ => crate::trash::drop_what_a_purged_post_used(&state, &payload).await,
             }
         }
         crate::trash::forget(db, entry.id).await?;

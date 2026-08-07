@@ -95,6 +95,7 @@ the site is in the answer.",
     ),
     tags(
         (name = "posts", description = "Writing, reading and listing posts. `GET /posts` is the one a site generator lives on: narrow it with `status`, `locale` and `q`, ask for bodies with `include=content` and for the head strings with `include=seo`, and page with `limit` and `offset` until you have `total`."),
+        (name = "content", description = "What this site publishes: posts and pages, and any other kind it has made — a course, a package, a property. Each kind says what it is made of, and content of it carries those values beside its title and body."),
         (name = "taxonomy", description = "Categories and tags. Both are per-language: a Turkish post takes Turkish categories, and the same category in two languages is linked by a translation group rather than duplicated."),
         (name = "languages", description = "The languages this site writes content in. Independent of the language the panel is displayed in."),
         (name = "media", description = "Uploaded files. Addresses that begin with `/` are on this server; when the site uploads to object storage they are already absolute."),

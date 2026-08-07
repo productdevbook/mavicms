@@ -84,6 +84,7 @@ pub fn digest(model: &PostModel) -> String {
             .as_bytes(),
     );
     field(model.kind.as_bytes());
+    field(model.fields.as_bytes());
     field(model.locale.as_bytes());
     field(model.translation_group_id.as_bytes());
     field(model.created_at.to_rfc3339().as_bytes());
@@ -123,8 +124,10 @@ pub struct PostSummary {
     pub tags: Vec<String>,
     pub cover_url: String,
     pub featured: bool,
-    /// "post" or "page".
+    /// Which kind of thing this is: post, page, or one the site made up.
     pub kind: String,
+    /// What it carries for its kind's own fields. Empty for a kind with none.
+    pub fields: serde_json::Value,
     pub locale: String,
     pub translation_group_id: Uuid,
     /// Which languages this post exists in, including its own.
@@ -161,6 +164,7 @@ impl PostSummary {
             tags: serde_json::from_value(model.tags).unwrap_or_default(),
             cover_url: model.cover_url,
             featured: model.featured,
+            fields: crate::content::read_values(&model.fields),
             kind: model.kind,
             locale: model.locale,
             translation_group_id: model.translation_group_id,
@@ -248,8 +252,10 @@ pub struct PostResponse {
     pub allow_comments: bool,
     pub content_html: String,
     pub content_markdown: Option<String>,
-    /// "post" or "page".
+    /// Which kind of thing this is: post, page, or one the site made up.
     pub kind: String,
+    /// What it carries for its kind's own fields.
+    pub fields: serde_json::Value,
     pub locale: String,
     pub translation_group_id: Uuid,
     /// Which languages this post exists in, including its own. Cheap enough to
@@ -308,6 +314,7 @@ impl PostResponse {
             allow_comments: model.allow_comments,
             content_html: model.content_html,
             content_markdown: model.content_markdown,
+            fields: crate::content::read_values(&model.fields),
             kind: model.kind,
             locale: model.locale,
             translation_group_id: model.translation_group_id,
@@ -360,9 +367,13 @@ pub struct CreatePostRequest {
     /// HTML may send that alone.
     #[serde(default)]
     pub content_markdown: Option<String>,
-    /// "post" or "page". A page is one that is not in the feed.
+    /// Which kind of thing this is. Defaults to a post; `page`, or any kind
+    /// the site has made, for anything else.
     #[serde(default)]
     pub kind: Option<String>,
+    /// The values for that kind's own fields.
+    #[serde(default)]
+    pub fields: Option<serde_json::Value>,
     /// Defaults to the site's default language.
     #[serde(default)]
     pub locale: Option<String>,
@@ -397,6 +408,8 @@ pub struct UpdatePostRequest {
     pub allow_comments: Option<bool>,
     pub content_html: Option<String>,
     pub content_markdown: Option<String>,
+    /// Replaces every value this carries for its kind's fields.
+    pub fields: Option<serde_json::Value>,
 }
 
 #[cfg(test)]
@@ -424,6 +437,7 @@ mod tests {
             content_html: "<p>A body</p>".to_string(),
             content_markdown: Some("A body".to_string()),
             kind: "post".to_string(),
+            fields: "{}".to_string(),
             locale: "en".to_string(),
             translation_group_id: uuid::Uuid::now_v7(),
             created_at: now,

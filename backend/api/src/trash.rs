@@ -154,15 +154,13 @@ pub async fn restore(db: &DatabaseConnection, id: Uuid) -> AppResult<String> {
     let (entry, payload) = take(db, id).await?;
 
     let what = match entry.kind.as_str() {
-        POST | PAGE => restore_post(db, &payload).await?,
         MEDIA => restore_media(db, &payload).await?,
         FORM => restore_form(db, &payload).await?,
         FORM_SUBMISSION => restore_submission(db, &payload).await?,
-        other => {
-            return Err(AppError::Internal(format!(
-                "nothing here knows how to put a {other} back"
-            )));
-        }
+        // A post, a page, or a kind this site made up. They are one table and
+        // one way back, so matching the two names this used to know would have
+        // meant a course going into the bin and never coming out of it.
+        _ => restore_post(db, &payload).await?,
     };
 
     forget(db, entry.id).await?;

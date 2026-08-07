@@ -242,8 +242,10 @@ export interface Post {
   content_markdown: string | null
   locale: string
   translation_group_id: string
-  /** "post" or "page". */
+  /** Which kind of thing this is. */
   kind: PostKind
+  /** What it carries for its kind's own fields, by field name. */
+  fields: Record<string, unknown>
   /** Languages this post exists in, including its own. */
   locales: string[]
   /** Sibling language versions; empty on the list endpoint. */
@@ -265,6 +267,8 @@ export interface PostPayload {
   slug: string
   /** Defaults to a post. */
   kind?: PostKind
+  /** Replaces every value carried for the kind's fields. */
+  fields?: Record<string, unknown>
   excerpt?: string
   status?: PostStatus
   publish_at?: string | null
@@ -307,8 +311,60 @@ export interface PostPage {
   counts: Record<PostStatus, number>
 }
 
-/** "post", or "page" for the ones that are not in the feed. */
-export type PostKind = "post" | "page"
+/**
+ * Which kind of thing a piece of content is.
+ *
+ * A slug, not a union: every site has "post" and "page", and may have made
+ * others. What exists is a question for the site — see listContentTypes.
+ */
+export type PostKind = string
+
+export interface ContentType {
+  id: string
+  /** What `kind` holds, and what a front end asks for. */
+  slug: string
+  name: string
+  /** What a list of them is called. */
+  plural: string
+  fields: FormField[]
+  /** post and page: their fields can change, they cannot be removed. */
+  built_in: boolean
+  count: number
+}
+
+export interface SaveContentType {
+  name: string
+  plural?: string
+  slug?: string
+  fields: FormField[]
+}
+
+export function listContentTypes(): Promise<ContentType[]> {
+  return request<ContentType[]>("/content-types")
+}
+
+export function createContentType(
+  payload: SaveContentType
+): Promise<ContentType> {
+  return request<ContentType>("/content-types", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function updateContentType(
+  id: string,
+  payload: SaveContentType
+): Promise<ContentType> {
+  return request<ContentType>(`/content-types/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteContentType(id: string): Promise<void> {
+  return request<void>(`/content-types/${id}`, { method: "DELETE" })
+}
 
 export function getPosts(
   locale?: string,

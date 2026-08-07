@@ -217,7 +217,7 @@ pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppR
     if let Some(codes) = query.codes() {
         find = find.filter(post::Column::Locale.is_in(codes));
     }
-    find = find.filter(post::Column::Kind.is_in(query.kinds()?));
+    find = find.filter(post::Column::Kind.is_in(crate::content::known(db, &query.kinds()).await?));
     if let Some(statuses) = query.statuses()? {
         find = find.filter(post::Column::Status.is_in(statuses));
     }
@@ -433,13 +433,19 @@ pub async fn create(
 
     // Checked up front so a re-run over content that is already there says
     // which post is in the way, instead of a bare unique-index conflict.
-    let wanted_kind = match payload.kind.as_deref() {
-        Some(named) => crate::dto::taxonomy::check_kind(named)?,
-        None => crate::dto::taxonomy::POST,
-    };
+    let wanted_kind = payload
+        .kind
+        .clone()
+        .unwrap_or_else(|| crate::content::POST.to_string());
+    let of_kind = crate::content::by_slug(db, &wanted_kind).await?;
+    let values = crate::content::checked_values(
+        &crate::content::fields_of(&of_kind.fields)?,
+        payload.fields.clone(),
+        crate::content::is_finished(&payload.status),
+    )?;
     if post::Entity::find()
         .filter(post::Column::Locale.eq(&locale))
-        .filter(post::Column::Kind.eq(wanted_kind))
+        .filter(post::Column::Kind.eq(&wanted_kind))
         .filter(post::Column::Slug.eq(payload.slug.trim()))
         .one(db)
         .await?
@@ -457,7 +463,8 @@ pub async fn create(
 
     let model = post::ActiveModel {
         id: Set(id),
-        kind: Set(wanted_kind.to_string()),
+        kind: Set(wanted_kind.clone()),
+        fields: Set(values),
         title: Set(payload.title),
         slug: Set(payload.slug),
         excerpt: Set(payload.excerpt),
@@ -591,6 +598,36 @@ pub async fn update(
     }
     if let Some(content_markdown) = payload.content_markdown {
         model.content_markdown = Set(Some(content_markdown));
+    }
+    // Against the status the post is about to have, which the change above may
+    // just have altered.
+    let going_out =
+        crate::content::is_finished(&PostStatus::from_str_lenient(model.status.as_ref()));
+    // Two moments matter, and only two. New values are checked as they arrive.
+    // And a piece of content on its way out is checked whole, even when the
+    // request only said "publish" — otherwise a course goes online with no
+    // price by the simple method of not mentioning the price.
+    //
+    // Deliberately not on every save: a kind that gains a required field
+    // afterwards would otherwise make every existing piece unfixable until
+    // somebody filled the new field in, which is a strange thing to be told
+    // while correcting a typo.
+    let becoming_finished = going_out && payload.status.is_some();
+    if payload.fields.is_some() || becoming_finished {
+        // Checked against the kind the post actually is, not one the request
+        // could name: a post does not change kind.
+        let of_kind = crate::content::by_slug(db, model.kind.as_ref()).await?;
+        let given = match payload.fields {
+            Some(given) => Some(given),
+            // Nothing new to store, so what is already there is what is being
+            // published.
+            None => Some(crate::content::read_values(model.fields.as_ref())),
+        };
+        model.fields = Set(crate::content::checked_values(
+            &crate::content::fields_of(&of_kind.fields)?,
+            given,
+            going_out,
+        )?);
     }
     model.updated_at = Set(Utc::now().fixed_offset());
 
@@ -744,14 +781,13 @@ pub async fn delete_post(
         .map(|row| row.tag_id)
         .collect();
 
-    let kind = if existing.kind == crate::trash::PAGE {
-        crate::trash::PAGE
-    } else {
-        crate::trash::POST
-    };
+    // Its own kind, whatever the site calls it. A course in the bin listed as
+    // "post" is a small lie, and the one that matters is the count that stops
+    // a kind being removed while there is still something of it in here.
+    let kind = existing.kind.clone();
     crate::trash::keep(
         db,
-        kind,
+        &kind,
         id,
         &existing.title,
         serde_json::json!({

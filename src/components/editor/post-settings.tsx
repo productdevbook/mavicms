@@ -19,6 +19,8 @@ import {
 } from "@/lib/api"
 import { toCategoryTree } from "@/lib/category-tree"
 import { Badge } from "@/components/ui/badge"
+import { useContentTypes } from "@/lib/use-content-types"
+import { ContentFields } from "@/components/editor/content-fields"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -112,11 +114,26 @@ export function PostSettings({
     }
   }
 
+  // What this thing is, and so which fields it has beyond the usual ones.
+  const { find } = useContentTypes()
+  const of_kind = find(meta.kind)
+
   const seoTitle = meta.seoTitle || meta.title
   const seoDescription = meta.seoDescription || meta.excerpt
 
   return (
     <div className="flex flex-col gap-5">
+      {of_kind && of_kind.fields.length > 0 && (
+        <div className="flex flex-col gap-5 rounded-xl border border-border px-4 py-4">
+          <p className="text-sm font-medium">{of_kind.name}</p>
+          <ContentFields
+            fields={of_kind.fields}
+            values={meta.fields}
+            onChange={(fields) => onChange({ fields })}
+          />
+        </div>
+      )}
+
       <Field label={t`Status`} htmlFor="meta-status">
         <Select
           value={meta.status}

@@ -13,6 +13,7 @@ import {
   type PostStatus,
   type PostSummary,
 } from "@/lib/api"
+import { useContentTypes } from "@/lib/use-content-types"
 import { useLanguages } from "@/lib/use-languages"
 import {
   Select,
@@ -45,7 +46,11 @@ import { useStatusLabels } from "@/components/editor/types"
  */
 export function ContentList({ kind }: { kind: PostKind }) {
   const { t } = useLingui()
-  const page_kind = kind === "page"
+  const { find } = useContentTypes()
+  const of_kind = find(kind)
+  // Until the list of kinds arrives, the slug is a better label than nothing.
+  const one = of_kind?.name ?? kind
+  const many = of_kind?.plural ?? kind
   const navigate = useNavigate()
   const STATUS_LABELS = useStatusLabels()
   const [page, setPage] = React.useState<PostPage | null>(null)
@@ -90,14 +95,10 @@ export function ContentList({ kind }: { kind: PostKind }) {
       // Reloaded rather than filtered out: the counts and the page below it
       // both move when a post goes.
       load()
-      toast.success(page_kind ? t`Page deleted` : t`Post deleted`)
+      toast.success(t`${one} deleted`)
     } catch (error) {
       toast.error(
-        error instanceof ApiError
-          ? error.message
-          : page_kind
-            ? t`Could not delete page`
-            : t`Could not delete post`
+        error instanceof ApiError ? error.message : t`Could not delete it`
       )
     } finally {
       setPendingDelete(null)
@@ -149,9 +150,7 @@ export function ContentList({ kind }: { kind: PostKind }) {
         </div>
       ) : posts.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            {page_kind ? t`No pages yet` : t`No posts yet`}
-          </p>
+          <p className="text-sm text-muted-foreground">{t`No ${many} yet`}</p>
           <Button
             onClick={() =>
               navigate({
@@ -160,7 +159,7 @@ export function ContentList({ kind }: { kind: PostKind }) {
               })
             }
           >
-            {page_kind ? t`New page` : t`New post`}
+            {t`New ${one}`}
           </Button>
         </div>
       ) : (
@@ -173,7 +172,7 @@ export function ContentList({ kind }: { kind: PostKind }) {
                   params={{ postId: post.id }}
                   className="truncate text-sm font-medium hover:underline"
                 >
-                  {post.title || (page_kind ? t`Untitled page` : t`Untitled post`)}
+                  {post.title || t`Untitled`}
                 </Link>
                 <p className="truncate text-xs text-muted-foreground">
                   {post.category || t`Uncategorized`} ·{" "}
