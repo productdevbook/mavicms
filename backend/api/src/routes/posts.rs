@@ -401,9 +401,17 @@ pub async fn create(
     if payload.title.trim().is_empty() {
         return Err(AppError::Validation("title must not be empty".to_string()));
     }
-    if payload.slug.trim().is_empty() {
-        return Err(AppError::Validation("slug must not be empty".to_string()));
-    }
+
+    // One place decides what an address looks like, and it is this one.
+    let slug = crate::slug::slugify_or(
+        payload
+            .slug
+            .as_deref()
+            .map(str::trim)
+            .filter(|given| !given.is_empty())
+            .unwrap_or(&payload.title),
+        "post",
+    );
 
     let locale = resolve(db, payload.locale.as_deref()).await?;
 
@@ -446,14 +454,13 @@ pub async fn create(
     if post::Entity::find()
         .filter(post::Column::Locale.eq(&locale))
         .filter(post::Column::Kind.eq(&wanted_kind))
-        .filter(post::Column::Slug.eq(payload.slug.trim()))
+        .filter(post::Column::Slug.eq(&slug))
         .one(db)
         .await?
         .is_some()
     {
         return Err(AppError::Conflict(format!(
-            "a {locale} {wanted_kind} with the address \"{}\" already exists",
-            payload.slug.trim()
+            "a {locale} {wanted_kind} with the address \"{slug}\" already exists"
         )));
     }
 
@@ -466,7 +473,7 @@ pub async fn create(
         kind: Set(wanted_kind.clone()),
         fields: Set(values),
         title: Set(payload.title),
-        slug: Set(payload.slug),
+        slug: Set(slug),
         excerpt: Set(payload.excerpt),
         status: Set(payload.status.as_str().to_string()),
         publish_at: Set(payload.publish_at.map(|value| value.fixed_offset())),

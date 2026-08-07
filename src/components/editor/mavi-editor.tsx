@@ -24,7 +24,7 @@ import {
 import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
-import { shortcut, slugify } from "@/lib/editor-utils"
+import { shortcut } from "@/lib/editor-utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Kbd } from "@/components/ui/kbd"
@@ -142,7 +142,10 @@ function metaToPayload(
 ): PostPayload {
   return {
     title: meta.title,
-    slug: meta.slug.trim() || slugify(meta.title),
+    // Left out until somebody types one: the server makes it from the title,
+    // and a guess sent from here would be a second opinion about what an
+    // address looks like — which is how "Başlık" became "ba_l_k".
+    slug: meta.slug.trim() || undefined,
     excerpt: meta.excerpt,
     status: meta.status,
     publish_at: meta.publishAt ? new Date(meta.publishAt).toISOString() : null,
