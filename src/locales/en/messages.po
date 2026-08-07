@@ -104,6 +104,11 @@ msgstr "{0} clicked"
 msgid "{0} confirmed"
 msgstr "{0} confirmed"
 
+#. placeholder {0}: client.name
+#: src/components/assistant-clients.tsx:188
+msgid "{0} connects from its own servers, not from this computer, so it cannot reach this address. It will work once the site is on a public address with https. The programs that run on your machine — Codex, Claude Code, Cursor — can connect to it as it is."
+msgstr "{0} connects from its own servers, not from this computer, so it cannot reach this address. It will work once the site is on a public address with https. The programs that run on your machine — Codex, Claude Code, Cursor — can connect to it as it is."
+
 #. placeholder {0}: site.host
 #: src/routes/console.index.tsx:65
 msgid "{0} is ready"
@@ -224,6 +229,11 @@ msgstr "{0}: {1} sent, {2} did not arrive"
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. This is the account that opens and manages your sites."
 
+#. placeholder {0}: client.name
+#: src/components/assistant-clients.tsx:200
+msgid "{0}'s own instructions"
+msgstr "{0}'s own instructions"
+
 #: src/components/ses-health.tsx:104
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
@@ -296,6 +306,10 @@ msgstr "A message that bounced hard, or that somebody reported as spam. Amazon k
 #: src/components/ses-account.tsx:313
 msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 msgstr "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
+
+#: src/components/assistant-clients.tsx:59
+msgid "A paid plan is needed for this; developer mode is where custom connectors live."
+msgstr "A paid plan is needed for this; developer mode is where custom connectors live."
 
 #: src/routes/dashboard.api.tsx:302
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
@@ -390,6 +404,10 @@ msgstr "Add column after"
 msgid "Add column before"
 msgstr "Add column before"
 
+#: src/components/assistant-clients.tsx:47
+msgid "Add custom connector, and paste the address."
+msgstr "Add custom connector, and paste the address."
+
 #: src/components/editor/dialogs.tsx:380
 msgid "Add header row"
 msgstr "Add header row"
@@ -451,6 +469,10 @@ msgstr "Address"
 #: src/components/ses-account.tsx:464
 msgid "Addresses Amazon refuses"
 msgstr "Addresses Amazon refuses"
+
+#: src/components/assistant-clients.tsx:69
+msgid "Afterwards, /mcp lists what it is connected to."
+msgstr "Afterwards, /mcp lists what it is connected to."
 
 #: src/routes/dashboard.sites.tsx:204
 msgid "Agencies"
@@ -564,7 +586,7 @@ msgstr "An archive holding the database, and the uploaded files if you ask for t
 msgid "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 msgstr "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 
-#: src/components/assistant-connection.tsx:130
+#: src/components/assistant-connection.tsx:131
 msgid "An assistant pointed at this site can be asked to do the work rather than told how to do it — find a post and correct it, tell you what came in through the forms this week, put a piece online."
 msgstr "An assistant pointed at this site can be asked to do the work rather than told how to do it — find a post and correct it, tell you what came in through the forms this week, put a piece online."
 
@@ -619,7 +641,7 @@ msgstr "arrived"
 
 #. placeholder {0}: connection.username
 #. placeholder {1}: new Date(connection.created_at).toLocaleDateString()
-#: src/components/assistant-connection.tsx:200
+#: src/components/assistant-connection.tsx:202
 msgid "As {0}, since {1}"
 msgstr "As {0}, since {1}"
 
@@ -677,6 +699,10 @@ msgstr "At least {MINIMUM_PASSWORD} characters. Changing it signs you out everyw
 #: src/components/setup/setup-wizard.tsx:800
 msgid "Back"
 msgstr "Back"
+
+#: src/components/assistant-clients.tsx:58
+msgid "Back in Connectors, create a custom connector and paste the address."
+msgstr "Back in Connectors, create a custom connector and paste the address."
 
 #: src/components/editor/mavi-editor.tsx:553
 msgid "Back to editing"
@@ -868,7 +894,7 @@ msgstr "Change it"
 msgid "Change one."
 msgstr "Change one."
 
-#: src/components/assistant-connection.tsx:159
+#: src/components/assistant-connection.tsx:161
 msgid "Changes things"
 msgstr "Changes things"
 
@@ -976,7 +1002,7 @@ msgstr "Connect your database"
 #~ msgid "Connected assistants"
 #~ msgstr "Connected assistants"
 
-#: src/components/assistant-connection.tsx:176
+#: src/components/assistant-connection.tsx:178
 msgid "Connected now"
 msgstr "Connected now"
 
@@ -984,7 +1010,7 @@ msgstr "Connected now"
 msgid "Connected. Restarting the server…"
 msgstr "Connected. Restarting the server…"
 
-#: src/components/assistant-connection.tsx:128
+#: src/components/assistant-connection.tsx:129
 msgid "Connecting an assistant"
 msgstr "Connecting an assistant"
 
@@ -1032,6 +1058,7 @@ msgstr "Continue to the dashboard"
 msgid "Copied"
 msgstr "Copied"
 
+#: src/components/assistant-clients.tsx:119
 #: src/components/editor/bubble-menus.tsx:317
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
@@ -1067,7 +1094,7 @@ msgstr "Copy link"
 msgid "Copy text"
 msgstr "Copy text"
 
-#: src/components/assistant-connection.tsx:136
+#: src/components/assistant-connection.tsx:137
 #: src/components/mcp-connection.tsx:78
 msgid "Copy the address"
 msgstr "Copy the address"
@@ -1131,7 +1158,8 @@ msgstr "Could not ask Amazon"
 msgid "Could not change it"
 msgstr "Could not change it"
 
-#: src/components/assistant-connection.tsx:44
+#: src/components/assistant-clients.tsx:106
+#: src/components/assistant-connection.tsx:45
 #: src/components/local-env.tsx:109
 #: src/components/mcp-connection.tsx:28
 #: src/components/ses-account.tsx:691
@@ -1167,7 +1195,7 @@ msgstr "Could not delete tag"
 msgid "Could not delete the backup"
 msgstr "Could not delete the backup"
 
-#: src/components/assistant-connection.tsx:117
+#: src/components/assistant-connection.tsx:118
 msgid "Could not disconnect it"
 msgstr "Could not disconnect it"
 
@@ -1204,7 +1232,7 @@ msgstr "Could not load the campaign"
 msgid "Could not load the campaigns"
 msgstr "Could not load the campaigns"
 
-#: src/components/assistant-connection.tsx:98
+#: src/components/assistant-connection.tsx:99
 msgid "Could not load the connections"
 msgstr "Could not load the connections"
 
@@ -1563,11 +1591,11 @@ msgstr "Did not arrive"
 msgid "Disabled"
 msgstr "Disabled"
 
-#: src/components/assistant-connection.tsx:206
+#: src/components/assistant-connection.tsx:208
 msgid "Disconnect"
 msgstr "Disconnect"
 
-#: src/components/assistant-connection.tsx:218
+#: src/components/assistant-connection.tsx:220
 msgid "Disconnecting one stops it that moment."
 msgstr "Disconnecting one stops it that moment."
 
@@ -1828,7 +1856,7 @@ msgstr "Generate from title"
 msgid "Generate password"
 msgstr "Generate password"
 
-#: src/components/assistant-connection.tsx:135
+#: src/components/assistant-connection.tsx:136
 msgid "Give it this address"
 msgstr "Give it this address"
 
@@ -2081,7 +2109,7 @@ msgstr "Invitations"
 msgid "It calls itself \"{0}\", which is its own word for itself and not something this site can check. If you did not just ask a program to connect, close this page."
 msgstr "It calls itself \"{0}\", which is its own word for itself and not something this site can check. If you did not just ask a program to connect, close this page."
 
-#: src/components/assistant-connection.tsx:148
+#: src/components/assistant-connection.tsx:150
 msgid "It can then do what you can"
 msgstr "It can then do what you can"
 
@@ -2101,7 +2129,7 @@ msgstr "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgid "It will be able to do what you can: read this site's posts, write and change them, see what has come in through the forms, and ask for the pages to be built. It cannot delete anything."
 msgstr "It will be able to do what you can: read this site's posts, write and change them, see what has come in through the forms, and ask for the pages to be built. It cannot delete anything."
 
-#: src/components/assistant-connection.tsx:144
+#: src/components/assistant-connection.tsx:146
 msgid "It will send you to this site to sign in and ask whether you want to allow it. Nothing is connected until you say yes, and the program never sees your password or anything you could paste elsewhere."
 msgstr "It will send you to this site to sign in and ask whether you want to allow it. Nothing is connected until you say yes, and the program never sees your password or anything you could paste elsewhere."
 
@@ -2590,7 +2618,7 @@ msgstr "Note"
 msgid "Nothing asked for yet"
 msgstr "Nothing asked for yet"
 
-#: src/components/assistant-connection.tsx:168
+#: src/components/assistant-connection.tsx:170
 msgid "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
 msgstr "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
 
@@ -2611,7 +2639,7 @@ msgstr "Nothing has come in yet"
 #~ msgid "Nothing is connected"
 #~ msgstr "Nothing is connected"
 
-#: src/components/assistant-connection.tsx:186
+#: src/components/assistant-connection.tsx:188
 msgid "Nothing is connected yet. Follow the three steps above and whatever you allowed will appear here."
 msgstr "Nothing is connected yet. Follow the three steps above and whatever you allowed will appear here."
 
@@ -2718,7 +2746,7 @@ msgstr "Only by hand"
 msgid "Only for a private repository"
 msgstr "Only for a private repository"
 
-#: src/components/assistant-connection.tsx:164
+#: src/components/assistant-connection.tsx:166
 msgid "Only reads"
 msgstr "Only reads"
 
@@ -3183,6 +3211,14 @@ msgstr "Resume sending"
 msgid "Row"
 msgstr "Row"
 
+#: src/components/assistant-clients.tsx:77
+msgid "Run this, then /mcp to sign in."
+msgstr "Run this, then /mcp to sign in."
+
+#: src/components/assistant-clients.tsx:68
+msgid "Run this. It notices that the address asks for a sign-in and opens one."
+msgstr "Run this. It notices that the address asks for a sign-in and opens one."
+
 #: src/components/plugin-forms.tsx:195
 #: src/components/plugin-forms.tsx:208
 #: src/routes/dashboard.plugins_.backup.tsx:229
@@ -3444,6 +3480,18 @@ msgstr "Settings panel"
 msgid "Settings saved"
 msgstr "Settings saved"
 
+#: src/components/assistant-clients.tsx:57
+msgid "Settings, then Connectors, then Advanced settings at the bottom: turn on developer mode."
+msgstr "Settings, then Connectors, then Advanced settings at the bottom: turn on developer mode."
+
+#: src/components/assistant-clients.tsx:46
+msgid "Settings, then Connectors."
+msgstr "Settings, then Connectors."
+
+#: src/components/assistant-clients.tsx:87
+msgid "Settings, then Tools & MCP, then New MCP Server — which opens the file below."
+msgstr "Settings, then Tools & MCP, then New MCP Server — which opens the file below."
+
 #: src/components/setup/setup-wizard.tsx:865
 msgid "Setup failed"
 msgstr "Setup failed"
@@ -3475,7 +3523,7 @@ msgstr "Sign in"
 msgid "Sign in to manage your site."
 msgstr "Sign in to manage your site."
 
-#: src/components/assistant-connection.tsx:142
+#: src/components/assistant-connection.tsx:144
 msgid "Sign in, here"
 msgstr "Sign in, here"
 
@@ -3808,6 +3856,10 @@ msgstr "The only honest check. A key without permission, an address SES has not 
 msgid "The restore failed"
 msgstr "The restore failed"
 
+#: src/components/assistant-clients.tsx:48
+msgid "The same connector then works in Claude on the web, on the desktop and on a phone."
+msgstr "The same connector then works in Claude on the web, on the desktop and on a phone."
+
 #: src/routes/dashboard.api.tsx:159
 msgid "The same, with each body included."
 msgstr "The same, with each body included."
@@ -3870,6 +3922,10 @@ msgstr "This cannot be connected"
 msgid "This is the only time it is shown. Leave this page and it cannot be read again — make another one instead."
 msgstr "This is the only time it is shown. Leave this page and it cannot be read again — make another one instead."
 
+#: src/components/assistant-connection.tsx:139
+msgid "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
+msgstr "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
+
 #: src/routes/console.account.tsx:107
 msgid "This is what you sign in with."
 msgstr "This is what you sign in with."
@@ -3890,7 +3946,7 @@ msgstr "This signs you in to the server itself. Everyone else signs in somewhere
 msgid "This site"
 msgstr "This site"
 
-#: src/components/assistant-connection.tsx:153
+#: src/components/assistant-connection.tsx:155
 msgid "This site's tools could not be listed just now."
 msgstr "This site's tools could not be listed just now."
 
@@ -4153,8 +4209,8 @@ msgid "Where to send it"
 msgstr "Where to send it"
 
 #: src/components/assistant-connection.tsx:138
-msgid "Wherever the program asks for an MCP server, or a custom connector, paste this and nothing else. There is no token to find and no file to edit."
-msgstr "Wherever the program asks for an MCP server, or a custom connector, paste this and nothing else. There is no token to find and no file to edit."
+#~ msgid "Wherever the program asks for an MCP server, or a custom connector, paste this and nothing else. There is no token to find and no file to edit."
+#~ msgstr "Wherever the program asks for an MCP server, or a custom connector, paste this and nothing else. There is no token to find and no file to edit."
 
 #: src/routes/dashboard.api.tsx:195
 msgid "Which fields a form takes, and which are required."

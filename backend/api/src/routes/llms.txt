@@ -61,9 +61,23 @@ claude mcp add --transport http mavicms {{base}}/mcp \
 
 Somewhere that has no field for a token — Claude's own connector dialog,
 ChatGPT's — paste the address on its own. This site is its own authorization
-server: you will be sent here to sign in and asked whether to allow it, and
-the program is handed a credential you never see. It is listed under **API**
-in the panel afterwards and can be disconnected there.
+server: whoever is connecting is sent here to sign in and asked whether to
+allow it, and the program is handed a credential they never see. It is listed
+under **API** in the panel afterwards and can be disconnected there.
+
+Where the address goes, per program:
+
+- **Claude** — Settings, Connectors, Add custom connector.
+- **ChatGPT** — Settings, Connectors, Advanced settings, developer mode; then
+  create a custom connector.
+- **Codex** — `codex mcp add mavicms --url {{base}}/mcp`, which notices the
+  sign-in and opens one.
+- **Claude Code** — `claude mcp add --transport http mavicms {{base}}/mcp`.
+- **Cursor** — Settings, Tools & MCP, New MCP Server.
+
+Claude and ChatGPT connect from their own servers rather than from the machine
+somebody is sitting at, so a site on localhost is not one they can reach. The
+programs that run on that machine have no such trouble.
 
 Nothing there deletes anything.
 

@@ -173,12 +173,27 @@ at `https://your-site/api/mcp`, and so does an agency console at the server's
 own address. Which of the two you get is decided by the address you reach and
 the token you send, the same way everything else here is.
 
-In anything that asks for a URL — Claude's connector dialog, ChatGPT's — paste
-the address and nothing else:
+Paste the address and nothing else:
 
 ```
 https://your-site/api/mcp
 ```
+
+Where it goes:
+
+| | |
+|---|---|
+| **Claude** | Settings → Connectors → Add custom connector. One connector covers Claude on the web, on the desktop and on a phone. |
+| **ChatGPT** | Settings → Connectors → Advanced settings → developer mode, then create a custom connector. Needs a paid plan. |
+| **Codex** | `codex mcp add mavicms --url https://your-site/api/mcp` — it notices the sign-in and opens one. Then `/mcp`. |
+| **Claude Code** | `claude mcp add --transport http mavicms https://your-site/api/mcp`, then `/mcp` to sign in. |
+| **Cursor** | Settings → Tools & MCP → New MCP Server, or `{"mcpServers":{"mavicms":{"url":"…"}}}` in `~/.cursor/mcp.json`. |
+
+**Claude and ChatGPT connect from their own servers, not from the machine you
+are sitting at.** A site on `localhost`, or behind a VPN, is not one they can
+reach — it has to be on a public address over https. The ones that run on your
+own machine, Codex and Claude Code and Cursor, have no such trouble. This is
+the first thing to check when a connector will not attach.
 
 The site is its own authorization server. Whoever is connecting is sent to
 this site to sign in, asked plainly whether to allow it, and the program is

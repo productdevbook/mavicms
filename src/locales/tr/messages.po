@@ -104,6 +104,11 @@ msgstr "{0} tıkladı"
 msgid "{0} confirmed"
 msgstr "{0} onaylı"
 
+#. placeholder {0}: client.name
+#: src/components/assistant-clients.tsx:188
+msgid "{0} connects from its own servers, not from this computer, so it cannot reach this address. It will work once the site is on a public address with https. The programs that run on your machine — Codex, Claude Code, Cursor — can connect to it as it is."
+msgstr "{0} bu bilgisayardan değil kendi sunucularından bağlanır, dolayısıyla bu adrese ulaşamaz. Site https ile herkese açık bir adrese taşındığında çalışacak. Kendi makinenizde çalışan programlar — Codex, Claude Code, Cursor — bu hâliyle bağlanabilir."
+
 #. placeholder {0}: site.host
 #: src/routes/console.index.tsx:65
 msgid "{0} is ready"
@@ -224,6 +229,11 @@ msgstr "{0}: {1} gönderildi, {2} ulaşmadı"
 msgid "{0}. This is the account that opens and manages your sites."
 msgstr "{0}. Sitelerinizi açan ve yöneten hesap budur."
 
+#. placeholder {0}: client.name
+#: src/components/assistant-clients.tsx:200
+msgid "{0}'s own instructions"
+msgstr "{0} kendi belgeleri"
+
 #: src/components/ses-health.tsx:104
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} tanesi · Amazon %{reviewAt} oranında inceler, %{pauseAt} oranında durdurur"
@@ -296,6 +306,10 @@ msgstr "Sert şekilde geri dönen ya da birinin spam olarak bildirdiği mesajlar
 #: src/components/ses-account.tsx:313
 msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 msgstr "Yeni bir SES hesabı kum havuzunda başlar; yalnızca aşağıda doğruladığınız adreslere yazabilir. Ziyaretçilerinize yazabilmek için buradan çıkmayı istemeniz gerekir."
+
+#: src/components/assistant-clients.tsx:59
+msgid "A paid plan is needed for this; developer mode is where custom connectors live."
+msgstr "Bunun için ücretli bir plan gerekiyor; özel bağlayıcılar geliştirici kipinde duruyor."
 
 #: src/routes/dashboard.api.tsx:302
 msgid "A post carries <0>content_markdown</0>, which is what it is written as, and <1>content_html</1>, which is what it renders to. The Markdown is written for <2>comark</2>, so a project can turn its blocks into its own components."
@@ -390,6 +404,10 @@ msgstr "Sağa sütun ekle"
 msgid "Add column before"
 msgstr "Sola sütun ekle"
 
+#: src/components/assistant-clients.tsx:47
+msgid "Add custom connector, and paste the address."
+msgstr "Özel bağlayıcı ekle deyin ve adresi yapıştırın."
+
 #: src/components/editor/dialogs.tsx:380
 msgid "Add header row"
 msgstr "Başlık satırı ekle"
@@ -451,6 +469,10 @@ msgstr "Adres"
 #: src/components/ses-account.tsx:464
 msgid "Addresses Amazon refuses"
 msgstr "Amazon'un reddettiği adresler"
+
+#: src/components/assistant-clients.tsx:69
+msgid "Afterwards, /mcp lists what it is connected to."
+msgstr "Sonrasında /mcp neye bağlı olduğunu listeler."
 
 #: src/routes/dashboard.sites.tsx:204
 msgid "Agencies"
@@ -564,7 +586,7 @@ msgstr "Veritabanını ve istersen yüklenen dosyaları içeren bir arşiv."
 msgid "An archive taken on another server. This is how a site moves — everything here is replaced by what the file holds."
 msgstr "Başka bir sunucuda alınmış arşiv. Bir site böyle taşınır — buradaki her şeyin yerine dosyadakiler geçer."
 
-#: src/components/assistant-connection.tsx:130
+#: src/components/assistant-connection.tsx:131
 msgid "An assistant pointed at this site can be asked to do the work rather than told how to do it — find a post and correct it, tell you what came in through the forms this week, put a piece online."
 msgstr "Bu siteye yöneltilmiş bir asistandan, nasıl yapılacağını anlatmak yerine işi doğrudan isteyebilirsiniz — bir yazıyı bulup düzeltmek, bu hafta formlardan ne geldiğini söylemek, bir yazıyı yayına almak."
 
@@ -619,7 +641,7 @@ msgstr "ulaştı"
 
 #. placeholder {0}: connection.username
 #. placeholder {1}: new Date(connection.created_at).toLocaleDateString()
-#: src/components/assistant-connection.tsx:200
+#: src/components/assistant-connection.tsx:202
 msgid "As {0}, since {1}"
 msgstr "{0} olarak, {1} tarihinden beri"
 
@@ -677,6 +699,10 @@ msgstr "En az {MINIMUM_PASSWORD} karakter. Değiştirmek sizi bu tarayıcı dahi
 #: src/components/setup/setup-wizard.tsx:800
 msgid "Back"
 msgstr "Geri"
+
+#: src/components/assistant-clients.tsx:58
+msgid "Back in Connectors, create a custom connector and paste the address."
+msgstr "Bağlayıcılar'a dönüp özel bir bağlayıcı oluşturun ve adresi yapıştırın."
 
 #: src/components/editor/mavi-editor.tsx:553
 msgid "Back to editing"
@@ -868,7 +894,7 @@ msgstr "Değiştir"
 msgid "Change one."
 msgstr "Bir yazıyı değiştirir."
 
-#: src/components/assistant-connection.tsx:159
+#: src/components/assistant-connection.tsx:161
 msgid "Changes things"
 msgstr "Bir şeyleri değiştirir"
 
@@ -976,7 +1002,7 @@ msgstr "Veritabanınızı bağlayın"
 #~ msgid "Connected assistants"
 #~ msgstr "Bağlı asistanlar"
 
-#: src/components/assistant-connection.tsx:176
+#: src/components/assistant-connection.tsx:178
 msgid "Connected now"
 msgstr "Şu an bağlı olanlar"
 
@@ -984,7 +1010,7 @@ msgstr "Şu an bağlı olanlar"
 msgid "Connected. Restarting the server…"
 msgstr "Bağlandı. Sunucu yeniden başlatılıyor…"
 
-#: src/components/assistant-connection.tsx:128
+#: src/components/assistant-connection.tsx:129
 msgid "Connecting an assistant"
 msgstr "Bir asistan bağlamak"
 
@@ -1032,6 +1058,7 @@ msgstr "Panele devam et"
 msgid "Copied"
 msgstr "Kopyalandı"
 
+#: src/components/assistant-clients.tsx:119
 #: src/components/editor/bubble-menus.tsx:317
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
@@ -1067,7 +1094,7 @@ msgstr "Bağlantıyı kopyala"
 msgid "Copy text"
 msgstr "Metni kopyala"
 
-#: src/components/assistant-connection.tsx:136
+#: src/components/assistant-connection.tsx:137
 #: src/components/mcp-connection.tsx:78
 msgid "Copy the address"
 msgstr "Adresi kopyala"
@@ -1131,7 +1158,8 @@ msgstr "Amazon'a sorulamadı"
 msgid "Could not change it"
 msgstr "Değiştirilemedi"
 
-#: src/components/assistant-connection.tsx:44
+#: src/components/assistant-clients.tsx:106
+#: src/components/assistant-connection.tsx:45
 #: src/components/local-env.tsx:109
 #: src/components/mcp-connection.tsx:28
 #: src/components/ses-account.tsx:691
@@ -1167,7 +1195,7 @@ msgstr "Etiket silinemedi"
 msgid "Could not delete the backup"
 msgstr "Yedek silinemedi"
 
-#: src/components/assistant-connection.tsx:117
+#: src/components/assistant-connection.tsx:118
 msgid "Could not disconnect it"
 msgstr "Bağlantı kesilemedi"
 
@@ -1204,7 +1232,7 @@ msgstr "Kampanya yüklenemedi"
 msgid "Could not load the campaigns"
 msgstr "Kampanyalar yüklenemedi"
 
-#: src/components/assistant-connection.tsx:98
+#: src/components/assistant-connection.tsx:99
 msgid "Could not load the connections"
 msgstr "Bağlantılar yüklenemedi"
 
@@ -1559,11 +1587,11 @@ msgstr "Ulaşmadı"
 msgid "Disabled"
 msgstr "Devre dışı"
 
-#: src/components/assistant-connection.tsx:206
+#: src/components/assistant-connection.tsx:208
 msgid "Disconnect"
 msgstr "Bağlantıyı kes"
 
-#: src/components/assistant-connection.tsx:218
+#: src/components/assistant-connection.tsx:220
 msgid "Disconnecting one stops it that moment."
 msgstr "Birinin bağlantısını kesmek onu o anda durdurur."
 
@@ -1824,7 +1852,7 @@ msgstr "Başlıktan üret"
 msgid "Generate password"
 msgstr "Parola üret"
 
-#: src/components/assistant-connection.tsx:135
+#: src/components/assistant-connection.tsx:136
 msgid "Give it this address"
 msgstr "Ona bu adresi verin"
 
@@ -2077,7 +2105,7 @@ msgstr "Davetler"
 msgid "It calls itself \"{0}\", which is its own word for itself and not something this site can check. If you did not just ask a program to connect, close this page."
 msgstr "Kendine \"{0}\" diyor; bu onun kendi ifadesi, bu sitenin doğrulayabileceği bir şey değil. Az önce bir programı bağlamayı siz istemediyseniz bu sayfayı kapatın."
 
-#: src/components/assistant-connection.tsx:148
+#: src/components/assistant-connection.tsx:150
 msgid "It can then do what you can"
 msgstr "Artık sizin yapabildiklerinizi yapabilir"
 
@@ -2097,7 +2125,7 @@ msgstr "CMS_API_URL ve SITE_URL bu sitenin adresine ayarlı olarak çalışır."
 msgid "It will be able to do what you can: read this site's posts, write and change them, see what has come in through the forms, and ask for the pages to be built. It cannot delete anything."
 msgstr "Sizin yapabildiklerinizi yapabilecek: bu sitenin yazılarını okumak, yazmak ve değiştirmek, formlardan geleni görmek, sayfaların derlenmesini istemek. Hiçbir şeyi silemez."
 
-#: src/components/assistant-connection.tsx:144
+#: src/components/assistant-connection.tsx:146
 msgid "It will send you to this site to sign in and ask whether you want to allow it. Nothing is connected until you say yes, and the program never sees your password or anything you could paste elsewhere."
 msgstr "Sizi giriş yapmanız için bu siteye yönlendirir ve izin verip vermeyeceğinizi sorar. Siz evet demeden hiçbir şey bağlanmaz; program parolanızı ya da başka bir yere yapıştırabileceğiniz bir şeyi hiç görmez."
 
@@ -2586,7 +2614,7 @@ msgstr "Not"
 msgid "Nothing asked for yet"
 msgstr "Henüz bir başvuru yok"
 
-#: src/components/assistant-connection.tsx:168
+#: src/components/assistant-connection.tsx:170
 msgid "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
 msgstr "Başka bir şey yok. Burada bir yazıyı ya da dosyayı silen bir araç yok — o, bir insanın bu panelde yaptığı şey olarak kalıyor."
 
@@ -2607,7 +2635,7 @@ msgstr "Henüz bir şey gelmedi"
 #~ msgid "Nothing is connected"
 #~ msgstr "Bağlı bir şey yok"
 
-#: src/components/assistant-connection.tsx:186
+#: src/components/assistant-connection.tsx:188
 msgid "Nothing is connected yet. Follow the three steps above and whatever you allowed will appear here."
 msgstr "Henüz bağlı bir şey yok. Yukarıdaki üç adımı izleyin; izin verdiğiniz her ne ise burada görünecek."
 
@@ -2714,7 +2742,7 @@ msgstr "Yalnızca elle"
 msgid "Only for a private repository"
 msgstr "Yalnızca özel depolar için"
 
-#: src/components/assistant-connection.tsx:164
+#: src/components/assistant-connection.tsx:166
 msgid "Only reads"
 msgstr "Yalnızca okur"
 
@@ -3179,6 +3207,14 @@ msgstr "Göndermeyi sürdür"
 msgid "Row"
 msgstr "Satır"
 
+#: src/components/assistant-clients.tsx:77
+msgid "Run this, then /mcp to sign in."
+msgstr "Bunu çalıştırın, sonra giriş için /mcp."
+
+#: src/components/assistant-clients.tsx:68
+msgid "Run this. It notices that the address asks for a sign-in and opens one."
+msgstr "Bunu çalıştırın. Adresin giriş istediğini fark edip girişi kendisi açar."
+
 #: src/components/plugin-forms.tsx:195
 #: src/components/plugin-forms.tsx:208
 #: src/routes/dashboard.plugins_.backup.tsx:229
@@ -3440,6 +3476,18 @@ msgstr "Ayarlar paneli"
 msgid "Settings saved"
 msgstr "Ayarlar kaydedildi"
 
+#: src/components/assistant-clients.tsx:57
+msgid "Settings, then Connectors, then Advanced settings at the bottom: turn on developer mode."
+msgstr "Ayarlar, sonra Bağlayıcılar, sonra en alttaki Gelişmiş ayarlar: geliştirici kipini açın."
+
+#: src/components/assistant-clients.tsx:46
+msgid "Settings, then Connectors."
+msgstr "Ayarlar, sonra Bağlayıcılar."
+
+#: src/components/assistant-clients.tsx:87
+msgid "Settings, then Tools & MCP, then New MCP Server — which opens the file below."
+msgstr "Ayarlar, sonra Tools & MCP, sonra New MCP Server — aşağıdaki dosyayı açar."
+
 #: src/components/setup/setup-wizard.tsx:865
 msgid "Setup failed"
 msgstr "Kurulum başarısız oldu"
@@ -3471,7 +3519,7 @@ msgstr "Giriş yap"
 msgid "Sign in to manage your site."
 msgstr "Sitenizi yönetmek için giriş yapın."
 
-#: src/components/assistant-connection.tsx:142
+#: src/components/assistant-connection.tsx:144
 msgid "Sign in, here"
 msgstr "Girişi burada yapın"
 
@@ -3804,6 +3852,10 @@ msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, SES'in doğrulamadı�
 msgid "The restore failed"
 msgstr "Geri yükleme başarısız oldu"
 
+#: src/components/assistant-clients.tsx:48
+msgid "The same connector then works in Claude on the web, on the desktop and on a phone."
+msgstr "Aynı bağlayıcı sonrasında web'de, masaüstünde ve telefonda Claude için çalışır."
+
 #: src/routes/dashboard.api.tsx:159
 msgid "The same, with each body included."
 msgstr "Aynısı, gövdeler dahil."
@@ -3866,6 +3918,10 @@ msgstr "Bu bağlanamaz"
 msgid "This is the only time it is shown. Leave this page and it cannot be read again — make another one instead."
 msgstr "Yalnızca bir kez gösterilir. Bu sayfadan çıkarsanız bir daha okunamaz; yenisini üretmeniz gerekir."
 
+#: src/components/assistant-connection.tsx:139
+msgid "This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:"
+msgstr "Hepsi bu — bulunacak bir jeton ya da düzenlenecek bir dosya yok. Nereye yapıştırılacağı programa göre değişiyor:"
+
 #: src/routes/console.account.tsx:107
 msgid "This is what you sign in with."
 msgstr "Giriş yaparken bunu kullanırsınız."
@@ -3886,7 +3942,7 @@ msgstr "Bu giriş sunucunun kendisine. Diğer herkes başka bir yerden giriyor:"
 msgid "This site"
 msgstr "Bu site"
 
-#: src/components/assistant-connection.tsx:153
+#: src/components/assistant-connection.tsx:155
 msgid "This site's tools could not be listed just now."
 msgstr "Bu sitenin araçları şu an listelenemedi."
 
@@ -4149,8 +4205,8 @@ msgid "Where to send it"
 msgstr "Nereye gönderilsin"
 
 #: src/components/assistant-connection.tsx:138
-msgid "Wherever the program asks for an MCP server, or a custom connector, paste this and nothing else. There is no token to find and no file to edit."
-msgstr "Program nerede MCP sunucusu ya da özel bağlayıcı istiyorsa yalnızca bunu yapıştırın. Bulunacak bir jeton ya da düzenlenecek bir dosya yok."
+#~ msgid "Wherever the program asks for an MCP server, or a custom connector, paste this and nothing else. There is no token to find and no file to edit."
+#~ msgstr "Program nerede MCP sunucusu ya da özel bağlayıcı istiyorsa yalnızca bunu yapıştırın. Bulunacak bir jeton ya da düzenlenecek bir dosya yok."
 
 #: src/routes/dashboard.api.tsx:195
 msgid "Which fields a form takes, and which are required."

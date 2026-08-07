@@ -20,6 +20,7 @@ import {
   type AssistantTool,
   type Connection,
 } from "@/lib/api"
+import { AssistantClients } from "@/components/assistant-clients"
 import { Button } from "@/components/ui/button"
 
 /**
@@ -135,8 +136,9 @@ export function AssistantConnection({ origin }: { origin: string }) {
         <Step number={1} title={t`Give it this address`}>
           <Copyable text={url} label={t`Copy the address`} />
           <p className="text-sm text-muted-foreground">
-            {t`Wherever the program asks for an MCP server, or a custom connector, paste this and nothing else. There is no token to find and no file to edit.`}
+            {t`This is the whole of it — there is no token to find and no file to edit. Where it goes depends on the program:`}
           </p>
+          <AssistantClients url={url} />
         </Step>
 
         <Step number={2} title={t`Sign in, here`}>
