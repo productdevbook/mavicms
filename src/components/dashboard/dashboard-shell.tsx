@@ -61,7 +61,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const matchRoute = useMatchRoute()
   const { user, site } = useRouteContext({ from: "/dashboard" })
-  const { types } = useContentTypes()
+  const { types, find } = useContentTypes()
+
+  // Which kind this button writes depends on which list is on screen. It used
+  // to be a post wherever you stood, so pressing it on the courses page gave
+  // you a blog post with none of a course's fields on it.
+  const showing = matchRoute({ to: "/dashboard/content/$kind", fuzzy: false })
+  const writing = (showing ? find(showing.kind) : undefined) ?? {
+    slug: "post",
+    name: t`post`,
+  }
 
   // The server's own installation and a hosted site are the same panel; which
   // one this is decides the colour, the icon and what the tab is called.
@@ -174,8 +183,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <span className="hidden text-sm text-muted-foreground sm:inline">
             {user.username}
           </span>
-          <Button size="sm" onClick={() => navigate({ to: "/editor/new" })}>
-            {t`New post`}
+          <Button
+            size="sm"
+            onClick={() =>
+              navigate({
+                to: "/editor/new",
+                search: { kind: writing.slug, locale: undefined, translationOf: undefined },
+              })
+            }
+          >
+            {t`New ${writing.name}`}
           </Button>
           <LocaleToggle />
           <ModeToggle />

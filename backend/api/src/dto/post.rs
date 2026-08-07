@@ -334,7 +334,12 @@ fn default_true() -> bool {
 #[derive(Debug, Deserialize, ToSchema)]
 pub struct CreatePostRequest {
     pub title: String,
-    pub slug: String,
+    /// The address it answers on. Worked out from the title when it is left
+    /// out, which is what every caller should do: a client that makes its own
+    /// is a second opinion about what a slug looks like, and the two disagree
+    /// the first time somebody writes a title in Turkish.
+    #[serde(default)]
+    pub slug: Option<String>,
     #[serde(default)]
     pub excerpt: String,
     #[serde(default)]

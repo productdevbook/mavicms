@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui/react/macro"
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react"
 
-import type { FormField, FormFieldKind } from "@/lib/api"
+import { getSlug, type FormField, type FormFieldKind } from "@/lib/api"
 import { emptyField, fieldName } from "@/lib/form-fields"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -96,6 +96,18 @@ export function FormFieldsEditor({
                       ? { name: fieldName(label) }
                       : {}),
                   })
+                }}
+                onBlur={(event) => {
+                  // The server has the only opinion that counts, and asking it
+                  // once the label is finished costs one request rather than
+                  // one per keystroke.
+                  const label = event.target.value
+                  if (!label.trim()) return
+                  const derived = fieldName(label)
+                  if (fields[index]?.name !== derived) return
+                  void getSlug(label)
+                    .then((slug) => patch(index, { name: fieldName(slug) }))
+                    .catch(() => {})
                 }}
               />
             </div>

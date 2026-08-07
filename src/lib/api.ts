@@ -264,7 +264,8 @@ export interface PostTranslation {
 
 export interface PostPayload {
   title: string
-  slug: string
+  /** Worked out from the title by the server when it is left out. */
+  slug?: string
   /** Defaults to a post. */
   kind?: PostKind
   /** Replaces every value carried for the kind's fields. */

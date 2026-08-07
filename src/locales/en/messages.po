@@ -343,7 +343,7 @@ msgstr "A post carries <0>content_markdown</0>, which is what it is written as, 
 msgid "A prefix inside the bucket."
 msgstr "A prefix inside the bucket."
 
-#: src/components/editor/mavi-editor.tsx:294
+#: src/components/editor/mavi-editor.tsx:297
 msgid "A scheduled post needs a publish date"
 msgstr "A scheduled post needs a publish date"
 
@@ -355,7 +355,7 @@ msgstr "a second, at most"
 msgid "Accepting answers"
 msgstr "Accepting answers"
 
-#: src/components/form-fields-editor.tsx:117
+#: src/components/form-fields-editor.tsx:129
 msgid "Accepts"
 msgstr "Accepts"
 
@@ -389,7 +389,7 @@ msgstr "Add"
 msgid "Add a blockquote"
 msgstr "Add a blockquote"
 
-#: src/components/form-fields-editor.tsx:208
+#: src/components/form-fields-editor.tsx:220
 msgid "Add a field"
 msgstr "Add a field"
 
@@ -654,7 +654,7 @@ msgstr "Anybody can be written to, up to the limits above."
 #~ msgid "Anywhere that takes a configuration file:"
 #~ msgstr "Anywhere that takes a configuration file:"
 
-#: src/components/dashboard/dashboard-shell.tsx:103
+#: src/components/dashboard/dashboard-shell.tsx:112
 #: src/routes/dashboard.api.tsx:207
 msgid "API"
 msgstr "API"
@@ -739,7 +739,7 @@ msgstr "Back"
 msgid "Back in Connectors, create a custom connector and paste the address."
 msgstr "Back in Connectors, create a custom connector and paste the address."
 
-#: src/components/editor/mavi-editor.tsx:565
+#: src/components/editor/mavi-editor.tsx:568
 msgid "Back to editing"
 msgstr "Back to editing"
 
@@ -780,7 +780,7 @@ msgstr "Basic"
 msgid "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 msgstr "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 
-#: src/components/dashboard/dashboard-shell.tsx:93
+#: src/components/dashboard/dashboard-shell.tsx:102
 #: src/routes/dashboard.trash.tsx:129
 msgid "Bin"
 msgstr "Bin"
@@ -918,7 +918,7 @@ msgstr "Carry on"
 msgid "Case sensitive"
 msgstr "Case sensitive"
 
-#: src/components/dashboard/dashboard-shell.tsx:89
+#: src/components/dashboard/dashboard-shell.tsx:98
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Categories"
@@ -955,7 +955,7 @@ msgstr "Changes things"
 msgid "Checkbox to-do list"
 msgstr "Checkbox to-do list"
 
-#: src/components/form-fields-editor.tsx:184
+#: src/components/form-fields-editor.tsx:196
 msgid "Choices"
 msgstr "Choices"
 
@@ -1089,7 +1089,7 @@ msgstr "Connecting with a token instead, from a terminal"
 msgid "Connection URL"
 msgstr "Connection URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:76
+#: src/components/dashboard/dashboard-shell.tsx:85
 #: src/routes/dashboard.api.tsx:300
 msgid "Content"
 msgstr "Content"
@@ -1098,7 +1098,7 @@ msgstr "Content"
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
 msgstr "Content already written in this language blocks removal — you'll be told how much there is."
 
-#: src/components/dashboard/dashboard-shell.tsx:99
+#: src/components/dashboard/dashboard-shell.tsx:108
 msgid "Content types"
 msgstr "Content types"
 
@@ -1280,7 +1280,7 @@ msgstr "Could not do it"
 msgid "Could not link tags"
 msgstr "Could not link tags"
 
-#: src/components/editor/mavi-editor.tsx:269
+#: src/components/editor/mavi-editor.tsx:272
 msgid "Could not load post"
 msgstr "Could not load post"
 
@@ -1425,7 +1425,7 @@ msgstr "Could not remove them"
 msgid "Could not save it"
 msgstr "Could not save it"
 
-#: src/components/editor/mavi-editor.tsx:333
+#: src/components/editor/mavi-editor.tsx:336
 msgid "Could not save post"
 msgstr "Could not save post"
 
@@ -1522,7 +1522,7 @@ msgstr "Cover image"
 msgid "Cover preview"
 msgstr "Cover preview"
 
-#: src/components/editor/mavi-editor.tsx:538
+#: src/components/editor/mavi-editor.tsx:541
 msgid "Create"
 msgstr "Create"
 
@@ -1559,7 +1559,7 @@ msgstr "Custom"
 msgid "Dark"
 msgstr "Dark"
 
-#: src/components/editor/mavi-editor.tsx:481
+#: src/components/editor/mavi-editor.tsx:484
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -1713,7 +1713,7 @@ msgstr "Download"
 msgid "Draft"
 msgstr "Draft"
 
-#: src/components/editor/mavi-editor.tsx:329
+#: src/components/editor/mavi-editor.tsx:332
 msgid "Draft saved"
 msgstr "Draft saved"
 
@@ -1727,7 +1727,7 @@ msgstr "Each language has its own tags. Link them so a post's tag can point at i
 
 #: src/components/dashboard/content-list.tsx:201
 #: src/components/editor/bubble-menus.tsx:323
-#: src/components/editor/mavi-editor.tsx:538
+#: src/components/editor/mavi-editor.tsx:541
 #: src/routes/dashboard.categories.tsx:309
 #: src/routes/dashboard.forms.tsx:206
 #: src/routes/dashboard.mail.tsx:311
@@ -1884,7 +1884,7 @@ msgid "Find…"
 msgstr "Find…"
 
 #: src/components/editor/dialogs.tsx:543
-#: src/components/editor/mavi-editor.tsx:557
+#: src/components/editor/mavi-editor.tsx:560
 msgid "Focus mode"
 msgstr "Focus mode"
 
@@ -1915,7 +1915,7 @@ msgstr "Format"
 msgid "Formatting"
 msgstr "Formatting"
 
-#: src/components/dashboard/dashboard-shell.tsx:91
+#: src/components/dashboard/dashboard-shell.tsx:100
 #: src/routes/dashboard.forms_.$formId.tsx:144
 #: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
@@ -1942,7 +1942,7 @@ msgid "Full width"
 msgstr "Full width"
 
 #: src/components/editor/dialogs.tsx:544
-#: src/components/editor/mavi-editor.tsx:572
+#: src/components/editor/mavi-editor.tsx:575
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
@@ -1970,7 +1970,7 @@ msgstr "Give it this address"
 msgid "Give it this policy."
 msgstr "Give it this policy."
 
-#: src/components/editor/mavi-editor.tsx:285
+#: src/components/editor/mavi-editor.tsx:288
 msgid "Give your post a title first"
 msgstr "Give your post a title first"
 
@@ -2139,7 +2139,7 @@ msgid "Import"
 msgstr "Import"
 
 #: src/components/editor/dialogs.tsx:434
-#: src/components/editor/mavi-editor.tsx:580
+#: src/components/editor/mavi-editor.tsx:583
 msgid "Import / export"
 msgstr "Import / export"
 
@@ -2274,7 +2274,7 @@ msgstr "Justify"
 msgid "Keep going, type “/” to add a block…"
 msgstr "Keep going, type “/” to add a block…"
 
-#: src/components/form-fields-editor.tsx:103
+#: src/components/form-fields-editor.tsx:115
 msgid "Key"
 msgstr "Key"
 
@@ -2291,7 +2291,7 @@ msgstr "Label"
 msgid "Language"
 msgstr "Language"
 
-#: src/components/dashboard/dashboard-shell.tsx:100
+#: src/components/dashboard/dashboard-shell.tsx:109
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Languages"
@@ -2418,7 +2418,7 @@ msgstr "Long text"
 msgid "Made {0}"
 msgstr "Made {0}"
 
-#: src/components/dashboard/dashboard-shell.tsx:92
+#: src/components/dashboard/dashboard-shell.tsx:101
 #: src/routes/console.sites.$siteId.tsx:310
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
 #: src/routes/dashboard.mail.tsx:69
@@ -2489,7 +2489,7 @@ msgstr "Markdown imported"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS needs a database to store your site."
 
-#: src/components/dashboard/dashboard-shell.tsx:88
+#: src/components/dashboard/dashboard-shell.tsx:97
 msgid "Media"
 msgstr "Media"
 
@@ -2526,15 +2526,15 @@ msgstr "Messages a day"
 msgid "Messages a second"
 msgstr "Messages a second"
 
-#: src/components/form-fields-editor.tsx:166
+#: src/components/form-fields-editor.tsx:178
 msgid "Move down"
 msgstr "Move down"
 
-#: src/components/form-fields-editor.tsx:157
+#: src/components/form-fields-editor.tsx:169
 msgid "Move up"
 msgstr "Move up"
 
-#: src/components/form-fields-editor.tsx:149
+#: src/components/form-fields-editor.tsx:161
 msgid "Must be filled in"
 msgstr "Must be filled in"
 
@@ -2573,6 +2573,11 @@ msgstr "Needed to schedule"
 msgid "needs translation"
 msgstr "needs translation"
 
+#. placeholder {0}: writing.name
+#: src/components/dashboard/dashboard-shell.tsx:195
+msgid "New {0}"
+msgstr "New {0}"
+
 #: src/components/dashboard/content-list.tsx:162
 msgid "New {one}"
 msgstr "New {one}"
@@ -2608,8 +2613,8 @@ msgid "New password"
 msgstr "New password"
 
 #: src/components/dashboard/dashboard-shell.tsx:178
-msgid "New post"
-msgstr "New post"
+#~ msgid "New post"
+#~ msgstr "New post"
 
 #: src/routes/dashboard.tags.tsx:153
 msgid "New tag"
@@ -3045,7 +3050,7 @@ msgstr "Pause"
 msgid "Paused"
 msgstr "Paused"
 
-#: src/components/dashboard/dashboard-shell.tsx:102
+#: src/components/dashboard/dashboard-shell.tsx:111
 #: src/routes/dashboard.mail.tsx:80
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
@@ -3083,7 +3088,7 @@ msgstr "plain text"
 msgid "Plain text block"
 msgstr "Plain text block"
 
-#: src/components/dashboard/dashboard-shell.tsx:101
+#: src/components/dashboard/dashboard-shell.tsx:110
 #: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.email.tsx:118
 #: src/routes/dashboard.plugins_.s3.tsx:111
@@ -3100,6 +3105,7 @@ msgstr "Point the address at this server first — the site answers on whichever
 msgid "Port"
 msgstr "Port"
 
+#: src/components/dashboard/dashboard-shell.tsx:72
 #: src/components/editor/post-settings.tsx:427
 #: src/routes/dashboard.trash.tsx:68
 msgid "post"
@@ -3113,15 +3119,15 @@ msgstr "post"
 msgid "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 msgstr "Post JSON to this address from your own pages or software. No account is needed, and only the fields above are accepted."
 
-#: src/components/editor/mavi-editor.tsx:624
+#: src/components/editor/mavi-editor.tsx:627
 msgid "Post published"
 msgstr "Post published"
 
-#: src/components/editor/mavi-editor.tsx:692
+#: src/components/editor/mavi-editor.tsx:695
 msgid "Post settings"
 msgstr "Post settings"
 
-#: src/components/editor/mavi-editor.tsx:677
+#: src/components/editor/mavi-editor.tsx:680
 #: src/components/editor/post-settings.tsx:430
 msgid "Post title"
 msgstr "Post title"
@@ -3131,7 +3137,7 @@ msgstr "Post title"
 msgid "post-url"
 msgstr "post-url"
 
-#: src/components/dashboard/dashboard-shell.tsx:78
+#: src/components/dashboard/dashboard-shell.tsx:87
 msgid "Posts"
 msgstr "Posts"
 
@@ -3139,7 +3145,7 @@ msgstr "Posts"
 msgid "Posts, newest first, in pages."
 msgstr "Posts, newest first, in pages."
 
-#: src/components/editor/mavi-editor.tsx:565
+#: src/components/editor/mavi-editor.tsx:568
 msgid "Preview"
 msgstr "Preview"
 
@@ -3160,8 +3166,8 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:108
-#: src/components/editor/mavi-editor.tsx:629
+#: src/components/dashboard/dashboard-shell.tsx:117
+#: src/components/editor/mavi-editor.tsx:632
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:308
 #: src/routes/dashboard.publish.tsx:116
@@ -3269,7 +3275,7 @@ msgstr "Regular expression"
 
 #: src/components/editor/bubble-menus.tsx:193
 #: src/components/editor/bubble-menus.tsx:274
-#: src/components/form-fields-editor.tsx:175
+#: src/components/form-fields-editor.tsx:187
 #: src/components/plugin-forms.tsx:385
 #: src/components/plugin-forms.tsx:393
 #: src/components/publish-panel.tsx:136
@@ -3423,7 +3429,7 @@ msgstr "S3 compatible storage"
 msgid "Sandbox"
 msgstr "Sandbox"
 
-#: src/components/editor/mavi-editor.tsx:618
+#: src/components/editor/mavi-editor.tsx:621
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
 #: src/routes/console.account.tsx:145
@@ -3615,7 +3621,7 @@ msgstr "SEO description"
 msgid "SEO title"
 msgstr "SEO title"
 
-#: src/components/form-fields-editor.tsx:196
+#: src/components/form-fields-editor.tsx:208
 msgid "Separated by commas"
 msgstr "Separated by commas"
 
@@ -3653,7 +3659,7 @@ msgstr "Set up the S3 plugin first if you want backups kept off this machine."
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/editor/mavi-editor.tsx:593
+#: src/components/editor/mavi-editor.tsx:596
 msgid "Settings panel"
 msgstr "Settings panel"
 
@@ -3690,7 +3696,7 @@ msgid "Short description shown on listing pages"
 msgstr "Short description shown on listing pages"
 
 #: src/components/editor/dialogs.tsx:545
-#: src/components/editor/mavi-editor.tsx:586
+#: src/components/editor/mavi-editor.tsx:589
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
@@ -3716,8 +3722,8 @@ msgstr "Sign in, here"
 msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
-#: src/components/dashboard/dashboard-shell.tsx:185
-#: src/components/editor/mavi-editor.tsx:602
+#: src/components/dashboard/dashboard-shell.tsx:202
+#: src/components/editor/mavi-editor.tsx:605
 #: src/routes/console.index.tsx:119
 msgid "Sign out"
 msgstr "Sign out"
@@ -3746,7 +3752,7 @@ msgstr "Site removed"
 msgid "Site title"
 msgstr "Site title"
 
-#: src/components/dashboard/dashboard-shell.tsx:110
+#: src/components/dashboard/dashboard-shell.tsx:119
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
 msgstr "Sites"
@@ -3881,8 +3887,8 @@ msgstr "System"
 msgid "Table"
 msgstr "Table"
 
-#: src/components/editor/mavi-editor.tsx:550
-#: src/components/editor/mavi-editor.tsx:645
+#: src/components/editor/mavi-editor.tsx:553
+#: src/components/editor/mavi-editor.tsx:648
 msgid "Table of contents"
 msgstr "Table of contents"
 
@@ -3894,7 +3900,7 @@ msgstr "tag"
 msgid "Tagline"
 msgstr "Tagline"
 
-#: src/components/dashboard/dashboard-shell.tsx:90
+#: src/components/dashboard/dashboard-shell.tsx:99
 #: src/components/editor/post-settings.tsx:247
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -4123,7 +4129,7 @@ msgstr "This is the whole of it — there is no token to find and no file to edi
 msgid "This is what you sign in with."
 msgstr "This is what you sign in with."
 
-#: src/components/editor/mavi-editor.tsx:256
+#: src/components/editor/mavi-editor.tsx:259
 msgid "This post could not be opened, so it has been left untouched."
 msgstr "This post could not be opened, so it has been left untouched."
 
@@ -4135,7 +4141,7 @@ msgstr "This server is by invitation"
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
 msgstr "This signs you in to the server itself. Everyone else signs in somewhere else:"
 
-#: src/components/dashboard/dashboard-shell.tsx:97
+#: src/components/dashboard/dashboard-shell.tsx:106
 msgid "This site"
 msgstr "This site"
 
@@ -4161,7 +4167,7 @@ msgstr "Tokens"
 msgid "took {0} seconds"
 msgstr "took {0} seconds"
 
-#: src/components/editor/mavi-editor.tsx:508
+#: src/components/editor/mavi-editor.tsx:511
 msgid "Translations"
 msgstr "Translations"
 
@@ -4213,8 +4219,8 @@ msgstr "Untitled"
 #~ msgid "Untitled page"
 #~ msgstr "Untitled page"
 
-#: src/components/editor/mavi-editor.tsx:490
-#: src/components/editor/mavi-editor.tsx:675
+#: src/components/editor/mavi-editor.tsx:493
+#: src/components/editor/mavi-editor.tsx:678
 msgid "Untitled post"
 msgstr "Untitled post"
 

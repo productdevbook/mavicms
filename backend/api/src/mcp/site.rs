@@ -657,14 +657,9 @@ async fn write_post(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppR
         .unwrap_or_default()
         .to_string();
 
-    let slug = match text(arguments, "slug") {
-        Some(slug) => slug,
-        None => crate::slug::slugify(&title),
-    };
-
     let payload = CreatePostRequest {
         title,
-        slug,
+        slug: text(arguments, "slug"),
         excerpt: arguments
             .get("excerpt")
             .and_then(Value::as_str)
