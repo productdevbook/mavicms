@@ -280,13 +280,13 @@ export function MaviEditor({
 
   const persist = React.useCallback(
     async (nextMeta: PostMeta, options?: { notify?: boolean }) => {
-      if (!editor) return
+      if (!editor) return false
       // A brand-new, untitled post has nothing worth saving yet (and the
       // backend rejects an empty title) — wait for the user to type one
       // instead of surfacing a validation error on every keystroke-free tick.
       if (!currentPostId && !nextMeta.title.trim()) {
         if (options?.notify) toast.error(t`Give your post a title first`)
-        return
+        return false
       }
       // The status is chosen above the date it needs, so an autosave in
       // between would refuse the post for a gap the writer is two seconds from
@@ -296,7 +296,7 @@ export function MaviEditor({
         if (options?.notify) {
           toast.error(t`A scheduled post needs a publish date`)
         }
-        return
+        return false
       }
       setSaveState("saving")
       // Both forms, from the one place that can produce either: Markdown is
@@ -330,11 +330,13 @@ export function MaviEditor({
         }
         setSaveState("saved")
         if (options?.notify) toast.success(t`Draft saved`)
+        return true
       } catch (error) {
         setSaveState("idle")
         toast.error(
           error instanceof ApiError ? error.message : t`Could not save post`
         )
+        return false
       }
     },
     [editor, currentPostId, navigate, t, locale, translationOf]
@@ -377,6 +379,23 @@ export function MaviEditor({
     },
     [scheduleSave]
   )
+
+  // Publishing is the one save whose outcome the writer is told about, so it
+  // waits for the server instead of going through the autosave timer. A post
+  // whose content type has a required field still empty is refused, and the
+  // status has to go back to what it was — otherwise the header reads
+  // "Published" over a post the site will never show.
+  const publish = React.useCallback(async () => {
+    if (saveTimer.current) window.clearTimeout(saveTimer.current)
+    const before = metaRef.current.status
+    const next: PostMeta = { ...metaRef.current, status: "published" }
+    setMeta(next)
+    if (await persist(next)) {
+      toast.success(t`Post published`, { description: `/blog/${next.slug}` })
+    } else {
+      setMeta((current) => ({ ...current, status: before }))
+    }
+  }, [persist, t])
 
   // Slug tracks the title automatically until the user edits it directly
   // (via post settings) — same "auto until touched" behavior as WordPress's
@@ -620,15 +639,7 @@ export function MaviEditor({
         >
           <Save /> {t`Save`}
         </Button>
-        <Button
-          size="sm"
-          onClick={() => {
-            updateMeta({ status: "published" })
-            toast.success(t`Post published`, {
-              description: `/blog/${meta.slug}`,
-            })
-          }}
-        >
+        <Button size="sm" onClick={() => void publish()}>
           <Send /> {t`Publish`}
         </Button>
       </header>
