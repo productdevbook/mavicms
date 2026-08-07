@@ -69,7 +69,7 @@ export function McpConnection({
       <div>
         <h2 className="text-sm font-medium">{t`Assistants`}</h2>
         <p className="text-sm text-muted-foreground">
-          {t`This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others.`}
+          {t`This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how.`}
         </p>
       </div>
 
@@ -78,39 +78,49 @@ export function McpConnection({
       <Copyable text={url} label={t`Copy the address`} />
 
       <p className="text-sm text-muted-foreground">
-        {t`In Claude Code, one line:`}
+        {t`Paste it wherever a program asks for a server address and nothing else. You will be sent here to sign in and asked whether to allow it, and it will then be able to do what you can — writing included. This is the way to connect.`}
       </p>
-      <Copyable
-        text={`claude mcp add --transport http ${name} ${url} \\
+
+      <details className="rounded-lg border border-border px-3 py-2">
+        <summary className="cursor-pointer text-sm text-muted-foreground">
+          {t`Connecting with a token instead, from a terminal`}
+        </summary>
+
+        <div className="flex flex-col gap-3 pt-3">
+          <p className="text-sm text-muted-foreground">
+            {t`A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead.`}
+          </p>
+
+          <Copyable
+            text={`claude mcp add --transport http ${name} ${url} \\
   --header "Authorization: Bearer ${secret}"`}
-        label={t`Copy the command`}
-      />
+            label={t`Copy the command`}
+          />
 
-      <p className="text-sm text-muted-foreground">
-        {t`Anywhere that takes a configuration file:`}
-      </p>
-      <Copyable
-        text={JSON.stringify(
-          {
-            mcpServers: {
-              [name]: {
-                type: "http",
-                url,
-                headers: { Authorization: `Bearer ${secret}` },
+          <Copyable
+            text={JSON.stringify(
+              {
+                mcpServers: {
+                  [name]: {
+                    type: "http",
+                    url,
+                    headers: { Authorization: `Bearer ${secret}` },
+                  },
+                },
               },
-            },
-          },
-          null,
-          2
-        )}
-        label={t`Copy the configuration`}
-      />
+              null,
+              2
+            )}
+            label={t`Copy the configuration`}
+          />
 
-      {!token && (
-        <p className="text-sm text-muted-foreground">
-          {t`Put a token where the … is. It is shown once, when you make it.`}
-        </p>
-      )}
+          {!token && (
+            <p className="text-sm text-muted-foreground">
+              {t`Put a token where the … is. It is shown once, when you make it.`}
+            </p>
+          )}
+        </div>
+      </details>
     </section>
   )
 }

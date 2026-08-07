@@ -126,8 +126,9 @@ pub async fn upload_media(
     Ok((StatusCode::CREATED, Json(saved.into())))
 }
 
-/// Validates, stores and records an image. Shared by uploading and importing.
-async fn store_image(
+/// Validates, stores and records an image. Shared by uploading, importing,
+/// and an assistant sending one over MCP.
+pub(crate) async fn store_image(
     state: &AppState,
     bytes: &[u8],
     filename: String,
@@ -188,6 +189,25 @@ pub async fn import_media(
     Site(state): Site,
     Json(payload): Json<ImportMediaRequest>,
 ) -> AppResult<(StatusCode, Json<MediaResponse>)> {
+    let saved = fetch_and_store(&state, &payload.url, payload.filename, payload.alt_text).await?;
+    Ok((StatusCode::CREATED, Json(saved.into())))
+}
+
+/// Fetches a public address and stores what comes back as an image.
+///
+/// The name is worked out from the address when nobody gave one, which is
+/// almost always: an assistant has a link and no opinion about filenames.
+pub(crate) async fn fetch_and_store(
+    state: &AppState,
+    url: &str,
+    filename: Option<String>,
+    alt_text: Option<String>,
+) -> AppResult<media::Model> {
+    let payload = ImportMediaRequest {
+        url: url.to_string(),
+        filename,
+        alt_text,
+    };
     let bytes = fetch_remote_file(&payload.url, MAX_UPLOAD_BYTES)
         .await
         .map_err(|err| match err {
@@ -206,14 +226,13 @@ pub async fn import_media(
             .to_string()
     });
 
-    let saved = store_image(
-        &state,
+    store_image(
+        state,
         &bytes,
         filename,
         payload.alt_text.unwrap_or_default(),
     )
-    .await?;
-    Ok((StatusCode::CREATED, Json(saved.into())))
+    .await
 }
 
 /// Deletes any of `candidates` that no post refers to any more.

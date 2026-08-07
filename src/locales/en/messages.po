@@ -264,6 +264,10 @@ msgstr "A build does not sign in. It is handed CMS_TOKEN, made below, which can 
 #~ msgid "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
 #~ msgstr "A build gets these from its build variables, which the site's agency sets — so the credentials live on the server rather than in the project."
 
+#: src/components/mcp-connection.tsx:91
+msgid "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
+msgstr "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
+
 #: src/components/plugin-forms.tsx:427
 msgid "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
 msgstr "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
@@ -586,8 +590,8 @@ msgid "Anybody can be written to, up to the limits above."
 msgstr "Anybody can be written to, up to the limits above."
 
 #: src/components/mcp-connection.tsx:90
-msgid "Anywhere that takes a configuration file:"
-msgstr "Anywhere that takes a configuration file:"
+#~ msgid "Anywhere that takes a configuration file:"
+#~ msgstr "Anywhere that takes a configuration file:"
 
 #: src/components/dashboard/dashboard-shell.tsx:87
 #: src/routes/dashboard.api.tsx:202
@@ -968,6 +972,10 @@ msgstr "Connected. Restarting the server…"
 msgid "Connecting as {0}"
 msgstr "Connecting as {0}"
 
+#: src/components/mcp-connection.tsx:86
+msgid "Connecting with a token instead, from a terminal"
+msgstr "Connecting with a token instead, from a terminal"
+
 #: src/components/setup/setup-wizard.tsx:415
 #: src/components/setup/setup-wizard.tsx:422
 msgid "Connection URL"
@@ -1038,11 +1046,11 @@ msgstr "Copy text"
 msgid "Copy the address"
 msgstr "Copy the address"
 
-#: src/components/mcp-connection.tsx:86
+#: src/components/mcp-connection.tsx:97
 msgid "Copy the command"
 msgstr "Copy the command"
 
-#: src/components/mcp-connection.tsx:106
+#: src/components/mcp-connection.tsx:114
 msgid "Copy the configuration"
 msgstr "Copy the configuration"
 
@@ -1970,8 +1978,8 @@ msgid "Import this archive?"
 msgstr "Import this archive?"
 
 #: src/components/mcp-connection.tsx:81
-msgid "In Claude Code, one line:"
-msgstr "In Claude Code, one line:"
+#~ msgid "In Claude Code, one line:"
+#~ msgstr "In Claude Code, one line:"
 
 #: src/components/editor/types.ts:27
 msgid "In review"
@@ -2025,9 +2033,13 @@ msgstr "Interactive docs"
 msgid "Invitations"
 msgstr "Invitations"
 
+#: src/routes/dashboard.api.tsx:242
+msgid "It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages."
+msgstr "It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages."
+
 #: src/routes/dashboard.api.tsx:246
-msgid "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
-msgstr "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
+#~ msgid "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
+#~ msgstr "It answers about this site: finding and reading posts, writing and correcting them, what has come in through the forms, and building the pages. A build token is offered only what reads."
 
 #. placeholder {0}: asking.client_name
 #: src/routes/oauth.tsx:110
@@ -2756,6 +2768,10 @@ msgstr "Password changed — sign in again"
 msgid "Paste an image address, drag and drop one, or pick from your media library."
 msgstr "Paste an image address, drag and drop one, or pick from your media library."
 
+#: src/components/mcp-connection.tsx:81
+msgid "Paste it wherever a program asks for a server address and nothing else. You will be sent here to sign in and asked whether to allow it, and it will then be able to do what you can — writing included. This is the way to connect."
+msgstr "Paste it wherever a program asks for a server address and nothing else. You will be sent here to sign in and asked whether to allow it, and it will then be able to do what you can — writing included. This is the way to connect."
+
 #: src/components/editor/dialogs.tsx:227
 msgid "Paste the video link."
 msgstr "Paste the video link."
@@ -2927,7 +2943,7 @@ msgstr "Publishing these is what proves the domain is yours, and what lets Amazo
 msgid "Publishing…"
 msgstr "Publishing…"
 
-#: src/components/mcp-connection.tsx:111
+#: src/components/mcp-connection.tsx:119
 msgid "Put a token where the … is. It is shown once, when you make it."
 msgstr "Put a token where the … is. It is shown once, when you make it."
 
@@ -3774,8 +3790,12 @@ msgid "This account is out of the sandbox: it can write to anybody."
 msgstr "This account is out of the sandbox: it can write to anybody."
 
 #: src/components/mcp-connection.tsx:72
-msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
-msgstr "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
+msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how."
+msgstr "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how."
+
+#: src/components/mcp-connection.tsx:72
+#~ msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
+#~ msgstr "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
 
 #: src/routes/oauth.tsx:76
 msgid "This cannot be connected"
