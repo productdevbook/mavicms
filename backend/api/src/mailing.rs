@@ -561,6 +561,19 @@ use crate::entities::{
 /// Confirmed members of its lists, minus anybody blocked, minus anybody
 /// already written to. Asking rather than remembering is what makes a worker
 /// that died mid-campaign safe to restart.
+/// How many people this campaign still has to write to.
+///
+/// Asked before the first batch so a campaign that cannot finish is refused
+/// whole. Half a newsletter is worse than none: the people who did not get it
+/// are the ones somebody would then have to explain it to.
+pub async fn how_many_are_waiting(
+    db: &DatabaseConnection,
+    campaign_id: uuid::Uuid,
+) -> AppResult<u64> {
+    // The same question the batch asks, without a ceiling on the answer.
+    Ok(remaining(db, campaign_id, u64::MAX).await?.len() as u64)
+}
+
 async fn remaining(
     db: &DatabaseConnection,
     campaign_id: uuid::Uuid,

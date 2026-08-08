@@ -376,7 +376,7 @@ pub async fn test_flow(
     .insert(db)
     .await?;
 
-    flows::run_queued(db, &state.secrets, &format!("https://{host}")).await?;
+    flows::run_queued(&state, &format!("https://{host}")).await?;
     one_run(db, run.id).await.map(Json)
 }
 

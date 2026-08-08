@@ -204,14 +204,22 @@ impl Builder {
             .await
             .map_err(|err| AppError::Internal(format!("could not open the site: {err}")))?;
 
-        let settings = mavicms_api::plugins::load::<mavicms_api::email::EmailConfig>(
+        // Its own account, or the server's with this site named as its own
+        // Amazon tenant.
+        let settings = mavicms_api::outbound::how_for(
             &db,
             &self.secrets,
-            mavicms_api::plugins::EMAIL_PLUGIN,
+            &self.control,
+            &self.secrets,
+            tenant.id,
         )
-        .await?
-        .filter(|stored| stored.enabled)
-        .ok_or_else(|| AppError::Validation("mail is not switched on for this site".to_string()))?;
+        .await?;
+
+        // Asked before the first message rather than discovered at message
+        // eighty-one: half a newsletter is worse than none, and the people who
+        // did not get it are the ones who would have to be told.
+        let waiting = mavicms_api::mailing::how_many_are_waiting(&db, campaign_id).await?;
+        mavicms_api::outbound::may_send(&settings, &db, waiting).await?;
 
         let site_url = format!("{}://{}", self.site_scheme, tenant.host);
         let api_base = format!("{site_url}/api");

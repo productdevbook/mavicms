@@ -634,18 +634,20 @@ async fn notify(state: &crate::state::AppState, form: &form::Model, data: &serde
         return;
     };
 
-    let settings = crate::plugins::load::<crate::email::EmailConfig>(
-        db,
-        &state.secrets,
-        crate::plugins::EMAIL_PLUGIN,
-    )
-    .await;
-
-    let Ok(Some(settings)) = settings else {
-        tracing::warn!(form = %form.slug, "a form names an address but mail is not set up");
-        return;
+    // Whichever account this site sends by — its own, or the server's with
+    // this site named as its own Amazon tenant.
+    let post = match crate::outbound::how(state).await {
+        Ok(post) => post,
+        Err(err) => {
+            tracing::warn!(form = %form.slug, error = %err, "a form names an address but cannot send");
+            return;
+        }
     };
-    if !settings.enabled {
+    // A form that stops emailing because the day's messages ran out is worth
+    // a line in the log: the submission is kept either way, and somebody has
+    // to be able to find out why the message never came.
+    if let Err(err) = crate::outbound::may_send(&post, db, 1).await {
+        tracing::warn!(form = %form.slug, error = %err, "not sending the notification");
         return;
     }
 
@@ -653,7 +655,7 @@ async fn notify(state: &crate::state::AppState, form: &form::Model, data: &serde
     let body = readable(form, data);
 
     if let Err(err) = crate::email::send(
-        &settings.config,
+        &post.config,
         crate::email::Message {
             to: &form.notify,
             subject: &subject,

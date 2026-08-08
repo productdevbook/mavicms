@@ -86,6 +86,10 @@ pub struct Registry {
     /// The address of that database, used to reach each site's schema.
     base_url: String,
     sites_dir: PathBuf,
+    /// The server's own key. What the server keeps on a site's behalf — the
+    /// account it lends for sending mail — is encrypted with this and not
+    /// with the site's, because it is not the site's to read.
+    server_secrets: Arc<crate::crypto::SecretBox>,
     open: Mutex<Vec<(Uuid, Open)>>,
 }
 
@@ -94,14 +98,17 @@ impl Registry {
         control: DatabaseConnection,
         base_url: String,
         sites_dir: PathBuf,
+        server_secrets: Arc<crate::crypto::SecretBox>,
     ) -> AppResult<Self> {
         create_table(&control).await?;
         crate::console::create_tables(&control).await?;
         crate::publish::create_tables(&control).await?;
+        crate::platform::create_tables(&control).await?;
         crate::mailing::create_tables(&control).await?;
         Ok(Self {
             control,
             base_url,
+            server_secrets,
             sites_dir,
             open: Mutex::new(Vec::new()),
         })
@@ -370,6 +377,9 @@ impl Registry {
             data_dir: root.clone(),
             media_root: root.join("media"),
             secrets: Arc::new(secrets),
+            control: Some(self.control.clone()),
+            control_secrets: Some(self.server_secrets.clone()),
+            tenant_id: Some(tenant.id),
         };
 
         if open.len() >= MAX_OPEN

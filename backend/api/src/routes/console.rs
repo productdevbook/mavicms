@@ -259,6 +259,248 @@ pub async fn logout(
     StatusCode::NO_CONTENT
 }
 
+#[derive(Debug, Serialize, ToSchema)]
+pub struct PlatformMailResponse {
+    /// Whether the server has an Amazon account of its own to lend.
+    pub configured: bool,
+    pub region: String,
+    pub from_address: String,
+    pub has_secret_access_key: bool,
+    /// What Amazon allows the account itself, so the numbers handed out below
+    /// can be read against something.
+    pub account_a_second: Option<f64>,
+    pub account_last_day: Option<f64>,
+    pub sites: Vec<SiteMailAllowance>,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct SiteMailAllowance {
+    pub site_id: String,
+    pub host: String,
+    /// "own" or "shared".
+    pub sends: String,
+    pub a_day: i64,
+    pub sent_today: u64,
+    pub ses_tenant: Option<String>,
+    /// What Amazon says about this site's own sending, when it has a tenant.
+    pub amazon_says: Option<String>,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct PlatformMailRequest {
+    pub region: String,
+    pub access_key_id: String,
+    /// Left out to keep the stored secret.
+    pub secret_access_key: Option<String>,
+    pub from_address: String,
+    #[serde(default)]
+    pub from_name: String,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct AllowanceRequest {
+    /// "own" or "shared".
+    pub sends: String,
+    /// Messages a day. Zero stops a site without taking anything away.
+    pub a_day: Option<i64>,
+}
+
+/// The account the server lends, and who is using it.
+#[utoipa::path(
+    get,
+    path = "/console/platform/mail",
+    tag = "console",
+    responses((status = 200, description = "The shared account", body = PlatformMailResponse))
+)]
+pub async fn get_platform_mail(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+) -> AppResult<Json<PlatformMailResponse>> {
+    let registry = hosting.registry()?;
+    let control = registry.control();
+    let held = crate::platform::ses(control, hosting.secrets()).await?;
+
+    // Asked of Amazon rather than remembered: the account's own limit is
+    // raised by Amazon, not by us, and a cached number is the number from
+    // before somebody asked for more.
+    let account = match held.as_ref() {
+        Some(config) => crate::email::account(config).await.ok(),
+        None => None,
+    };
+
+    let sites = registry.all().await?;
+    let mut out = Vec::new();
+    for allowed in crate::platform::allowances(control).await? {
+        let tenant = sites.iter().find(|one| one.id == allowed.tenant_id);
+
+        // Counted from the site's own log, which is the one record every send
+        // passes through whatever asked for it.
+        let sent_today = match tenant {
+            Some(tenant) => match registry.state_for(tenant).await {
+                Ok(state) => match state.db.as_ref() {
+                    Some(db) => crate::outbound::sent_today(db).await.unwrap_or(0),
+                    None => 0,
+                },
+                Err(_) => 0,
+            },
+            None => 0,
+        };
+
+        let amazon_says = match (held.as_ref(), allowed.ses_tenant.as_deref()) {
+            (Some(config), Some(name)) => crate::email::tenant_status(config, name).await.ok(),
+            _ => None,
+        };
+
+        out.push(SiteMailAllowance {
+            site_id: allowed.tenant_id.to_string(),
+            host: allowed.host,
+            sends: allowed.sends,
+            a_day: allowed.a_day,
+            sent_today,
+            ses_tenant: allowed.ses_tenant,
+            amazon_says,
+        });
+    }
+
+    Ok(Json(PlatformMailResponse {
+        configured: held.is_some(),
+        region: held.as_ref().map(|c| c.region.clone()).unwrap_or_default(),
+        from_address: held
+            .as_ref()
+            .map(|c| c.from_address.clone())
+            .unwrap_or_default(),
+        has_secret_access_key: held
+            .as_ref()
+            .map(|c| !c.secret_access_key.is_empty())
+            .unwrap_or(false),
+        account_a_second: account.as_ref().map(|a| a.max_send_rate),
+        account_last_day: account.as_ref().map(|a| a.sent_last_24_hours),
+        sites: out,
+    }))
+}
+
+/// Sets the account the server lends to its sites.
+#[utoipa::path(
+    put,
+    path = "/console/platform/mail",
+    tag = "console",
+    request_body = PlatformMailRequest,
+    responses((status = 204, description = "Saved"))
+)]
+pub async fn save_platform_mail(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+    Json(payload): Json<PlatformMailRequest>,
+) -> AppResult<StatusCode> {
+    let registry = hosting.registry()?;
+    let control = registry.control();
+    let held = crate::platform::ses(control, hosting.secrets()).await?;
+
+    let secret = match payload.secret_access_key.as_deref().map(str::trim) {
+        Some(given) if !given.is_empty() => given.to_string(),
+        // Left out means unchanged, so saving the form after reading it does
+        // not blank the one field it was never shown.
+        _ => held
+            .as_ref()
+            .map(|c| c.secret_access_key.clone())
+            .unwrap_or_default(),
+    };
+
+    let config = crate::email::EmailConfig {
+        region: payload.region.trim().to_string(),
+        access_key_id: payload.access_key_id.trim().to_string(),
+        secret_access_key: secret,
+        from_address: payload.from_address.trim().to_string(),
+        from_name: payload.from_name.trim().to_string(),
+        senders: held.as_ref().map(|c| c.senders.clone()).unwrap_or_default(),
+        events_token: held
+            .as_ref()
+            .map(|c| c.events_token.clone())
+            .filter(|token| !token.is_empty())
+            .unwrap_or_else(|| Uuid::now_v7().simple().to_string()),
+        events_topic_arn: held
+            .as_ref()
+            .map(|c| c.events_topic_arn.clone())
+            .unwrap_or_default(),
+        reply_to: String::new(),
+        configuration_set: held
+            .as_ref()
+            .map(|c| c.configuration_set.clone())
+            .unwrap_or_default(),
+        // The server's own account is not a tenant of anything.
+        tenant: String::new(),
+    };
+
+    crate::platform::set_ses(control, hosting.secrets(), &config).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Says whether one site may send through the server's account, and how much.
+///
+/// Turning it on makes that site an Amazon tenant, which is what keeps its
+/// reputation — and any trouble it gets into — its own.
+#[utoipa::path(
+    put,
+    path = "/console/platform/mail/{id}",
+    tag = "console",
+    params(("id" = String, Path, description = "Site id")),
+    request_body = AllowanceRequest,
+    responses(
+        (status = 200, description = "Set", body = SiteMailAllowance),
+        (status = 400, description = "The server has no account to lend", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn set_site_mail_allowance(
+    _operator: crate::tenants::Operator,
+    State(hosting): State<Hosting>,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<AllowanceRequest>,
+) -> AppResult<Json<SiteMailAllowance>> {
+    let registry = hosting.registry()?;
+    let control = registry.control();
+    let tenant = registry
+        .all()
+        .await?
+        .into_iter()
+        .find(|one| one.id == id)
+        .ok_or_else(|| AppError::NotFound("that site".to_string()))?;
+
+    let sends = crate::platform::Sends::read(&payload.sends);
+    let a_day = payload
+        .a_day
+        .unwrap_or(crate::platform::A_DAY_TO_BEGIN_WITH);
+
+    let mut ses_tenant = crate::platform::allowance(control, id)
+        .await?
+        .and_then(|held| held.ses_tenant);
+
+    if sends == crate::platform::Sends::Shared {
+        let config = crate::platform::ses(control, hosting.secrets())
+            .await?
+            .ok_or_else(|| {
+                AppError::Validation(
+                    "set the server's own Amazon account up before lending it".to_string(),
+                )
+            })?;
+
+        let name = crate::platform::tenant_name(&tenant.slug);
+        crate::email::create_tenant(&config, &name).await?;
+        ses_tenant = Some(name);
+    }
+
+    crate::platform::set_allowance(control, id, sends, a_day, ses_tenant.as_deref()).await?;
+
+    Ok(Json(SiteMailAllowance {
+        site_id: id.to_string(),
+        host: tenant.host,
+        sends: sends.as_str().to_string(),
+        a_day,
+        sent_today: 0,
+        ses_tenant,
+        amazon_says: None,
+    }))
+}
+
 /// Who is signed in to the console.
 #[utoipa::path(
     get,

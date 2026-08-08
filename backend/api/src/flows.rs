@@ -220,11 +220,8 @@ async fn too_busy(db: &DatabaseConnection, flow_id: Uuid) -> AppResult<bool> {
 
 /// Runs what is queued for one site. Called on the same tick that publishes
 /// what is due and empties the bin.
-pub async fn run_queued(
-    db: &DatabaseConnection,
-    secrets: &SecretBox,
-    site_url: &str,
-) -> AppResult<usize> {
+pub async fn run_queued(state: &crate::state::AppState, site_url: &str) -> AppResult<usize> {
+    let db = state.db_or_unavailable()?;
     let queued = flow_run::Entity::find()
         .filter(flow_run::Column::Status.eq(QUEUED))
         .order_by_asc(flow_run::Column::CreatedAt)
@@ -241,7 +238,7 @@ pub async fn run_queued(
         taken.started_at = Set(Some(Utc::now().fixed_offset()));
         taken.update(db).await?;
 
-        let outcome = run_one(db, secrets, site_url, &run).await;
+        let outcome = run_one(state, site_url, &run).await;
 
         let mut finished: flow_run::ActiveModel = flow_run::Entity::find_by_id(run.id)
             .one(db)
@@ -267,11 +264,11 @@ pub async fn run_queued(
 }
 
 async fn run_one(
-    db: &DatabaseConnection,
-    secrets: &SecretBox,
+    state: &crate::state::AppState,
     site_url: &str,
     run: &flow_run::Model,
 ) -> AppResult<()> {
+    let db = state.db_or_unavailable()?;
     let steps = flow_step::Entity::find()
         .filter(flow_step::Column::FlowId.eq(run.flow_id))
         .order_by_asc(flow_step::Column::Position)
@@ -291,7 +288,7 @@ async fn run_one(
             continue;
         }
 
-        let outcome = perform(db, secrets, &step, &seen).await;
+        let outcome = perform(state, &step, &seen).await;
         match outcome {
             Ok(output) => {
                 // A branch that says no does not fail; it ends the flow.
@@ -344,16 +341,17 @@ async fn record(
 }
 
 async fn perform(
-    db: &DatabaseConnection,
-    secrets: &SecretBox,
+    state: &crate::state::AppState,
     step: &flow_step::Model,
     seen: &Value,
 ) -> AppResult<Value> {
+    let db = state.db_or_unavailable()?;
+    let secrets = &state.secrets;
     let config: Value = serde_json::from_str(&step.config)
         .map_err(|err| AppError::Validation(format!("this step's settings are not JSON: {err}")))?;
 
     match step.action.as_str() {
-        action::MAIL_SEND => send_mail(db, secrets, &config, seen).await,
+        action::MAIL_SEND => send_mail(state, &config, seen).await,
         action::HTTP_REQUEST => make_request(&config, seen, None).await,
         action::BRANCH => Ok(json!({ "passed": branch_passes(&config, seen) })),
         action::SLACK => {
@@ -376,11 +374,12 @@ async fn perform(
 }
 
 async fn send_mail(
-    db: &DatabaseConnection,
-    secrets: &SecretBox,
+    state: &crate::state::AppState,
     config: &Value,
     seen: &Value,
 ) -> AppResult<Value> {
+    let db = state.db_or_unavailable()?;
+    let secrets = &state.secrets;
     let to = fill(config.get("to").and_then(Value::as_str).unwrap_or(""), seen);
     let subject = fill(
         config.get("subject").and_then(Value::as_str).unwrap_or(""),
@@ -416,21 +415,14 @@ async fn send_mail(
         return Ok(json!({ "to": to, "subject": subject, "server_said": said }));
     }
 
-    let settings = crate::plugins::load::<crate::email::EmailConfig>(
-        db,
-        secrets,
-        crate::plugins::EMAIL_PLUGIN,
-    )
-    .await?
-    .map(|stored| stored.config)
-    .ok_or_else(|| {
-        AppError::Validation(
-            "this site has no mail settings and this step names no account".to_string(),
-        )
-    })?;
+    // Its own account, or the server's with this site named as its own tenant.
+    // A flow is set off by the public, so the day's allowance is the thing
+    // standing between a contact form and somebody's afternoon.
+    let post = crate::outbound::how(state).await?;
+    crate::outbound::may_send(&post, db, 1).await?;
 
     crate::email::send(
-        &settings,
+        &post.config,
         crate::email::Message {
             to: &to,
             subject: &subject,

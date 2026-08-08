@@ -43,6 +43,11 @@ async fn main() {
         data_dir: config.data_dir.clone(),
         media_root: config.media_root.clone(),
         secrets: std::sync::Arc::new(secrets),
+        // The server's own installation is the control plane; it has nobody
+        // to borrow an account from.
+        control: None,
+        control_secrets: None,
+        tenant_id: None,
     };
 
     // Started before the state is handed to the router, which consumes it.
@@ -60,6 +65,7 @@ async fn main() {
                 db.clone(),
                 url.clone(),
                 config.data_dir.join("sites"),
+                state.secrets.clone(),
             )
             .await
             .unwrap_or_else(|err| panic!("failed to prepare the site registry: {err}")),

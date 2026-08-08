@@ -23,6 +23,8 @@ pub mod mcp;
 pub mod middleware;
 pub mod oauth;
 pub mod openapi;
+pub mod outbound;
+pub mod platform;
 pub mod plugins;
 pub mod publish;
 pub mod routes;

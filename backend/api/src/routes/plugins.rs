@@ -468,6 +468,9 @@ async fn resolve_email(
             .as_ref()
             .map(|stored| stored.config.events_topic_arn.clone())
             .unwrap_or_default(),
+        // Empty for a site's own account: there is one user of it. It is
+        // filled in only where the server lends its own.
+        tenant: String::new(),
     })
 }
 

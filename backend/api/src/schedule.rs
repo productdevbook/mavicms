@@ -142,8 +142,7 @@ async fn run_the_flows(
     )
     .await?;
 
-    let ran =
-        crate::flows::run_queued(db, &state.secrets, &format!("https://{}", tenant.host)).await?;
+    let ran = crate::flows::run_queued(&state, &format!("https://{}", tenant.host)).await?;
     if ran > 0 {
         tracing::info!(site = %tenant.slug, runs = ran, "ran flows");
     }

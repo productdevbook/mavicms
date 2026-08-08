@@ -411,12 +411,18 @@ const INSTRUCTIONS: &str = "This is a Mavi CMS site. Which site depends on the a
 /// Who is asking, and therefore which set of tools they are offered.
 pub enum Caller {
     /// Somebody working on one site, or a build reading it.
-    Site {
-        state: AppState,
-        user: crate::entities::user::Model,
-    },
+    ///
+    /// Boxed because a site's state is much larger than an agency's account,
+    /// and an enum is as big as its largest arm everywhere it is passed.
+    Site(Box<AtSite>),
     /// An agency, on the server's own address, asking about its sites.
-    Console(crate::console::Operator),
+    ///
+    Console(Box<crate::console::Operator>),
+}
+
+pub struct AtSite {
+    pub state: AppState,
+    pub user: crate::entities::user::Model,
 }
 
 async fn caller(
@@ -440,14 +446,14 @@ async fn caller(
         && let Some(operator) =
             console_session(registry.control(), cookies, bearer.as_deref()).await
     {
-        return Ok(Caller::Console(operator));
+        return Ok(Caller::Console(Box::new(operator)));
     }
 
     match crate::auth::authenticate(state, cookies, bearer.as_deref()).await {
-        Ok(user) => Ok(Caller::Site {
+        Ok(user) => Ok(Caller::Site(Box::new(AtSite {
             state: state.clone(),
             user,
-        }),
+        }))),
         // The header is the whole of how a client finds the sign-in flow: it
         // reads the address out of it, fetches the metadata there, registers
         // itself and sends somebody to authorize. Without it a connector can
@@ -513,7 +519,7 @@ pub struct Tool {
 
 fn listing(caller: &Caller) -> Value {
     let (tools, may_write) = match caller {
-        Caller::Site { user, .. } => (site::TOOLS, user.role != crate::auth::BUILDER),
+        Caller::Site(at) => (site::TOOLS, at.user.role != crate::auth::BUILDER),
         Caller::Console(_) => (console::TOOLS, true),
     };
 
@@ -556,7 +562,8 @@ async fn invoke(
     arguments: &Value,
 ) -> Option<Result<Value, AppError>> {
     match caller {
-        Caller::Site { state, user } => {
+        Caller::Site(at) => {
+            let (state, user) = (&at.state, &at.user);
             let tool = site::TOOLS.iter().find(|tool| tool.name == name)?;
             if tool.writes && user.role == crate::auth::BUILDER {
                 // Naming the credential and stopping there is what this used

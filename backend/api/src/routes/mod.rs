@@ -176,6 +176,11 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(console::create_invite, console::list_invites))
         .routes(routes!(console::revoke_invite))
         .routes(routes!(console::update_agency))
+        .routes(routes!(
+            console::get_platform_mail,
+            console::save_platform_mail
+        ))
+        .routes(routes!(console::set_site_mail_allowance))
         .routes(routes!(media::delete_media))
         .routes(routes!(media::import_media))
         .routes(routes!(

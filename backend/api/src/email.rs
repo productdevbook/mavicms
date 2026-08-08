@@ -57,6 +57,14 @@ pub struct EmailConfig {
     /// An SES configuration set, if the account uses them for tracking or
     /// dedicated IPs. Left empty, SES uses the account default.
     pub configuration_set: String,
+    /// Whose mail this is, when the account is shared.
+    ///
+    /// Amazon keeps a tenant's reputation and sending status apart from every
+    /// other tenant's, so one site collecting complaints is stopped on its
+    /// own rather than taking the account down with it. Empty on an account
+    /// with one user, which is every site sending with its own keys.
+    #[serde(default)]
+    pub tenant: String,
 }
 
 /// What the panel is shown. The secret key is not among the fields: once
@@ -289,6 +297,12 @@ pub async fn send(config: &EmailConfig, message: Message<'_>) -> AppResult<()> {
     }
     if !config.configuration_set.trim().is_empty() {
         request = request.configuration_set_name(config.configuration_set.trim());
+    }
+    // The whole of what keeps a shared account survivable: Amazon attributes
+    // this message to one site, judges that site on its own, and can stop it
+    // without stopping anybody else.
+    if !config.tenant.trim().is_empty() {
+        request = request.tenant_name(config.tenant.trim());
     }
 
     for (name, value) in message.tags {
@@ -906,6 +920,91 @@ pub async fn create_configuration_set(config: &EmailConfig, name: &str) -> AppRe
 ///
 /// An address gets a message with a link in it. A domain gets three CNAME
 /// records to publish, which `identities` then hands back.
+/// Makes a container for one site's sending inside a shared account.
+///
+/// Amazon keeps a tenant's reputation and its sending status apart from every
+/// other tenant's, which is the whole reason a shared account is survivable:
+/// a site that collects complaints is paused on its own rather than taking
+/// the account down with it. Making one that is already there is not an
+/// error worth passing on — the answer to "does this site have a tenant" is
+/// yes either way.
+pub async fn create_tenant(config: &EmailConfig, name: &str) -> AppResult<()> {
+    match client_for(config)
+        .create_tenant()
+        .tenant_name(name)
+        .send()
+        .await
+    {
+        Ok(_) => Ok(()),
+        Err(err) => {
+            let said = err
+                .message()
+                .map(str::to_string)
+                .unwrap_or_else(|| aws_sdk_sesv2::error::DisplayErrorContext(&err).to_string());
+            if said.to_lowercase().contains("already exists") {
+                return Ok(());
+            }
+            Err(AppError::Validation(format!(
+                "SES would not make the tenant: {said}"
+            )))
+        }
+    }
+}
+
+/// Ties an identity — a domain, or one address — to a site's tenant, so that
+/// what it sends is judged as that site's and nobody else's.
+pub async fn associate_with_tenant(
+    config: &EmailConfig,
+    tenant: &str,
+    identity: &str,
+) -> AppResult<()> {
+    match client_for(config)
+        .create_tenant_resource_association()
+        .tenant_name(tenant)
+        .resource_arn(identity)
+        .send()
+        .await
+    {
+        Ok(_) => Ok(()),
+        Err(err) => {
+            let said = err
+                .message()
+                .map(str::to_string)
+                .unwrap_or_else(|| aws_sdk_sesv2::error::DisplayErrorContext(&err).to_string());
+            if said.to_lowercase().contains("already") {
+                return Ok(());
+            }
+            Err(AppError::Validation(format!(
+                "SES would not attach {identity} to {tenant}: {said}"
+            )))
+        }
+    }
+}
+
+/// What Amazon says about one site's sending: whether it is still allowed to,
+/// and what it has been doing.
+pub async fn tenant_status(config: &EmailConfig, name: &str) -> AppResult<String> {
+    let found = client_for(config)
+        .get_tenant()
+        .tenant_name(name)
+        .send()
+        .await
+        .map_err(|err| {
+            AppError::Validation(format!(
+                "SES would not say: {}",
+                err.message()
+                    .map(str::to_string)
+                    .unwrap_or_else(|| aws_sdk_sesv2::error::DisplayErrorContext(&err).to_string())
+            ))
+        })?;
+
+    Ok(found
+        .tenant()
+        .and_then(|tenant| tenant.sending_status())
+        .map(|status| status.as_str().to_string())
+        .unwrap_or_else(|| "unknown".to_string()))
+}
+
 pub async fn add_identity(config: &EmailConfig, name: &str) -> AppResult<()> {
     account_settings(config)?;
     let name = name.trim();
