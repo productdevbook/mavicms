@@ -21,6 +21,7 @@ pub mod slug;
 pub mod tags;
 pub mod trash;
 pub mod users;
+pub mod videos;
 
 use axum::{
     extract::DefaultBodyLimit,
@@ -129,6 +130,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(mailing::open_pixel))
         .routes(routes!(mailing::click))
         .routes(routes!(mailing::receive_events))
+        .routes(routes!(videos::receive_event))
         .layer(DefaultBodyLimit::max(forms::MAX_SUBMISSION_BYTES))
         .layer(from_fn(require_database));
 
@@ -207,6 +209,13 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
             content_types::delete_content_type
         ))
         .routes(routes!(plugins::list_plugins))
+        .routes(routes!(videos::get_settings, videos::update_settings))
+        .routes(routes!(videos::test_settings))
+        .routes(routes!(videos::get_usage))
+        .routes(routes!(videos::get_protection))
+        .routes(routes!(videos::list_videos, videos::create_video))
+        .routes(routes!(videos::get_video, videos::delete_video))
+        .routes(routes!(videos::playback))
         .routes(routes!(
             plugins::get_s3_settings,
             plugins::update_s3_settings

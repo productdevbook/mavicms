@@ -36,3 +36,4 @@ pub mod storage;
 pub mod tenants;
 pub mod throttle;
 pub mod trash;
+pub mod video;

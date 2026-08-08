@@ -9,6 +9,7 @@ import { useLingui } from "@lingui/react/macro"
 import {
   Code2,
   FileText,
+  Film,
   FolderTree,
   Shapes,
   Globe,
@@ -96,6 +97,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             icon: FileText,
           })),
         { to: "/dashboard/media", label: t`Media`, icon: Image },
+        { to: "/dashboard/videos", label: t`Videos`, icon: Film },
         { to: "/dashboard/categories", label: t`Categories`, icon: FolderTree },
         { to: "/dashboard/tags", label: t`Tags`, icon: Tags },
         { to: "/dashboard/forms", label: t`Forms`, icon: Inbox },
