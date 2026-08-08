@@ -37,6 +37,14 @@ pub async fn list_plugins(Site(state): Site) -> AppResult<Json<Vec<PluginSummary
     .await
     .ok()
     .flatten();
+    let video = crate::plugins::load::<crate::video::VideoConfig>(
+        state.db(),
+        &state.secrets,
+        crate::video::VIDEO_PLUGIN,
+    )
+    .await
+    .ok()
+    .flatten();
 
     Ok(Json(vec![
         PluginSummary {
@@ -56,6 +64,15 @@ pub async fn list_plugins(Site(state): Site) -> AppResult<Json<Vec<PluginSummary
                     .to_string(),
             enabled: email.as_ref().is_some_and(|s| s.enabled),
             configured: email.is_some(),
+        },
+        PluginSummary {
+            id: crate::video::VIDEO_PLUGIN.to_string(),
+            name: "Video".to_string(),
+            description:
+                "Host lesson videos on Bunny Stream or Cloudflare Stream. Uploads go straight from the browser to them, and every address expires."
+                    .to_string(),
+            enabled: video.as_ref().is_some_and(|s| s.enabled),
+            configured: video.is_some(),
         },
         PluginSummary {
             id: crate::plugins::BACKUP_PLUGIN.to_string(),

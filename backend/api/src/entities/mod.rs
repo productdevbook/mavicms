@@ -28,3 +28,4 @@ pub mod subscriber_list;
 pub mod tag;
 pub mod trash;
 pub mod user;
+pub mod video_asset;

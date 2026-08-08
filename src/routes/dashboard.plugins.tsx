@@ -30,6 +30,10 @@ function PluginsRoute() {
       name: t`Amazon SES`,
       description: t`Send mail through Amazon SES — a notification when somebody fills in one of this site's forms.`,
     },
+    video: {
+      name: t`Video`,
+      description: t`Host lesson videos on Bunny Stream or Cloudflare Stream. Files go straight from the browser to them, and every address expires.`,
+    },
     backup: {
       name: t`Backups`,
       description: t`Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket.`,
@@ -38,9 +42,13 @@ function PluginsRoute() {
 
   const SETTINGS_PATH: Record<
     string,
-    "/dashboard/plugins/s3" | "/dashboard/plugins/backup" | "/dashboard/plugins/email"
+    | "/dashboard/plugins/s3"
+    | "/dashboard/plugins/backup"
+    | "/dashboard/plugins/email"
+    | "/dashboard/plugins/video"
   > = {
     s3_storage: "/dashboard/plugins/s3",
+    video: "/dashboard/plugins/video",
     amazon_ses: "/dashboard/plugins/email",
     backup: "/dashboard/plugins/backup",
   }

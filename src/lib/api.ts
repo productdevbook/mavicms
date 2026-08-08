@@ -551,6 +551,123 @@ export function testS3Settings(
   })
 }
 
+// ------------------------------------------------------------------- video
+
+export type VideoHost = "" | "bunny" | "cloudflare"
+
+export interface VideoSettings {
+  enabled: boolean
+  host: VideoHost
+  library_id: string
+  cdn_hostname: string
+  account_id: string
+  customer_subdomain: string
+  /** The secrets never come back; these say whether one is held. */
+  has_api_key: boolean
+  has_token_key: boolean
+  has_api_token: boolean
+  /** Paste this into the host's own dashboard. */
+  events_url: string
+}
+
+export interface VideoSettingsPayload {
+  enabled: boolean
+  host: VideoHost
+  library_id: string
+  cdn_hostname: string
+  account_id: string
+  customer_subdomain: string
+  /** Left out to keep what is stored. */
+  api_key?: string
+  token_key?: string
+  api_token?: string
+}
+
+export interface VideoAsset {
+  id: string
+  title: string
+  status: "uploading" | "processing" | "ready" | "failed"
+  duration_seconds: number
+  thumbnail_url: string
+  size_bytes: number
+  error: string
+  host: string
+  created_at: string
+}
+
+/** Where the browser sends the file. Never this server. */
+export interface UploadTicket {
+  provider_id: string
+  upload_url: string
+  method: "put" | "tus"
+  headers: Array<[string, string]>
+}
+
+export interface VideoPlayback {
+  url: string
+  expires_at: string
+  thumbnail_url: string
+}
+
+export interface VideoUsage {
+  stored_seconds: number
+  stored_bytes: number
+  delivered_bytes: number
+  delivered_minutes: number
+  since: string
+}
+
+export function getVideoSettings(): Promise<VideoSettings> {
+  return request<VideoSettings>("/plugins/video")
+}
+
+export function saveVideoSettings(
+  payload: VideoSettingsPayload
+): Promise<VideoSettings> {
+  return request<VideoSettings>("/plugins/video", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function testVideoSettings(
+  payload: VideoSettingsPayload
+): Promise<ConnectionTest> {
+  return request<ConnectionTest>("/plugins/video/test", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function getVideoUsage(): Promise<VideoUsage> {
+  return request<VideoUsage>("/plugins/video/usage")
+}
+
+export function listVideos(): Promise<VideoAsset[]> {
+  return request<VideoAsset[]>("/videos")
+}
+
+export function getVideo(id: string): Promise<VideoAsset> {
+  return request<VideoAsset>(`/videos/${id}`)
+}
+
+export function createVideo(
+  title: string
+): Promise<{ video: VideoAsset; ticket: UploadTicket }> {
+  return request("/videos", {
+    method: "POST",
+    body: JSON.stringify({ title }),
+  })
+}
+
+export function getVideoPlayback(id: string): Promise<VideoPlayback> {
+  return request<VideoPlayback>(`/videos/${id}/playback`, { method: "POST" })
+}
+
+export function deleteVideo(id: string): Promise<void> {
+  return request<void>(`/videos/${id}`, { method: "DELETE" })
+}
+
 export type BackupDestination = "local" | "s3"
 export type BackupSchedule = "off" | "hourly" | "daily" | "weekly"
 
