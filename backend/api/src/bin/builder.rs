@@ -263,7 +263,11 @@ impl Builder {
             .control
             .query_one_raw(Statement::from_sql_and_values(
                 backend,
-                "SELECT host, slug, schema_name, database_url FROM tenants WHERE id = $1"
+                // The agency comes with it: a site of its own has no token when
+                // the agency keeps one for all of them, and reading it needs to
+                // know which agency. This said None until it did.
+                "SELECT host, slug, schema_name, database_url, organization_id \
+                 FROM tenants WHERE id = $1"
                     .to_string(),
                 [id.to_string().into()],
             ))
@@ -276,7 +280,12 @@ impl Builder {
             slug: row.try_get("", "slug")?,
             schema: row.try_get("", "schema_name")?,
             database_url: row.try_get("", "database_url")?,
-            organization_id: None,
+            organization_id: row
+                .try_get::<Option<String>>("", "organization_id")?
+                .as_deref()
+                .map(Uuid::parse_str)
+                .transpose()
+                .map_err(|err| AppError::Internal(format!("bad organization id: {err}")))?,
             active: true,
         })
     }
