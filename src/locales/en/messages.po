@@ -156,7 +156,7 @@ msgstr "{0} looks after how this site is built. Publishing puts what you have wr
 
 #. placeholder {0}: allowance.sent_today
 #. placeholder {1}: allowance.a_day ?? 0
-#: src/routes/dashboard.plugins_.email.tsx:207
+#: src/routes/dashboard.plugins_.email.tsx:212
 msgid "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
 msgstr "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
 
@@ -364,7 +364,7 @@ msgstr "A mailbox (SMTP)"
 msgid "A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again."
 msgstr "A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again."
 
-#: src/components/ses-account.tsx:466
+#: src/components/ses-account.tsx:395
 msgid "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 msgstr "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 
@@ -372,7 +372,7 @@ msgstr "A message that bounced hard, or that somebody reported as spam. Amazon k
 msgid "A new kind"
 msgstr "A new kind"
 
-#: src/components/ses-account.tsx:313
+#: src/components/ses-account.tsx:292
 msgid "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 msgstr "A new SES account starts in the sandbox, where it may only write to addresses you have verified below. Asking to leave it is how you can write to your visitors."
 
@@ -393,7 +393,7 @@ msgstr "A prefix inside the bucket."
 msgid "A scheduled post needs a publish date"
 msgstr "A scheduled post needs a publish date"
 
-#: src/components/ses-account.tsx:260
+#: src/components/ses-account.tsx:239
 msgid "a second, at most"
 msgstr "a second, at most"
 
@@ -562,7 +562,7 @@ msgstr "Add someone"
 msgid "Add table"
 msgstr "Add table"
 
-#: src/components/ses-account.tsx:442
+#: src/components/ses-account.tsx:907
 msgid "Add the domain you send from. A domain covers every address on it, so it is worth doing before adding addresses one at a time."
 msgstr "Add the domain you send from. A domain covers every address on it, so it is worth doing before adding addresses one at a time."
 
@@ -579,7 +579,7 @@ msgstr "Added here counts as confirmed — say so only if they asked to be on it
 msgid "Address"
 msgstr "Address"
 
-#: src/components/ses-account.tsx:464
+#: src/components/ses-account.tsx:393
 msgid "Addresses Amazon refuses"
 msgstr "Addresses Amazon refuses"
 
@@ -654,11 +654,11 @@ msgstr "Alt text"
 msgid "Amazon allows this account {0} a second"
 msgstr "Amazon allows this account {0} a second"
 
-#: src/components/ses-account.tsx:555
+#: src/components/ses-account.tsx:484
 msgid "Amazon could not find it"
 msgstr "Amazon could not find it"
 
-#: src/components/ses-account.tsx:559
+#: src/components/ses-account.tsx:488
 msgid "Amazon does not check this one"
 msgstr "Amazon does not check this one"
 
@@ -671,11 +671,11 @@ msgstr "Amazon has not said anything yet"
 #~ msgid "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
 #~ msgstr "Amazon has paused sending on this account ({0}). Nothing will go out until that is resolved with them."
 
-#: src/components/ses-account.tsx:478
+#: src/components/ses-account.tsx:407
 msgid "Amazon is refusing nobody on this account."
 msgstr "Amazon is refusing nobody on this account."
 
-#: src/routes/dashboard.plugins_.email.tsx:127
+#: src/routes/dashboard.plugins_.email.tsx:132
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Amazon SES"
 msgstr "Amazon SES"
@@ -742,7 +742,7 @@ msgstr "An image keeps its file while it is here, so a restored post still has i
 msgid "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 msgstr "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 
-#: src/components/ses-account.tsx:322
+#: src/components/ses-account.tsx:301
 msgid "Anybody can be written to, up to the limits above."
 msgstr "Anybody can be written to, up to the limits above."
 
@@ -792,7 +792,7 @@ msgstr "Ask for it"
 msgid "Ask people to confirm by email"
 msgstr "Ask people to confirm by email"
 
-#: src/components/ses-account.tsx:402
+#: src/components/ses-account.tsx:381
 msgid "Ask to leave the sandbox"
 msgstr "Ask to leave the sandbox"
 
@@ -804,7 +804,7 @@ msgstr "Ask to leave the sandbox, from the section below. Until Amazon agrees, S
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 
-#: src/components/ses-account.tsx:179
+#: src/components/ses-account.tsx:845
 msgid "Asked SES to verify it"
 msgstr "Asked SES to verify it"
 
@@ -812,7 +812,7 @@ msgstr "Asked SES to verify it"
 msgid "Asked. Amazon usually answers within a day or two."
 msgstr "Asked. Amazon usually answers within a day or two."
 
-#: src/components/ses-account.tsx:165
+#: src/components/ses-account.tsx:160
 msgid "Asked. Amazon usually answers within a day."
 msgstr "Asked. Amazon usually answers within a day."
 
@@ -925,12 +925,12 @@ msgstr "Bold"
 msgid "Bot token"
 msgstr "Bot token"
 
-#: src/components/ses-account.tsx:708
+#: src/components/ses-account.tsx:637
 msgid "Bounces"
 msgstr "Bounces"
 
 #. placeholder {0}: identity.mail_from_domain
-#: src/components/ses-account.tsx:602
+#: src/components/ses-account.tsx:531
 msgid "bounces to {0}"
 msgstr "bounces to {0}"
 
@@ -993,7 +993,7 @@ msgstr "campaign"
 msgid "Campaigns"
 msgstr "Campaigns"
 
-#: src/components/ses-account.tsx:614
+#: src/components/ses-account.tsx:543
 msgid "can send"
 msgstr "can send"
 
@@ -1280,14 +1280,14 @@ msgstr "Copied with a key, it can also do the work rather than describe it: writ
 #: src/components/editor/bubble-menus.tsx:325
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
-#: src/components/ses-account.tsx:865
+#: src/components/ses-account.tsx:794
 #: src/components/ses-setup.tsx:153
 #: src/routes/dashboard.flows.tsx:411
 #: src/routes/dashboard.forms_.$formId.tsx:53
 msgid "Copy"
 msgstr "Copy"
 
-#: src/components/ses-account.tsx:730
+#: src/components/ses-account.tsx:659
 msgid "Copy all"
 msgstr "Copy all"
 
@@ -1338,7 +1338,7 @@ msgstr "Copy without a key"
 msgid "Copy your post in different formats, download it, or import Markdown."
 msgstr "Copy your post in different formats, download it, or import Markdown."
 
-#: src/components/ses-account.tsx:183
+#: src/components/ses-account.tsx:849
 msgid "Could not add it"
 msgstr "Could not add it"
 
@@ -1363,13 +1363,13 @@ msgstr "Could not add the site"
 msgid "Could not add them"
 msgstr "Could not add them"
 
-#: src/components/ses-account.tsx:168
+#: src/components/ses-account.tsx:163
 #: src/components/ses-health.tsx:207
 msgid "Could not ask"
 msgstr "Could not ask"
 
-#: src/components/ses-account.tsx:143
-#: src/components/ses-account.tsx:221
+#: src/components/ses-account.tsx:141
+#: src/components/ses-account.tsx:200
 #: src/components/ses-analytics.tsx:86
 #: src/components/ses-analytics.tsx:141
 #: src/components/ses-health.tsx:177
@@ -1390,7 +1390,7 @@ msgstr "Could not change it"
 #: src/components/assistant-connection.tsx:45
 #: src/components/local-env.tsx:109
 #: src/components/mcp-connection.tsx:28
-#: src/components/ses-account.tsx:691
+#: src/components/ses-account.tsx:620
 #: src/components/ses-setup.tsx:112
 #: src/routes/dashboard.api.tsx:105
 #: src/routes/dashboard.forms_.$formId.tsx:41
@@ -1435,11 +1435,11 @@ msgstr "Could not delete the backup"
 msgid "Could not disconnect it"
 msgstr "Could not disconnect it"
 
-#: src/components/ses-account.tsx:292
+#: src/components/ses-account.tsx:271
 #: src/components/site-mail.tsx:95
 #: src/routes/dashboard.forms_.$formId.tsx:89
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:115
-#: src/routes/dashboard.plugins_.email.tsx:100
+#: src/routes/dashboard.plugins_.email.tsx:105
 msgid "Could not do it"
 msgstr "Could not do it"
 
@@ -1493,7 +1493,7 @@ msgid "Could not load the local settings"
 msgstr "Could not load the local settings"
 
 #: src/components/site-mail.tsx:61
-#: src/routes/dashboard.plugins_.email.tsx:60
+#: src/routes/dashboard.plugins_.email.tsx:65
 msgid "Could not load the mail settings"
 msgstr "Could not load the mail settings"
 
@@ -1567,7 +1567,7 @@ msgstr "Could not reach the server. Please try again."
 msgid "Could not read the file"
 msgstr "Could not read the file"
 
-#: src/components/ses-account.tsx:624
+#: src/components/ses-account.tsx:553
 #: src/routes/dashboard.content-types.tsx:46
 #: src/routes/dashboard.forms_.$formId.tsx:103
 #: src/routes/dashboard.forms.tsx:127
@@ -1597,7 +1597,7 @@ msgstr "Could not run it"
 #: src/routes/dashboard.mail.tsx:280
 #: src/routes/dashboard.mail.tsx:647
 #: src/routes/dashboard.platform-mail.tsx:68
-#: src/routes/dashboard.plugins_.email.tsx:86
+#: src/routes/dashboard.plugins_.email.tsx:91
 msgid "Could not save it"
 msgstr "Could not save it"
 
@@ -1642,7 +1642,7 @@ msgstr "Could not save the token"
 msgid "Could not send it"
 msgstr "Could not send it"
 
-#: src/components/ses-account.tsx:808
+#: src/components/ses-account.tsx:737
 msgid "Could not set it"
 msgstr "Could not set it"
 
@@ -1667,7 +1667,7 @@ msgstr "Could not take it back"
 msgid "Could not throw it away"
 msgstr "Could not throw it away"
 
-#: src/components/ses-account.tsx:503
+#: src/components/ses-account.tsx:432
 msgid "Could not unblock it"
 msgstr "Could not unblock it"
 
@@ -1878,7 +1878,7 @@ msgstr "Description text shown in search results."
 msgid "did not arrive"
 msgstr "did not arrive"
 
-#: src/components/ses-account.tsx:491
+#: src/components/ses-account.tsx:420
 #: src/components/ses-health.tsx:249
 msgid "Did not arrive"
 msgstr "Did not arrive"
@@ -1904,11 +1904,11 @@ msgstr "Disconnecting one stops it that moment."
 msgid "Divider"
 msgstr "Divider"
 
-#: src/components/ses-account.tsx:713
+#: src/components/ses-account.tsx:642
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/components/ses-account.tsx:645
+#: src/components/ses-account.tsx:574
 msgid "DNS records"
 msgstr "DNS records"
 
@@ -2091,7 +2091,7 @@ msgstr "Featured"
 msgid "Fields"
 msgstr "Fields"
 
-#: src/components/ses-account.tsx:207
+#: src/components/ses-account.tsx:186
 msgid "Fill in the region and the keys above and save them. Everything Amazon knows about this account then appears here: how much sending is left today, whether it is still in the sandbox, which senders are verified, and how the last two weeks went."
 msgstr "Fill in the region and the keys above and save them. Everything Amazon knows about this account then appears here: how much sending is left today, whether it is still in the sandbox, which senders are verified, and how the last two weeks went."
 
@@ -2164,7 +2164,7 @@ msgstr "From here it answers about every site this agency looks after: which of 
 msgid "From name"
 msgstr "From name"
 
-#: src/components/ses-account.tsx:320
+#: src/components/ses-account.tsx:299
 msgid "Full access"
 msgstr "Full access"
 
@@ -2605,7 +2605,7 @@ msgid "Large section heading"
 msgstr "Large section heading"
 
 #. placeholder {0}: account.review_status
-#: src/components/ses-account.tsx:329
+#: src/components/ses-account.tsx:308
 msgid "Last request: {0}"
 msgstr "Last request: {0}"
 
@@ -2745,11 +2745,11 @@ msgid "Mail from this site still leaves as {0}, which belongs to the server rath
 msgstr "Mail from this site still leaves as {0}, which belongs to the server rather than to you. A newsletter has to come from the domain it is about — otherwise it is the server's domain that answers for it, and every site sharing it pays for anybody's complaints. Add your domain under Mail settings, publish the records it gives you, and set it as the sender. Notifications and form replies keep working meanwhile."
 
 #. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:212
+#: src/routes/dashboard.plugins_.email.tsx:217
 msgid "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
 msgstr "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
 
-#: src/routes/dashboard.plugins_.email.tsx:129
+#: src/routes/dashboard.plugins_.email.tsx:134
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Mail this site sends — a notification when somebody fills in one of your forms."
 
@@ -2844,7 +2844,7 @@ msgstr "Merge cells"
 msgid "Message"
 msgstr "Message"
 
-#: src/components/ses-account.tsx:251
+#: src/components/ses-account.tsx:230
 msgid "messages a day"
 msgstr "messages a day"
 
@@ -2892,7 +2892,7 @@ msgid "My Mavi CMS Site"
 msgstr "My Mavi CMS Site"
 
 #: src/components/flows/flow-accounts.tsx:220
-#: src/components/ses-account.tsx:838
+#: src/components/ses-account.tsx:767
 #: src/routes/dashboard.flows.tsx:312
 #: src/routes/dashboard.forms.tsx:160
 #: src/routes/dashboard.forms.tsx:238
@@ -2984,8 +2984,8 @@ msgstr "New tag"
 msgid "New template"
 msgstr "New template"
 
-#: src/components/ses-account.tsx:348
-#: src/components/ses-account.tsx:358
+#: src/components/ses-account.tsx:327
+#: src/components/ses-account.tsx:337
 msgid "Newsletters and campaigns"
 msgstr "Newsletters and campaigns"
 
@@ -3035,7 +3035,7 @@ msgstr "No flows yet"
 msgid "No forms yet"
 msgstr "No forms yet"
 
-#: src/components/ses-account.tsx:248
+#: src/components/ses-account.tsx:227
 msgid "no limit"
 msgstr "no limit"
 
@@ -3108,7 +3108,7 @@ msgstr "No tokens yet"
 msgid "Nobody here yet"
 msgstr "Nobody here yet"
 
-#: src/components/ses-account.tsx:476
+#: src/components/ses-account.tsx:405
 msgid "None"
 msgstr "None"
 
@@ -3124,7 +3124,7 @@ msgstr "None yet — add one under Accounts, below the flow list."
 msgid "Not configured"
 msgstr "Not configured"
 
-#: src/components/ses-account.tsx:205
+#: src/components/ses-account.tsx:184
 msgid "Not connected yet"
 msgstr "Not connected yet"
 
@@ -3162,7 +3162,7 @@ msgstr "Nothing else. Accounts, credentials, backups, how the site is built and 
 #~ msgstr "Nothing else. There is no tool here that deletes a post or a file — that stays something a person does in this panel."
 
 #. placeholder {0}: account.enforcement_status
-#: src/components/ses-account.tsx:269
+#: src/components/ses-account.tsx:248
 msgid "Nothing goes out until it is on again. Amazon switches it off itself when an account is in trouble ({0})."
 msgstr "Nothing goes out until it is on again. Amazon switches it off itself when an account is in trouble ({0})."
 
@@ -3202,12 +3202,12 @@ msgstr "Nothing sent in the last two weeks"
 msgid "Nothing sent yet"
 msgstr "Nothing sent yet"
 
-#: src/components/ses-account.tsx:440
+#: src/components/ses-account.tsx:905
 msgid "Nothing verified yet"
 msgstr "Nothing verified yet"
 
-#: src/components/ses-account.tsx:349
-#: src/components/ses-account.tsx:355
+#: src/components/ses-account.tsx:328
+#: src/components/ses-account.tsx:334
 msgid "Notifications people asked for"
 msgstr "Notifications people asked for"
 
@@ -3362,7 +3362,7 @@ msgstr "Optional folder inside the bucket"
 #~ msgid "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two more records appear above once it is set."
 #~ msgstr "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two more records appear above once it is set."
 
-#: src/components/ses-account.tsx:745
+#: src/components/ses-account.tsx:674
 msgid "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two records appear here once it is set."
 msgstr "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two records appear here once it is set."
 
@@ -3387,7 +3387,7 @@ msgstr "Other sites this server hosts. Each gets its own database schema, accoun
 msgid "Output folder"
 msgstr "Output folder"
 
-#: src/components/ses-account.tsx:703
+#: src/components/ses-account.tsx:632
 msgid "Ownership and signing"
 msgstr "Ownership and signing"
 
@@ -3512,7 +3512,7 @@ msgstr "Plain text block"
 
 #: src/components/dashboard/dashboard-shell.tsx:112
 #: src/routes/dashboard.plugins_.backup.tsx:194
-#: src/routes/dashboard.plugins_.email.tsx:123
+#: src/routes/dashboard.plugins_.email.tsx:128
 #: src/routes/dashboard.plugins_.s3.tsx:111
 #: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
@@ -3622,7 +3622,7 @@ msgstr "Publish"
 msgid "Publish date"
 msgstr "Publish date"
 
-#: src/components/ses-account.tsx:722
+#: src/components/ses-account.tsx:651
 msgid "Publish these at whoever holds the domain. Amazon finds them by itself, usually within the hour."
 msgstr "Publish these at whoever holds the domain. Amazon finds them by itself, usually within the hour."
 
@@ -3630,7 +3630,7 @@ msgstr "Publish these at whoever holds the domain. Amazon finds them by itself, 
 #~ msgid "Publish these three CNAME records on the domain, then this turns itself green."
 #~ msgstr "Publish these three CNAME records on the domain, then this turns itself green."
 
-#: src/components/ses-account.tsx:550
+#: src/components/ses-account.tsx:479
 msgid "published"
 msgstr "published"
 
@@ -3643,7 +3643,7 @@ msgstr "Published"
 msgid "Publishing — this takes a minute or two"
 msgstr "Publishing — this takes a minute or two"
 
-#: src/components/ses-account.tsx:704
+#: src/components/ses-account.tsx:633
 msgid "Publishing these is what proves the domain is yours, and what lets Amazon sign as you. Nothing sends until they are up."
 msgstr "Publishing these is what proves the domain is yours, and what lets Amazon sign as you. Nothing sends until they are up."
 
@@ -3668,7 +3668,7 @@ msgstr "Put it back"
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 msgstr "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 
-#: src/routes/dashboard.plugins_.email.tsx:215
+#: src/routes/dashboard.plugins_.email.tsx:220
 msgid "Putting your own Amazon keys in above replaces this arrangement entirely."
 msgstr "Putting your own Amazon keys in above replaces this arrangement entirely."
 
@@ -3748,7 +3748,7 @@ msgstr "Regular expression"
 #: src/components/plugin-forms.tsx:385
 #: src/components/plugin-forms.tsx:393
 #: src/components/publish-panel.tsx:136
-#: src/components/ses-account.tsx:619
+#: src/components/ses-account.tsx:548
 #: src/routes/dashboard.content-types.tsx:113
 #: src/routes/dashboard.forms_.$formId.tsx:224
 #: src/routes/dashboard.forms.tsx:211
@@ -3830,7 +3830,7 @@ msgstr "reported as spam"
 msgid "Reported as spam"
 msgstr "Reported as spam"
 
-#: src/components/ses-account.tsx:490
+#: src/components/ses-account.tsx:419
 msgid "Reported it as spam"
 msgstr "Reported it as spam"
 
@@ -3867,7 +3867,7 @@ msgstr "Restore this backup?"
 msgid "Restored: {rows} rows and {0} files"
 msgstr "Restored: {rows} rows and {0} files"
 
-#: src/components/ses-account.tsx:301
+#: src/components/ses-account.tsx:280
 msgid "Resume sending"
 msgstr "Resume sending"
 
@@ -3903,7 +3903,7 @@ msgstr "S3 bucket ({0})"
 msgid "S3 compatible storage"
 msgstr "S3 compatible storage"
 
-#: src/components/ses-account.tsx:309
+#: src/components/ses-account.tsx:288
 msgid "Sandbox"
 msgstr "Sandbox"
 
@@ -3925,7 +3925,7 @@ msgstr "Sandbox"
 #: src/routes/dashboard.mail.tsx:740
 #: src/routes/dashboard.platform-mail.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:155
+#: src/routes/dashboard.plugins_.email.tsx:160
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Save"
@@ -3950,7 +3950,7 @@ msgstr "Save the flow and an address appears here. Anything sent to it sets this
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:92
 #: src/routes/dashboard.platform-mail.tsx:65
-#: src/routes/dashboard.plugins_.email.tsx:83
+#: src/routes/dashboard.plugins_.email.tsx:88
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Saved"
@@ -4026,7 +4026,7 @@ msgstr "Select your language"
 
 #: src/components/site-mail.tsx:163
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:393
-#: src/routes/dashboard.plugins_.email.tsx:185
+#: src/routes/dashboard.plugins_.email.tsx:190
 msgid "Send"
 msgstr "Send"
 
@@ -4036,7 +4036,7 @@ msgstr "Send a form's answers. No account needed."
 
 #: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
-#: src/routes/dashboard.plugins_.email.tsx:161
+#: src/routes/dashboard.plugins_.email.tsx:166
 msgid "Send a test"
 msgstr "Send a test"
 
@@ -4063,7 +4063,7 @@ msgid "Send mail through Amazon SES — a notification when somebody fills in on
 msgstr "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 
 #: src/components/site-mail.tsx:125
-#: src/routes/dashboard.plugins_.email.tsx:143
+#: src/routes/dashboard.plugins_.email.tsx:148
 msgid "Send mail through SES"
 msgstr "Send mail through SES"
 
@@ -4076,7 +4076,7 @@ msgstr "Send on Telegram"
 msgid "Send yourself one"
 msgstr "Send yourself one"
 
-#: src/components/ses-account.tsx:267
+#: src/components/ses-account.tsx:246
 msgid "Sending is off on this account"
 msgstr "Sending is off on this account"
 
@@ -4089,23 +4089,27 @@ msgstr "Sending is off on this account"
 msgid "Sending limits, and raising them"
 msgstr "Sending limits, and raising them"
 
-#: src/components/ses-account.tsx:223
+#: src/components/ses-account.tsx:202
 msgid "Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher."
 msgstr "Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher."
 
-#: src/components/ses-account.tsx:284
+#: src/components/ses-account.tsx:263
 msgid "Sending resumed"
 msgstr "Sending resumed"
 
-#: src/components/ses-account.tsx:283
+#: src/components/ses-account.tsx:262
 msgid "Sending stopped"
 msgstr "Sending stopped"
+
+#: src/components/ses-account.tsx:868
+msgid "Sending through the server's account"
+msgstr "Sending through the server's account"
 
 #: src/components/ses-account.tsx:504
 #~ msgid "Sends bounces back to you"
 #~ msgstr "Sends bounces back to you"
 
-#: src/components/ses-account.tsx:709
+#: src/components/ses-account.tsx:638
 msgid "Sends refusals back to a subdomain you own instead of to amazonses.com, which is what makes the visible sender and the envelope sender agree."
 msgstr "Sends refusals back to a subdomain you own instead of to amazonses.com, which is what makes the visible sender and the envelope sender agree."
 
@@ -4127,7 +4131,7 @@ msgstr "Sent"
 msgid "Sent as"
 msgstr "Sent as"
 
-#: src/components/ses-account.tsx:256
+#: src/components/ses-account.tsx:235
 msgid "sent in the last day"
 msgstr "sent in the last day"
 
@@ -4169,7 +4173,7 @@ msgstr "Server"
 msgid "SES console"
 msgstr "SES console"
 
-#: src/components/ses-account.tsx:414
+#: src/components/ses-account.tsx:879
 msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 msgstr "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 
@@ -4186,7 +4190,7 @@ msgstr "Set a password"
 msgid "Set it"
 msgstr "Set it"
 
-#: src/components/ses-account.tsx:814
+#: src/components/ses-account.tsx:743
 msgid "Set it up"
 msgstr "Set it up"
 
@@ -4312,7 +4316,7 @@ msgstr "Sites allowed"
 msgid "Small section heading"
 msgstr "Small section heading"
 
-#: src/components/ses-account.tsx:422
+#: src/components/ses-account.tsx:887
 msgid "someone@example.com or example.com"
 msgstr "someone@example.com or example.com"
 
@@ -4334,7 +4338,7 @@ msgid "Start writing, or type “/” for commands…"
 msgstr "Start writing, or type “/” for commands…"
 
 #: src/components/editor/post-settings.tsx:137
-#: src/components/ses-account.tsx:840
+#: src/components/ses-account.tsx:769
 msgid "Status"
 msgstr "Status"
 
@@ -4342,7 +4346,7 @@ msgstr "Status"
 msgid "Stop"
 msgstr "Stop"
 
-#: src/components/ses-account.tsx:300
+#: src/components/ses-account.tsx:279
 msgid "Stop all sending"
 msgstr "Stop all sending"
 
@@ -4401,7 +4405,7 @@ msgstr "Strong"
 msgid "Sub-heading"
 msgstr "Sub-heading"
 
-#: src/components/ses-account.tsx:787
+#: src/components/ses-account.tsx:716
 msgid "Subdomain for bounces"
 msgstr "Subdomain for bounces"
 
@@ -4585,7 +4589,7 @@ msgstr "The backup failed"
 msgid "The build runs with these. A name already here is replaced; the others are left alone."
 msgstr "The build runs with these. A name already here is replaced; the others are left alone."
 
-#: src/components/ses-account.tsx:240
+#: src/components/ses-account.tsx:219
 msgid "The ceiling on this account today. Sending stops at it rather than queueing."
 msgstr "The ceiling on this account today. Sending stops at it rather than queueing."
 
@@ -4647,7 +4651,7 @@ msgid "The one your SES identities are verified in. Verification does not cross 
 msgstr "The one your SES identities are verified in. Verification does not cross regions."
 
 #: src/components/site-mail.tsx:145
-#: src/routes/dashboard.plugins_.email.tsx:163
+#: src/routes/dashboard.plugins_.email.tsx:168
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 
@@ -4710,7 +4714,7 @@ msgstr "They can write, publish and manage this site."
 msgid "This"
 msgstr "This"
 
-#: src/components/ses-account.tsx:312
+#: src/components/ses-account.tsx:291
 msgid "This account is out of the sandbox: it can write to anybody."
 msgstr "This account is out of the sandbox: it can write to anybody."
 
@@ -4764,7 +4768,7 @@ msgstr "This signs you in to the server itself. Everyone else signs in somewhere
 msgid "This site"
 msgstr "This site"
 
-#: src/routes/dashboard.plugins_.email.tsx:205
+#: src/routes/dashboard.plugins_.email.tsx:210
 msgid "This site sends through the server's own account"
 msgstr "This site sends through the server's own account"
 
@@ -4811,11 +4815,11 @@ msgstr "Try it"
 msgid "Turn into"
 msgstr "Turn into"
 
-#: src/components/ses-account.tsx:837
+#: src/components/ses-account.tsx:766
 msgid "Type"
 msgstr "Type"
 
-#: src/components/ses-account.tsx:506
+#: src/components/ses-account.tsx:435
 msgid "Unblock"
 msgstr "Unblock"
 
@@ -4843,7 +4847,7 @@ msgid "Unsaved changes"
 msgstr "Unsaved changes"
 
 #. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:211
+#: src/routes/dashboard.plugins_.email.tsx:216
 msgid "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
 msgstr "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
 
@@ -4905,7 +4909,7 @@ msgstr "Username"
 msgid "value"
 msgstr "value"
 
-#: src/components/ses-account.tsx:839
+#: src/components/ses-account.tsx:768
 msgid "Value"
 msgstr "Value"
 
@@ -4917,7 +4921,7 @@ msgstr "Value"
 msgid "Verified identities in {where}"
 msgstr "Verified identities in {where}"
 
-#: src/components/ses-account.tsx:430
+#: src/components/ses-account.tsx:895
 msgid "Verify"
 msgstr "Verify"
 
@@ -4933,7 +4937,7 @@ msgstr "Verifying an address or a domain"
 msgid "View"
 msgstr "View"
 
-#: src/components/ses-account.tsx:614
+#: src/components/ses-account.tsx:543
 msgid "waiting"
 msgstr "waiting"
 
@@ -4941,7 +4945,7 @@ msgstr "waiting"
 #~ msgid "Waiting"
 #~ msgstr "Waiting"
 
-#: src/components/ses-account.tsx:553
+#: src/components/ses-account.tsx:482
 msgid "waiting for DNS"
 msgstr "waiting for DNS"
 
@@ -4961,7 +4965,7 @@ msgstr "Watching how sending is going"
 msgid "Weak"
 msgstr "Weak"
 
-#: src/components/ses-account.tsx:365
+#: src/components/ses-account.tsx:344
 #: src/components/ses-health.tsx:324
 msgid "Website"
 msgstr "Website"
@@ -4970,7 +4974,7 @@ msgstr "Website"
 msgid "What a build or somebody's own machine reads this site with. It can read and change nothing, lasts 30 days, and can be taken back here."
 msgstr "What a build or somebody's own machine reads this site with. It can read and change nothing, lasts 30 days, and can be taken back here."
 
-#: src/components/ses-account.tsx:238
+#: src/components/ses-account.tsx:217
 msgid "What Amazon allows"
 msgstr "What Amazon allows"
 
@@ -4994,7 +4998,7 @@ msgstr "What comes in is kept as it was sent, so changing the fields later never
 #~ msgid "What Gmail and Yahoo ask for"
 #~ msgstr "What Gmail and Yahoo ask for"
 
-#: src/components/ses-account.tsx:714
+#: src/components/ses-account.tsx:643
 msgid "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 msgstr "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 
@@ -5034,7 +5038,7 @@ msgstr "What sets it off"
 msgid "what somebody sent"
 msgstr "what somebody sent"
 
-#: src/components/ses-account.tsx:334
+#: src/components/ses-account.tsx:313
 msgid "What the mail is"
 msgstr "What the mail is"
 
@@ -5105,7 +5109,7 @@ msgstr "Where to keep them"
 
 #: src/components/site-mail.tsx:154
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:385
-#: src/routes/dashboard.plugins_.email.tsx:172
+#: src/routes/dashboard.plugins_.email.tsx:177
 msgid "Where to send it"
 msgstr "Where to send it"
 
@@ -5137,7 +5141,7 @@ msgstr "Who can sign in to this site and write on it."
 msgid "Who gets it"
 msgstr "Who gets it"
 
-#: src/components/ses-account.tsx:388
+#: src/components/ses-account.tsx:367
 msgid "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 msgstr "Who receives it, how they came to be on the list, and how they stop it. A person at Amazon reads this."
 
@@ -5145,7 +5149,7 @@ msgstr "Who receives it, how they came to be on the list, and how they stop it. 
 msgid "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 msgstr "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 
-#: src/components/ses-account.tsx:412
+#: src/components/ses-account.tsx:877
 msgid "Who you may send as"
 msgstr "Who you may send as"
 
@@ -5161,7 +5165,7 @@ msgstr "Whole word"
 msgid "Why you need it"
 msgstr "Why you need it"
 
-#: src/components/ses-account.tsx:377
+#: src/components/ses-account.tsx:356
 msgid "Why you send"
 msgstr "Why you send"
 
@@ -5238,6 +5242,10 @@ msgstr "You can disconnect it later from API in the panel."
 #: src/components/flows/flow-settings.tsx:39
 msgid "You can write these anywhere above"
 msgstr "You can write these anywhere above"
+
+#: src/components/ses-account.tsx:870
+msgid "You do not need an Amazon account. Add the domain you send from below, publish the records it gives you, and your mail goes out as your own domain — the server only lends the account behind it."
+msgstr "You do not need an Amazon account. Add the domain you send from below, publish the records it gives you, and your mail goes out as your own domain — the server only lends the account behind it."
 
 #: src/components/setup/setup-wizard.tsx:674
 msgid "You'll use this to sign in and manage your site."

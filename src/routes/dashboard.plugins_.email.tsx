@@ -12,14 +12,15 @@ import {
   updateEmailSettings,
   type ConnectionTest,
   type EmailSettingsPayload,
+  getSendingAllowance,
+  type SendingAllowance,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { EmailFields } from "@/components/plugin-forms"
-import { SesAccountPanel } from "@/components/ses-account"
-import { getSendingAllowance, type SendingAllowance } from "@/lib/api"
+import { SesAccountPanel, SesSendersPanel } from "@/components/ses-account"
 import { SesHealthPanel } from "@/components/ses-health"
 import { SesSetupGuide } from "@/components/ses-setup"
 
@@ -50,6 +51,10 @@ function EmailSettingsRoute() {
   const [testTo, setTestTo] = React.useState("")
   const [result, setResult] = React.useState<ConnectionTest | null>(null)
   const [allowance, setAllowance] = React.useState<SendingAllowance | null>(null)
+
+  // Its own keys beat anything lent to it, which is the same order the
+  // sending path uses.
+  const ownAccount = Boolean(form.region.trim() && hasStoredSecret)
 
   React.useEffect(() => {
     getEmailSettings()
@@ -218,10 +223,18 @@ function EmailSettingsRoute() {
         ) : null}
 
         <div className="flex flex-col gap-8 border-t border-border pt-6">
-          <SesAccountPanel
-            ready={Boolean(form.region.trim() && hasStoredSecret)}
-          />
-          {form.region.trim() && hasStoredSecret && <SesHealthPanel />}
+          {ownAccount ? (
+            <>
+              <SesAccountPanel ready />
+              <SesHealthPanel />
+            </>
+          ) : allowance?.sends === "shared" ? (
+            // Borrowing the server's account: the senders are this site's to
+            // manage and everything else on that account is not.
+            <SesSendersPanel borrowed />
+          ) : (
+            <SesAccountPanel ready={false} />
+          )}
         </div>
       </div>
     </>

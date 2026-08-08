@@ -104,14 +104,12 @@ export function SesAccountPanel({
   const { t } = useLingui()
 
   const [account, setAccount] = React.useState<SesAccount | null>(null)
-  const [identities, setIdentities] = React.useState<SesIdentity[]>([])
   const [suppressed, setSuppressed] = React.useState<SesSuppressed[]>([])
   const [problem, setProblem] = React.useState<string | null>(null)
   // Only loading when there is something to load; with no settings the
   // panel has nothing to ask and nothing to wait for.
   const [loading, setLoading] = React.useState(ready)
   const [busy, setBusy] = React.useState(false)
-  const [newIdentity, setNewIdentity] = React.useState("")
 
   const [request, setRequest] = React.useState({
     mail_type: "TRANSACTIONAL",
@@ -145,9 +143,6 @@ export function SesAccountPanel({
       })
       .finally(() => setLoading(false))
 
-    getSesIdentities(siteId)
-      .then(setIdentities)
-      .catch(() => setIdentities([]))
     getSesSuppressed(siteId)
       .then(setSuppressed)
       .catch(() => setSuppressed([]))
@@ -166,22 +161,6 @@ export function SesAccountPanel({
       load()
     } catch (error) {
       toast.error(error instanceof ApiError ? error.message : t`Could not ask`)
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  const add = async () => {
-    setBusy(true)
-    try {
-      await addSesIdentity(newIdentity.trim(), siteId)
-      setNewIdentity("")
-      toast.success(t`Asked SES to verify it`)
-      load()
-    } catch (error) {
-      toast.error(
-        error instanceof ApiError ? error.message : t`Could not add it`
-      )
     } finally {
       setBusy(false)
     }
@@ -407,57 +386,7 @@ export function SesAccountPanel({
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t`Who you may send as`}</CardTitle>
-          <CardDescription>
-            {t`SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send.`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <div className="flex flex-wrap gap-2">
-            <Input
-              value={newIdentity}
-              onChange={(event) => setNewIdentity(event.target.value)}
-              placeholder={t`someone@example.com or example.com`}
-              className="max-w-sm"
-            />
-            <Button
-              variant="outline"
-              onClick={() => void add()}
-              disabled={busy || newIdentity.trim().length < 3}
-            >
-              <Plus /> {t`Verify`}
-            </Button>
-          </div>
-
-          {identities.length === 0 ? (
-            <Empty className="border">
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <Globe />
-                </EmptyMedia>
-                <EmptyTitle>{t`Nothing verified yet`}</EmptyTitle>
-                <EmptyDescription>
-                  {t`Add the domain you send from. A domain covers every address on it, so it is worth doing before adding addresses one at a time.`}
-                </EmptyDescription>
-              </EmptyHeader>
-            </Empty>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {identities.map((identity) => (
-                <Identity
-                  key={identity.name}
-                  identity={identity}
-                  siteId={siteId}
-                  busy={busy}
-                  onChanged={load}
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <SesSendersPanel siteId={siteId} />
 
       <Card>
         <CardHeader>
@@ -873,6 +802,127 @@ function RecordTable({
           })}
         </TableBody>
       </Table>
+    </div>
+  )
+}
+
+/**
+ * The senders, on their own.
+ *
+ * Split out because a site borrowing the server's Amazon account gets exactly
+ * this and nothing else: the account's quota, its reputation reports and its
+ * suppression list belong to whoever runs the server, and that suppression
+ * list is every other site's correspondents by name.
+ */
+export function SesSendersPanel({
+  siteId,
+  borrowed = false,
+}: {
+  siteId?: string
+  /** Sending through the server's account rather than one of this site's. */
+  borrowed?: boolean
+}) {
+  const { t } = useLingui()
+  const [identities, setIdentities] = React.useState<SesIdentity[]>([])
+  const [loading, setLoading] = React.useState(true)
+  const [busy, setBusy] = React.useState(false)
+  const [newIdentity, setNewIdentity] = React.useState("")
+
+  const load = React.useCallback(() => {
+    getSesIdentities(siteId)
+      .then(setIdentities)
+      .catch(() => setIdentities([]))
+      .finally(() => setLoading(false))
+  }, [siteId])
+
+  React.useEffect(load, [load])
+
+  const add = async () => {
+    setBusy(true)
+    try {
+      await addSesIdentity(newIdentity.trim(), siteId)
+      setNewIdentity("")
+      toast.success(t`Asked SES to verify it`)
+      load()
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError ? error.message : t`Could not add it`
+      )
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-12">
+        <Spinner className="size-6 text-muted-foreground" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      {borrowed ? (
+        <div className="rounded-xl border border-border bg-muted/40 p-4">
+          <p className="text-sm font-medium">{t`Sending through the server's account`}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t`You do not need an Amazon account. Add the domain you send from below, publish the records it gives you, and your mail goes out as your own domain — the server only lends the account behind it.`}
+          </p>
+        </div>
+      ) : null}
+
+      <Card>
+    <CardHeader>
+      <CardTitle>{t`Who you may send as`}</CardTitle>
+      <CardDescription>
+        {t`SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send.`}
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="flex flex-col gap-4">
+      <div className="flex flex-wrap gap-2">
+        <Input
+          value={newIdentity}
+          onChange={(event) => setNewIdentity(event.target.value)}
+          placeholder={t`someone@example.com or example.com`}
+          className="max-w-sm"
+        />
+        <Button
+          variant="outline"
+          onClick={() => void add()}
+          disabled={busy || newIdentity.trim().length < 3}
+        >
+          <Plus /> {t`Verify`}
+        </Button>
+      </div>
+
+      {identities.length === 0 ? (
+        <Empty className="border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Globe />
+            </EmptyMedia>
+            <EmptyTitle>{t`Nothing verified yet`}</EmptyTitle>
+            <EmptyDescription>
+              {t`Add the domain you send from. A domain covers every address on it, so it is worth doing before adding addresses one at a time.`}
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {identities.map((identity) => (
+            <Identity
+              key={identity.name}
+              identity={identity}
+              siteId={siteId}
+              busy={busy}
+              onChanged={load}
+            />
+          ))}
+        </div>
+      )}
+    </CardContent>
+  </Card>
     </div>
   )
 }

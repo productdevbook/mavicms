@@ -602,6 +602,26 @@ async fn email_config_of(state: &AppState) -> AppResult<crate::email::EmailConfi
     Ok(crate::outbound::how(state).await?.config)
 }
 
+/// The account for the screens that act on the account itself rather than on
+/// one of its senders.
+///
+/// A borrowed account is somebody else's. Its quota, its sandbox status, its
+/// reputation reports, its support cases and its event pipeline belong to
+/// whoever runs the server — and its suppression list is every other site's
+/// correspondents by name, which is the one that would be a breach rather
+/// than a nuisance.
+async fn own_account_of(state: &AppState) -> AppResult<crate::email::EmailConfig> {
+    let post = crate::outbound::how(state).await?;
+    if !post.own {
+        return Err(AppError::Validation(
+            "this site sends through the server's account, and that account's own settings \
+             belong to whoever runs the server"
+                .to_string(),
+        ));
+    }
+    Ok(post.config)
+}
+
 /// The control plane and site, when this site is on the server's account.
 ///
 /// `None` for a site sending with its own keys: there is nobody else on that
@@ -706,7 +726,7 @@ pub async fn get_email_account(Site(state): Site) -> AppResult<Json<crate::email
 }
 
 pub async fn email_account_of(state: &AppState) -> AppResult<crate::email::AccountStatus> {
-    crate::email::account(&email_config_of(state).await?).await
+    crate::email::account(&own_account_of(state).await?).await
 }
 
 /// Ask Amazon to take the account out of the sandbox.
@@ -730,7 +750,7 @@ pub async fn request_production_access_of(
     state: &AppState,
     payload: crate::email::ProductionAccessRequest,
 ) -> AppResult<()> {
-    crate::email::request_production_access(&email_config_of(state).await?, payload).await
+    crate::email::request_production_access(&own_account_of(state).await?, payload).await
 }
 
 /// The addresses and domains SES will send from.
@@ -845,7 +865,7 @@ pub async fn list_email_suppressed(
 }
 
 pub async fn email_suppressed_of(state: &AppState) -> AppResult<Vec<crate::email::Suppressed>> {
-    crate::email::suppressed(&email_config_of(state).await?).await
+    crate::email::suppressed(&own_account_of(state).await?).await
 }
 
 /// Take one off that list.
@@ -866,7 +886,7 @@ pub async fn delete_email_suppressed(
 }
 
 pub async fn unsuppress_email_of(state: &AppState, address: &str) -> AppResult<()> {
-    crate::email::unsuppress(&email_config_of(state).await?, address).await
+    crate::email::unsuppress(&own_account_of(state).await?, address).await
 }
 
 /// How the account has been behaving: the bounce and complaint rates Amazon
@@ -882,7 +902,7 @@ pub async fn get_email_health(Site(state): Site) -> AppResult<Json<crate::email:
 }
 
 pub async fn email_health_of(state: &AppState) -> AppResult<crate::email::SendingHealth> {
-    crate::email::health(&email_config_of(state).await?).await
+    crate::email::health(&own_account_of(state).await?).await
 }
 
 #[derive(Debug, serde::Deserialize, utoipa::ToSchema)]
@@ -908,7 +928,7 @@ pub async fn set_email_sending(
 }
 
 pub async fn set_email_sending_of(state: &AppState, enabled: bool) -> AppResult<()> {
-    crate::email::set_sending(&email_config_of(state).await?, enabled).await
+    crate::email::set_sending(&own_account_of(state).await?, enabled).await
 }
 
 /// The configuration sets this account has.
@@ -923,7 +943,7 @@ pub async fn list_email_configuration_sets(Site(state): Site) -> AppResult<Json<
 }
 
 pub async fn email_configuration_sets_of(state: &AppState) -> AppResult<Vec<String>> {
-    crate::email::configuration_sets(&email_config_of(state).await?).await
+    crate::email::configuration_sets(&own_account_of(state).await?).await
 }
 
 /// Ask Amazon for a bigger quota.
@@ -949,7 +969,7 @@ pub async fn request_quota_increase_of(
     state: &AppState,
     payload: crate::email::QuotaIncreaseRequest,
 ) -> AppResult<crate::email::SupportCase> {
-    crate::email::request_quota_increase(&email_config_of(state).await?, payload).await
+    crate::email::request_quota_increase(&own_account_of(state).await?, payload).await
 }
 
 /// The requests this account has made about sending, and where they got to.
@@ -966,7 +986,7 @@ pub async fn list_email_requests(
 }
 
 pub async fn email_requests_of(state: &AppState) -> AppResult<Vec<crate::email::SupportCase>> {
-    crate::email::support_cases(&email_config_of(state).await?).await
+    crate::email::support_cases(&own_account_of(state).await?).await
 }
 
 #[derive(Debug, serde::Deserialize, utoipa::ToSchema)]
@@ -1018,7 +1038,7 @@ pub async fn create_email_configuration_set(
 }
 
 pub async fn create_configuration_set_of(state: &AppState, name: &str) -> AppResult<()> {
-    crate::email::create_configuration_set(&email_config_of(state).await?, name).await
+    crate::email::create_configuration_set(&own_account_of(state).await?, name).await
 }
 
 #[derive(Debug, serde::Serialize, utoipa::ToSchema)]
@@ -1058,6 +1078,10 @@ pub async fn setup_email_events(
 }
 
 pub async fn setup_events_of(state: &AppState, host: &str) -> AppResult<PipelineResponse> {
+    // The pipeline is the account's, not a sender's: one configuration set and
+    // one SNS topic serve everything the account sends.
+    own_account_of(state).await?;
+
     let stored = crate::plugins::load::<crate::email::EmailConfig>(
         state.db(),
         &state.secrets,
@@ -1130,5 +1154,5 @@ pub async fn deliverability_of(
     state: &AppState,
     days: i64,
 ) -> AppResult<crate::email::Deliverability> {
-    crate::email::deliverability(&email_config_of(state).await?, days).await
+    crate::email::deliverability(&own_account_of(state).await?, days).await
 }
