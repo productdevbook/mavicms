@@ -49,44 +49,106 @@ function gigabytes(bytes: number) {
   return mb < 1024 ? `${Math.round(mb)} MB` : `${(mb / 1024).toFixed(1)} GB`
 }
 
+/// How much goes in one request.
+///
+/// Small enough that a dropped connection costs one chunk rather than an
+/// afternoon, large enough that a two-gigabyte lesson is not four thousand
+/// round trips.
+const CHUNK = 32 * 1024 * 1024
+
+function send(
+  method: string,
+  url: string,
+  headers: Array<[string, string]>,
+  body: XMLHttpRequestBodyInit | null,
+  onProgress?: (sent: number) => void
+): Promise<XMLHttpRequest> {
+  return new Promise((resolve, reject) => {
+    const request = new XMLHttpRequest()
+    request.open(method, url)
+    for (const [name, value] of headers) request.setRequestHeader(name, value)
+    if (onProgress) {
+      request.upload.onprogress = (event) => onProgress(event.loaded)
+    }
+    request.onload = () =>
+      request.status >= 200 && request.status < 300
+        ? resolve(request)
+        : reject(
+            new Error(
+              `${request.status} ${request.statusText}${
+                request.responseText ? ` — ${request.responseText.slice(0, 200)}` : ""
+              }`
+            )
+          )
+    request.onerror = () => reject(new Error("the upload was interrupted"))
+    request.send(body)
+  })
+}
+
 /**
- * Sends the file to the host, not to this server.
+ * Sends the file to the host, not to this server, over tus.
  *
- * `put` for Bunny, which takes the whole body on one request. `tus` for
- * Cloudflare's one-time URL — and the tus a browser needs for a single
- * complete file is one POST, so it is written here rather than pulling in a
- * client for the resumable parts nothing yet uses.
+ * Written out rather than pulled in as a client because what a browser needs
+ * for one file is two verbs: a POST that says how long it will be, and PATCHes
+ * that say where they start. The chunking is what makes an interrupted upload
+ * cost one chunk — which is the whole reason for tus, and the reason a
+ * two-gigabyte file over an office connection is a feature rather than a
+ * complaint.
+ *
+ * Nothing here is a credential. The ticket carries a signature the server made
+ * for this one video, and it expires.
  */
-function upload(
+async function upload(
   ticket: UploadTicket,
   file: File,
   onProgress: (fraction: number) => void
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const request = new XMLHttpRequest()
-    request.open(ticket.method === "tus" ? "POST" : "PUT", ticket.upload_url)
+  const meta = [
+    `filetype ${btoa(file.type || "video/mp4")}`,
+    `title ${btoa(unescape(encodeURIComponent(file.name)))}`,
+  ].join(",")
 
-    for (const [name, value] of ticket.headers) {
-      request.setRequestHeader(name, value)
-    }
+  const created = await send(
+    "POST",
+    ticket.upload_url,
+    [
+      ...ticket.headers,
+      ["Tus-Resumable", "1.0.0"],
+      ["Upload-Length", String(file.size)],
+      ["Upload-Metadata", meta],
+    ],
+    null
+  )
 
-    request.upload.onprogress = (event) => {
-      if (event.lengthComputable) onProgress(event.loaded / event.total)
-    }
-    request.onload = () =>
-      request.status >= 200 && request.status < 300
-        ? resolve()
-        : reject(new Error(`${request.status} ${request.statusText}`))
-    request.onerror = () => reject(new Error("the upload was interrupted"))
+  // Where the chunks go. Relative for a host that answers with a path.
+  const location = created.getResponseHeader("Location")
+  if (!location) throw new Error("the host accepted the upload and said nowhere to put it")
+  const target = new URL(location, ticket.upload_url).toString()
 
-    if (ticket.method === "tus") {
-      const body = new FormData()
-      body.append("file", file)
-      request.send(body)
-    } else {
-      request.send(file)
+  for (let offset = 0; offset < file.size; offset += CHUNK) {
+    const chunk = file.slice(offset, Math.min(offset + CHUNK, file.size))
+    const at = offset
+    const answer = await send(
+      "PATCH",
+      target,
+      [
+        ["Tus-Resumable", "1.0.0"],
+        ["Upload-Offset", String(offset)],
+        ["Content-Type", "application/offset+octet-stream"],
+      ],
+      chunk,
+      (sent) => onProgress(Math.min(1, (at + sent) / file.size))
+    )
+
+    // The host is the authority on how much it has. Trusting our own count
+    // would resume from the wrong place after a chunk it only partly took.
+    const acknowledged = Number(answer.getResponseHeader("Upload-Offset"))
+    if (Number.isFinite(acknowledged) && acknowledged > 0) {
+      offset = acknowledged - CHUNK
     }
-  })
+  }
+
+  onProgress(1)
 }
 
 function VideosRoute() {

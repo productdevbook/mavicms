@@ -36,6 +36,13 @@ pub const VIDEO_PLUGIN: &str = "video";
 /// costs more than it saves for everyone who is not a film studio.
 pub const PLAYBACK_TTL: Duration = Duration::from_secs(4 * 60 * 60);
 
+/// How long the browser has to finish sending a file.
+///
+/// Two hours, which is a two-gigabyte lesson at about 2.5 Mbit up — an office
+/// connection having a bad afternoon. It authorises one upload of one video
+/// that this server has already created, so a long window is not a large key.
+pub const UPLOAD_TTL: Duration = Duration::from_secs(2 * 60 * 60);
+
 /// Which host this site's videos are on.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -104,17 +111,27 @@ pub struct VideoConfig {
 }
 
 /// Where the browser sends the file, and what to send it with.
+///
+/// Everything in here reaches the browser, so nothing in here may be a
+/// credential. That is not a style rule: a ticket is asked for by anything
+/// that can write to this site, including the day-long assistant key, which is
+/// refused `/plugins` in [`crate::auth::off_limits`] exactly so that it cannot
+/// read another service's credentials. Handing it the video host's API key
+/// through a different door would have made that boundary decorative.
+///
+/// So both hosts are used the way they are meant to be used from a browser:
+/// something that authorises one upload of one video and then expires.
 #[derive(Debug, Serialize, ToSchema)]
 pub struct Ticket {
     /// The host's own id for the video, which the row is keyed on afterwards.
     pub provider_id: String,
     pub upload_url: String,
-    /// `tus` where the host supports resuming, `put` where it does not. A
-    /// two-gigabyte file on an office connection will be interrupted, and the
-    /// difference between the two is whether that costs the whole upload.
+    /// Always `tus`. Both hosts speak it, and a two-gigabyte file on an office
+    /// connection will be interrupted — the difference between resuming and
+    /// starting again is the difference between a feature and a complaint.
     pub method: String,
-    /// Sent with the upload. Empty for a one-time URL that carries its own
-    /// authorisation, which is the point of one.
+    /// Sent with the request that starts the upload. A signature and what it
+    /// covers, never a key.
     pub headers: Vec<(String, String)>,
 }
 
@@ -272,6 +289,32 @@ impl VideoConfig {
         Ok(())
     }
 
+    /// What a browser is handed to upload one Bunny video.
+    ///
+    /// Its own function, and not inlined above, so that the property that
+    /// matters can be tested without a Bunny account: the plain `PUT` upload
+    /// wants the library's API key, which can list, replace and delete every
+    /// video in it, so that route is for this server and not for a browser.
+    /// This is Bunny's own answer to the same problem — a signature over this
+    /// one video and a moment it stops being accepted.
+    fn bunny_ticket(&self, id: &str, expires: i64) -> Ticket {
+        let library = self.library_id.trim();
+        Ticket {
+            upload_url: "https://video.bunnycdn.com/tusupload".to_string(),
+            method: "tus".to_string(),
+            headers: vec![
+                (
+                    "AuthorizationSignature".to_string(),
+                    bunny_upload_signature(library, self.api_key.trim(), expires, id),
+                ),
+                ("AuthorizationExpire".to_string(), expires.to_string()),
+                ("VideoId".to_string(), id.to_string()),
+                ("LibraryId".to_string(), library.to_string()),
+            ],
+            provider_id: id.to_string(),
+        }
+    }
+
     /// Make a place for a file and say where to send it.
     pub async fn upload_ticket(&self, title: &str) -> AppResult<Ticket> {
         self.validate()?;
@@ -300,12 +343,7 @@ impl VideoConfig {
                     })?
                     .to_string();
 
-                Ok(Ticket {
-                    upload_url: format!("https://video.bunnycdn.com/library/{library}/videos/{id}"),
-                    provider_id: id,
-                    method: "put".to_string(),
-                    headers: vec![("AccessKey".to_string(), self.api_key.trim().to_string())],
-                })
+                Ok(self.bunny_ticket(&id, expires_in(UPLOAD_TTL)))
             }
             Host::Cloudflare => {
                 let account = self.account_id.trim();
@@ -535,6 +573,24 @@ impl VideoConfig {
     }
 }
 
+/// What lets a browser upload one video to Bunny without holding the key.
+///
+/// Their documented scheme: SHA-256 of the library, the API key, the moment it
+/// expires and the video's id, as lower-case hex. The key is an input to the
+/// hash and never leaves this process; what the browser carries proves it was
+/// made here, for this video, until that moment.
+fn bunny_upload_signature(library: &str, key: &str, expires: i64, video: &str) -> String {
+    use sha2::{Digest, Sha256};
+
+    let mut hasher = Sha256::new();
+    hasher.update(format!("{library}{key}{expires}{video}").as_bytes());
+    hasher
+        .finalize()
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect()
+}
+
 /// Bunny's token authentication, which is a SHA-256 of the key, the path and
 /// the expiry, base64 in the URL-safe alphabet with the padding taken off.
 fn bunny_token(key: &str, path: &str, expires: i64) -> String {
@@ -608,6 +664,71 @@ mod tests {
 
         config.token_key = "t".to_string();
         assert!(config.validate().is_ok());
+    }
+
+    /// The one this file exists to get right. A ticket goes to a browser, and
+    /// is asked for by anything that can write to the site — including the
+    /// day-long assistant key, which is refused `/plugins` precisely so that
+    /// it cannot read another service's credentials.
+    #[test]
+    fn what_a_browser_is_given_is_never_the_key() {
+        let key = "bunny-library-api-key";
+        let signature = bunny_upload_signature("12345", key, 1_800_000_000, "guid-1");
+
+        assert!(!signature.contains(key));
+        assert_eq!(signature.len(), 64, "sha-256 as hex");
+        assert!(signature.chars().all(|c| c.is_ascii_hexdigit()));
+
+        // Bound to this video, this library and this moment: none of the three
+        // may be swapped for another and still be accepted.
+        assert_ne!(
+            signature,
+            bunny_upload_signature("12345", key, 1_800_000_000, "guid-2")
+        );
+        assert_ne!(
+            signature,
+            bunny_upload_signature("99999", key, 1_800_000_000, "guid-1")
+        );
+        assert_ne!(
+            signature,
+            bunny_upload_signature("12345", key, 1_800_000_001, "guid-1")
+        );
+        assert_ne!(
+            signature,
+            bunny_upload_signature("12345", "another-key", 1_800_000_000, "guid-1")
+        );
+    }
+
+    /// The same property, over the whole thing that is serialised to the
+    /// browser rather than over the hash alone.
+    #[test]
+    fn a_ticket_carries_no_credential_anywhere_in_it() {
+        let secret = "the-library-api-key-nobody-should-see";
+        let config = VideoConfig {
+            host: "bunny".to_string(),
+            library_id: "12345".to_string(),
+            api_key: secret.to_string(),
+            token_key: "the-token-key-either".to_string(),
+            cdn_hostname: "vz-test.b-cdn.net".to_string(),
+            ..Default::default()
+        };
+
+        let ticket = config.bunny_ticket("guid-1", 1_800_000_000);
+        let json = serde_json::to_string(&ticket).expect("a ticket serialises");
+
+        assert!(!json.contains(secret), "{json}");
+        assert!(!json.contains("the-token-key-either"), "{json}");
+        assert!(!json.to_lowercase().contains("accesskey"), "{json}");
+
+        // And it does carry the four things Bunny wants instead.
+        for wanted in [
+            "AuthorizationSignature",
+            "AuthorizationExpire",
+            "VideoId",
+            "LibraryId",
+        ] {
+            assert!(json.contains(wanted), "{wanted} missing from {json}");
+        }
     }
 
     #[test]

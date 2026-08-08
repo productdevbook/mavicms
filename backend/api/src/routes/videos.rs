@@ -4,6 +4,28 @@
 //! bytes — never touches this server: the panel asks for a ticket, uploads to
 //! the host, and the host says when it is done. What these endpoints move is
 //! a row, an address and a signature.
+//!
+//! # Who may do what, and why it is not the same for all of them
+//!
+//! Listing, reading and adding are open to anything signed in that may write,
+//! which is what `media` already does for images and what makes the assistant
+//! key of any use for a course. A build token reaches the two `GET`s and is
+//! refused the rest by its own rule, which is that it may not write at all.
+//!
+//! Two are not like the others, and the asymmetry is deliberate:
+//!
+//! - **The settings** are administrator-only, like every other plugin's. They
+//!   hold another service's credentials.
+//! - **Deleting** is administrator-only because it does not go to the bin. A
+//!   deleted post waits thirty days; a deleted video is gone from the host as
+//!   well, and the only copy left is on somebody's laptop.
+//!
+//! And one is a placeholder: `playback` mints an address for **whoever asked**,
+//! which is right while the only callers are the panel and an assistant
+//! previewing. It is not the endpoint a student may ever reach. When the member
+//! area arrives it gets its own, which decides enrolment, expiry and drip
+//! before it signs anything — see `docs/courses.md`. Wiring a member area to
+//! this one would hand every video to anybody with an account.
 
 use axum::{
     Json,
@@ -410,6 +432,10 @@ pub async fn get_video(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<Jso
 }
 
 /// An address that plays, good for a few hours.
+///
+/// For the panel and for an assistant previewing what it uploaded. **Not** for
+/// a student: it signs for whoever asked, having checked only that they are
+/// signed in. The member area's own endpoint decides enrolment first.
 #[utoipa::path(
     post,
     path = "/videos/{id}/playback",
@@ -435,6 +461,9 @@ pub async fn playback(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<Json
 }
 
 /// Remove it, here and on the host.
+///
+/// Administrator, unlike adding one. This is the endpoint with no way back:
+/// the video goes from the host too, and there is no bin to take it out of.
 #[utoipa::path(
     delete,
     path = "/videos/{id}",
