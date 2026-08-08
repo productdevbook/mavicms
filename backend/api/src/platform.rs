@@ -338,37 +338,58 @@ pub async fn owns_identity(
     tenant_id: Uuid,
     name: &str,
 ) -> AppResult<bool> {
-    let name = name.trim().to_ascii_lowercase();
+    let name = tidy(name);
     let mine = identities(db, tenant_id).await?;
-    Ok(mine.iter().any(|held| {
-        let held = held.trim().to_ascii_lowercase();
-        name == held || name.ends_with(&format!(".{held}")) || name.ends_with(&format!("@{held}"))
-    }))
+    Ok(mine.iter().any(|held| answers_for(&tidy(held), &name)))
+}
+
+/// Whether the first name answers for the second.
+///
+/// A domain answers for its own subdomains and for addresses at it: a site
+/// that verified `example.com` gets `mail.example.com` without asking again,
+/// which is what a custom MAIL FROM is.
+fn answers_for(held: &str, name: &str) -> bool {
+    name == held || name.ends_with(&format!(".{held}")) || name.ends_with(&format!("@{held}"))
 }
 
 /// Whether anybody else has this sender already. The check that stops one
 /// site claiming another's domain on a shared account.
+///
+/// Both directions, because ownership runs down the tree: taking the parent of
+/// somebody's domain would take the domain with it, and taking a subdomain of
+/// somebody's domain sends as a name they answer for. An exact-name check
+/// catches neither — it would let a second site add `mail.example.com` under
+/// the first's `example.com`, or add `example.com` over the first's
+/// `mail.example.com` and then delete it.
 pub async fn identity_taken(
     db: &DatabaseConnection,
     tenant_id: Uuid,
     name: &str,
 ) -> AppResult<bool> {
     let backend = db.get_database_backend();
-    let row = db
-        .query_one_raw(Statement::from_sql_and_values(
+    let rows = db
+        .query_all_raw(Statement::from_sql_and_values(
             backend,
             format!(
-                "SELECT tenant_id FROM site_email_identity WHERE name = {} AND tenant_id <> {}",
-                parameter(backend, 1),
-                parameter(backend, 2)
+                "SELECT name FROM site_email_identity WHERE tenant_id <> {}",
+                parameter(backend, 1)
             ),
-            [
-                name.trim().to_ascii_lowercase().into(),
-                tenant_id.to_string().into(),
-            ],
+            [tenant_id.to_string().into()],
         ))
         .await?;
-    Ok(row.is_some())
+
+    let name = tidy(name);
+    for row in rows {
+        let held = tidy(&row.try_get::<String>("", "name")?);
+        if answers_for(&held, &name) || answers_for(&name, &held) {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
+fn tidy(name: &str) -> String {
+    name.trim().trim_matches('.').to_ascii_lowercase()
 }
 
 pub async fn remember_identity(
@@ -385,7 +406,7 @@ pub async fn remember_identity(
         ),
         [
             tenant_id.to_string().into(),
-            name.trim().to_ascii_lowercase().into(),
+            tidy(name).into(),
             Utc::now().to_rfc3339().into(),
         ],
     ))
@@ -406,10 +427,7 @@ pub async fn forget_identity(
             parameter(backend, 1),
             parameter(backend, 2)
         ),
-        [
-            tenant_id.to_string().into(),
-            name.trim().to_ascii_lowercase().into(),
-        ],
+        [tenant_id.to_string().into(), tidy(name).into()],
     ))
     .await?;
     Ok(())
@@ -503,6 +521,30 @@ mod tests {
 
         assert!(super::identity_taken(&db, one, "baska.test").await.unwrap());
         assert!(!super::identity_taken(&db, one, "ornek.test").await.unwrap());
+
+        // Both directions. Taking a subdomain of somebody's domain sends as a
+        // name they answer for; taking the parent takes their domain with it,
+        // and then it can be deleted.
+        assert!(
+            super::identity_taken(&db, one, "posta.baska.test")
+                .await
+                .unwrap()
+        );
+        super::remember_identity(&db, other, "alt.uclu.test")
+            .await
+            .unwrap();
+        assert!(super::identity_taken(&db, one, "uclu.test").await.unwrap());
+        assert!(
+            super::identity_taken(&db, one, "bilgi@baska.test")
+                .await
+                .unwrap()
+        );
+        // A neighbour that merely shares an ending is still free.
+        assert!(
+            !super::identity_taken(&db, one, "bambaska.test")
+                .await
+                .unwrap()
+        );
 
         super::forget_identity(&db, one, "ornek.test")
             .await
