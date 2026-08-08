@@ -96,6 +96,31 @@ else:
 }
 ```
 
+The same three steps from a shell, if you would rather not click. Save the
+policy above as `ses-policy.json` first:
+
+```sh
+aws iam create-policy --policy-name mavicms-ses \
+  --policy-document file://ses-policy.json
+aws iam create-user --user-name mavicms-mail
+aws iam attach-user-policy --user-name mavicms-mail \
+  --policy-arn arn:aws:iam::<account>:policy/mavicms-ses
+aws iam create-access-key --user-name mavicms-mail > key.json
+```
+
+The secret is in that file and nowhere else — Amazon will not show it again.
+Copy it into the panel, then delete the file. Worth checking afterwards that
+the policy is neither more nor less than it should be, which `simulate` will
+answer without changing anything:
+
+```sh
+aws iam simulate-principal-policy \
+  --policy-source-arn arn:aws:iam::<account>:user/mavicms-mail \
+  --action-names ses:SendEmail ses:CreateTenant iam:CreateUser
+```
+
+The first two should come back `allowed` and the third `implicitDeny`.
+
 `ses:DeleteTenant` is deliberately absent. A tenant carries a site's reputation
 history, and there is no button in this panel that removes one — a site that
 should stop sending is set to nought messages a day instead.
