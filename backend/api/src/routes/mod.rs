@@ -212,6 +212,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(videos::get_settings, videos::update_settings))
         .routes(routes!(videos::test_settings))
         .routes(routes!(videos::get_usage))
+        .routes(routes!(videos::get_protection))
         .routes(routes!(videos::list_videos, videos::create_video))
         .routes(routes!(videos::get_video, videos::delete_video))
         .routes(routes!(videos::playback))

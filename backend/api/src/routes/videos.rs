@@ -46,7 +46,7 @@ use crate::{
     error::{AppError, AppResult},
     state::AppState,
     tenants::Site,
-    video::{Facts, Playback, Status, Ticket, Usage, VIDEO_PLUGIN, VideoConfig},
+    video::{Facts, Playback, Protection, Status, Ticket, Usage, VIDEO_PLUGIN, VideoConfig},
 };
 
 // ---------------------------------------------------------------- settings
@@ -244,6 +244,40 @@ pub async fn test_settings(
             message: err.to_string(),
         },
     }))
+}
+
+/// Whether the videos are really behind the signature that is put on them.
+///
+/// Tried against one video that is ready, because there is no way to ask the
+/// question in the abstract — and a site with nothing uploaded has nothing
+/// exposed either.
+#[utoipa::path(
+    get,
+    path = "/plugins/video/protection",
+    tag = "plugins",
+    responses((status = 200, description = "What an unsigned address does", body = Protection))
+)]
+pub async fn get_protection(
+    Site(state): Site,
+    _admin: Administrator,
+) -> AppResult<Json<Protection>> {
+    let (enabled, config) = stored(&state).await?;
+
+    let ready = video_asset::Entity::find()
+        .filter(video_asset::Column::Status.eq(Status::Ready.name()))
+        .order_by(video_asset::Column::CreatedAt, Order::Desc)
+        .one(state.db())
+        .await?;
+
+    let (Some(video), true) = (ready, enabled) else {
+        return Ok(Json(Protection {
+            checked: false,
+            protected: false,
+            message: String::new(),
+        }));
+    };
+
+    Ok(Json(config.protection(&video.host_id).await?))
 }
 
 /// What this site is storing and serving.

@@ -639,6 +639,17 @@ export function testVideoSettings(
   })
 }
 
+/** Whether the host is really refusing an address with no signature on it. */
+export interface VideoProtection {
+  checked: boolean
+  protected: boolean
+  message: string
+}
+
+export function getVideoProtection(): Promise<VideoProtection> {
+  return request<VideoProtection>("/plugins/video/protection")
+}
+
 export function getVideoUsage(): Promise<VideoUsage> {
   return request<VideoUsage>("/plugins/video/usage")
 }

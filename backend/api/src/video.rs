@@ -176,6 +176,15 @@ pub struct Playback {
     pub thumbnail_url: String,
 }
 
+/// Whether the videos are actually behind the signature we put on them.
+#[derive(Debug, Serialize, ToSchema)]
+pub struct Protection {
+    /// False when there was nothing ready to try it on yet.
+    pub checked: bool,
+    pub protected: bool,
+    pub message: String,
+}
+
 /// What this site has cost so far this month.
 ///
 /// Read from the host rather than counted here: what we could count is what we
@@ -541,6 +550,58 @@ impl VideoConfig {
                 .to_rfc3339(),
             thumbnail_url: thumbnail.to_string(),
         })
+    }
+
+    /// Ask the host whether an address with no signature on it still plays.
+    ///
+    /// This exists because signing is only half of it. On Bunny, whether a
+    /// signature is *checked* is a switch in the library's own settings, and
+    /// only whoever owns that library can turn it on. Left off, everything
+    /// here still works, every address is still signed, and every one of them
+    /// also plays for anybody who has it, for ever — a site would look
+    /// protected and be wide open, and nothing in this panel would say so.
+    ///
+    /// So it is asked rather than assumed: fetch the plain address, and if the
+    /// host serves it, the switch is off.
+    pub async fn protection(&self, provider_id: &str) -> AppResult<Protection> {
+        match self.host()? {
+            Host::Bunny => {
+                let url = format!(
+                    "https://{}/{provider_id}/playlist.m3u8",
+                    self.cdn_hostname.trim()
+                );
+                let answer =
+                    self.client()?.get(url).send().await.map_err(|err| {
+                        AppError::Validation(format!("could not reach Bunny: {err}"))
+                    })?;
+
+                let served = answer.status().is_success();
+                Ok(Protection {
+                    checked: true,
+                    protected: !served,
+                    message: if served {
+                        "This library serves a video to anybody who has the address. Turn on \
+                         Token Authentication in the library's settings on Bunny — until you \
+                         do, the key saved here is not doing anything and every lesson is \
+                         public to whoever is sent a link."
+                            .to_string()
+                    } else {
+                        "An address with no signature on it was refused, which is what should \
+                         happen."
+                            .to_string()
+                    },
+                })
+            }
+            // Nothing to check and nothing anybody can forget: this is set per
+            // video, by this server, when the video is made.
+            Host::Cloudflare => Ok(Protection {
+                checked: true,
+                protected: true,
+                message: "Every video is uploaded with requireSignedURLs, so this is not a \
+                          setting that can be left off."
+                    .to_string(),
+            }),
+        }
     }
 
     /// Take it off the host. Best effort: the row is going either way, and a

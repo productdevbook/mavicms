@@ -7,11 +7,13 @@ import { toast } from "sonner"
 
 import {
   ApiError,
+  getVideoProtection,
   getVideoSettings,
   saveVideoSettings,
   testVideoSettings,
   type ConnectionTest,
   type VideoHost,
+  type VideoProtection,
   type VideoSettingsPayload,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -51,6 +53,7 @@ function VideoSettingsRoute() {
   const [loading, setLoading] = React.useState(true)
   const [busy, setBusy] = React.useState<"save" | "test" | null>(null)
   const [result, setResult] = React.useState<ConnectionTest | null>(null)
+  const [guard, setGuard] = React.useState<VideoProtection | null>(null)
 
   React.useEffect(() => {
     getVideoSettings()
@@ -65,6 +68,13 @@ function VideoSettingsRoute() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
+
+    // Signing an address is half of it; the host refusing an unsigned one is
+    // the other half, and on Bunny that half is a switch only the customer can
+    // reach. So it is asked rather than assumed.
+    getVideoProtection()
+      .then(setGuard)
+      .catch(() => setGuard(null))
   }, [])
 
   const patch = (fields: Partial<VideoSettingsPayload>) =>
@@ -177,6 +187,19 @@ function VideoSettingsRoute() {
 
         {form.host === "bunny" && (
           <>
+            {/* Four fields, in three different places in somebody else's
+                dashboard. Saying where each one is turns a support message
+                into a setup that takes two minutes. */}
+            <ol className="flex list-decimal flex-col gap-1.5 rounded-lg border border-border px-6 py-3 text-sm text-muted-foreground">
+              <li>{t`On bunny.net, open Stream and make a video library.`}</li>
+              <li>{t`In that library, open the API tab. The library id and the API key are both there.`}</li>
+              <li>{t`The pull zone hostname is on the same tab — it looks like vz-… .b-cdn.net`}</li>
+              <li className="text-foreground">
+                {t`In the library's settings, open Security and turn on Token Authentication. Copy the key it shows. This is the step that makes video addresses expire — leave it off and everything below still works, and every lesson plays for anybody who is sent a link.`}
+              </li>
+              <li>{t`Paste the address shown further down into the library's webhook setting.`}</li>
+            </ol>
+
             <div className="flex flex-col gap-2">
               <Label htmlFor="library">{t`Library id`}</Label>
               <Input
@@ -262,6 +285,13 @@ function VideoSettingsRoute() {
               </p>
             </div>
           </>
+        )}
+
+        {guard?.checked && !guard.protected && (
+          <p className="flex items-start gap-2 rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">
+            <XCircle className="mt-px size-3.5 shrink-0" />
+            {guard.message}
+          </p>
         )}
 
         {eventsUrl && (
