@@ -169,6 +169,12 @@ msgstr "{1} kişiden {0} gönderildi"
 msgid "{0} of {1} sent, {2} refused, {3} opened, {4} clicked"
 msgstr "{1} kişiden {0} gönderildi, {2} reddedildi, {3} açtı, {4} tıkladı"
 
+#. placeholder {0}: site.sent_today
+#. placeholder {1}: site.a_day
+#: src/routes/dashboard.platform-mail.tsx:202
+msgid "{0} of {1} used today"
+msgstr "bugün {1} hakkın {0} tanesi kullanıldı"
+
 #. placeholder {0}: sites?.length ?? 0
 #. placeholder {1}: account.site_limit
 #: src/routes/console.index.tsx:88
@@ -385,6 +391,14 @@ msgstr "Zamanlanmış bir yazının bir yayın tarihi olmalı"
 msgid "a second, at most"
 msgstr "saniyede en fazla"
 
+#: src/routes/dashboard.platform-mail.tsx:187
+msgid "A site appears here once it has been lent the account. Until then it sends with its own settings, or not at all."
+msgstr "Bir site, hesap kendisine ödünç verildiğinde burada belirir. O zamana kadar kendi ayarlarıyla gönderir, ya da hiç göndermez."
+
+#: src/routes/dashboard.platform-mail.tsx:246
+msgid "A site starts at 200 a day — a contact form and some notifications, not a mailing list. Nought stops it without taking anything away: the lists and the history stay, and raising the number starts it again."
+msgstr "Bir site günde 200 ile başlar — iletişim formu ve birkaç bildirim, posta listesi değil. Sıfır, hiçbir şeyi almadan siteyi durdurur: listeler ve geçmiş yerinde kalır, sayıyı yükseltmek yeniden başlatır."
+
 #: src/components/flows/flow-accounts.tsx:214
 msgid "A Telegram bot"
 msgstr "Bir Telegram botu"
@@ -401,6 +415,10 @@ msgstr "Yanıt alıyor"
 #: src/components/form-fields-editor.tsx:129
 msgid "Accepts"
 msgstr "Kabul ettiği"
+
+#: src/routes/dashboard.platform-mail.tsx:123
+msgid "Access key"
+msgstr "Erişim anahtarı"
 
 #: src/components/plugin-forms.tsx:111
 #: src/components/plugin-forms.tsx:319
@@ -624,6 +642,11 @@ msgstr "Hesabınız var mı? Giriş yapın"
 #: src/components/editor/dialogs.tsx:188
 msgid "Alt text"
 msgstr "Alternatif metin"
+
+#. placeholder {0}: held.account_a_second ?? 0
+#: src/routes/dashboard.platform-mail.tsx:162
+msgid "Amazon allows this account {0} a second"
+msgstr "Amazon bu hesaba saniyede {0} izin veriyor"
 
 #: src/components/ses-account.tsx:555
 msgid "Amazon could not find it"
@@ -1349,6 +1372,7 @@ msgstr "İstek gönderilemedi"
 msgid "Could not ask Amazon"
 msgstr "Amazon'a sorulamadı"
 
+#: src/routes/dashboard.platform-mail.tsx:81
 #: src/routes/dashboard.sites.tsx:97
 #: src/routes/dashboard.sites.tsx:126
 #: src/routes/dashboard.users.tsx:108
@@ -1566,6 +1590,7 @@ msgstr "Çalıştırılamadı"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:89
 #: src/routes/dashboard.mail.tsx:280
 #: src/routes/dashboard.mail.tsx:647
+#: src/routes/dashboard.platform-mail.tsx:68
 #: src/routes/dashboard.plugins_.email.tsx:81
 msgid "Could not save it"
 msgstr "Kaydedilemedi"
@@ -2210,6 +2235,10 @@ msgstr "gri: gönderildi · kırmızı: ulaşmadı"
 #~ msgid "Guide"
 #~ msgstr "Rehber"
 
+#: src/routes/dashboard.platform-mail.tsx:167
+msgid "Handed out to sites: {handedOut} a day"
+msgstr "Sitelere dağıtılan: günde {handedOut}"
+
 #. placeholder {0}: when(key.created_at)
 #: src/components/assistant-keys.tsx:74
 msgid "Handed over {0}"
@@ -2607,6 +2636,10 @@ msgstr "Kum havuzundan çıkmak"
 msgid "Leaving the sandbox is the first increase. This is the one after it — Amazon treats it as a support request, and this opens one in the same words its console would."
 msgstr "Kum havuzundan çıkmak ilk artıştır. Bu ondan sonraki — Amazon bunu bir destek talebi sayar ve buradan, konsolunun kullanacağı ifadelerle bir talep açılır."
 
+#: src/routes/dashboard.platform-mail.tsx:237
+msgid "Lend the account"
+msgstr "Hesabı ödünç ver"
+
 #: src/components/ses-account.tsx:503
 #~ msgid "Lets Amazon sign as you"
 #~ msgstr "Amazon'un sizin adınıza imzalamasını sağlar"
@@ -2692,6 +2725,7 @@ msgstr "Kanalın kendi ayarlarında, gelen webhook'lar altında üretilir. Elind
 #: src/routes/console.sites.$siteId.tsx:312
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
 #: src/routes/dashboard.mail.tsx:70
+#: src/routes/dashboard.platform-mail.tsx:93
 msgid "Mail"
 msgstr "Posta"
 
@@ -2795,6 +2829,7 @@ msgid "messages a day"
 msgstr "günde mesaj"
 
 #: src/components/ses-health.tsx:298
+#: src/routes/dashboard.platform-mail.tsx:215
 msgid "Messages a day"
 msgstr "Günde mesaj"
 
@@ -2874,7 +2909,7 @@ msgid "needs translation"
 msgstr "çeviri bekliyor"
 
 #. placeholder {0}: writing.name
-#: src/components/dashboard/dashboard-shell.tsx:197
+#: src/components/dashboard/dashboard-shell.tsx:206
 msgid "New {0}"
 msgstr "Yeni {0}"
 
@@ -3027,6 +3062,10 @@ msgstr "Kişi bulunamadı"
 msgid "No results found"
 msgstr "Sonuç bulunamadı"
 
+#: src/routes/dashboard.platform-mail.tsx:185
+msgid "No site is using the server's account"
+msgstr "Sunucunun hesabını kullanan site yok"
+
 #: src/routes/console.index.tsx:102
 msgid "No sites yet"
 msgstr "Henüz site yok"
@@ -3074,6 +3113,7 @@ msgid "Not sent yet"
 msgstr "Henüz gönderilmedi"
 
 #: src/components/console-build-token.tsx:46
+#: src/routes/dashboard.platform-mail.tsx:142
 msgid "Not set"
 msgstr "Tanımlı değil"
 
@@ -3192,6 +3232,10 @@ msgstr "Sunucunun diskinde"
 #: src/routes/console_.register.tsx:135
 msgid "One account for every site you run. Each site keeps its own content and its own people."
 msgstr "Yürüttüğünüz bütün siteler için tek hesap. Her site kendi içeriğini ve kendi ekibini ayrı tutar."
+
+#: src/routes/dashboard.platform-mail.tsx:95
+msgid "One Amazon account, lent to the sites that have none of their own. Each site sends as its own Amazon tenant, so one site's complaints do not become everybody's."
+msgstr "Tek bir Amazon hesabı, kendi hesabı olmayan sitelere ödünç verilir. Her site kendi Amazon kiracısı olarak gönderir; böylece bir sitenin şikâyetleri herkesin sorunu olmaz."
 
 #: src/routes/dashboard.api.tsx:220
 msgid "One language, one page at a time."
@@ -3665,6 +3709,7 @@ msgstr "gönderilmeden reddedildi"
 
 #: src/components/plugin-forms.tsx:98
 #: src/components/plugin-forms.tsx:307
+#: src/routes/dashboard.platform-mail.tsx:105
 msgid "Region"
 msgstr "Bölge"
 
@@ -3854,6 +3899,7 @@ msgstr "Kum havuzu"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:349
 #: src/routes/dashboard.mail.tsx:391
 #: src/routes/dashboard.mail.tsx:740
+#: src/routes/dashboard.platform-mail.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:333
 #: src/routes/dashboard.plugins_.email.tsx:150
 #: src/routes/dashboard.plugins_.s3.tsx:172
@@ -3879,6 +3925,7 @@ msgstr "Akışı kaydedin, adres burada belirir. Oraya gönderilen her şey bunu
 #: src/routes/dashboard.flows.tsx:153
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:86
+#: src/routes/dashboard.platform-mail.tsx:65
 #: src/routes/dashboard.plugins_.email.tsx:78
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
@@ -3923,6 +3970,10 @@ msgstr "Arama motoru"
 #: src/routes/dashboard.api.tsx:222
 msgid "Search titles, summaries and bodies."
 msgstr "Başlık, özet ve gövdede arar."
+
+#: src/routes/dashboard.platform-mail.tsx:132
+msgid "Secret"
+msgstr "Gizli anahtar"
 
 #: src/components/plugin-forms.tsx:117
 #: src/components/plugin-forms.tsx:331
@@ -3975,6 +4026,7 @@ msgid "Send an email"
 msgstr "E-posta gönder"
 
 #: src/components/flows/flow-accounts.tsx:270
+#: src/routes/dashboard.platform-mail.tsx:114
 msgid "Send as"
 msgstr "Gönderen adres"
 
@@ -4033,6 +4085,10 @@ msgstr "Gönderim durduruldu"
 msgid "Sends refusals back to a subdomain you own instead of to amazonses.com, which is what makes the visible sender and the envelope sender agree."
 msgstr "İadeleri amazonses.com yerine sizin sahip olduğunuz bir alt alan adına gönderir; görünen gönderenle zarf üzerindeki göndereni de bu uyumlu kılar."
 
+#: src/routes/dashboard.platform-mail.tsx:203
+msgid "Sends with its own account"
+msgstr "Kendi hesabıyla gönderiyor"
+
 #: src/components/ses-analytics.tsx:156
 #: src/routes/dashboard.mail.tsx:814
 msgid "sent"
@@ -4050,6 +4106,11 @@ msgstr "Gönderen"
 #: src/components/ses-account.tsx:256
 msgid "sent in the last day"
 msgstr "son günde gönderilen"
+
+#. placeholder {0}: Math.round(held.account_last_day ?? 0)
+#: src/routes/dashboard.platform-mail.tsx:165
+msgid "Sent in the last day: {0}"
+msgstr "Son bir günde gönderilen: {0}"
 
 #. placeholder {0}: testTo.trim()
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:121
@@ -4142,6 +4203,10 @@ msgstr "Kurulum başarısız oldu"
 msgid "Several are called"
 msgstr "Birkaçının adı"
 
+#: src/components/dashboard/dashboard-shell.tsx:127
+msgid "Shared mail"
+msgstr "Ortak e-posta"
+
 #: src/components/editor/dialogs.tsx:193
 msgid "Short description of the image"
 msgstr "Görseli tanımlayan kısa metin"
@@ -4178,7 +4243,7 @@ msgid "Sign in; sets the session cookie."
 msgstr "Giriş yapar; oturum çerezini bırakır."
 
 #: src/components/console/console-shell.tsx:144
-#: src/components/dashboard/dashboard-shell.tsx:204
+#: src/components/dashboard/dashboard-shell.tsx:213
 #: src/components/editor/mavi-editor.tsx:695
 #: src/components/editor/mavi-editor.tsx:983
 msgid "Sign out"
@@ -4209,7 +4274,8 @@ msgid "Site title"
 msgstr "Site başlığı"
 
 #: src/components/console/console-shell.tsx:51
-#: src/components/dashboard/dashboard-shell.tsx:121
+#: src/components/dashboard/dashboard-shell.tsx:122
+#: src/routes/dashboard.platform-mail.tsx:173
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
 msgstr "Siteler"
@@ -4256,6 +4322,10 @@ msgstr "Durdur"
 msgid "Stop all sending"
 msgstr "Tüm gönderimi durdur"
 
+#: src/routes/dashboard.platform-mail.tsx:228
+msgid "Stop lending"
+msgstr "Ödünç vermeyi bırak"
+
 #: src/components/flows/flow-settings.tsx:397
 msgid "Stop the whole flow"
 msgstr "Bütün akışı durdur"
@@ -4284,6 +4354,7 @@ msgstr "Kayıtlı — değiştirmemek için boş bırakın"
 #: src/components/console-build-token.tsx:46
 #: src/components/plugin-forms.tsx:340
 #: src/components/publish-panel.tsx:248
+#: src/routes/dashboard.platform-mail.tsx:141
 msgid "Stored — type to replace"
 msgstr "Kayıtlı — değiştirmek için yazın"
 
@@ -4469,6 +4540,10 @@ msgstr "O anahtar artık çalışmıyor"
 msgid "That request could not be read"
 msgstr "Bu istek okunamadı"
 
+#: src/routes/dashboard.platform-mail.tsx:101
+msgid "The account"
+msgstr "Hesap"
+
 #: src/routes/dashboard.api.tsx:243
 msgid "The address a title would get."
 msgstr "Bir başlığın alacağı adres."
@@ -4493,6 +4568,10 @@ msgstr "Bu hesabın bugünkü tavanı. Gönderim buraya gelince sıraya girmez, 
 #: src/components/flows/flow-settings.tsx:247
 msgid "The channel's address"
 msgstr "Kanalın adresi"
+
+#: src/routes/dashboard.platform-mail.tsx:149
+msgid "The exact permissions this needs are in docs/shared-email.md. A new Amazon account may only send 200 messages a day and only to addresses it has verified, which is no use for lending — ask Amazon for production access before turning any site on."
+msgstr "Gereken tam izinler docs/shared-email.md içinde. Yeni bir Amazon hesabı günde yalnızca 200 mesaj ve yalnızca doğruladığı adreslere gönderebilir; bu ödünç vermek için işe yaramaz — herhangi bir siteyi açmadan önce Amazon'dan üretim erişimi isteyin."
 
 #: src/components/ses-setup.tsx:161
 msgid "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."

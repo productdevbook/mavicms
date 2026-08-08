@@ -118,7 +118,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           ? []
           : [{ to: "/dashboard/publish", label: t`Publish`, icon: Rocket }]),
         ...(user.operator
-          ? [{ to: "/dashboard/sites", label: t`Sites`, icon: Server }]
+          ? [
+              { to: "/dashboard/sites", label: t`Sites`, icon: Server },
+              // The account this server lends its sites, and who may use how
+              // much of it. Whoever runs the machine, not whoever runs a site.
+              {
+                to: "/dashboard/platform-mail",
+                label: t`Shared mail`,
+                icon: Mails,
+              },
+            ]
           : []),
       ],
     },

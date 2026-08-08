@@ -1027,6 +1027,53 @@ export function getFlowRun(id: string): Promise<FlowRun> {
   return request<FlowRun>(`/flows/runs/${id}`)
 }
 
+export interface SiteMailAllowance {
+  site_id: string
+  host: string
+  sends: string
+  a_day: number
+  sent_today: number
+  ses_tenant: string | null
+  amazon_says: string | null
+}
+
+export interface PlatformMail {
+  configured: boolean
+  region: string
+  from_address: string
+  has_secret_access_key: boolean
+  account_a_second: number | null
+  account_last_day: number | null
+  sites: SiteMailAllowance[]
+}
+
+export function getPlatformMail(): Promise<PlatformMail> {
+  return request<PlatformMail>("/console/platform/mail")
+}
+
+export function savePlatformMail(payload: {
+  region: string
+  access_key_id: string
+  secret_access_key?: string
+  from_address: string
+  from_name?: string
+}): Promise<void> {
+  return request<void>("/console/platform/mail", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function setSiteMailAllowance(
+  siteId: string,
+  payload: { sends: string; a_day?: number }
+): Promise<SiteMailAllowance> {
+  return request<SiteMailAllowance>(`/console/platform/mail/${siteId}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
 export interface TrashEntry {
   id: string
   kind: string
