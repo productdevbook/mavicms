@@ -246,6 +246,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(plugins::setup_email_events))
         .routes(routes!(plugins::get_email_deliverability))
         .routes(routes!(plugins::get_email_reputation))
+        .routes(routes!(plugins::delete_email_credentials))
         .routes(routes!(
             plugins::get_backup_settings,
             plugins::update_backup_settings

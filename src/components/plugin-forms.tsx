@@ -292,24 +292,26 @@ export function EmailFields({
   form,
   hasStoredSecret,
   onChange,
-  lent = false,
+  onlyCredentials = false,
+  onlySender = false,
 }: {
   form: EmailSettingsPayload
   hasStoredSecret: boolean
   onChange: (values: Partial<EmailSettingsPayload>) => void
+  /** The region and keys alone — the step that asks for an Amazon account. */
+  onlyCredentials?: boolean
   /**
-   * The server has lent this site its account. The region and the keys are
-   * the server's, so asking for them here would be asking for the one thing
-   * the arrangement exists to avoid.
+   * The name on the letter alone. What a site borrowing the server's account
+   * fills in, since the keys and the region are the server's.
    */
-  lent?: boolean
+  onlySender?: boolean
 }) {
   const { t } = useLingui()
   const [extra, setExtra] = React.useState({ address: "", name: "" })
 
   return (
     <>
-      {lent ? null : (
+      {onlySender ? null : (
         <>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
@@ -357,112 +359,116 @@ export function EmailFields({
         </>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      {onlyCredentials ? null : (
+        <>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="ses-from">{t`From address`}</Label>
+            <Input
+              id="ses-from"
+              type="email"
+              value={form.from_address}
+              onChange={(event) =>
+                onChange({ from_address: event.target.value })
+              }
+              placeholder="site@example.com"
+            />
+            <p className="text-sm text-muted-foreground">
+              {t`SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive.`}
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="ses-from-name">{t`From name`}</Label>
+            <Input
+              id="ses-from-name"
+              value={form.from_name}
+              onChange={(event) => onChange({ from_name: event.target.value })}
+            />
+          </div>
+        </div>
+
         <div className="flex flex-col gap-2">
-          <Label htmlFor="ses-from">{t`From address`}</Label>
-          <Input
-            id="ses-from"
-            type="email"
-            value={form.from_address}
-            onChange={(event) =>
-              onChange({ from_address: event.target.value })
-            }
-            placeholder="site@example.com"
-          />
+          <Label>{t`Other addresses you send as`}</Label>
+          {form.senders.length > 0 && (
+            <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
+              {form.senders.map((sender, index) => (
+                <div key={index} className="flex items-center gap-2 px-3 py-2">
+                  <span className="min-w-0 flex-1 truncate text-sm">
+                    {sender.name ? `${sender.name} <${sender.address}>` : sender.address}
+                  </span>
+                  <button
+                    type="button"
+                    aria-label={t`Remove`}
+                    className="text-xs text-muted-foreground hover:text-destructive"
+                    onClick={() =>
+                      onChange({
+                        senders: form.senders.filter((_, at) => at !== index),
+                      })
+                    }
+                  >
+                    {t`Remove`}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="flex flex-wrap gap-2">
+            <Input
+              value={extra.address}
+              onChange={(event) =>
+                setExtra({ ...extra, address: event.target.value })
+              }
+              placeholder="bulten@example.com"
+              className="max-w-xs"
+            />
+            <Input
+              value={extra.name}
+              onChange={(event) => setExtra({ ...extra, name: event.target.value })}
+              placeholder={t`Name shown`}
+              className="max-w-40"
+            />
+            <button
+              type="button"
+              disabled={!extra.address.includes("@")}
+              className="rounded-md border border-border px-3 text-sm disabled:opacity-50"
+              onClick={() => {
+                onChange({ senders: [...form.senders, extra] })
+                setExtra({ address: "", name: "" })
+              }}
+            >
+              {t`Add`}
+            </button>
+          </div>
           <p className="text-sm text-muted-foreground">
-            {t`SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive.`}
+            {t`A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so.`}
           </p>
         </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="ses-from-name">{t`From name`}</Label>
-          <Input
-            id="ses-from-name"
-            value={form.from_name}
-            onChange={(event) => onChange({ from_name: event.target.value })}
-          />
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-2">
-        <Label>{t`Other addresses you send as`}</Label>
-        {form.senders.length > 0 && (
-          <div className="flex flex-col divide-y divide-border rounded-xl border border-border">
-            {form.senders.map((sender, index) => (
-              <div key={index} className="flex items-center gap-2 px-3 py-2">
-                <span className="min-w-0 flex-1 truncate text-sm">
-                  {sender.name ? `${sender.name} <${sender.address}>` : sender.address}
-                </span>
-                <button
-                  type="button"
-                  aria-label={t`Remove`}
-                  className="text-xs text-muted-foreground hover:text-destructive"
-                  onClick={() =>
-                    onChange({
-                      senders: form.senders.filter((_, at) => at !== index),
-                    })
-                  }
-                >
-                  {t`Remove`}
-                </button>
-              </div>
-            ))}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="ses-reply">{t`Reply-to`}</Label>
+            <Input
+              id="ses-reply"
+              type="email"
+              value={form.reply_to}
+              onChange={(event) => onChange({ reply_to: event.target.value })}
+              placeholder={t`Optional`}
+            />
           </div>
-        )}
-        <div className="flex flex-wrap gap-2">
-          <Input
-            value={extra.address}
-            onChange={(event) =>
-              setExtra({ ...extra, address: event.target.value })
-            }
-            placeholder="bulten@example.com"
-            className="max-w-xs"
-          />
-          <Input
-            value={extra.name}
-            onChange={(event) => setExtra({ ...extra, name: event.target.value })}
-            placeholder={t`Name shown`}
-            className="max-w-40"
-          />
-          <button
-            type="button"
-            disabled={!extra.address.includes("@")}
-            className="rounded-md border border-border px-3 text-sm disabled:opacity-50"
-            onClick={() => {
-              onChange({ senders: [...form.senders, extra] })
-              setExtra({ address: "", name: "" })
-            }}
-          >
-            {t`Add`}
-          </button>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="ses-set">{t`Configuration set`}</Label>
+            <Input
+              id="ses-set"
+              value={form.configuration_set}
+              onChange={(event) =>
+                onChange({ configuration_set: event.target.value })
+              }
+              placeholder={t`Optional`}
+            />
+          </div>
         </div>
-        <p className="text-sm text-muted-foreground">
-          {t`A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so.`}
-        </p>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="ses-reply">{t`Reply-to`}</Label>
-          <Input
-            id="ses-reply"
-            type="email"
-            value={form.reply_to}
-            onChange={(event) => onChange({ reply_to: event.target.value })}
-            placeholder={t`Optional`}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="ses-set">{t`Configuration set`}</Label>
-          <Input
-            id="ses-set"
-            value={form.configuration_set}
-            onChange={(event) =>
-              onChange({ configuration_set: event.target.value })
-            }
-            placeholder={t`Optional`}
-          />
-        </div>
-      </div>
+        </>
+      )}
     </>
   )
 }

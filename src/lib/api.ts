@@ -1819,6 +1819,14 @@ export interface SesReputation {
   note: string
 }
 
+export function deleteEmailCredentials(
+  siteId?: string
+): Promise<EmailSettings> {
+  return request<EmailSettings>(`${mailBase(siteId)}/credentials`, {
+    method: "DELETE",
+  })
+}
+
 export function getSesReputation(siteId?: string): Promise<SesReputation> {
   return request<SesReputation>(`${mailBase(siteId)}/reputation`)
 }

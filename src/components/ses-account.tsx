@@ -388,8 +388,6 @@ export function SesAccountPanel({
         </CardContent>
       </Card>
 
-      <SesSendersPanel siteId={siteId} />
-
       <Card>
         <CardHeader>
           <CardTitle>{t`Addresses Amazon refuses`}</CardTitle>
@@ -504,7 +502,7 @@ function Standing({ status }: { status: string }) {
 }
 
 /** One verified sender, and — for a domain — everything it has to publish. */
-function Identity({
+export function SenderRow({
   identity,
   siteId,
   busy,
@@ -921,7 +919,7 @@ export function SesSendersPanel({
       ) : (
         <div className="flex flex-col gap-3">
           {identities.map((identity) => (
-            <Identity
+            <SenderRow
               key={identity.name}
               identity={identity}
               siteId={siteId}

@@ -563,6 +563,56 @@ pub async fn save_email_of(
     email_settings_of(state).await
 }
 
+/// Give the Amazon account back.
+///
+/// Somebody who put their own keys in and thought better of it had no way out:
+/// an empty box on the form means "keep the stored one", so the keys could be
+/// replaced and never removed, and while they were there they beat anything
+/// the server had lent the site.
+///
+/// What the site said about itself is kept — the address it sends from, the
+/// name on it, where replies go. What belonged to the old account is not: its
+/// region, its keys, its configuration set and the address Amazon was posting
+/// events to, none of which mean anything on another account.
+#[utoipa::path(
+    delete,
+    path = "/plugins/email/credentials",
+    tag = "plugins",
+    responses((status = 200, description = "Given back", body = crate::email::EmailSettingsResponse))
+)]
+pub async fn delete_email_credentials(
+    _admin: crate::auth::Administrator,
+    Site(state): Site,
+) -> AppResult<Json<crate::email::EmailSettingsResponse>> {
+    Ok(Json(hand_back_the_keys(&state).await?))
+}
+
+pub async fn hand_back_the_keys(
+    state: &AppState,
+) -> AppResult<crate::email::EmailSettingsResponse> {
+    let stored =
+        crate::plugins::load::<crate::email::EmailConfig>(state.db(), &state.secrets, EMAIL_PLUGIN)
+            .await?
+            .map(|stored| stored.config)
+            .unwrap_or_default();
+
+    let config = crate::email::EmailConfig {
+        region: String::new(),
+        access_key_id: String::new(),
+        secret_access_key: String::new(),
+        configuration_set: String::new(),
+        events_token: String::new(),
+        events_topic_arn: String::new(),
+        tenant: String::new(),
+        ..stored
+    };
+
+    // Left switched on, because the site is not asking to stop sending — it is
+    // asking to send by the other account.
+    crate::plugins::save(state.db(), &state.secrets, EMAIL_PLUGIN, true, &config).await?;
+    email_settings_of(state).await
+}
+
 /// Send one message to an address, and say what SES said.
 ///
 /// The only honest test of mail settings: a key with the wrong permissions, an

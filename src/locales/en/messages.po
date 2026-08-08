@@ -13,11 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. placeholder {0}: pendingDelete?.title
-#: src/routes/dashboard.videos.tsx:419
-msgid "\"{0}\" goes from the host as well as from here, and does not go to the bin. Any lesson using it will have no video."
-msgstr "\"{0}\" goes from the host as well as from here, and does not go to the bin. Any lesson using it will have no video."
-
 #. placeholder {0}: pendingDelete?.filename
 #. placeholder {0}: pendingDelete?.name
 #. placeholder {0}: pendingDelete?.title
@@ -137,9 +132,9 @@ msgstr "{0} looks after how this site is built. Publishing puts what you have wr
 
 #. placeholder {0}: allowance.sent_today
 #. placeholder {1}: allowance.a_day ?? 0
-#: src/routes/dashboard.plugins_.email.tsx:215
-msgid "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
-msgstr "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
+#: src/routes/dashboard.plugins_.email.tsx:407
+msgid "{0} of {1} messages today. Whoever runs the server sets that number and can raise it."
+msgstr "{0} of {1} messages today. Whoever runs the server sets that number and can raise it."
 
 #. placeholder {0}: row.sent
 #. placeholder {1}: row.to_send
@@ -246,11 +241,6 @@ msgstr "{0}. This is the account that opens and manages your sites."
 msgid "{0}'s own instructions"
 msgstr "{0}'s own instructions"
 
-#. placeholder {0}: Math.round(sending.fraction * 100)
-#: src/routes/dashboard.videos.tsx:300
-msgid "{0}% sent. Leaving this page stops the upload."
-msgstr "{0}% sent. Leaving this page stops the upload."
-
 #: src/components/ses-health.tsx:104
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
@@ -291,13 +281,9 @@ msgstr "A build does not sign in. It is handed CMS_TOKEN, made below, which can 
 msgid "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
 msgstr "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
 
-#: src/components/plugin-forms.tsx:439
+#: src/components/plugin-forms.tsx:443
 msgid "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
 msgstr "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
-
-#: src/routes/dashboard.plugins_.video.tsx:243
-msgid "A different key from the one above, in the library's own settings. Without it every video address works for ever and for anybody who has it."
-msgstr "A different key from the one above, in the library's own settings. Without it every video address works for ever and for anybody who has it."
 
 #: src/components/plugin-forms.tsx:226
 #: src/routes/dashboard.plugins_.backup.tsx:265
@@ -338,7 +324,7 @@ msgstr "A mailbox (SMTP)"
 msgid "A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again."
 msgstr "A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again."
 
-#: src/components/ses-account.tsx:397
+#: src/components/ses-account.tsx:395
 msgid "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 msgstr "A message that bounced hard, or that somebody reported as spam. Amazon keeps this list itself and honours it whatever this panel does — a bounce costs money and complaints close accounts."
 
@@ -401,7 +387,7 @@ msgid "Access key"
 msgstr "Access key"
 
 #: src/components/plugin-forms.tsx:111
-#: src/components/plugin-forms.tsx:328
+#: src/components/plugin-forms.tsx:330
 msgid "Access key ID"
 msgstr "Access key ID"
 
@@ -422,10 +408,6 @@ msgstr "Account"
 msgid "Account added"
 msgstr "Account added"
 
-#: src/routes/dashboard.plugins_.video.tsx:252
-msgid "Account id"
-msgstr "Account id"
-
 #: src/components/flows/flow-accounts.tsx:121
 msgid "Accounts"
 msgstr "Accounts"
@@ -436,9 +418,10 @@ msgstr "Active"
 
 #: src/components/editor/dialogs.tsx:200
 #: src/components/flows/flow-accounts.tsx:137
-#: src/components/plugin-forms.tsx:435
+#: src/components/plugin-forms.tsx:439
 #: src/components/publish-panel.tsx:165
 #: src/routes/dashboard.mail.tsx:601
+#: src/routes/dashboard.plugins_.email.tsx:315
 #: src/routes/dashboard.tags.tsx:174
 #: src/routes/dashboard.users.tsx:303
 msgid "Add"
@@ -476,6 +459,10 @@ msgstr "Add a tag and press Enter"
 #: src/components/editor/extensions/slash-command.tsx:189
 msgid "Add an image from a link"
 msgstr "Add an image from a link"
+
+#: src/routes/dashboard.plugins_.email.tsx:343
+msgid "Add and verify a domain first, then any address at it can be used here."
+msgstr "Add and verify a domain first, then any address at it can be used here."
 
 #: src/components/editor/post-settings.tsx:239
 #: src/routes/dashboard.categories.tsx:210
@@ -536,13 +523,17 @@ msgstr "Add someone"
 msgid "Add table"
 msgstr "Add table"
 
-#: src/components/ses-account.tsx:917
+#: src/components/ses-account.tsx:915
 msgid "Add the domain you send from. A domain covers every address on it, so it is worth doing before adding addresses one at a time."
 msgstr "Add the domain you send from. A domain covers every address on it, so it is worth doing before adding addresses one at a time."
 
 #: src/routes/dashboard.mail.tsx:592
 msgid "Added here counts as confirmed — say so only if they asked to be on it."
 msgstr "Added here counts as confirmed — say so only if they asked to be on it."
+
+#: src/routes/dashboard.plugins_.email.tsx:154
+msgid "Added. Publish the records below and it verifies itself."
+msgstr "Added. Publish the records below and it verifies itself."
 
 #: src/components/editor/dialogs.tsx:300
 #: src/components/flows/flow-settings.tsx:305
@@ -553,7 +544,7 @@ msgstr "Added here counts as confirmed — say so only if they asked to be on it
 msgid "Address"
 msgstr "Address"
 
-#: src/components/ses-account.tsx:395
+#: src/components/ses-account.tsx:393
 msgid "Addresses Amazon refuses"
 msgstr "Addresses Amazon refuses"
 
@@ -628,11 +619,11 @@ msgstr "Alt text"
 msgid "Amazon allows this account {0} a second"
 msgstr "Amazon allows this account {0} a second"
 
-#: src/components/ses-account.tsx:486
+#: src/components/ses-account.tsx:484
 msgid "Amazon could not find it"
 msgstr "Amazon could not find it"
 
-#: src/components/ses-account.tsx:490
+#: src/components/ses-account.tsx:488
 msgid "Amazon does not check this one"
 msgstr "Amazon does not check this one"
 
@@ -640,16 +631,19 @@ msgstr "Amazon does not check this one"
 msgid "Amazon has not said anything yet"
 msgstr "Amazon has not said anything yet"
 
-#: src/components/ses-account.tsx:409
+#: src/components/ses-account.tsx:407
 msgid "Amazon is refusing nobody on this account."
 msgstr "Amazon is refusing nobody on this account."
 
-#: src/routes/dashboard.plugins_.email.tsx:132
+#: src/routes/dashboard.plugins_.email.tsx:299
+msgid "Amazon refuses to send from a domain it has not been shown you own. Add yours and it gives you records to publish, which cover every address on it."
+msgstr "Amazon refuses to send from a domain it has not been shown you own. Add yours and it gives you records to publish, which cover every address on it."
+
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Amazon SES"
 msgstr "Amazon SES"
 
-#: src/components/ses-account.tsx:986
+#: src/components/ses-account.tsx:984
 msgid "Amazon starts paying attention above 0.1% complaints and stops accounts around 0.5%."
 msgstr "Amazon starts paying attention above 0.1% complaints and stops accounts around 0.5%."
 
@@ -694,7 +688,7 @@ msgstr "An assistant pointed at this site can be asked to do the work rather tha
 msgid "An email each time somebody fills this in. Needs Amazon SES switched on under Plugins — what comes in is kept either way."
 msgstr "An email each time somebody fills this in. Needs Amazon SES switched on under Plugins — what comes in is kept either way."
 
-#: src/components/plugin-forms.tsx:353
+#: src/components/plugin-forms.tsx:355
 msgid "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 msgstr "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 
@@ -707,22 +701,18 @@ msgstr "An image keeps its file while it is here, so a restored post still has i
 msgid "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 msgstr "Answers are posted to /api/forms/{0}/submit. Changing it stops whatever already posts there."
 
+#: src/routes/dashboard.plugins_.email.tsx:342
+msgid "Any address at a domain above works — it does not have to be a real mailbox, though replies go to it unless you give a reply address."
+msgstr "Any address at a domain above works — it does not have to be a real mailbox, though replies go to it unless you give a reply address."
+
 #: src/components/ses-account.tsx:303
 msgid "Anybody can be written to, up to the limits above."
 msgstr "Anybody can be written to, up to the limits above."
 
-#: src/components/dashboard/dashboard-shell.tsx:116
+#: src/components/dashboard/dashboard-shell.tsx:114
 #: src/routes/dashboard.api.tsx:263
 msgid "API"
 msgstr "API"
-
-#: src/routes/dashboard.plugins_.video.tsx:222
-msgid "API key"
-msgstr "API key"
-
-#: src/routes/dashboard.plugins_.video.tsx:260
-msgid "API token"
-msgstr "API token"
 
 #: src/components/editor/bubble-menus.tsx:267
 #: src/components/editor/dialogs.tsx:326
@@ -773,7 +763,7 @@ msgstr "Ask to leave the sandbox, from the section below. Until Amazon agrees, S
 msgid "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 msgstr "Asked for whatever you are changing — a session left open somewhere should not be enough to take the account away."
 
-#: src/components/ses-account.tsx:851
+#: src/components/ses-account.tsx:849
 msgid "Asked SES to verify it"
 msgstr "Asked SES to verify it"
 
@@ -834,7 +824,7 @@ msgstr "Backup written: {0}"
 
 #: src/routes/console.sites.$siteId.tsx:313
 #: src/routes/dashboard.plugins_.backup.tsx:198
-#: src/routes/dashboard.plugins.tsx:38
+#: src/routes/dashboard.plugins.tsx:34
 msgid "Backups"
 msgstr "Backups"
 
@@ -850,15 +840,11 @@ msgstr "Bad addresses stop themselves"
 msgid "Basic"
 msgstr "Basic"
 
-#: src/routes/dashboard.videos.tsx:255
-msgid "Being prepared"
-msgstr "Being prepared"
-
 #: src/routes/dashboard.content-types.tsx:201
 msgid "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 msgstr "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 
-#: src/components/dashboard/dashboard-shell.tsx:106
+#: src/components/dashboard/dashboard-shell.tsx:104
 #: src/routes/dashboard.trash.tsx:129
 msgid "Bin"
 msgstr "Bin"
@@ -898,16 +884,16 @@ msgstr "Bold"
 msgid "Bot token"
 msgstr "Bot token"
 
-#: src/components/ses-account.tsx:978
+#: src/components/ses-account.tsx:976
 msgid "bounced for good"
 msgstr "bounced for good"
 
-#: src/components/ses-account.tsx:639
+#: src/components/ses-account.tsx:637
 msgid "Bounces"
 msgstr "Bounces"
 
 #. placeholder {0}: identity.mail_from_domain
-#: src/components/ses-account.tsx:533
+#: src/components/ses-account.tsx:531
 msgid "bounces to {0}"
 msgstr "bounces to {0}"
 
@@ -947,7 +933,7 @@ msgstr "Building a front end"
 msgid "Building only what changed"
 msgstr "Building only what changed"
 
-#: src/routes/dashboard.plugins.tsx:67
+#: src/routes/dashboard.plugins.tsx:59
 msgid "Built-in integrations you can switch on and configure."
 msgstr "Built-in integrations you can switch on and configure."
 
@@ -956,14 +942,6 @@ msgstr "Built-in integrations you can switch on and configure."
 #: src/components/editor/toolbar.tsx:519
 msgid "Bullet list"
 msgstr "Bullet list"
-
-#: src/routes/dashboard.plugins_.video.tsx:184
-msgid "Bunny is the cheaper of the two, and cheaper again to Turkey. Cloudflare costs more and asks less of you. Both transcode for you and both make addresses that expire."
-msgstr "Bunny is the cheaper of the two, and cheaper again to Turkey. Cloudflare costs more and asks less of you. Both transcode for you and both make addresses that expire."
-
-#: src/routes/dashboard.plugins_.video.tsx:138
-msgid "Bunny Stream"
-msgstr "Bunny Stream"
 
 #: src/components/flows/flow-canvas.tsx:100
 #: src/routes/dashboard.flows.tsx:130
@@ -978,7 +956,7 @@ msgstr "campaign"
 msgid "Campaigns"
 msgstr "Campaigns"
 
-#: src/components/ses-account.tsx:545
+#: src/components/ses-account.tsx:543
 msgid "can send"
 msgstr "can send"
 
@@ -1008,7 +986,6 @@ msgstr "can send"
 #: src/routes/dashboard.users.tsx:291
 #: src/routes/dashboard.users.tsx:332
 #: src/routes/dashboard.users.tsx:357
-#: src/routes/dashboard.videos.tsx:423
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -1032,7 +1009,7 @@ msgstr "Carry on anyway"
 msgid "Case sensitive"
 msgstr "Case sensitive"
 
-#: src/components/dashboard/dashboard-shell.tsx:101
+#: src/components/dashboard/dashboard-shell.tsx:99
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Categories"
@@ -1097,10 +1074,6 @@ msgstr "Choose a file"
 msgid "Choose a list first"
 msgstr "Choose a list first"
 
-#: src/routes/dashboard.plugins_.video.tsx:174
-msgid "Choose one"
-msgstr "Choose one"
-
 #: src/components/ses-health.tsx:274
 msgid "Clean the list before sending again"
 msgstr "Clean the list before sending again"
@@ -1116,13 +1089,8 @@ msgid "clicked"
 msgstr "clicked"
 
 #: src/components/editor/find-replace.tsx:75
-#: src/routes/dashboard.videos.tsx:405
 msgid "Close"
 msgstr "Close"
-
-#: src/routes/dashboard.plugins_.video.tsx:139
-msgid "Cloudflare Stream"
-msgstr "Cloudflare Stream"
 
 #: src/components/local-env.tsx:138
 msgid "CMS_TOKEN is blank until you make one. Without it the site answers nothing, which is the \"why can I not see any posts\" everybody runs into."
@@ -1164,11 +1132,11 @@ msgstr "Comments"
 msgid "Compared how"
 msgstr "Compared how"
 
-#: src/components/plugin-forms.tsx:455
+#: src/components/plugin-forms.tsx:459
 msgid "Configuration set"
 msgstr "Configuration set"
 
-#: src/routes/dashboard.plugins.tsx:114
+#: src/routes/dashboard.plugins.tsx:106
 msgid "Configure"
 msgstr "Configure"
 
@@ -1228,7 +1196,7 @@ msgstr "Contact form to the inbox"
 msgid "contains"
 msgstr "contains"
 
-#: src/components/dashboard/dashboard-shell.tsx:87
+#: src/components/dashboard/dashboard-shell.tsx:86
 #: src/routes/dashboard.api.tsx:356
 msgid "Content"
 msgstr "Content"
@@ -1237,7 +1205,7 @@ msgstr "Content"
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
 msgstr "Content already written in this language blocks removal — you'll be told how much there is."
 
-#: src/components/dashboard/dashboard-shell.tsx:112
+#: src/components/dashboard/dashboard-shell.tsx:110
 msgid "Content types"
 msgstr "Content types"
 
@@ -1263,14 +1231,14 @@ msgstr "Copied with a key, it can also do the work rather than describe it: writ
 #: src/components/editor/bubble-menus.tsx:325
 #: src/components/editor/dialogs.tsx:462
 #: src/components/local-env.tsx:128
-#: src/components/ses-account.tsx:796
+#: src/components/ses-account.tsx:794
 #: src/components/ses-setup.tsx:153
 #: src/routes/dashboard.flows.tsx:411
 #: src/routes/dashboard.forms_.$formId.tsx:53
 msgid "Copy"
 msgstr "Copy"
 
-#: src/components/ses-account.tsx:661
+#: src/components/ses-account.tsx:659
 msgid "Copy all"
 msgstr "Copy all"
 
@@ -1317,7 +1285,8 @@ msgstr "Copy without a key"
 msgid "Copy your post in different formats, download it, or import Markdown."
 msgstr "Copy your post in different formats, download it, or import Markdown."
 
-#: src/components/ses-account.tsx:855
+#: src/components/ses-account.tsx:853
+#: src/routes/dashboard.plugins_.email.tsx:157
 msgid "Could not add it"
 msgstr "Could not add it"
 
@@ -1369,7 +1338,7 @@ msgstr "Could not change it"
 #: src/components/assistant-connection.tsx:45
 #: src/components/local-env.tsx:109
 #: src/components/mcp-connection.tsx:28
-#: src/components/ses-account.tsx:622
+#: src/components/ses-account.tsx:620
 #: src/components/ses-setup.tsx:112
 #: src/routes/dashboard.api.tsx:105
 #: src/routes/dashboard.forms_.$formId.tsx:41
@@ -1387,7 +1356,6 @@ msgid "Could not delete category"
 msgstr "Could not delete category"
 
 #: src/components/dashboard/content-list.tsx:101
-#: src/routes/dashboard.videos.tsx:246
 msgid "Could not delete it"
 msgstr "Could not delete it"
 
@@ -1411,7 +1379,8 @@ msgstr "Could not disconnect it"
 #: src/components/site-mail.tsx:95
 #: src/routes/dashboard.forms_.$formId.tsx:89
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:115
-#: src/routes/dashboard.plugins_.email.tsx:105
+#: src/routes/dashboard.plugins_.email.tsx:176
+#: src/routes/dashboard.plugins_.email.tsx:190
 msgid "Could not do it"
 msgstr "Could not do it"
 
@@ -1465,7 +1434,7 @@ msgid "Could not load the local settings"
 msgstr "Could not load the local settings"
 
 #: src/components/site-mail.tsx:61
-#: src/routes/dashboard.plugins_.email.tsx:65
+#: src/routes/dashboard.plugins_.email.tsx:93
 msgid "Could not load the mail settings"
 msgstr "Could not load the mail settings"
 
@@ -1523,10 +1492,6 @@ msgstr "Could not make it"
 msgid "Could not open the site"
 msgstr "Could not open the site"
 
-#: src/routes/dashboard.videos.tsx:233
-msgid "Could not play it"
-msgstr "Could not play it"
-
 #: src/routes/dashboard.trash.tsx:108
 msgid "Could not put it back"
 msgstr "Could not put it back"
@@ -1543,7 +1508,7 @@ msgstr "Could not reach the server. Please try again."
 msgid "Could not read the file"
 msgstr "Could not read the file"
 
-#: src/components/ses-account.tsx:555
+#: src/components/ses-account.tsx:553
 #: src/routes/dashboard.content-types.tsx:46
 #: src/routes/dashboard.forms_.$formId.tsx:103
 #: src/routes/dashboard.forms.tsx:127
@@ -1573,7 +1538,7 @@ msgstr "Could not run it"
 #: src/routes/dashboard.mail.tsx:280
 #: src/routes/dashboard.mail.tsx:647
 #: src/routes/dashboard.platform-mail.tsx:68
-#: src/routes/dashboard.plugins_.email.tsx:91
+#: src/routes/dashboard.plugins_.email.tsx:141
 msgid "Could not save it"
 msgstr "Could not save it"
 
@@ -1582,7 +1547,6 @@ msgid "Could not save post"
 msgstr "Could not save post"
 
 #: src/routes/dashboard.plugins_.s3.tsx:88
-#: src/routes/dashboard.plugins_.video.tsx:120
 msgid "Could not save settings"
 msgstr "Could not save settings"
 
@@ -1619,7 +1583,7 @@ msgstr "Could not save the token"
 msgid "Could not send it"
 msgstr "Could not send it"
 
-#: src/components/ses-account.tsx:739
+#: src/components/ses-account.tsx:737
 msgid "Could not set it"
 msgstr "Could not set it"
 
@@ -1644,7 +1608,7 @@ msgstr "Could not take it back"
 msgid "Could not throw it away"
 msgstr "Could not throw it away"
 
-#: src/components/ses-account.tsx:434
+#: src/components/ses-account.tsx:432
 msgid "Could not unblock it"
 msgstr "Could not unblock it"
 
@@ -1671,10 +1635,6 @@ msgstr "Could not upload {0}"
 #: src/components/editor/post-settings.tsx:348
 msgid "Could not upload cover image"
 msgstr "Could not upload cover image"
-
-#: src/routes/dashboard.videos.tsx:219
-msgid "Could not upload it"
-msgstr "Could not upload it"
 
 #: src/components/flows/flow-settings.tsx:110
 msgid "Counted from when it last ran, not from a clock: 60 means about once an hour."
@@ -1718,7 +1678,6 @@ msgid "Create your administrator account"
 msgstr "Create your administrator account"
 
 #: src/routes/dashboard.plugins_.s3.tsx:152
-#: src/routes/dashboard.plugins_.video.tsx:340
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Credentials are encrypted before they are stored and are never sent back to the browser."
 
@@ -1796,8 +1755,6 @@ msgstr "Default"
 #: src/routes/dashboard.plugins_.backup.tsx:424
 #: src/routes/dashboard.tags.tsx:234
 #: src/routes/dashboard.tags.tsx:303
-#: src/routes/dashboard.videos.tsx:369
-#: src/routes/dashboard.videos.tsx:425
 msgid "Delete"
 msgstr "Delete"
 
@@ -1837,18 +1794,10 @@ msgstr "Delete this media?"
 msgid "Delete this tag?"
 msgstr "Delete this tag?"
 
-#: src/routes/dashboard.videos.tsx:417
-msgid "Delete this video?"
-msgstr "Delete this video?"
-
 #. placeholder {0}: entry.deleted_by
 #: src/routes/dashboard.trash.tsx:168
 msgid "deleted by {0}"
 msgstr "deleted by {0}"
-
-#: src/routes/dashboard.plugins_.video.tsx:274
-msgid "Delivery hostname"
-msgstr "Delivery hostname"
 
 #: src/routes/dashboard.forms.tsx:157
 msgid "Describe what a form accepts here, then have your own pages post to it."
@@ -1862,12 +1811,12 @@ msgstr "Description text shown in search results."
 msgid "did not arrive"
 msgstr "did not arrive"
 
-#: src/components/ses-account.tsx:422
+#: src/components/ses-account.tsx:420
 #: src/components/ses-health.tsx:249
 msgid "Did not arrive"
 msgstr "Did not arrive"
 
-#: src/routes/dashboard.plugins.tsx:96
+#: src/routes/dashboard.plugins.tsx:88
 msgid "Disabled"
 msgstr "Disabled"
 
@@ -1884,11 +1833,11 @@ msgstr "Disconnecting one stops it that moment."
 msgid "Divider"
 msgstr "Divider"
 
-#: src/components/ses-account.tsx:644
+#: src/components/ses-account.tsx:642
 msgid "DMARC"
 msgstr "DMARC"
 
-#: src/components/ses-account.tsx:576
+#: src/components/ses-account.tsx:574
 msgid "DNS records"
 msgstr "DNS records"
 
@@ -1964,7 +1913,7 @@ msgstr "Emoji"
 
 #: src/components/plugin-forms.tsx:171
 #: src/routes/dashboard.plugins_.backup.tsx:207
-#: src/routes/dashboard.plugins.tsx:94
+#: src/routes/dashboard.plugins.tsx:86
 msgid "Enabled"
 msgstr "Enabled"
 
@@ -2053,10 +2002,6 @@ msgstr "Excerpt"
 msgid "Export"
 msgstr "Export"
 
-#: src/routes/dashboard.videos.tsx:257
-msgid "Failed"
-msgstr "Failed"
-
 #: src/components/ses-analytics.tsx:180
 msgid "failed for now"
 msgstr "failed for now"
@@ -2085,7 +2030,7 @@ msgstr "Find and replace"
 msgid "Find…"
 msgstr "Find…"
 
-#: src/components/dashboard/dashboard-shell.tsx:105
+#: src/components/dashboard/dashboard-shell.tsx:103
 #: src/routes/dashboard.flows.tsx:211
 msgid "Flows"
 msgstr "Flows"
@@ -2122,13 +2067,13 @@ msgstr "Format"
 msgid "Formatting"
 msgstr "Formatting"
 
-#: src/components/dashboard/dashboard-shell.tsx:103
+#: src/components/dashboard/dashboard-shell.tsx:101
 #: src/routes/dashboard.forms_.$formId.tsx:144
 #: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
 msgstr "Forms"
 
-#: src/components/plugin-forms.tsx:362
+#: src/components/plugin-forms.tsx:366
 msgid "From address"
 msgstr "From address"
 
@@ -2140,7 +2085,7 @@ msgstr "From BotFather. The step also needs the chat's id, which you give it the
 msgid "From here it answers about every site this agency looks after: which of them built, which did not, what a failing build said, and adding a new one. Writing a post is a question for that site's own address."
 msgstr "From here it answers about every site this agency looks after: which of them built, which did not, what a failing build said, and adding a new one. Writing a post is a question for that site's own address."
 
-#: src/components/plugin-forms.tsx:377
+#: src/components/plugin-forms.tsx:381
 msgid "From name"
 msgstr "From name"
 
@@ -2230,6 +2175,10 @@ msgstr "Handed out to sites: {handedOut} a day"
 msgid "Handed over {0}"
 msgstr "Handed over {0}"
 
+#: src/routes/dashboard.plugins_.email.tsx:280
+msgid "Handing the account back keeps the address you send from and where replies go. It does not move your verified domains: those were verified in your Amazon account, so you add the domain again here and publish the new records the server's account gives you."
+msgstr "Handing the account back keeps the address you send from and where replies go. It does not move your verified domains: those were verified in your Amazon account, so you add the domain again here and publish the new records the server's account gives you."
+
 #: src/routes/dashboard.api.tsx:119
 msgid "Handing this to an assistant"
 msgstr "Handing this to an assistant"
@@ -2309,14 +2258,14 @@ msgstr "Highlighted on the home page"
 msgid "Host"
 msgstr "Host"
 
-#: src/routes/dashboard.plugins.tsx:35
-msgid "Host lesson videos on Bunny Stream or Cloudflare Stream. Files go straight from the browser to them, and every address expires."
-msgstr "Host lesson videos on Bunny Stream or Cloudflare Stream. Files go straight from the browser to them, and every address expires."
-
 #: src/components/plugin-forms.tsx:272
 #: src/routes/dashboard.plugins_.backup.tsx:307
 msgid "How many to keep"
 msgstr "How many to keep"
+
+#: src/routes/dashboard.plugins_.email.tsx:405
+msgid "How much you may send"
+msgstr "How much you may send"
 
 #: src/components/plugin-forms.tsx:248
 #: src/routes/dashboard.plugins_.backup.tsx:284
@@ -2404,14 +2353,6 @@ msgstr "Import this archive?"
 #: src/components/editor/types.ts:30
 msgid "In review"
 msgstr "In review"
-
-#: src/routes/dashboard.plugins_.video.tsx:195
-msgid "In that library, open the API tab. The library id and the API key are both there."
-msgstr "In that library, open the API tab. The library id and the API key are both there."
-
-#: src/routes/dashboard.plugins_.video.tsx:198
-msgid "In the library's settings, open Security and turn on Token Authentication. Copy the key it shows. This is the step that makes video addresses expire — leave it off and everything below still works, and every lesson plays for anybody who is sent a link."
-msgstr "In the library's settings, open Security and turn on Token Authentication. Copy the key it shows. This is the step that makes video addresses expire — leave it off and everything below still works, and every lesson plays for anybody who is sent a link."
 
 #: src/components/plugin-forms.tsx:235
 #: src/routes/dashboard.plugins_.backup.tsx:271
@@ -2563,7 +2504,7 @@ msgstr "Label"
 msgid "Language"
 msgstr "Language"
 
-#: src/components/dashboard/dashboard-shell.tsx:113
+#: src/components/dashboard/dashboard-shell.tsx:111
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Languages"
@@ -2614,10 +2555,6 @@ msgstr "Leaving the sandbox is the first increase. This is the one after it — 
 msgid "Lend the account"
 msgstr "Lend the account"
 
-#: src/routes/dashboard.videos.tsx:266
-msgid "Lesson videos. They go straight from this browser to the host, so a two-gigabyte file never passes through the server — and every address this page makes stops working after a few hours."
-msgstr "Lesson videos. They go straight from this browser to the host, so a two-gigabyte file never passes through the server — and every address this page makes stops working after a few hours."
-
 #: src/routes/dashboard.trash.tsx:77
 msgid "letterhead"
 msgstr "letterhead"
@@ -2625,10 +2562,6 @@ msgstr "letterhead"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:325
 msgid "Letterhead"
 msgstr "Letterhead"
-
-#: src/routes/dashboard.plugins_.video.tsx:204
-msgid "Library id"
-msgstr "Library id"
 
 #: src/components/editor/mavi-editor.tsx:964
 #: src/components/mode-toggle.tsx:37
@@ -2699,7 +2632,7 @@ msgstr "Made {0}"
 msgid "Made in the channel's own settings, under incoming webhooks. Anybody holding it can post to that channel, so it is treated as a password and kept out of the run record."
 msgstr "Made in the channel's own settings, under incoming webhooks. Anybody holding it can post to that channel, so it is treated as a password and kept out of the run record."
 
-#: src/components/dashboard/dashboard-shell.tsx:104
+#: src/components/dashboard/dashboard-shell.tsx:102
 #: src/routes/console.sites.$siteId.tsx:312
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:156
 #: src/routes/dashboard.mail.tsx:70
@@ -2711,15 +2644,6 @@ msgstr "Mail"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:210
 msgid "Mail from this site still leaves as {0}, which belongs to the server rather than to you. A newsletter has to come from the domain it is about — otherwise it is the server's domain that answers for it, and every site sharing it pays for anybody's complaints. Add your domain under Mail settings, publish the records it gives you, and set it as the sender. Notifications and form replies keep working meanwhile."
 msgstr "Mail from this site still leaves as {0}, which belongs to the server rather than to you. A newsletter has to come from the domain it is about — otherwise it is the server's domain that answers for it, and every site sharing it pays for anybody's complaints. Add your domain under Mail settings, publish the records it gives you, and set it as the sender. Notifications and form replies keep working meanwhile."
-
-#. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:220
-msgid "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
-msgstr "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
-
-#: src/routes/dashboard.plugins_.email.tsx:134
-msgid "Mail this site sends — a notification when somebody fills in one of your forms."
-msgstr "Mail this site sends — a notification when somebody fills in one of your forms."
 
 #: src/routes/dashboard.trash.tsx:75
 msgid "mailing list"
@@ -2781,7 +2705,7 @@ msgstr "Markdown imported"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS needs a database to store your site."
 
-#: src/components/dashboard/dashboard-shell.tsx:99
+#: src/components/dashboard/dashboard-shell.tsx:98
 msgid "Media"
 msgstr "Media"
 
@@ -2860,7 +2784,7 @@ msgid "My Mavi CMS Site"
 msgstr "My Mavi CMS Site"
 
 #: src/components/flows/flow-accounts.tsx:220
-#: src/components/ses-account.tsx:769
+#: src/components/ses-account.tsx:767
 #: src/routes/dashboard.flows.tsx:312
 #: src/routes/dashboard.forms.tsx:160
 #: src/routes/dashboard.forms.tsx:238
@@ -2876,7 +2800,7 @@ msgstr "Name"
 msgid "Name (optional)"
 msgstr "Name (optional)"
 
-#: src/components/plugin-forms.tsx:423
+#: src/components/plugin-forms.tsx:427
 msgid "Name shown"
 msgstr "Name shown"
 
@@ -2892,16 +2816,12 @@ msgstr "Needed to publish"
 msgid "Needed to schedule"
 msgstr "Needed to schedule"
 
-#: src/routes/dashboard.plugins_.video.tsx:270
-msgid "Needs Stream read and edit, and nothing else."
-msgstr "Needs Stream read and edit, and nothing else."
-
 #: src/routes/dashboard.categories.tsx:279
 msgid "needs translation"
 msgstr "needs translation"
 
 #. placeholder {0}: writing.name
-#: src/components/dashboard/dashboard-shell.tsx:208
+#: src/components/dashboard/dashboard-shell.tsx:206
 msgid "New {0}"
 msgstr "New {0}"
 
@@ -3060,15 +2980,15 @@ msgstr "No templates yet — a campaign without one sends just its own body"
 msgid "No tokens yet"
 msgstr "No tokens yet"
 
-#: src/routes/dashboard.videos.tsx:312
-msgid "No videos yet"
-msgstr "No videos yet"
+#: src/routes/dashboard.plugins_.email.tsx:230
+msgid "Nobody has set this site up to send yet. Either put in your own Amazon keys below, or ask whoever runs this server to lend you theirs — then you need no Amazon account at all."
+msgstr "Nobody has set this site up to send yet. Either put in your own Amazon keys below, or ask whoever runs this server to lend you theirs — then you need no Amazon account at all."
 
 #: src/routes/dashboard.mail.tsx:514
 msgid "Nobody here yet"
 msgstr "Nobody here yet"
 
-#: src/components/ses-account.tsx:407
+#: src/components/ses-account.tsx:405
 msgid "None"
 msgstr "None"
 
@@ -3080,7 +3000,7 @@ msgstr "None — send the body as it is"
 msgid "None yet — add one under Accounts, below the flow list."
 msgstr "None yet — add one under Accounts, below the flow list."
 
-#: src/routes/dashboard.plugins.tsx:97
+#: src/routes/dashboard.plugins.tsx:89
 msgid "Not configured"
 msgstr "Not configured"
 
@@ -3097,7 +3017,7 @@ msgstr "Not sent yet"
 msgid "Not set"
 msgstr "Not set"
 
-#: src/components/plugin-forms.tsx:349
+#: src/components/plugin-forms.tsx:351
 msgid "Not set yet"
 msgstr "Not set yet"
 
@@ -3154,7 +3074,7 @@ msgstr "Nothing sent in the last two weeks"
 msgid "Nothing sent yet"
 msgstr "Nothing sent yet"
 
-#: src/components/ses-account.tsx:915
+#: src/components/ses-account.tsx:913
 msgid "Nothing verified yet"
 msgstr "Nothing verified yet"
 
@@ -3193,10 +3113,6 @@ msgstr "On"
 #: src/routes/dashboard.mail.tsx:524
 msgid "on {0} lists"
 msgstr "on {0} lists"
-
-#: src/routes/dashboard.plugins_.video.tsx:194
-msgid "On bunny.net, open Stream and make a video library."
-msgstr "On bunny.net, open Stream and make a video library."
 
 #: src/components/plugin-forms.tsx:196
 #: src/components/plugin-forms.tsx:201
@@ -3301,8 +3217,8 @@ msgstr "OpenAPI document"
 msgid "opened"
 msgstr "opened"
 
-#: src/components/plugin-forms.tsx:451
-#: src/components/plugin-forms.tsx:462
+#: src/components/plugin-forms.tsx:455
+#: src/components/plugin-forms.tsx:466
 msgid "Optional"
 msgstr "Optional"
 
@@ -3310,7 +3226,7 @@ msgstr "Optional"
 msgid "Optional folder inside the bucket"
 msgstr "Optional folder inside the bucket"
 
-#: src/components/ses-account.tsx:676
+#: src/components/ses-account.tsx:674
 msgid "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two records appear here once it is set."
 msgstr "Optional, and worth it: without one, bounces go to amazonses.com and a receiving server learns less about who really sent the message. Two records appear here once it is set."
 
@@ -3319,7 +3235,7 @@ msgstr "Optional, and worth it: without one, bounces go to amazonses.com and a r
 msgid "Orange"
 msgstr "Orange"
 
-#: src/components/plugin-forms.tsx:387
+#: src/components/plugin-forms.tsx:391
 msgid "Other addresses you send as"
 msgstr "Other addresses you send as"
 
@@ -3331,7 +3247,7 @@ msgstr "Other sites this server hosts. Each gets its own database schema, accoun
 msgid "Output folder"
 msgstr "Output folder"
 
-#: src/components/ses-account.tsx:634
+#: src/components/ses-account.tsx:632
 msgid "Ownership and signing"
 msgstr "Ownership and signing"
 
@@ -3379,10 +3295,6 @@ msgstr "Paste an image address, drag and drop one, or pick from your media libra
 msgid "Paste it wherever a program asks for a server address and nothing else. You will be sent here to sign in and asked whether to allow it, and it will then be able to do what you can — writing included. This is the way to connect."
 msgstr "Paste it wherever a program asks for a server address and nothing else. You will be sent here to sign in and asked whether to allow it, and it will then be able to do what you can — writing included. This is the way to connect."
 
-#: src/routes/dashboard.plugins_.video.tsx:200
-msgid "Paste the address shown further down into the library's webhook setting."
-msgstr "Paste the address shown further down into the library's webhook setting."
-
 #: src/components/mail/letterhead-editor.tsx:85
 msgid "Paste the HTML here"
 msgstr "Paste the HTML here"
@@ -3390,10 +3302,6 @@ msgstr "Paste the HTML here"
 #: src/components/editor/dialogs.tsx:227
 msgid "Paste the video link."
 msgstr "Paste the video link."
-
-#: src/routes/dashboard.plugins_.video.tsx:301
-msgid "Paste this into the host's webhook setting. Without it a video still uploads and still transcodes — the panel just never notices that it finished."
-msgstr "Paste this into the host's webhook setting. Without it a video still uploads and still transcodes — the panel just never notices that it finished."
 
 #: src/components/plugin-forms.tsx:135
 msgid "Path prefix"
@@ -3407,7 +3315,7 @@ msgstr "Pause"
 msgid "Paused"
 msgstr "Paused"
 
-#: src/components/dashboard/dashboard-shell.tsx:115
+#: src/components/dashboard/dashboard-shell.tsx:113
 #: src/routes/dashboard.mail.tsx:81
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
@@ -3454,16 +3362,11 @@ msgstr "Plain text"
 msgid "Plain text block"
 msgstr "Plain text block"
 
-#: src/routes/dashboard.videos.tsx:360
-msgid "Play"
-msgstr "Play"
-
-#: src/components/dashboard/dashboard-shell.tsx:114
+#: src/components/dashboard/dashboard-shell.tsx:112
 #: src/routes/dashboard.plugins_.backup.tsx:194
-#: src/routes/dashboard.plugins_.email.tsx:128
+#: src/routes/dashboard.plugins_.email.tsx:213
 #: src/routes/dashboard.plugins_.s3.tsx:111
-#: src/routes/dashboard.plugins_.video.tsx:150
-#: src/routes/dashboard.plugins.tsx:65
+#: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
 msgstr "Plugins"
 
@@ -3477,7 +3380,7 @@ msgstr "Point the address at this server first — the site answers on whichever
 msgid "Port"
 msgstr "Port"
 
-#: src/components/dashboard/dashboard-shell.tsx:74
+#: src/components/dashboard/dashboard-shell.tsx:73
 #: src/components/editor/post-settings.tsx:427
 #: src/routes/dashboard.trash.tsx:68
 msgid "post"
@@ -3525,7 +3428,7 @@ msgstr "post-url"
 msgid "post, page, or one this site made up. Left empty, anything being published sets this off."
 msgstr "post, page, or one this site made up. Left empty, anything being published sets this off."
 
-#: src/components/dashboard/dashboard-shell.tsx:89
+#: src/components/dashboard/dashboard-shell.tsx:88
 #: src/lib/use-content-types.ts:45
 msgid "Posts"
 msgstr "Posts"
@@ -3547,7 +3450,7 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:121
+#: src/components/dashboard/dashboard-shell.tsx:119
 #: src/components/editor/mavi-editor.tsx:735
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:310
@@ -3559,11 +3462,11 @@ msgstr "Publish"
 msgid "Publish date"
 msgstr "Publish date"
 
-#: src/components/ses-account.tsx:653
+#: src/components/ses-account.tsx:651
 msgid "Publish these at whoever holds the domain. Amazon finds them by itself, usually within the hour."
 msgstr "Publish these at whoever holds the domain. Amazon finds them by itself, usually within the hour."
 
-#: src/components/ses-account.tsx:481
+#: src/components/ses-account.tsx:479
 msgid "published"
 msgstr "published"
 
@@ -3576,17 +3479,13 @@ msgstr "Published"
 msgid "Publishing — this takes a minute or two"
 msgstr "Publishing — this takes a minute or two"
 
-#: src/components/ses-account.tsx:635
+#: src/components/ses-account.tsx:633
 msgid "Publishing these is what proves the domain is yours, and what lets Amazon sign as you. Nothing sends until they are up."
 msgstr "Publishing these is what proves the domain is yours, and what lets Amazon sign as you. Nothing sends until they are up."
 
 #: src/components/publish-panel.tsx:306
 msgid "Publishing…"
 msgstr "Publishing…"
-
-#: src/routes/dashboard.plugins_.video.tsx:213
-msgid "Pull zone hostname"
-msgstr "Pull zone hostname"
 
 #: src/components/editor/palette.ts:25
 #: src/components/editor/palette.ts:37
@@ -3604,10 +3503,6 @@ msgstr "Put it back"
 #: src/components/local-env.tsx:118
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 msgstr "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
-
-#: src/routes/dashboard.plugins_.email.tsx:223
-msgid "Putting your own Amazon keys in above replaces this arrangement entirely."
-msgstr "Putting your own Amazon keys in above replaces this arrangement entirely."
 
 #: src/components/editor/dialogs.tsx:524
 #: src/components/editor/extensions/slash-command.tsx:127
@@ -3645,10 +3540,6 @@ msgstr "Reading"
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 
-#: src/routes/dashboard.videos.tsx:256
-msgid "Ready"
-msgstr "Ready"
-
 #: src/routes/console.sites.$siteId.tsx:358
 #: src/routes/dashboard.publish.tsx:152
 msgid "Recent builds"
@@ -3673,7 +3564,7 @@ msgid "refused before sending"
 msgstr "refused before sending"
 
 #: src/components/plugin-forms.tsx:98
-#: src/components/plugin-forms.tsx:316
+#: src/components/plugin-forms.tsx:318
 #: src/routes/dashboard.platform-mail.tsx:105
 msgid "Region"
 msgstr "Region"
@@ -3686,10 +3577,10 @@ msgstr "Regular expression"
 #: src/components/editor/bubble-menus.tsx:201
 #: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
-#: src/components/plugin-forms.tsx:397
-#: src/components/plugin-forms.tsx:405
+#: src/components/plugin-forms.tsx:401
+#: src/components/plugin-forms.tsx:409
 #: src/components/publish-panel.tsx:136
-#: src/components/ses-account.tsx:550
+#: src/components/ses-account.tsx:548
 #: src/routes/dashboard.content-types.tsx:113
 #: src/routes/dashboard.forms_.$formId.tsx:224
 #: src/routes/dashboard.forms.tsx:211
@@ -3758,11 +3649,11 @@ msgstr "Replace content"
 msgid "Replace…"
 msgstr "Replace…"
 
-#: src/components/plugin-forms.tsx:445
+#: src/components/plugin-forms.tsx:449
 msgid "Reply-to"
 msgstr "Reply-to"
 
-#: src/components/ses-account.tsx:973
+#: src/components/ses-account.tsx:971
 #: src/components/ses-analytics.tsx:183
 #: src/routes/dashboard.mail.tsx:810
 msgid "reported as spam"
@@ -3772,7 +3663,7 @@ msgstr "reported as spam"
 msgid "Reported as spam"
 msgstr "Reported as spam"
 
-#: src/components/ses-account.tsx:421
+#: src/components/ses-account.tsx:419
 msgid "Reported it as spam"
 msgstr "Reported it as spam"
 
@@ -3786,7 +3677,6 @@ msgid "Repository"
 msgstr "Repository"
 
 #: src/routes/dashboard.plugins_.s3.tsx:72
-#: src/routes/dashboard.plugins_.video.tsx:99
 msgid "Request failed"
 msgstr "Request failed"
 
@@ -3868,9 +3758,9 @@ msgstr "Sandbox"
 #: src/routes/dashboard.mail.tsx:740
 #: src/routes/dashboard.platform-mail.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:163
+#: src/routes/dashboard.plugins_.email.tsx:261
+#: src/routes/dashboard.plugins_.email.tsx:354
 #: src/routes/dashboard.plugins_.s3.tsx:172
-#: src/routes/dashboard.plugins_.video.tsx:358
 msgid "Save"
 msgstr "Save"
 
@@ -3894,7 +3784,7 @@ msgstr "Save the flow and an address appears here. Anything sent to it sets this
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:92
 #: src/routes/dashboard.platform-mail.tsx:65
-#: src/routes/dashboard.plugins_.email.tsx:88
+#: src/routes/dashboard.plugins_.email.tsx:138
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Saved"
@@ -3903,10 +3793,6 @@ msgstr "Saved"
 #: src/components/editor/status-bar.tsx:108
 msgid "Saved at {0}"
 msgstr "Saved at {0}"
-
-#: src/routes/dashboard.plugins_.video.tsx:313
-msgid "Saving this on tries the credentials first."
-msgstr "Saving this on tries the credentials first."
 
 #: src/components/editor/status-bar.tsx:101
 msgid "Saving…"
@@ -3948,7 +3834,7 @@ msgid "Secret"
 msgstr "Secret"
 
 #: src/components/plugin-forms.tsx:117
-#: src/components/plugin-forms.tsx:340
+#: src/components/plugin-forms.tsx:342
 msgid "Secret access key"
 msgstr "Secret access key"
 
@@ -3974,7 +3860,7 @@ msgstr "Select your language"
 
 #: src/components/site-mail.tsx:163
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:393
-#: src/routes/dashboard.plugins_.email.tsx:193
+#: src/routes/dashboard.plugins_.email.tsx:386
 msgid "Send"
 msgstr "Send"
 
@@ -3984,7 +3870,6 @@ msgstr "Send a form's answers. No account needed."
 
 #: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
-#: src/routes/dashboard.plugins_.email.tsx:169
 msgid "Send a test"
 msgstr "Send a test"
 
@@ -4011,7 +3896,7 @@ msgid "Send mail through Amazon SES — a notification when somebody fills in on
 msgstr "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 
 #: src/components/site-mail.tsx:125
-#: src/routes/dashboard.plugins_.email.tsx:150
+#: src/routes/dashboard.plugins_.email.tsx:250
 msgid "Send mail through SES"
 msgstr "Send mail through SES"
 
@@ -4021,6 +3906,7 @@ msgid "Send on Telegram"
 msgstr "Send on Telegram"
 
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:375
+#: src/routes/dashboard.plugins_.email.tsx:361
 msgid "Send yourself one"
 msgstr "Send yourself one"
 
@@ -4031,6 +3917,10 @@ msgstr "Sending is off on this account"
 #: src/components/ses-setup.tsx:204
 msgid "Sending limits, and raising them"
 msgstr "Sending limits, and raising them"
+
+#: src/routes/dashboard.plugins_.email.tsx:217
+msgid "Sending mail"
+msgstr "Sending mail"
 
 #: src/components/ses-account.tsx:204
 msgid "Sending needs ses:SendEmail. Reading this page needs ses:GetAccount, ses:ListEmailIdentities and ses:ListSuppressedDestinations; verifying a sender needs ses:CreateEmailIdentity; leaving the sandbox needs ses:PutAccountDetails; and asking for a bigger quota needs support:CreateCase on a Business plan or higher."
@@ -4044,11 +3934,11 @@ msgstr "Sending resumed"
 msgid "Sending stopped"
 msgstr "Sending stopped"
 
-#: src/components/ses-account.tsx:874
+#: src/components/ses-account.tsx:872
 msgid "Sending through the server's account"
 msgstr "Sending through the server's account"
 
-#: src/components/ses-account.tsx:640
+#: src/components/ses-account.tsx:638
 msgid "Sends refusals back to a subdomain you own instead of to amazonses.com, which is what makes the visible sender and the envelope sender agree."
 msgstr "Sends refusals back to a subdomain you own instead of to amazonses.com, which is what makes the visible sender and the envelope sender agree."
 
@@ -4071,7 +3961,7 @@ msgid "Sent as"
 msgstr "Sent as"
 
 #. placeholder {0}: standing.days
-#: src/components/ses-account.tsx:969
+#: src/components/ses-account.tsx:967
 msgid "sent in {0} days"
 msgstr "sent in {0} days"
 
@@ -4113,11 +4003,11 @@ msgstr "Server"
 msgid "SES console"
 msgstr "SES console"
 
-#: src/components/ses-account.tsx:889
+#: src/components/ses-account.tsx:887
 msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 msgstr "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 
-#: src/components/plugin-forms.tsx:373
+#: src/components/plugin-forms.tsx:377
 msgid "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
 msgstr "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
 
@@ -4130,7 +4020,7 @@ msgstr "Set a password"
 msgid "Set it"
 msgstr "Set it"
 
-#: src/components/ses-account.tsx:745
+#: src/components/ses-account.tsx:743
 msgid "Set it up"
 msgstr "Set it up"
 
@@ -4144,7 +4034,6 @@ msgid "Settings"
 msgstr "Settings"
 
 #: src/routes/dashboard.plugins_.s3.tsx:85
-#: src/routes/dashboard.plugins_.video.tsx:117
 msgid "Settings saved"
 msgstr "Settings saved"
 
@@ -4168,7 +4057,7 @@ msgstr "Setup failed"
 msgid "Several are called"
 msgstr "Several are called"
 
-#: src/components/dashboard/dashboard-shell.tsx:129
+#: src/components/dashboard/dashboard-shell.tsx:127
 msgid "Shared mail"
 msgstr "Shared mail"
 
@@ -4189,10 +4078,6 @@ msgstr "Shortcuts"
 msgid "Show password"
 msgstr "Show password"
 
-#: src/routes/dashboard.plugins_.video.tsx:284
-msgid "Shown beside any video in the Stream dashboard. It is the same for every video on the account and never changes."
-msgstr "Shown beside any video in the Stream dashboard. It is the same for every video on the account and never changes."
-
 #: src/routes/console_.login.tsx:108
 #: src/routes/login.tsx:99
 #: src/routes/login.tsx:140
@@ -4212,7 +4097,7 @@ msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
 #: src/components/console/console-shell.tsx:144
-#: src/components/dashboard/dashboard-shell.tsx:215
+#: src/components/dashboard/dashboard-shell.tsx:213
 #: src/components/editor/mavi-editor.tsx:695
 #: src/components/editor/mavi-editor.tsx:983
 msgid "Sign out"
@@ -4243,7 +4128,7 @@ msgid "Site title"
 msgstr "Site title"
 
 #: src/components/console/console-shell.tsx:51
-#: src/components/dashboard/dashboard-shell.tsx:124
+#: src/components/dashboard/dashboard-shell.tsx:122
 #: src/routes/dashboard.platform-mail.tsx:173
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
@@ -4257,7 +4142,7 @@ msgstr "Sites allowed"
 msgid "Small section heading"
 msgstr "Small section heading"
 
-#: src/components/ses-account.tsx:897
+#: src/components/ses-account.tsx:895
 msgid "someone@example.com or example.com"
 msgstr "someone@example.com or example.com"
 
@@ -4279,7 +4164,7 @@ msgid "Start writing, or type “/” for commands…"
 msgstr "Start writing, or type “/” for commands…"
 
 #: src/components/editor/post-settings.tsx:137
-#: src/components/ses-account.tsx:771
+#: src/components/ses-account.tsx:769
 msgid "Status"
 msgstr "Status"
 
@@ -4316,16 +4201,12 @@ msgstr "Storage"
 msgid "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 msgstr "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 
-#: src/routes/dashboard.plugins_.video.tsx:135
-msgid "Stored — leave blank to keep it"
-msgstr "Stored — leave blank to keep it"
-
 #: src/components/plugin-forms.tsx:120
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
 #: src/components/console-build-token.tsx:46
-#: src/components/plugin-forms.tsx:349
+#: src/components/plugin-forms.tsx:351
 #: src/components/publish-panel.tsx:248
 #: src/routes/dashboard.platform-mail.tsx:141
 msgid "Stored — type to replace"
@@ -4345,7 +4226,7 @@ msgstr "Strong"
 msgid "Sub-heading"
 msgstr "Sub-heading"
 
-#: src/components/ses-account.tsx:718
+#: src/components/ses-account.tsx:716
 msgid "Subdomain for bounces"
 msgstr "Subdomain for bounces"
 
@@ -4384,10 +4265,6 @@ msgstr "switched off"
 msgid "Switched off"
 msgstr "Switched off"
 
-#: src/routes/dashboard.plugins_.video.tsx:311
-msgid "Switched on"
-msgstr "Switched on"
-
 #: src/routes/dashboard.sites.tsx:257
 msgid "Switching an agency off stops it signing in. Its sites keep serving — the customers are not the ones who fell out with anybody."
 msgstr "Switching an agency off stops it signing in. Its sites keep serving — the customers are not the ones who fell out with anybody."
@@ -4421,7 +4298,7 @@ msgstr "tag"
 msgid "Tagline"
 msgstr "Tagline"
 
-#: src/components/dashboard/dashboard-shell.tsx:102
+#: src/components/dashboard/dashboard-shell.tsx:100
 #: src/components/editor/post-settings.tsx:247
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -4447,7 +4324,7 @@ msgstr "Take it back"
 msgid "Take off the addresses that bounced, and stop writing to anybody who has not opened anything in a year."
 msgstr "Take off the addresses that bounced, and stop writing to anybody who has not opened anything in a year."
 
-#: src/routes/dashboard.plugins.tsx:39
+#: src/routes/dashboard.plugins.tsx:35
 msgid "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 msgstr "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 
@@ -4465,10 +4342,6 @@ msgstr "Teal"
 msgid "Tell somebody"
 msgstr "Tell somebody"
 
-#: src/routes/dashboard.plugins_.video.tsx:299
-msgid "Tell the host where to report"
-msgstr "Tell the host where to report"
-
 #: src/components/setup/setup-wizard.tsx:581
 msgid "Tell us about your site"
 msgstr "Tell us about your site"
@@ -4482,7 +4355,6 @@ msgid "Test & continue"
 msgstr "Test & continue"
 
 #: src/routes/dashboard.plugins_.s3.tsx:168
-#: src/routes/dashboard.plugins_.video.tsx:354
 msgid "Test connection"
 msgstr "Test connection"
 
@@ -4525,6 +4397,10 @@ msgstr "The account"
 msgid "The address a title would get."
 msgstr "The address a title would get."
 
+#: src/routes/dashboard.plugins_.email.tsx:335
+msgid "The address it comes from"
+msgstr "The address it comes from"
+
 #: src/routes/dashboard.users.tsx:182
 msgid "the agency's, not this site's"
 msgstr "the agency's, not this site's"
@@ -4545,6 +4421,10 @@ msgstr "The ceiling on this account today. Sending stops at it rather than queue
 #: src/components/flows/flow-settings.tsx:247
 msgid "The channel's address"
 msgstr "The channel's address"
+
+#: src/routes/dashboard.plugins_.email.tsx:288
+msgid "The domain you send from"
+msgstr "The domain you send from"
 
 #: src/routes/dashboard.platform-mail.tsx:149
 msgid "The exact permissions this needs are in docs/shared-email.md. A new Amazon account may only send 200 messages a day and only to addresses it has verified, which is no use for lending — ask Amazon for production access before turning any site on."
@@ -4595,18 +4475,17 @@ msgstr "The letterhead"
 msgid "The most common shortcuts in the editor."
 msgstr "The most common shortcuts in the editor."
 
-#: src/components/plugin-forms.tsx:324
+#: src/components/plugin-forms.tsx:326
 msgid "The one your SES identities are verified in. Verification does not cross regions."
 msgstr "The one your SES identities are verified in. Verification does not cross regions."
 
+#: src/routes/dashboard.plugins_.email.tsx:366
+msgid "The only honest check. A key without permission, a domain that has not finished verifying and an account still in the sandbox all look the same until something is actually sent."
+msgstr "The only honest check. A key without permission, a domain that has not finished verifying and an account still in the sandbox all look the same until something is actually sent."
+
 #: src/components/site-mail.tsx:145
-#: src/routes/dashboard.plugins_.email.tsx:171
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
-
-#: src/routes/dashboard.plugins_.video.tsx:196
-msgid "The pull zone hostname is on the same tab — it looks like vz-… .b-cdn.net"
-msgstr "The pull zone hostname is on the same tab — it looks like vz-… .b-cdn.net"
 
 #: src/routes/console.sites.$siteId.tsx:250
 #: src/routes/dashboard.plugins_.backup.tsx:154
@@ -4709,17 +4588,17 @@ msgstr "This server is by invitation"
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
 msgstr "This signs you in to the server itself. Everyone else signs in somewhere else:"
 
-#: src/components/dashboard/dashboard-shell.tsx:110
+#: src/components/dashboard/dashboard-shell.tsx:108
 msgid "This site"
 msgstr "This site"
-
-#: src/routes/dashboard.plugins_.email.tsx:213
-msgid "This site sends through the server's own account"
-msgstr "This site sends through the server's own account"
 
 #: src/components/assistant-connection.tsx:155
 msgid "This site's tools could not be listed just now."
 msgstr "This site's tools could not be listed just now."
+
+#: src/routes/dashboard.plugins_.email.tsx:223
+msgid "Three steps and your forms can email you."
+msgstr "Three steps and your forms can email you."
 
 #: src/routes/dashboard.trash.tsx:187
 msgid "Throw it away now"
@@ -4732,10 +4611,6 @@ msgstr "To"
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
 msgstr "Today's date"
-
-#: src/routes/dashboard.plugins_.video.tsx:233
-msgid "Token authentication key"
-msgstr "Token authentication key"
 
 #: src/components/console-tokens.tsx:76
 #: src/components/local-env.tsx:146
@@ -4764,11 +4639,11 @@ msgstr "Try it"
 msgid "Turn into"
 msgstr "Turn into"
 
-#: src/components/ses-account.tsx:768
+#: src/components/ses-account.tsx:766
 msgid "Type"
 msgstr "Type"
 
-#: src/components/ses-account.tsx:437
+#: src/components/ses-account.tsx:435
 msgid "Unblock"
 msgstr "Unblock"
 
@@ -4795,11 +4670,6 @@ msgstr "Unlink"
 msgid "Unsaved changes"
 msgstr "Unsaved changes"
 
-#. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:219
-msgid "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
-msgstr "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
-
 #: src/components/dashboard/content-list.tsx:181
 #: src/components/editor/toc-panel.tsx:62
 msgid "Untitled"
@@ -4818,10 +4688,6 @@ msgstr "Upload"
 msgid "Upload a file (multipart)."
 msgstr "Upload a file (multipart)."
 
-#: src/routes/dashboard.videos.tsx:275
-msgid "Upload a video"
-msgstr "Upload a video"
-
 #: src/components/editor/post-settings.tsx:327
 msgid "Upload cover image"
 msgstr "Upload cover image"
@@ -4834,10 +4700,6 @@ msgstr "Upload image"
 msgid "Uploaded files and their addresses."
 msgstr "Uploaded files and their addresses."
 
-#: src/routes/dashboard.videos.tsx:254
-msgid "Uploading"
-msgstr "Uploading"
-
 #: src/components/editor/dialogs.tsx:141
 msgid "URL"
 msgstr "URL"
@@ -4845,6 +4707,10 @@ msgstr "URL"
 #: src/components/plugin-forms.tsx:76
 msgid "Use S3 for new uploads"
 msgstr "Use S3 for new uploads"
+
+#: src/routes/dashboard.plugins_.email.tsx:273
+msgid "Use the server's account instead"
+msgstr "Use the server's account instead"
 
 #: src/routes/dashboard.mail.tsx:731
 msgid "Use this one by default"
@@ -4862,7 +4728,7 @@ msgstr "Username"
 msgid "value"
 msgstr "value"
 
-#: src/components/ses-account.tsx:770
+#: src/components/ses-account.tsx:768
 msgid "Value"
 msgstr "Value"
 
@@ -4870,7 +4736,7 @@ msgstr "Value"
 msgid "Verified identities in {where}"
 msgstr "Verified identities in {where}"
 
-#: src/components/ses-account.tsx:905
+#: src/components/ses-account.tsx:903
 msgid "Verify"
 msgstr "Verify"
 
@@ -4882,33 +4748,15 @@ msgstr "Verify the address or domain you send from. SES refuses to send from any
 msgid "Verifying an address or a domain"
 msgstr "Verifying an address or a domain"
 
-#: src/routes/dashboard.plugins_.video.tsx:154
-#: src/routes/dashboard.plugins.tsx:34
-msgid "Video"
-msgstr "Video"
-
-#: src/routes/dashboard.videos.tsx:243
-msgid "Video deleted"
-msgstr "Video deleted"
-
-#: src/routes/dashboard.videos.tsx:318
-msgid "Video settings"
-msgstr "Video settings"
-
-#: src/components/dashboard/dashboard-shell.tsx:100
-#: src/routes/dashboard.videos.tsx:264
-msgid "Videos"
-msgstr "Videos"
-
 #: src/components/editor/dialogs.tsx:541
 msgid "View"
 msgstr "View"
 
-#: src/components/ses-account.tsx:545
+#: src/components/ses-account.tsx:543
 msgid "waiting"
 msgstr "waiting"
 
-#: src/components/ses-account.tsx:484
+#: src/components/ses-account.tsx:482
 msgid "waiting for DNS"
 msgstr "waiting for DNS"
 
@@ -4957,7 +4805,7 @@ msgstr "What Amazon saw"
 msgid "What comes in is kept as it was sent, so changing the fields later never rewrites it."
 msgstr "What comes in is kept as it was sent, so changing the fields later never rewrites it."
 
-#: src/components/ses-account.tsx:645
+#: src/components/ses-account.tsx:643
 msgid "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 msgstr "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 
@@ -5049,14 +4897,6 @@ msgstr "Where a browser is awkward, a key in a bearer header works instead. Whic
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Where readers load the images from (bucket public URL or CDN)"
 
-#: src/routes/dashboard.plugins_.video.tsx:168
-msgid "Where the videos live"
-msgstr "Where the videos live"
-
-#: src/routes/dashboard.plugins_.video.tsx:156
-msgid "Where this site's lesson videos live. Files go straight from the browser to the host — never through this server — and every playback address expires a few hours after it is made."
-msgstr "Where this site's lesson videos live. Files go straight from the browser to the host — never through this server — and every playback address expires a few hours after it is made."
-
 #: src/routes/console.sites.$siteId.tsx:286
 msgid "Where this site's pages come from, and how the last builds went."
 msgstr "Where this site's pages come from, and how the last builds went."
@@ -5068,7 +4908,6 @@ msgstr "Where to keep them"
 
 #: src/components/site-mail.tsx:154
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:385
-#: src/routes/dashboard.plugins_.email.tsx:180
 msgid "Where to send it"
 msgstr "Where to send it"
 
@@ -5104,7 +4943,7 @@ msgstr "Who receives it, how they came to be on the list, and how they stop it. 
 msgid "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 msgstr "Who receives the mail, how they came to be on the list, how they stop it, and what you do about bounces. A person at Amazon reads this and decides on it."
 
-#: src/components/ses-account.tsx:887
+#: src/components/ses-account.tsx:885
 msgid "Who you may send as"
 msgstr "Who you may send as"
 
@@ -5157,7 +4996,7 @@ msgstr "Working on this site locally"
 msgid "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 msgstr "Works with AWS S3, Cloudflare R2, MinIO and DigitalOcean Spaces. Existing local files stay where they are; only new uploads go to the bucket."
 
-#: src/components/ses-account.tsx:963
+#: src/components/ses-account.tsx:961
 msgid "Worth looking at"
 msgstr "Worth looking at"
 
@@ -5202,7 +5041,11 @@ msgstr "You can disconnect it later from API in the panel."
 msgid "You can write these anywhere above"
 msgstr "You can write these anywhere above"
 
-#: src/components/ses-account.tsx:876
+#: src/routes/dashboard.plugins_.email.tsx:298
+msgid "You do not need an Amazon account — the server lends you its. Add your domain here and it gives you a few DNS records to publish. Once they are live your mail goes out as your own domain, which is what stops it landing in spam."
+msgstr "You do not need an Amazon account — the server lends you its. Add your domain here and it gives you a few DNS records to publish. Once they are live your mail goes out as your own domain, which is what stops it landing in spam."
+
+#: src/components/ses-account.tsx:874
 msgid "You do not need an Amazon account. Add the domain you send from below, publish the records it gives you, and your mail goes out as your own domain — the server only lends the account behind it."
 msgstr "You do not need an Amazon account. Add the domain you send from below, publish the records it gives you, and your mail goes out as your own domain — the server only lends the account behind it."
 
@@ -5218,10 +5061,32 @@ msgstr "Your account"
 msgid "Your agency"
 msgstr "Your agency"
 
+#: src/routes/dashboard.plugins_.email.tsx:237
+msgid "Your Amazon keys"
+msgstr "Your Amazon keys"
+
+#: src/routes/dashboard.plugins_.email.tsx:173
+msgid "Your keys are gone. This site sends by the server now."
+msgstr "Your keys are gone. This site sends by the server now."
+
+#. placeholder {0}: form.from_address
+#: src/routes/dashboard.plugins_.email.tsx:220
+msgid "Your mail goes out as {0}."
+msgstr "Your mail goes out as {0}."
+
+#. placeholder {0}: allowance.sender
+#: src/routes/dashboard.plugins_.email.tsx:222
+msgid "Your mail works, but it goes out as {0} — the server's address. Three steps put your own on it."
+msgstr "Your mail works, but it goes out as {0} — the server's address. Three steps put your own on it."
+
 #: src/routes/console_.register.tsx:162
 #: src/routes/console.account.tsx:64
 msgid "Your name"
 msgstr "Your name"
+
+#: src/routes/dashboard.plugins_.email.tsx:373
+msgid "Your own address"
+msgstr "Your own address"
 
 #: src/routes/dashboard.users.tsx:215
 msgid "Your own password"
@@ -5231,11 +5096,11 @@ msgstr "Your own password"
 msgid "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 msgstr "Your pages are built from your own project. Publishing builds them again with what is in the CMS now."
 
-#: src/components/ses-account.tsx:961
+#: src/components/ses-account.tsx:959
 msgid "Your sending is in trouble"
 msgstr "Your sending is in trouble"
 
-#: src/components/ses-account.tsx:964
+#: src/components/ses-account.tsx:962
 msgid "Your sending looks healthy"
 msgstr "Your sending looks healthy"
 
