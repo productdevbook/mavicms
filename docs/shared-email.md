@@ -185,6 +185,17 @@ under **Mail → Senders**.
 | One `TXT` on the same subdomain, `v=spf1 include:amazonses.com ~all` | Goes with the MX above. |
 | One `TXT` on `_dmarc.<domain>` | DMARC. Start with `v=DMARC1; p=none; rua=mailto:…` and tighten it later. Gmail and Yahoo have required a DMARC record of bulk senders since February 2024. |
 
+Two things that go wrong while adding them:
+
+- **The MAIL FROM subdomain has to be a subdomain.** A domain that already
+  receives mail has an `MX` at its apex, and putting Amazon's there instead
+  takes the receiving with it. That is why the record goes on `mail.` or
+  `send.` and never on the domain itself.
+- **Most DNS panels append the zone to whatever is typed in the name field.**
+  Pasting the whole record name produces
+  `…_domainkey.example.com.example.com`, which resolves to nothing and leaves
+  the domain pending with no indication of why.
+
 Two things worth telling a customer plainly:
 
 - **The DKIM records are tied to the account that issued them.** They verify the
