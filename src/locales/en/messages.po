@@ -2739,6 +2739,11 @@ msgstr "Made in the channel's own settings, under incoming webhooks. Anybody hol
 msgid "Mail"
 msgstr "Mail"
 
+#. placeholder {0}: allowance.sender
+#: src/routes/dashboard.plugins_.email.tsx:212
+msgid "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
+msgstr "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
+
 #: src/routes/dashboard.plugins_.email.tsx:129
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Mail this site sends — a notification when somebody fills in one of your forms."
@@ -3657,6 +3662,10 @@ msgstr "Put it back"
 #: src/components/local-env.tsx:118
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 msgstr "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
+
+#: src/routes/dashboard.plugins_.email.tsx:215
+msgid "Putting your own Amazon keys in above replaces this arrangement entirely."
+msgstr "Putting your own Amazon keys in above replaces this arrangement entirely."
 
 #: src/components/editor/dialogs.tsx:524
 #: src/components/editor/extensions/slash-command.tsx:127
@@ -4824,6 +4833,11 @@ msgstr "Unlink"
 msgid "Unsaved changes"
 msgstr "Unsaved changes"
 
+#. placeholder {0}: allowance.sender
+#: src/routes/dashboard.plugins_.email.tsx:211
+msgid "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
+msgstr "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
+
 #: src/components/dashboard/content-list.tsx:181
 #: src/components/editor/toc-panel.tsx:62
 msgid "Untitled"
@@ -5229,8 +5243,8 @@ msgid "Your agency"
 msgstr "Your agency"
 
 #: src/routes/dashboard.plugins_.email.tsx:210
-msgid "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
-msgstr "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
+#~ msgid "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
+#~ msgstr "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
 
 #: src/routes/console_.register.tsx:162
 #: src/routes/console.account.tsx:64

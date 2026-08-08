@@ -108,6 +108,15 @@ pub async fn create_tables(db: &DatabaseConnection) -> AppResult<()> {
             ses_tenant TEXT NULL,
             created_at TEXT NOT NULL
         )",
+        // Which site added which sender. On a shared account the Amazon
+        // identity list is the whole server's, so without this a site would
+        // see every other site's domains and could delete them.
+        "CREATE TABLE IF NOT EXISTS site_email_identity (
+            tenant_id TEXT NOT NULL,
+            name TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            PRIMARY KEY (tenant_id, name)
+        )",
     ] {
         db.execute_raw(Statement::from_string(db.get_database_backend(), statement))
             .await?;
@@ -301,6 +310,111 @@ pub async fn allowances(db: &DatabaseConnection) -> AppResult<Vec<Allowance>> {
         .collect()
 }
 
+/// The senders one site has added to the server's account.
+pub async fn identities(db: &DatabaseConnection, tenant_id: Uuid) -> AppResult<Vec<String>> {
+    let backend = db.get_database_backend();
+    let rows = db
+        .query_all_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "SELECT name FROM site_email_identity WHERE tenant_id = {} ORDER BY name",
+                parameter(backend, 1)
+            ),
+            [tenant_id.to_string().into()],
+        ))
+        .await?;
+    rows.into_iter()
+        .map(|row| Ok(row.try_get("", "name")?))
+        .collect()
+}
+
+/// Whether this site may speak for this sender.
+///
+/// A domain answers for its own subdomains: a site that verified
+/// `example.com` gets `mail.example.com` without asking again, which is what
+/// a custom MAIL FROM is.
+pub async fn owns_identity(
+    db: &DatabaseConnection,
+    tenant_id: Uuid,
+    name: &str,
+) -> AppResult<bool> {
+    let name = name.trim().to_ascii_lowercase();
+    let mine = identities(db, tenant_id).await?;
+    Ok(mine.iter().any(|held| {
+        let held = held.trim().to_ascii_lowercase();
+        name == held || name.ends_with(&format!(".{held}")) || name.ends_with(&format!("@{held}"))
+    }))
+}
+
+/// Whether anybody else has this sender already. The check that stops one
+/// site claiming another's domain on a shared account.
+pub async fn identity_taken(
+    db: &DatabaseConnection,
+    tenant_id: Uuid,
+    name: &str,
+) -> AppResult<bool> {
+    let backend = db.get_database_backend();
+    let row = db
+        .query_one_raw(Statement::from_sql_and_values(
+            backend,
+            format!(
+                "SELECT tenant_id FROM site_email_identity WHERE name = {} AND tenant_id <> {}",
+                parameter(backend, 1),
+                parameter(backend, 2)
+            ),
+            [
+                name.trim().to_ascii_lowercase().into(),
+                tenant_id.to_string().into(),
+            ],
+        ))
+        .await?;
+    Ok(row.is_some())
+}
+
+pub async fn remember_identity(
+    db: &DatabaseConnection,
+    tenant_id: Uuid,
+    name: &str,
+) -> AppResult<()> {
+    let backend = db.get_database_backend();
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "INSERT INTO site_email_identity (tenant_id, name, created_at) VALUES ({})",
+            parameters(backend, 3)
+        ),
+        [
+            tenant_id.to_string().into(),
+            name.trim().to_ascii_lowercase().into(),
+            Utc::now().to_rfc3339().into(),
+        ],
+    ))
+    .await?;
+    Ok(())
+}
+
+pub async fn forget_identity(
+    db: &DatabaseConnection,
+    tenant_id: Uuid,
+    name: &str,
+) -> AppResult<()> {
+    let backend = db.get_database_backend();
+    db.execute_raw(Statement::from_sql_and_values(
+        backend,
+        format!(
+            "DELETE FROM site_email_identity WHERE tenant_id = {} AND name = {}",
+            parameter(backend, 1),
+            parameter(backend, 2)
+        ),
+        [
+            tenant_id.to_string().into(),
+            name.trim().to_ascii_lowercase().into(),
+        ],
+    ))
+    .await?;
+    Ok(())
+}
+
 /// A name Amazon will accept for this site's tenant.
 ///
 /// Letters, numbers, hyphen and underscore, up to sixty-four — Amazon's rule,
@@ -348,6 +462,52 @@ mod tests {
         // cannot accidentally spend somebody else's reputation.
         assert_eq!(Sends::read(""), Sends::Own);
         assert_eq!(Sends::read("paylasimli"), Sends::Own);
+    }
+
+    #[tokio::test]
+    async fn a_site_answers_for_its_own_domain_and_nobody_elses() {
+        let db = sea_orm::Database::connect("sqlite::memory:").await.unwrap();
+        super::create_tables(&db).await.unwrap();
+
+        let one = uuid::Uuid::from_u128(1);
+        let other = uuid::Uuid::from_u128(2);
+        super::remember_identity(&db, one, "Ornek.Test")
+            .await
+            .unwrap();
+        super::remember_identity(&db, other, "baska.test")
+            .await
+            .unwrap();
+
+        assert!(super::owns_identity(&db, one, "ornek.test").await.unwrap());
+        // A custom MAIL FROM is a subdomain of a domain already verified, so
+        // refusing it here would refuse the records the panel itself hands out.
+        assert!(
+            super::owns_identity(&db, one, "mail.ornek.test")
+                .await
+                .unwrap()
+        );
+        assert!(
+            super::owns_identity(&db, one, "bilgi@ornek.test")
+                .await
+                .unwrap()
+        );
+
+        // The whole point: the shared account's list is everybody's.
+        assert!(!super::owns_identity(&db, one, "baska.test").await.unwrap());
+        // A name that merely ends the same way is a different domain.
+        assert!(
+            !super::owns_identity(&db, one, "notornek.test")
+                .await
+                .unwrap()
+        );
+
+        assert!(super::identity_taken(&db, one, "baska.test").await.unwrap());
+        assert!(!super::identity_taken(&db, one, "ornek.test").await.unwrap());
+
+        super::forget_identity(&db, one, "ornek.test")
+            .await
+            .unwrap();
+        assert!(!super::owns_identity(&db, one, "ornek.test").await.unwrap());
     }
 
     #[test]

@@ -1674,6 +1674,8 @@ export interface SendingAllowance {
   sends: string
   a_day: number | null
   sent_today: number
+  sender: string
+  as_the_server: boolean
 }
 
 export function getSendingAllowance(siteId?: string): Promise<SendingAllowance> {

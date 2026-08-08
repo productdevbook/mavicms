@@ -1025,6 +1025,15 @@ pub async fn add_identity(config: &EmailConfig, name: &str) -> AppResult<()> {
     .map_err(|_| AppError::Validation("SES did not answer in time".to_string()))?
     .map_err(|err| refused("add it", err))?;
 
+    // On a shared account an identity nobody claimed belongs to the account,
+    // and its sending is judged with everybody else's. Amazon will not let it
+    // be attributed afterwards by any call this code makes, so it happens now
+    // or not at all.
+    let tenant = config.tenant.trim().to_string();
+    if !tenant.is_empty() {
+        associate_with_tenant(config, &tenant, name).await?;
+    }
+
     Ok(())
 }
 

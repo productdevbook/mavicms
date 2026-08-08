@@ -2735,6 +2735,11 @@ msgstr "Kanalın kendi ayarlarında, gelen webhook'lar altında üretilir. Elind
 msgid "Mail"
 msgstr "Posta"
 
+#. placeholder {0}: allowance.sender
+#: src/routes/dashboard.plugins_.email.tsx:212
+msgid "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
+msgstr "Postalar kendi adresinizden, {0} olarak çıkıyor. Gönderenler altındaki kayıtlar yayında kalmalı — alıcı sunucuya bu alan adının onay verdiğini söyleyen şey onlar."
+
 #: src/routes/dashboard.plugins_.email.tsx:129
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Bu sitenin gönderdiği postalar — formlarınızdan biri doldurulduğunda bildirim."
@@ -3653,6 +3658,10 @@ msgstr "Geri al"
 #: src/components/local-env.tsx:118
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 msgstr "Bunu projenin yanına bir .env dosyasına koyun. Canlı siteyi gösterir; tasarımcının kendi makinesinde gördüğü, burada gerçekten yazılmış olandır."
+
+#: src/routes/dashboard.plugins_.email.tsx:215
+msgid "Putting your own Amazon keys in above replaces this arrangement entirely."
+msgstr "Yukarıya kendi Amazon anahtarlarınızı girerseniz bu düzenlemenin tamamı yerini onlara bırakır."
 
 #: src/components/editor/dialogs.tsx:524
 #: src/components/editor/extensions/slash-command.tsx:127
@@ -4820,6 +4829,11 @@ msgstr "Bağlantıyı kaldır"
 msgid "Unsaved changes"
 msgstr "Değişiklik bekleniyor"
 
+#. placeholder {0}: allowance.sender
+#: src/routes/dashboard.plugins_.email.tsx:211
+msgid "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
+msgstr "Kendinize ait bir gönderen belirleyene kadar postalar {0} adresinden çıkıyor — sizin değil, sunucunun adresi. Yanıtlar yine size gelir. Aşağıdaki Gönderenler bölümünden alan adınızı ekleyin, verdiği kayıtları yayınlayın, sonra burada gönderen olarak seçin."
+
 #: src/components/dashboard/content-list.tsx:181
 #: src/components/editor/toc-panel.tsx:62
 msgid "Untitled"
@@ -5225,8 +5239,8 @@ msgid "Your agency"
 msgstr "İşletmeniz"
 
 #: src/routes/dashboard.plugins_.email.tsx:210
-msgid "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
-msgstr "Postanız yine kendi alan adınızdan çıkıyor, dolayısıyla aşağıdaki Gönderenler bölümündeki kayıtların yayınlanması gerekiyor — alıcı sunucuya bu alan adının onayladığını söyleyen şey onlar. Yukarıya kendi Amazon anahtarlarınızı girerseniz bu düzen tamamen yerini onlara bırakır."
+#~ msgid "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
+#~ msgstr "Postanız yine kendi alan adınızdan çıkıyor, dolayısıyla aşağıdaki Gönderenler bölümündeki kayıtların yayınlanması gerekiyor — alıcı sunucuya bu alan adının onayladığını söyleyen şey onlar. Yukarıya kendi Amazon anahtarlarınızı girerseniz bu düzen tamamen yerini onlara bırakır."
 
 #: src/routes/console_.register.tsx:162
 #: src/routes/console.account.tsx:64

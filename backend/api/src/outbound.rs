@@ -23,6 +23,10 @@ pub struct Post {
     pub a_day: Option<i64>,
     /// Whether the account belongs to the site.
     pub own: bool,
+    /// Whether the mail still goes out under the server's own address because
+    /// the site has not named one of its own. True is a working state and a
+    /// temporary one: the site's name is not on its own mail yet.
+    pub as_the_server: bool,
 }
 
 /// Works out which account a site sends with.
@@ -53,6 +57,7 @@ async fn own_only(db: &DatabaseConnection, secrets: &crate::crypto::SecretBox) -
                 config: stored.config,
                 a_day: None,
                 own: true,
+                as_the_server: false,
             })
         }
         _ => Err(AppError::Validation(
@@ -102,11 +107,52 @@ pub async fn how_for(
         )
     })?;
 
+    // The server lends the account, not the name on the letter. Without this
+    // every site the server sends for would appear to be the server, and a
+    // reply to a customer's contact form would go to whoever runs the machine.
+    let as_the_server = !overlay_sender(db, site_secrets, &mut config).await?;
+
     Ok(Post {
         config,
         a_day: Some(allowed.a_day),
         own: false,
+        as_the_server,
     })
+}
+
+/// Puts the site's own sender on the server's account. Says whether it had one.
+///
+/// A site that has named no sender still sends — under the server's address,
+/// with replies pointed back at the site — because a contact form that fails
+/// silently until somebody edits DNS is worse than one that works and says so.
+async fn overlay_sender(
+    db: &DatabaseConnection,
+    secrets: &crate::crypto::SecretBox,
+    config: &mut EmailConfig,
+) -> AppResult<bool> {
+    let Some(stored) =
+        crate::plugins::load::<EmailConfig>(db, secrets, crate::plugins::EMAIL_PLUGIN).await?
+    else {
+        return Ok(false);
+    };
+
+    let mine = stored.config;
+    if mine.from_address.trim().is_empty() {
+        // Nothing to send as. Keep the server's address but let replies find
+        // the site, if it said where.
+        if !mine.reply_to.trim().is_empty() {
+            config.reply_to = mine.reply_to;
+        }
+        return Ok(false);
+    }
+
+    config.from_address = mine.from_address;
+    if !mine.from_name.trim().is_empty() {
+        config.from_name = mine.from_name;
+    }
+    config.reply_to = mine.reply_to;
+    config.senders = mine.senders;
+    Ok(true)
 }
 
 /// How many messages this site has sent since midnight, whatever asked for
@@ -164,6 +210,7 @@ mod tests {
             config: EmailConfig::default(),
             a_day: Some(a_day),
             own: false,
+            as_the_server: false,
         }
     }
 
@@ -177,6 +224,7 @@ mod tests {
             config: EmailConfig::default(),
             a_day: None,
             own: true,
+            as_the_server: false,
         };
         // A number no shared site would be given, to show the ceiling is not
         // merely large but absent.

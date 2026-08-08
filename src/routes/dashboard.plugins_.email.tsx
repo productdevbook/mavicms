@@ -207,7 +207,12 @@ function EmailSettingsRoute() {
               {t`${allowance.sent_today} of ${allowance.a_day ?? 0} messages used today. Whoever runs the server sets that number and can raise it.`}
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              {t`Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely.`}
+              {allowance.as_the_server
+                ? t`Until you name a sender of your own, mail leaves as ${allowance.sender} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here.`
+                : t`Mail leaves as ${allowance.sender}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees.`}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t`Putting your own Amazon keys in above replaces this arrangement entirely.`}
             </p>
           </div>
         ) : null}

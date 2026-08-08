@@ -150,6 +150,27 @@ hand out to sites should stay under it.
 Pick one and keep it. An identity verified in `eu-central-1` is not verified in
 `eu-west-1`, and moving means every customer adds their DNS records again.
 
+## Whose address the mail comes from
+
+The server lends the account, not the name on the letter. A site borrowing the
+account still sends **as itself** — the credentials, the region and the tenant
+come from the server, and the From address, the reply address and the sender
+list come from the site's own settings.
+
+A site that has not named a sender yet still sends, under the server's address,
+with replies pointed back at the site. That is deliberate: a contact form that
+fails silently until somebody edits DNS is worse than one that works and says
+where the mail is coming from. The panel says which of the two is happening,
+and the difference is one field.
+
+So neither is compulsory. A customer who never touches DNS gets working mail
+under the host's name; one who publishes the records gets their own. What a
+customer cannot do is send as a domain somebody else added — the first site to
+add a domain owns it, and a site may only list, alter and remove the senders it
+added itself. On a shared account that is not a nicety: the SES identity list is
+the whole server's, so without it one customer would see every other customer's
+domains and could delete them.
+
 ## What a customer adds to their DNS
 
 A site sending through the server's account still sends **as its own domain**,

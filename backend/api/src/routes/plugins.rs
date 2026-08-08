@@ -592,15 +592,46 @@ pub async fn test_email_of(
 }
 
 /// The stored settings, or a refusal saying they are not there yet.
+/// The account these screens act on.
+///
+/// The same answer the sending path uses, so a site the server lends its
+/// account to can add its domain and read its own sending — which it could
+/// not when this only looked at the site's own keys, leaving every one of
+/// these screens dead for exactly the sites the arrangement exists for.
 async fn email_config_of(state: &AppState) -> AppResult<crate::email::EmailConfig> {
-    crate::plugins::load::<crate::email::EmailConfig>(
-        state.db(),
-        &state.secrets,
-        crate::plugins::EMAIL_PLUGIN,
-    )
-    .await?
-    .map(|stored| stored.config)
-    .ok_or_else(|| AppError::Validation("mail is not set up yet".to_string()))
+    Ok(crate::outbound::how(state).await?.config)
+}
+
+/// The control plane and site, when this site is on the server's account.
+///
+/// `None` for a site sending with its own keys: there is nobody else on that
+/// account to protect it from.
+async fn borrowing(
+    state: &AppState,
+) -> AppResult<Option<(&sea_orm::DatabaseConnection, uuid::Uuid)>> {
+    if crate::outbound::how(state).await?.own {
+        return Ok(None);
+    }
+    Ok(match (state.control.as_ref(), state.tenant_id) {
+        (Some(control), Some(tenant_id)) => Some((control, tenant_id)),
+        _ => None,
+    })
+}
+
+/// Refuses a sender this site did not add.
+///
+/// The list on a shared account is the whole server's, so without this a site
+/// could delete the domain of any other site on the machine by naming it.
+async fn its_own_sender(state: &AppState, name: &str) -> AppResult<()> {
+    let Some((control, tenant_id)) = borrowing(state).await? else {
+        return Ok(());
+    };
+    if crate::platform::owns_identity(control, tenant_id, name).await? {
+        return Ok(());
+    }
+    Err(AppError::Validation(
+        "this site did not add that sender".to_string(),
+    ))
 }
 
 #[derive(Debug, serde::Serialize, utoipa::ToSchema)]
@@ -612,6 +643,11 @@ pub struct SendingAllowance {
     /// the server does not meter.
     pub a_day: Option<i64>,
     pub sent_today: u64,
+    /// The address this site's mail actually leaves as.
+    pub sender: String,
+    /// Whether that address is the server's rather than the site's. The site
+    /// sends either way; this is what the screen warns about.
+    pub as_the_server: bool,
 }
 
 /// How this site sends, and how much of today is left.
@@ -636,11 +672,15 @@ pub async fn get_email_allowance(Site(state): Site) -> AppResult<Json<SendingAll
             sends: "own".to_string(),
             a_day: None,
             sent_today,
+            sender: post.config.from_address,
+            as_the_server: false,
         },
         Ok(post) => SendingAllowance {
             sends: "shared".to_string(),
             a_day: post.a_day,
             sent_today,
+            sender: post.config.from_address,
+            as_the_server: post.as_the_server,
         },
         // Nothing set up either way. Not an error: the screen it appears on is
         // where somebody goes to fix exactly that.
@@ -648,6 +688,8 @@ pub async fn get_email_allowance(Site(state): Site) -> AppResult<Json<SendingAll
             sends: "none".to_string(),
             a_day: None,
             sent_today,
+            sender: String::new(),
+            as_the_server: false,
         },
     }))
 }
@@ -705,7 +747,19 @@ pub async fn list_email_identities(
 }
 
 pub async fn email_identities_of(state: &AppState) -> AppResult<Vec<crate::email::Identity>> {
-    crate::email::identities(&email_config_of(state).await?).await
+    let all = crate::email::identities(&email_config_of(state).await?).await?;
+
+    let Some((control, tenant_id)) = borrowing(state).await? else {
+        return Ok(all);
+    };
+
+    let mut mine = Vec::new();
+    for one in all {
+        if crate::platform::owns_identity(control, tenant_id, &one.name).await? {
+            mine.push(one);
+        }
+    }
+    Ok(mine)
 }
 
 #[derive(Debug, serde::Deserialize, utoipa::ToSchema)]
@@ -732,7 +786,22 @@ pub async fn add_email_identity(
 }
 
 pub async fn add_email_identity_of(state: &AppState, name: &str) -> AppResult<()> {
-    crate::email::add_identity(&email_config_of(state).await?, name).await
+    if let Some((control, tenant_id)) = borrowing(state).await?
+        && crate::platform::identity_taken(control, tenant_id, name).await?
+    {
+        // Two sites cannot both answer for one domain, and the first to add it
+        // is the one Amazon gave the records to.
+        return Err(AppError::Validation(
+            "another site on this server has already added that sender".to_string(),
+        ));
+    }
+
+    crate::email::add_identity(&email_config_of(state).await?, name).await?;
+
+    if let Some((control, tenant_id)) = borrowing(state).await? {
+        crate::platform::remember_identity(control, tenant_id, name).await?;
+    }
+    Ok(())
 }
 
 /// Stop trusting one.
@@ -753,7 +822,13 @@ pub async fn delete_email_identity(
 }
 
 pub async fn remove_email_identity_of(state: &AppState, name: &str) -> AppResult<()> {
-    crate::email::remove_identity(&email_config_of(state).await?, name).await
+    its_own_sender(state, name).await?;
+    crate::email::remove_identity(&email_config_of(state).await?, name).await?;
+
+    if let Some((control, tenant_id)) = borrowing(state).await? {
+        crate::platform::forget_identity(control, tenant_id, name).await?;
+    }
+    Ok(())
 }
 
 /// The addresses SES has stopped writing to.
@@ -921,6 +996,7 @@ pub async fn set_email_mail_from(
 }
 
 pub async fn set_mail_from_of(state: &AppState, identity: &str, subdomain: &str) -> AppResult<()> {
+    its_own_sender(state, identity).await?;
     crate::email::set_mail_from(&email_config_of(state).await?, identity, subdomain).await
 }
 
