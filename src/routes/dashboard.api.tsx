@@ -5,8 +5,14 @@ import { Trans, useLingui } from "@lingui/react/macro"
 import { Bot, Check, Copy, ExternalLink, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
-import { getLlmsText } from "@/lib/api"
+import {
+  ApiError,
+  createHandover,
+  getLlmsText,
+  type Handover,
+} from "@/lib/api"
 import { AssistantConnection } from "@/components/assistant-connection"
+import { AssistantKeys } from "@/components/assistant-keys"
 import { BuildTokens } from "@/components/build-tokens"
 import { Button } from "@/components/ui/button"
 import {
@@ -70,39 +76,71 @@ function Snippet({ text }: { text: string }) {
  * The document is built by the server so the addresses in it are this site's.
  */
 function ForAnAssistant() {
-  const { t } = useLingui()
-  const [state, setState] = React.useState<"idle" | "copying" | "copied">(
+  const { t, i18n } = useLingui()
+  const [state, setState] = React.useState<"idle" | "working" | "copied">(
     "idle"
   )
+  const [handed, setHanded] = React.useState<Handover | null>(null)
+  const [handouts, setHandouts] = React.useState(0)
 
-  const copy = async () => {
-    setState("copying")
+  // With a key: the assistant can do the work. Without: it can only describe
+  // it, which is what this button used to hand over.
+  const copy = async (withKey: boolean) => {
+    setState("working")
     try {
-      await navigator.clipboard.writeText(await getLlmsText())
+      if (withKey) {
+        const given = await createHandover()
+        await navigator.clipboard.writeText(given.text)
+        setHanded(given)
+        setHandouts((count) => count + 1)
+      } else {
+        await navigator.clipboard.writeText(await getLlmsText())
+        setHanded(null)
+      }
       setState("copied")
       setTimeout(() => setState("idle"), 2000)
-    } catch {
+    } catch (error) {
       setState("idle")
-      toast.error(t`Could not copy it`)
+      toast.error(
+        error instanceof ApiError ? error.message : t`Could not copy it`
+      )
     }
   }
 
+  const until = handed
+    ? new Date(handed.expires_at).toLocaleString(i18n.locale, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
+    : ""
+
   return (
-    <section className="flex flex-col gap-2 rounded-xl border border-border bg-muted/30 px-4 py-4">
+    <section className="flex flex-col gap-3 rounded-xl border border-border bg-muted/30 px-4 py-4">
       <h2 className="text-sm font-medium">{t`Handing this to an assistant`}</h2>
       <p className="text-sm text-muted-foreground">
         {t`Everything below, plus a working Astro connection, as one document written for whatever is doing the wiring. It carries this site's own address, languages and forms — paste it into an assistant and it can build the front end without being told any of this twice.`}
       </p>
+      <p className="text-sm text-muted-foreground">
+        {t`Copied with a key, it can also do the work rather than describe it: write posts, upload images, make a form and read what comes in, add a kind of content, publish. The key lasts one day, then stops on its own, and you can take it back here sooner.`}
+      </p>
+
       <div className="flex flex-wrap gap-2 pt-1">
-        <Button onClick={() => void copy()} disabled={state === "copying"}>
-          {state === "copying" ? (
+        <Button onClick={() => void copy(true)} disabled={state === "working"}>
+          {state === "working" ? (
             <Loader2 className="animate-spin" />
           ) : state === "copied" ? (
             <Check />
           ) : (
             <Bot />
           )}
-          {state === "copied" ? t`Copied` : t`Copy for an assistant`}
+          {state === "copied" ? t`Copied` : t`Copy with a key for a day`}
+        </Button>
+        <Button
+          variant="outline"
+          disabled={state === "working"}
+          onClick={() => void copy(false)}
+        >
+          <Copy /> {t`Copy without a key`}
         </Button>
         <Button
           variant="outline"
@@ -111,9 +149,27 @@ function ForAnAssistant() {
           <ExternalLink /> {t`Read it`}
         </Button>
       </div>
+
+      {handed && (
+        <div className="rounded-xl border border-border bg-background px-4 py-3">
+          <p className="text-sm font-medium">
+            {t`A key went with it, until ${until}`}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t`It is in the text you just copied and is not shown again. Whoever holds it can write on this site until it runs out — so paste it where you meant to, and take it back below if it went somewhere else.`}
+          </p>
+        </div>
+      )}
+
       <p className="text-sm text-muted-foreground">
-        {t`It lives at /api/llms.txt, so anything that can reach this site can read it.`}
+        {t`Without a key the document lives at /api/llms.txt, so anything that can reach this site can read it. A key is never written into that copy.`}
       </p>
+
+      <p className="text-sm text-muted-foreground">
+        {t`A key cannot reach the accounts on this site or the invitations to it, cannot make another key of any kind, cannot read the storage and mail settings or the backups, and cannot empty the bin or send a mail campaign.`}
+      </p>
+
+      <AssistantKeys reloadOn={handouts} />
     </section>
   )
 }
@@ -225,7 +281,7 @@ function ApiRoute() {
             </summary>
             <div className="flex flex-col gap-4 pt-4">
               <p className="text-sm text-muted-foreground">
-                {t`Where a browser is awkward, a build token works as a bearer header — but it makes the connection read-only, which is the thing to know before using it. An assistant connected this way cannot write a post, upload anything or publish, and it will not appear in the list above, because nothing was allowed. If one is already stuck this way, remove it in the program and add the address again without the header.`}
+                {t`Where a browser is awkward, a key in a bearer header works instead. Which key decides what the assistant may do: a build token makes the connection read-only, so it cannot write a post, upload anything or publish. An assistant key — the day-long one made under Building a front end — writes. Neither appears in the list above, because nothing signed in.`}
               </p>
               <Snippet
                 text={`claude mcp add --transport http mavicms ${window.location.origin}/api/mcp \\

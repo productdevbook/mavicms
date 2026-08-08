@@ -26,6 +26,9 @@ use crate::{entities::site_settings, error::AppResult, tenants::Site};
 /// meant to be read and edited as what it is.
 const TEMPLATE: &str = include_str!("llms.txt");
 
+/// What goes in front of it when the document is handed over with a key.
+const HANDOVER: &str = include_str!("handover.txt");
+
 /// How this site is reached, as the caller reached it.
 ///
 /// The panel and the API are on the same address as the site, and which site
@@ -99,42 +102,82 @@ pub async fn llms_txt(
     cookies: Cookies,
     headers: HeaderMap,
 ) -> AppResult<Response> {
-    let db = state.db_or_unavailable()?;
-
-    let title = site_settings::Entity::find()
-        .one(db)
-        .await?
-        .map(|settings| settings.site_title)
-        .filter(|title| !title.trim().is_empty())
-        .unwrap_or_else(|| "This site".to_string());
-
-    let origin = origin(&headers);
-    let base = format!("{origin}/api");
-
-    let mut document = TEMPLATE
-        .replace("{{title}}", &title)
-        .replace("{{origin}}", &origin)
-        .replace("{{base}}", &base);
-
     let bearer = headers
         .get(header::AUTHORIZATION)
         .and_then(|value| value.to_str().ok())
         .and_then(|value| value.strip_prefix("Bearer "));
 
     // Signed in or not is the whole of the difference, not which account:
-    // everything appended below is readable by any of them.
-    if crate::auth::authenticate(&state, &cookies, bearer)
+    // everything the extra section holds is readable by any of them.
+    let signed_in = crate::auth::authenticate(&state, &cookies, bearer)
         .await
-        .is_ok()
-    {
-        document.push_str(&this_site(db).await?);
-    }
+        .is_ok();
 
     Ok((
         [(header::CONTENT_TYPE, "text/plain; charset=utf-8")],
-        document,
+        document(&state, &headers, signed_in).await?,
     )
         .into_response())
+}
+
+/// The document itself, whoever is asking for it.
+async fn document(
+    state: &crate::state::AppState,
+    headers: &HeaderMap,
+    signed_in: bool,
+) -> AppResult<String> {
+    let db = state.db_or_unavailable()?;
+
+    let origin = origin(headers);
+    let base = format!("{origin}/api");
+
+    let mut text = TEMPLATE
+        .replace("{{title}}", &title(db).await?)
+        .replace("{{origin}}", &origin)
+        .replace("{{base}}", &base);
+
+    if signed_in {
+        text.push_str(&this_site(db).await?);
+    }
+    Ok(text)
+}
+
+/// The same document with a working key in front of it.
+///
+/// The key is never written into the copy at `/llms.txt`: that one answers to
+/// anybody, and is cached by whatever is in front of this server.
+pub(crate) async fn handover_document(
+    state: &crate::state::AppState,
+    headers: &HeaderMap,
+    key: &str,
+    expires_at: chrono::DateTime<chrono::Utc>,
+) -> AppResult<String> {
+    let db = state.db_or_unavailable()?;
+    let base = format!("{}/api", origin(headers));
+
+    let preamble = HANDOVER
+        .replace("{{title}}", &title(db).await?)
+        .replace("{{base}}", &base)
+        .replace("{{token}}", key)
+        // To the minute. A timestamp carrying nanoseconds reads as machinery
+        // in a paragraph somebody is meant to take at its word.
+        .replace(
+            "{{expires}}",
+            &expires_at.format("%Y-%m-%d %H:%M UTC").to_string(),
+        );
+
+    // Handed over by somebody signed in, so it carries this site's own
+    // languages and forms — the whole reason the key is worth having.
+    Ok(preamble + &document(state, headers, true).await?)
+}
+
+async fn title(db: &sea_orm::DatabaseConnection) -> AppResult<String> {
+    Ok(site_settings::Entity::find()
+        .one(db)
+        .await?
+        .map(|settings| settings.site_title)
+        .filter(|title| !title.trim().is_empty())
+        .unwrap_or_else(|| "This site".to_string()))
 }
 
 /// The part that is true of this site and of no other.

@@ -31,9 +31,21 @@ Somebody working in a browser signs in at the panel and gets a cookie instead.
 The two are the same session by different routes; a token is the one to use
 anywhere a person is not sitting.
 
-A token that writes does not exist. If something you are building has to
-create or change a post it signs in as an account with a password, and that is
-a different and larger decision than reading.
+There is a second kind, for work rather than for building: an **assistant
+key**, made in the panel under **API** by whoever the site belongs to. It
+writes — posts, uploads, forms, content types, publishing — and it lasts one
+day. It is sent the same way, as a bearer token, and it is meant to be handed
+to somebody's assistant along with this document rather than kept in a CI
+variable.
+
+Four things an assistant key cannot do, whatever it is asked: reach the
+accounts on the site or the invitations to it, make another key of any kind,
+read the storage and mail settings or the backups, or empty the bin or send a
+mail campaign. Each refusal says so in the body of the 403.
+
+If something you are building needs to write for longer than a day, it signs
+in as an account with a password, and that is a different and larger decision
+than reading.
 
 Three addresses answer to anybody at all, because the visitor filling in a
 contact form or a newsletter box has no account here:
@@ -48,19 +60,24 @@ rather than an API to read about: finding and reading posts, writing and
 correcting them, uploading a file, reading and triaging what has come in
 through the forms, and building the pages.
 
-What you are offered depends on how you connected. **A build token can only
-read**, so an assistant holding one is offered the tools that read and none of
-the ones that write — if you cannot see `posts_create`, that is why, and the
-answer is to connect with no token at all and let the site ask somebody to
-sign in.
+What you are offered depends on which credential you connected with, and there
+are three ways.
+
+**A build token can only read**, so an assistant holding one is offered the
+tools that read and none of the ones that write. If you cannot see
+`posts_create`, that is why.
+
+**An assistant key writes**, and is the answer to that: the same header, a key
+made in the panel under **API** instead, and the tools that write appear.
 
 ```
 claude mcp add --transport http mavicms {{base}}/mcp \
   --header "Authorization: Bearer $CMS_TOKEN"
 ```
 
-Somewhere that has no field for a token — Claude's own connector dialog,
-ChatGPT's — paste the address on its own. This site is its own authorization
+**Or no credential at all.** Somewhere that has no field for a token —
+Claude's own connector dialog, ChatGPT's — paste the address on its own, and
+it writes too. This site is its own authorization
 server: whoever is connecting is sent here to sign in and asked whether to
 allow it, and the program is handed a credential they never see. It is listed
 under **API** in the panel afterwards and can be disconnected there.
@@ -513,6 +530,6 @@ panel has. Somebody writing a post presses it; a program rarely needs to.
   keeps its digest, and rebuilding a site because somebody opened a post and
   closed it is the cost this field exists to avoid.
 - Send `If-None-Match` back. It costs one header and saves the archive.
-- The token reads. Anything that writes is a person signing in, and should be
-  treated as one.
+- A build token reads and nothing else. Writing means an assistant key, which
+  lasts a day, or a person signing in — and either should be treated as one.
 - Addresses beginning with `/` are relative to {{origin}}.
