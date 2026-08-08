@@ -340,11 +340,11 @@ msgstr "A key went with it, until {until}"
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 
-#: src/components/flows/flow-accounts.tsx:178
+#: src/components/flows/flow-accounts.tsx:213
 msgid "A mailbox (SMTP)"
 msgstr "A mailbox (SMTP)"
 
-#: src/components/flows/flow-accounts.tsx:112
+#: src/components/flows/flow-accounts.tsx:123
 msgid "A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again."
 msgstr "A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again."
 
@@ -381,7 +381,7 @@ msgstr "A scheduled post needs a publish date"
 msgid "a second, at most"
 msgstr "a second, at most"
 
-#: src/components/flows/flow-accounts.tsx:179
+#: src/components/flows/flow-accounts.tsx:214
 msgid "A Telegram bot"
 msgstr "A Telegram bot"
 
@@ -424,7 +424,7 @@ msgstr "Account"
 msgid "Account added"
 msgstr "Account added"
 
-#: src/components/flows/flow-accounts.tsx:110
+#: src/components/flows/flow-accounts.tsx:121
 msgid "Accounts"
 msgstr "Accounts"
 
@@ -433,7 +433,7 @@ msgid "Active"
 msgstr "Active"
 
 #: src/components/editor/dialogs.tsx:200
-#: src/components/flows/flow-accounts.tsx:116
+#: src/components/flows/flow-accounts.tsx:137
 #: src/components/plugin-forms.tsx:423
 #: src/components/publish-panel.tsx:165
 #: src/routes/dashboard.mail.tsx:600
@@ -543,7 +543,7 @@ msgid "Added here counts as confirmed — say so only if they asked to be on it.
 msgstr "Added here counts as confirmed — say so only if they asked to be on it."
 
 #: src/components/editor/dialogs.tsx:300
-#: src/components/flows/flow-settings.tsx:290
+#: src/components/flows/flow-settings.tsx:305
 #: src/routes/console.index.tsx:152
 #: src/routes/dashboard.api.tsx:299
 #: src/routes/dashboard.forms.tsx:264
@@ -880,7 +880,7 @@ msgstr "Blue"
 msgid "Bold"
 msgstr "Bold"
 
-#: src/components/flows/flow-accounts.tsx:249
+#: src/components/flows/flow-accounts.tsx:284
 msgid "Bot token"
 msgstr "Bot token"
 
@@ -960,7 +960,7 @@ msgstr "can send"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/components/flows/flow-accounts.tsx:270
+#: src/components/flows/flow-accounts.tsx:311
 #: src/routes/console.index.tsx:164
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
@@ -997,7 +997,7 @@ msgstr "Canonical URL"
 msgid "Carry on"
 msgstr "Carry on"
 
-#: src/components/flows/flow-settings.tsx:383
+#: src/components/flows/flow-settings.tsx:398
 msgid "Carry on anyway"
 msgstr "Carry on anyway"
 
@@ -1026,6 +1026,10 @@ msgstr "Category"
 msgid "Center the paragraph"
 msgstr "Center the paragraph"
 
+#: src/components/flows/flow-accounts.tsx:169
+msgid "Change"
+msgstr "Change"
+
 #: src/routes/dashboard.users.tsx:243
 msgid "Change it"
 msgstr "Change it"
@@ -1038,7 +1042,7 @@ msgstr "Change one."
 msgid "Changes things"
 msgstr "Changes things"
 
-#: src/components/flows/flow-settings.tsx:267
+#: src/components/flows/flow-settings.tsx:282
 msgid "Chat id"
 msgstr "Chat id"
 
@@ -1054,7 +1058,7 @@ msgstr "Choices"
 msgid "Choose"
 msgstr "Choose"
 
-#: src/components/flows/flow-settings.tsx:264
+#: src/components/flows/flow-settings.tsx:279
 msgid "Choose a bot"
 msgstr "Choose a bot"
 
@@ -1124,7 +1128,7 @@ msgstr "Command menu"
 msgid "Comments"
 msgstr "Comments"
 
-#: src/components/flows/flow-settings.tsx:344
+#: src/components/flows/flow-settings.tsx:359
 msgid "Compared how"
 msgstr "Compared how"
 
@@ -1192,7 +1196,7 @@ msgstr "Connection URL"
 msgid "Contact form to the inbox"
 msgstr "Contact form to the inbox"
 
-#: src/components/flows/flow-settings.tsx:354
+#: src/components/flows/flow-settings.tsx:369
 msgid "contains"
 msgstr "contains"
 
@@ -1566,7 +1570,7 @@ msgstr "Could not save settings"
 msgid "Could not save tag"
 msgstr "Could not save tag"
 
-#: src/components/flows/flow-accounts.tsx:83
+#: src/components/flows/flow-accounts.tsx:94
 msgid "Could not save the account"
 msgstr "Could not save the account"
 
@@ -1755,7 +1759,7 @@ msgstr "Default"
 #: src/components/dashboard/content-list.tsx:275
 #: src/components/editor/block-handle.tsx:186
 #: src/components/editor/bubble-menus.tsx:415
-#: src/components/flows/flow-accounts.tsx:154
+#: src/components/flows/flow-accounts.tsx:189
 #: src/routes/dashboard.categories.tsx:317
 #: src/routes/dashboard.categories.tsx:343
 #: src/routes/dashboard.flows.tsx:264
@@ -2105,7 +2109,7 @@ msgstr "Forms"
 msgid "From address"
 msgstr "From address"
 
-#: src/components/flows/flow-accounts.tsx:259
+#: src/components/flows/flow-accounts.tsx:294
 msgid "From BotFather. The step also needs the chat's id, which you give it there."
 msgstr "From BotFather. The step also needs the chat's id, which you give it there."
 
@@ -2312,6 +2316,10 @@ msgstr "How to send to it"
 #~ msgid "How your sites are read when they are built."
 #~ msgstr "How your sites are read when they are built."
 
+#: src/components/flows/flow-settings.tsx:227
+msgid "HTML"
+msgstr "HTML"
+
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:341
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
@@ -2324,11 +2332,11 @@ msgstr "I already have an account"
 msgid "IAM users"
 msgstr "IAM users"
 
-#: src/components/flows/flow-settings.tsx:370
+#: src/components/flows/flow-settings.tsx:385
 msgid "If it does not match, the steps after this one are skipped and the run is still counted as a success."
 msgstr "If it does not match, the steps after this one are skipped and the run is still counted as a success."
 
-#: src/components/flows/flow-settings.tsx:376
+#: src/components/flows/flow-settings.tsx:391
 msgid "If this step fails"
 msgstr "If this step fails"
 
@@ -2426,7 +2434,7 @@ msgstr "Interactive docs"
 msgid "Invitations"
 msgstr "Invitations"
 
-#: src/components/flows/flow-settings.tsx:353
+#: src/components/flows/flow-settings.tsx:368
 msgid "is exactly"
 msgstr "is exactly"
 
@@ -2451,7 +2459,7 @@ msgstr "It can then do what you can"
 msgid "It could not be allowed"
 msgstr "It could not be allowed"
 
-#: src/components/flows/flow-accounts.tsx:99
+#: src/components/flows/flow-accounts.tsx:110
 msgid "It did not go"
 msgstr "It did not go"
 
@@ -2475,8 +2483,8 @@ msgstr "It ran, and every step worked"
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "It runs with CMS_API_URL and SITE_URL set to this site's address."
 
-#: src/components/flows/flow-accounts.tsx:96
-#: src/components/flows/flow-accounts.tsx:96
+#: src/components/flows/flow-accounts.tsx:107
+#: src/components/flows/flow-accounts.tsx:107
 msgid "It went"
 msgstr "It went"
 
@@ -2668,7 +2676,7 @@ msgstr "Long text"
 msgid "Made {0}"
 msgstr "Made {0}"
 
-#: src/components/flows/flow-settings.tsx:242
+#: src/components/flows/flow-settings.tsx:257
 msgid "Made in the channel's own settings, under incoming webhooks. Anybody holding it can post to that channel, so it is treated as a password and kept out of the run record."
 msgstr "Made in the channel's own settings, under incoming webhooks. Anybody holding it can post to that channel, so it is treated as a password and kept out of the run record."
 
@@ -2769,8 +2777,8 @@ msgid "Merge cells"
 msgstr "Merge cells"
 
 #: src/components/flows/flow-settings.tsx:208
-#: src/components/flows/flow-settings.tsx:246
-#: src/components/flows/flow-settings.tsx:276
+#: src/components/flows/flow-settings.tsx:261
+#: src/components/flows/flow-settings.tsx:291
 msgid "Message"
 msgstr "Message"
 
@@ -2786,7 +2794,7 @@ msgstr "Messages a day"
 msgid "Messages a second"
 msgstr "Messages a second"
 
-#: src/components/flows/flow-settings.tsx:299
+#: src/components/flows/flow-settings.tsx:314
 msgid "Method"
 msgstr "Method"
 
@@ -2798,7 +2806,7 @@ msgstr "Mono"
 msgid "More"
 msgstr "More"
 
-#: src/components/flows/flow-accounts.tsx:243
+#: src/components/flows/flow-accounts.tsx:278
 msgid "Most servers refuse to send as an address the account does not own. 465 is TLS from the start, 587 upgrades — the port decides unless you know otherwise."
 msgstr "Most servers refuse to send as an address the account does not own. 465 is TLS from the start, 587 upgrades — the port decides unless you know otherwise."
 
@@ -2820,7 +2828,7 @@ msgstr "Must be filled in"
 msgid "My Mavi CMS Site"
 msgstr "My Mavi CMS Site"
 
-#: src/components/flows/flow-accounts.tsx:185
+#: src/components/flows/flow-accounts.tsx:220
 #: src/components/ses-account.tsx:838
 #: src/routes/dashboard.flows.tsx:312
 #: src/routes/dashboard.forms.tsx:160
@@ -2931,7 +2939,7 @@ msgstr "No"
 msgid "No {many} yet"
 msgstr "No {many} yet"
 
-#: src/components/flows/flow-accounts.tsx:126
+#: src/components/flows/flow-accounts.tsx:147
 msgid "No accounts yet. Without one, an email step sends with the site's own mail settings."
 msgstr "No accounts yet. Without one, an email step sends with the site's own mail settings."
 
@@ -3213,7 +3221,7 @@ msgstr "One post, with its other languages."
 msgid "one step"
 msgstr "one step"
 
-#: src/components/flows/flow-settings.tsx:327
+#: src/components/flows/flow-settings.tsx:342
 msgid "Only addresses on the public internet. An address inside this cluster is refused, which is what keeps a flow from being a way to read the server's own services."
 msgstr "Only addresses on the public internet. An address inside this cluster is refused, which is what keeps a flow from being a way to read the server's own services."
 
@@ -3333,7 +3341,7 @@ msgstr "Pages"
 msgid "Paragraph"
 msgstr "Paragraph"
 
-#: src/components/flows/flow-accounts.tsx:225
+#: src/components/flows/flow-accounts.tsx:260
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console_.login.tsx:94
@@ -3418,6 +3426,10 @@ msgstr "Pink"
 msgid "plain text"
 msgstr "plain text"
 
+#: src/components/flows/flow-settings.tsx:226
+msgid "Plain text"
+msgstr "Plain text"
+
 #: src/components/editor/extensions/slash-command.tsx:56
 msgid "Plain text block"
 msgstr "Plain text block"
@@ -3435,7 +3447,7 @@ msgstr "Plugins"
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Point the address at this server first — the site answers on whichever address you give it here."
 
-#: src/components/flows/flow-accounts.tsx:207
+#: src/components/flows/flow-accounts.tsx:242
 #: src/components/setup/setup-wizard.tsx:496
 msgid "Port"
 msgstr "Port"
@@ -3817,7 +3829,7 @@ msgstr "Sandbox"
 #: src/components/console-build-token.tsx:59
 #: src/components/editor/mavi-editor.tsx:728
 #: src/components/editor/mavi-editor.tsx:732
-#: src/components/flows/flow-accounts.tsx:267
+#: src/components/flows/flow-accounts.tsx:302
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
 #: src/routes/console.account.tsx:119
@@ -3846,7 +3858,7 @@ msgstr "Save the flow and an address appears here. Anything sent to it sets this
 
 #: src/components/console-build-token.tsx:26
 #: src/components/editor/status-bar.tsx:116
-#: src/components/flows/flow-accounts.tsx:80
+#: src/components/flows/flow-accounts.tsx:91
 #: src/components/site-mail.tsx:78
 #: src/routes/console.account.tsx:41
 #: src/routes/console.sites.$siteId.tsx:165
@@ -3935,13 +3947,13 @@ msgstr "Send"
 msgid "Send a form's answers. No account needed."
 msgstr "Send a form's answers. No account needed."
 
-#: src/components/flows/flow-accounts.tsx:148
+#: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
 #: src/routes/dashboard.plugins_.email.tsx:156
 msgid "Send a test"
 msgstr "Send a test"
 
-#: src/components/flows/flow-accounts.tsx:91
+#: src/components/flows/flow-accounts.tsx:102
 msgid "Send a test message to which address?"
 msgstr "Send a test message to which address?"
 
@@ -3950,7 +3962,7 @@ msgstr "Send a test message to which address?"
 msgid "Send an email"
 msgstr "Send an email"
 
-#: src/components/flows/flow-accounts.tsx:235
+#: src/components/flows/flow-accounts.tsx:270
 msgid "Send as"
 msgstr "Send as"
 
@@ -4052,7 +4064,7 @@ msgstr "Separated by commas"
 msgid "Serif"
 msgstr "Serif"
 
-#: src/components/flows/flow-accounts.tsx:198
+#: src/components/flows/flow-accounts.tsx:233
 msgid "Server"
 msgstr "Server"
 
@@ -4232,7 +4244,7 @@ msgstr "Stop"
 msgid "Stop all sending"
 msgstr "Stop all sending"
 
-#: src/components/flows/flow-settings.tsx:382
+#: src/components/flows/flow-settings.tsx:397
 msgid "Stop the whole flow"
 msgstr "Stop the whole flow"
 
@@ -4433,7 +4445,7 @@ msgstr "Text color"
 msgid "Text shown in search results"
 msgstr "Text shown in search results"
 
-#: src/components/flows/flow-settings.tsx:361
+#: src/components/flows/flow-settings.tsx:376
 msgid "That"
 msgstr "That"
 
@@ -4466,7 +4478,7 @@ msgstr "The build runs with these. A name already here is replaced; the others a
 msgid "The ceiling on this account today. Sending stops at it rather than queueing."
 msgstr "The ceiling on this account today. Sending stops at it rather than queueing."
 
-#: src/components/flows/flow-settings.tsx:232
+#: src/components/flows/flow-settings.tsx:247
 msgid "The channel's address"
 msgstr "The channel's address"
 
@@ -4546,11 +4558,11 @@ msgstr "The server is taking longer than expected to restart. Reload this page i
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 
-#: src/components/flows/flow-settings.tsx:221
+#: src/components/flows/flow-settings.tsx:236
 msgid "The site's own mail settings"
 msgstr "The site's own mail settings"
 
-#: src/components/flows/flow-accounts.tsx:240
+#: src/components/flows/flow-accounts.tsx:275
 msgid "The username, if left empty"
 msgstr "The username, if left empty"
 
@@ -4579,7 +4591,7 @@ msgstr "These figures come from Amazon's deliverability manager, which has to be
 msgid "They can write, publish and manage this site."
 msgstr "They can write, publish and manage this site."
 
-#: src/components/flows/flow-settings.tsx:335
+#: src/components/flows/flow-settings.tsx:350
 msgid "This"
 msgstr "This"
 
@@ -4753,7 +4765,7 @@ msgstr "Use S3 for new uploads"
 msgid "Use this one by default"
 msgstr "Use this one by default"
 
-#: src/components/flows/flow-accounts.tsx:216
+#: src/components/flows/flow-accounts.tsx:251
 #: src/components/setup/setup-wizard.tsx:519
 #: src/components/setup/setup-wizard.tsx:680
 #: src/routes/dashboard.users.tsx:262
@@ -4809,7 +4821,7 @@ msgstr "waiting for DNS"
 msgid "Waiting to be thrown away"
 msgstr "Waiting to be thrown away"
 
-#: src/components/flows/flow-settings.tsx:355
+#: src/components/flows/flow-settings.tsx:370
 msgid "was filled in"
 msgstr "was filled in"
 
@@ -4874,7 +4886,7 @@ msgstr "What it is"
 msgid "What it is for"
 msgstr "What it is for"
 
-#: src/components/flows/flow-accounts.tsx:172
+#: src/components/flows/flow-accounts.tsx:207
 msgid "What kind"
 msgstr "What kind"
 
@@ -4906,7 +4918,7 @@ msgstr "What this site publishes"
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 
-#: src/components/flows/flow-settings.tsx:317
+#: src/components/flows/flow-settings.tsx:332
 msgid "What to send"
 msgstr "What to send"
 
@@ -4914,7 +4926,7 @@ msgstr "What to send"
 msgid "What you have asked for"
 msgstr "What you have asked for"
 
-#: src/components/flows/flow-accounts.tsx:190
+#: src/components/flows/flow-accounts.tsx:225
 msgid "What you will recognise it by"
 msgstr "What you will recognise it by"
 
@@ -5030,7 +5042,7 @@ msgstr "Wire up the events"
 msgid "Wired up. Events go to {0} and arrive here."
 msgstr "Wired up. Events go to {0} and arrive here."
 
-#: src/components/flows/flow-settings.tsx:224
+#: src/components/flows/flow-settings.tsx:239
 msgid "With no account chosen it goes through whatever the site has set up under Plugins → Email."
 msgstr "With no account chosen it goes through whatever the site has set up under Plugins → Email."
 
@@ -5061,6 +5073,10 @@ msgstr "Write a post."
 #: src/routes/dashboard.api.tsx:336
 msgid "Writing"
 msgstr "Writing"
+
+#: src/components/flows/flow-settings.tsx:217
+msgid "Written as"
+msgstr "Written as"
 
 #: src/components/editor/palette.ts:20
 #: src/components/editor/palette.ts:34

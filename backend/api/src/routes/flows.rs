@@ -586,6 +586,61 @@ pub async fn create_credential(
     ))
 }
 
+/// Changes one, in place, so that every step naming it follows.
+///
+/// The alternative — delete and make another — hands out a new id, and every
+/// step pointing at the old one has to be found and re-pointed. Rotating a
+/// password should not be an errand.
+#[utoipa::path(
+    put,
+    path = "/flows/credentials/{id}",
+    tag = "flows",
+    params(("id" = String, Path, description = "Credential id")),
+    request_body = SaveCredential,
+    responses(
+        (status = 200, description = "Changed", body = CredentialResponse),
+        (status = 404, description = "No such account", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn update_credential(
+    Site(state): Site,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<SaveCredential>,
+) -> AppResult<Json<CredentialResponse>> {
+    let db = state.db_or_unavailable()?;
+    let found = crate::entities::flow_credential::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound("that account".to_string()))?;
+
+    // The kind is fixed: a step naming this expects a mailbox, and turning it
+    // into a bot underneath that step is a failure at the worst moment.
+    if found.kind != payload.kind.trim() {
+        return Err(AppError::Validation(format!(
+            "this is a {} account and cannot become a {} one",
+            found.kind,
+            payload.kind.trim()
+        )));
+    }
+    if found.kind == flows::credential::SMTP {
+        let account: crate::smtp::SmtpAccount = serde_json::from_value(payload.secret.clone())
+            .map_err(|err| AppError::Validation(format!("that is not an SMTP account: {err}")))?;
+        crate::smtp::looks_usable(&account)?;
+    }
+
+    let mut row: crate::entities::flow_credential::ActiveModel = found.into();
+    row.name = Set(cleaned_name(&payload.name)?);
+    row.secret = Set(state.secrets.encrypt(&payload.secret.to_string())?);
+    let saved = row.update(db).await?;
+
+    Ok(Json(CredentialResponse {
+        id: saved.id.to_string(),
+        name: saved.name,
+        kind: saved.kind,
+        created_at: saved.created_at.to_rfc3339(),
+    }))
+}
+
 /// Takes one away. A step still naming it says so when it next runs, rather
 /// than the account quietly becoming a different one.
 #[utoipa::path(

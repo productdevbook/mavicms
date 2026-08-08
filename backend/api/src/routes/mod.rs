@@ -167,7 +167,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(flows::list_runs))
         .routes(routes!(flows::get_run))
         .routes(routes!(flows::list_credentials, flows::create_credential))
-        .routes(routes!(flows::delete_credential))
+        .routes(routes!(flows::update_credential, flows::delete_credential))
         .routes(routes!(flows::test_credential))
         .routes(routes!(sites::list_sites, sites::create_site))
         .routes(routes!(sites::update_site))

@@ -9,6 +9,7 @@ import {
   deleteFlowCredential,
   getFlowCredentials,
   testFlowCredential,
+  updateFlowCredential,
   type FlowCredential,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -44,6 +45,10 @@ export function FlowAccounts({ onChanged }: { onChanged?: () => void }) {
   const [from, setFrom] = React.useState("")
   const [token, setToken] = React.useState("")
   const [testing, setTesting] = React.useState<string | null>(null)
+  // The id being changed, or null when this is a new one. What is stored never
+  // comes back, so editing means typing the password again — which is the
+  // honest shape for a thing the server cannot show you.
+  const [editing, setEditing] = React.useState<string | null>(null)
 
   const load = React.useCallback(() => {
     getFlowCredentials()
@@ -56,7 +61,7 @@ export function FlowAccounts({ onChanged }: { onChanged?: () => void }) {
   const save = async () => {
     setBusy(true)
     try {
-      await createFlowCredential({
+      const payload = {
         name: name.trim(),
         kind,
         secret:
@@ -70,8 +75,14 @@ export function FlowAccounts({ onChanged }: { onChanged?: () => void }) {
                 from_name: "",
               }
             : { token: token.trim() },
-      })
+      }
+      if (editing) {
+        await updateFlowCredential(editing, payload)
+      } else {
+        await createFlowCredential(payload)
+      }
       setAdding(false)
+      setEditing(null)
       setName("")
       setPassword("")
       setToken("")
@@ -112,7 +123,17 @@ export function FlowAccounts({ onChanged }: { onChanged?: () => void }) {
             {t`A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again.`}
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setEditing(null)
+            setName("")
+            setPassword("")
+            setToken("")
+            setAdding(true)
+          }}
+        >
           <Plus /> {t`Add`}
         </Button>
       </div>
@@ -133,6 +154,20 @@ export function FlowAccounts({ onChanged }: { onChanged?: () => void }) {
                 <p className="truncate text-sm font-medium">{one.name}</p>
                 <p className="text-xs text-muted-foreground">{one.kind}</p>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setEditing(one.id)
+                  setKind(one.kind)
+                  setName(one.name)
+                  setPassword("")
+                  setToken("")
+                  setAdding(true)
+                }}
+              >
+                {t`Change`}
+              </Button>
               {one.kind === "smtp" ? (
                 <Button
                   variant="outline"
@@ -266,7 +301,13 @@ export function FlowAccounts({ onChanged }: { onChanged?: () => void }) {
               {busy ? <Loader2 className="animate-spin" /> : null}
               {t`Save`}
             </Button>
-            <Button variant="ghost" onClick={() => setAdding(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setAdding(false)
+                setEditing(null)
+              }}
+            >
               {t`Cancel`}
             </Button>
           </div>

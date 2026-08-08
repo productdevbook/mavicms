@@ -415,6 +415,36 @@ pub const TOOLS: &[Tool] = &[
         },
     },
     Tool {
+        name: "flows_list",
+        title: "What this site does on its own",
+        description: "The site's flows: what sets each one off, what it does, and whether it is \
+            switched on. Read this before adding one — a site that already emails somebody when a \
+            form arrives does not want two of them — and read it when somebody says an email did \
+            or did not arrive.",
+        writes: false,
+        destroys: false,
+        schema: || json!({ "type": "object", "additionalProperties": false, "properties": {} }),
+    },
+    Tool {
+        name: "flow_runs",
+        title: "Whether the flows have been working",
+        description: "The last runs, newest first, with what set each one off and what went \
+            wrong. This is the answer to \"did it send\" — a flow that looks right and has failed \
+            forty times says so here and nowhere else.",
+        writes: false,
+        destroys: false,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "flow_id": { "type": "string", "description": "Only this flow's runs" },
+                    "limit": { "type": "integer", "description": "Up to 200. Default 20." }
+                }
+            })
+        },
+    },
+    Tool {
         name: "trash_list",
         title: "What has been deleted",
         description: "Everything deleted in the last thirty days and still recoverable: posts, \
@@ -481,6 +511,8 @@ pub async fn call(
         "forms_create" => make_form(db, arguments).await,
         "form_mark_seen" => mark_seen(db, arguments).await,
         "form_submission_delete" => throw_away(db, who, arguments).await,
+        "flows_list" => the_flows(db).await,
+        "flow_runs" => the_runs(db, arguments).await,
         "trash_list" => in_the_bin(db).await,
         "trash_restore" => put_back(db, arguments).await,
         "publish_site" => publish(hosting, resolved).await,
@@ -1127,6 +1159,65 @@ async fn mark_seen(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppRe
 }
 
 /// What has been deleted and can still be got back.
+async fn the_flows(db: &sea_orm::DatabaseConnection) -> AppResult<Value> {
+    use crate::entities::{flow, flow_step};
+    use sea_orm::{ColumnTrait, EntityTrait, QueryFilter, QueryOrder};
+
+    let mut out = Vec::new();
+    for found in flow::Entity::find()
+        .order_by_asc(flow::Column::Name)
+        .all(db)
+        .await?
+    {
+        let steps = flow_step::Entity::find()
+            .filter(flow_step::Column::FlowId.eq(found.id))
+            .order_by_asc(flow_step::Column::Position)
+            .all(db)
+            .await?;
+        out.push(json!({
+            "id": found.id,
+            "name": found.name,
+            "starts_when": found.trigger_kind,
+            "enabled": found.enabled,
+            // Not the settings: a step's settings hold a Slack address and a
+            // Telegram chat, and this answer is read by a model and lands in
+            // somebody's transcript.
+            "does": steps.iter().map(|step| step.action.clone()).collect::<Vec<_>>(),
+        }));
+    }
+    Ok(json!({ "flows": out }))
+}
+
+async fn the_runs(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    use crate::entities::flow_run;
+    use sea_orm::{ColumnTrait, EntityTrait, QueryFilter, QueryOrder, QuerySelect};
+
+    let mut find = flow_run::Entity::find();
+    if let Some(id) = text(arguments, "flow_id")
+        && let Ok(parsed) = uuid::Uuid::parse_str(id.trim())
+    {
+        find = find.filter(flow_run::Column::FlowId.eq(parsed));
+    }
+
+    let rows = find
+        .order_by_desc(flow_run::Column::CreatedAt)
+        .limit(rows(arguments, 20))
+        .all(db)
+        .await?;
+
+    Ok(json!({
+        "runs": rows
+            .into_iter()
+            .map(|run| json!({
+                "flow_id": run.flow_id,
+                "status": run.status,
+                "error": run.error,
+                "at": run.created_at.to_rfc3339(),
+            }))
+            .collect::<Vec<_>>()
+    }))
+}
+
 async fn in_the_bin(db: &sea_orm::DatabaseConnection) -> AppResult<Value> {
     let entries = crate::trash::list(db).await?;
     Ok(json!({

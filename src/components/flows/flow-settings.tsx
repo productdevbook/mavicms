@@ -213,6 +213,21 @@ export function StepSettings({
               onChange={(event) => set("body", event.target.value)}
             />
           </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="step-html">{t`Written as`}</Label>
+            <Select
+              value={config.html === true ? "html" : "text"}
+              onValueChange={(value) => set("html", value === "html")}
+            >
+              <SelectTrigger id="step-html">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="text">{t`Plain text`}</SelectItem>
+                <SelectItem value="html">{t`HTML`}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <AccountPicker
             kind="smtp"
             accounts={accounts}

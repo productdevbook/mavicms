@@ -996,6 +996,16 @@ export function createFlowCredential(payload: {
   })
 }
 
+export function updateFlowCredential(
+  id: string,
+  payload: { name: string; kind: string; secret: Record<string, unknown> }
+): Promise<FlowCredential> {
+  return request<FlowCredential>(`/flows/credentials/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
 export function deleteFlowCredential(id: string): Promise<void> {
   return request<void>(`/flows/credentials/${id}`, { method: "DELETE" })
 }

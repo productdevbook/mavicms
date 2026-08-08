@@ -340,11 +340,11 @@ msgstr "Yanında bir anahtar gitti, {until} tarihine kadar geçerli"
 msgid "A listing leaves the bodies out, because a whole archive in one response is megabytes nobody asked for. Ask for them with include=content."
 msgstr "Liste, yazıların gövdesini vermez; bütün arşivi tek yanıtta göndermek kimsenin istemediği megabaytlar demek. Gövdeler için include=content ekleyin."
 
-#: src/components/flows/flow-accounts.tsx:178
+#: src/components/flows/flow-accounts.tsx:213
 msgid "A mailbox (SMTP)"
 msgstr "Bir posta kutusu (SMTP)"
 
-#: src/components/flows/flow-accounts.tsx:112
+#: src/components/flows/flow-accounts.tsx:123
 msgid "A mailbox to send from, or a bot to post as. Kept encrypted, and never shown again."
 msgstr "Gönderilecek bir posta kutusu ya da adına yazılacak bir bot. Şifreli saklanır ve bir daha gösterilmez."
 
@@ -381,7 +381,7 @@ msgstr "Zamanlanmış bir yazının bir yayın tarihi olmalı"
 msgid "a second, at most"
 msgstr "saniyede en fazla"
 
-#: src/components/flows/flow-accounts.tsx:179
+#: src/components/flows/flow-accounts.tsx:214
 msgid "A Telegram bot"
 msgstr "Bir Telegram botu"
 
@@ -424,7 +424,7 @@ msgstr "Hesap"
 msgid "Account added"
 msgstr "Hesap eklendi"
 
-#: src/components/flows/flow-accounts.tsx:110
+#: src/components/flows/flow-accounts.tsx:121
 msgid "Accounts"
 msgstr "Hesaplar"
 
@@ -433,7 +433,7 @@ msgid "Active"
 msgstr "Etkin"
 
 #: src/components/editor/dialogs.tsx:200
-#: src/components/flows/flow-accounts.tsx:116
+#: src/components/flows/flow-accounts.tsx:137
 #: src/components/plugin-forms.tsx:423
 #: src/components/publish-panel.tsx:165
 #: src/routes/dashboard.mail.tsx:600
@@ -543,7 +543,7 @@ msgid "Added here counts as confirmed — say so only if they asked to be on it.
 msgstr "Buradan eklemek onaylı sayılır — yalnızca listede olmayı kendileri istediyse ekleyin."
 
 #: src/components/editor/dialogs.tsx:300
-#: src/components/flows/flow-settings.tsx:290
+#: src/components/flows/flow-settings.tsx:305
 #: src/routes/console.index.tsx:152
 #: src/routes/dashboard.api.tsx:299
 #: src/routes/dashboard.forms.tsx:264
@@ -880,7 +880,7 @@ msgstr "Mavi"
 msgid "Bold"
 msgstr "Kalın"
 
-#: src/components/flows/flow-accounts.tsx:249
+#: src/components/flows/flow-accounts.tsx:284
 msgid "Bot token"
 msgstr "Bot jetonu"
 
@@ -960,7 +960,7 @@ msgstr "gönderebilir"
 #: src/components/editor/dialogs.tsx:198
 #: src/components/editor/dialogs.tsx:238
 #: src/components/editor/dialogs.tsx:324
-#: src/components/flows/flow-accounts.tsx:270
+#: src/components/flows/flow-accounts.tsx:311
 #: src/routes/console.index.tsx:164
 #: src/routes/dashboard.categories.tsx:298
 #: src/routes/dashboard.categories.tsx:341
@@ -997,7 +997,7 @@ msgstr "Canonical URL"
 msgid "Carry on"
 msgstr "Devam et"
 
-#: src/components/flows/flow-settings.tsx:383
+#: src/components/flows/flow-settings.tsx:398
 msgid "Carry on anyway"
 msgstr "Yine de devam et"
 
@@ -1026,6 +1026,10 @@ msgstr "Kategori"
 msgid "Center the paragraph"
 msgstr "Paragrafı ortala"
 
+#: src/components/flows/flow-accounts.tsx:169
+msgid "Change"
+msgstr "Değiştir"
+
 #: src/routes/dashboard.users.tsx:243
 msgid "Change it"
 msgstr "Değiştir"
@@ -1038,7 +1042,7 @@ msgstr "Bir yazıyı değiştirir."
 msgid "Changes things"
 msgstr "Bir şeyleri değiştirir"
 
-#: src/components/flows/flow-settings.tsx:267
+#: src/components/flows/flow-settings.tsx:282
 msgid "Chat id"
 msgstr "Sohbet kimliği"
 
@@ -1054,7 +1058,7 @@ msgstr "Seçenekler"
 msgid "Choose"
 msgstr "Seçin"
 
-#: src/components/flows/flow-settings.tsx:264
+#: src/components/flows/flow-settings.tsx:279
 msgid "Choose a bot"
 msgstr "Bir bot seçin"
 
@@ -1124,7 +1128,7 @@ msgstr "Komut menüsü"
 msgid "Comments"
 msgstr "Yorumlar"
 
-#: src/components/flows/flow-settings.tsx:344
+#: src/components/flows/flow-settings.tsx:359
 msgid "Compared how"
 msgstr "Nasıl karşılaştırılsın"
 
@@ -1192,7 +1196,7 @@ msgstr "Bağlantı URL'si"
 msgid "Contact form to the inbox"
 msgstr "İletişim formu gelen kutusuna"
 
-#: src/components/flows/flow-settings.tsx:354
+#: src/components/flows/flow-settings.tsx:369
 msgid "contains"
 msgstr "içeriyor"
 
@@ -1566,7 +1570,7 @@ msgstr "Ayarlar kaydedilemedi"
 msgid "Could not save tag"
 msgstr "Etiket kaydedilemedi"
 
-#: src/components/flows/flow-accounts.tsx:83
+#: src/components/flows/flow-accounts.tsx:94
 msgid "Could not save the account"
 msgstr "Hesap kaydedilemedi"
 
@@ -1755,7 +1759,7 @@ msgstr "Varsayılan"
 #: src/components/dashboard/content-list.tsx:275
 #: src/components/editor/block-handle.tsx:186
 #: src/components/editor/bubble-menus.tsx:415
-#: src/components/flows/flow-accounts.tsx:154
+#: src/components/flows/flow-accounts.tsx:189
 #: src/routes/dashboard.categories.tsx:317
 #: src/routes/dashboard.categories.tsx:343
 #: src/routes/dashboard.flows.tsx:264
@@ -2101,7 +2105,7 @@ msgstr "Formlar"
 msgid "From address"
 msgstr "Gönderen adresi"
 
-#: src/components/flows/flow-accounts.tsx:259
+#: src/components/flows/flow-accounts.tsx:294
 msgid "From BotFather. The step also needs the chat's id, which you give it there."
 msgstr "BotFather'dan alınır. Adımın ayrıca sohbet kimliğine ihtiyacı var, onu da orada verirsiniz."
 
@@ -2308,6 +2312,10 @@ msgstr "Buraya nasıl gönderilir"
 #~ msgid "How your sites are read when they are built."
 #~ msgstr "Siteleriniz derlenirken nasıl okunuyor."
 
+#: src/components/flows/flow-settings.tsx:227
+msgid "HTML"
+msgstr "HTML"
+
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:341
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} ve {{ unsubscribe_url }} her kişi için doldurulur; kişi hakkında tuttuğunuz diğer alanlar da öyle. Düz metin bölümü bundan kendiliğinden üretilir."
@@ -2320,11 +2328,11 @@ msgstr "Zaten hesabım var"
 msgid "IAM users"
 msgstr "IAM kullanıcıları"
 
-#: src/components/flows/flow-settings.tsx:370
+#: src/components/flows/flow-settings.tsx:385
 msgid "If it does not match, the steps after this one are skipped and the run is still counted as a success."
 msgstr "Eşleşmezse bundan sonraki adımlar atlanır ve çalıştırma yine başarılı sayılır."
 
-#: src/components/flows/flow-settings.tsx:376
+#: src/components/flows/flow-settings.tsx:391
 msgid "If this step fails"
 msgstr "Bu adım başarısız olursa"
 
@@ -2422,7 +2430,7 @@ msgstr "Etkileşimli belgeler"
 msgid "Invitations"
 msgstr "Davetler"
 
-#: src/components/flows/flow-settings.tsx:353
+#: src/components/flows/flow-settings.tsx:368
 msgid "is exactly"
 msgstr "tam olarak eşit"
 
@@ -2447,7 +2455,7 @@ msgstr "Artık sizin yapabildiklerinizi yapabilir"
 msgid "It could not be allowed"
 msgstr "İzin verilemedi"
 
-#: src/components/flows/flow-accounts.tsx:99
+#: src/components/flows/flow-accounts.tsx:110
 msgid "It did not go"
 msgstr "Gitmedi"
 
@@ -2471,8 +2479,8 @@ msgstr "Çalıştı, bütün adımlar başarılı"
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "CMS_API_URL ve SITE_URL bu sitenin adresine ayarlı olarak çalışır."
 
-#: src/components/flows/flow-accounts.tsx:96
-#: src/components/flows/flow-accounts.tsx:96
+#: src/components/flows/flow-accounts.tsx:107
+#: src/components/flows/flow-accounts.tsx:107
 msgid "It went"
 msgstr "Gitti"
 
@@ -2664,7 +2672,7 @@ msgstr "Uzun metin"
 msgid "Made {0}"
 msgstr "{0} tarihinde üretildi"
 
-#: src/components/flows/flow-settings.tsx:242
+#: src/components/flows/flow-settings.tsx:257
 msgid "Made in the channel's own settings, under incoming webhooks. Anybody holding it can post to that channel, so it is treated as a password and kept out of the run record."
 msgstr "Kanalın kendi ayarlarında, gelen webhook'lar altında üretilir. Elinde tutan herkes o kanala mesaj atabilir; bu yüzden parola gibi davranılır ve çalıştırma kaydına yazılmaz."
 
@@ -2765,8 +2773,8 @@ msgid "Merge cells"
 msgstr "Hücreleri birleştir"
 
 #: src/components/flows/flow-settings.tsx:208
-#: src/components/flows/flow-settings.tsx:246
-#: src/components/flows/flow-settings.tsx:276
+#: src/components/flows/flow-settings.tsx:261
+#: src/components/flows/flow-settings.tsx:291
 msgid "Message"
 msgstr "Mesaj"
 
@@ -2782,7 +2790,7 @@ msgstr "Günde mesaj"
 msgid "Messages a second"
 msgstr "Saniyede mesaj"
 
-#: src/components/flows/flow-settings.tsx:299
+#: src/components/flows/flow-settings.tsx:314
 msgid "Method"
 msgstr "Yöntem"
 
@@ -2794,7 +2802,7 @@ msgstr "Eş aralıklı"
 msgid "More"
 msgstr "Daha fazla"
 
-#: src/components/flows/flow-accounts.tsx:243
+#: src/components/flows/flow-accounts.tsx:278
 msgid "Most servers refuse to send as an address the account does not own. 465 is TLS from the start, 587 upgrades — the port decides unless you know otherwise."
 msgstr "Çoğu sunucu, hesabın sahibi olmadığı bir adresten göndermeyi reddeder. 465 baştan TLS, 587 sonradan yükseltir — aksini bilmiyorsanız portu esas alır."
 
@@ -2816,7 +2824,7 @@ msgstr "Doldurulması zorunlu"
 msgid "My Mavi CMS Site"
 msgstr "Mavi CMS Sitem"
 
-#: src/components/flows/flow-accounts.tsx:185
+#: src/components/flows/flow-accounts.tsx:220
 #: src/components/ses-account.tsx:838
 #: src/routes/dashboard.flows.tsx:312
 #: src/routes/dashboard.forms.tsx:160
@@ -2927,7 +2935,7 @@ msgstr "Hayır"
 msgid "No {many} yet"
 msgstr "Henüz {many} yok"
 
-#: src/components/flows/flow-accounts.tsx:126
+#: src/components/flows/flow-accounts.tsx:147
 msgid "No accounts yet. Without one, an email step sends with the site's own mail settings."
 msgstr "Henüz hesap yok. Hesap olmadan e-posta adımı, sitenin kendi e-posta ayarlarıyla gönderir."
 
@@ -3209,7 +3217,7 @@ msgstr "Tek yazı, diğer dilleriyle birlikte."
 msgid "one step"
 msgstr "tek adım"
 
-#: src/components/flows/flow-settings.tsx:327
+#: src/components/flows/flow-settings.tsx:342
 msgid "Only addresses on the public internet. An address inside this cluster is refused, which is what keeps a flow from being a way to read the server's own services."
 msgstr "Yalnızca internete açık adresler. Kümenin içindeki bir adres reddedilir; akışın sunucunun kendi servislerini okumanın bir yolu olmasını engelleyen şey budur."
 
@@ -3329,7 +3337,7 @@ msgstr "Sayfalar"
 msgid "Paragraph"
 msgstr "Paragraf"
 
-#: src/components/flows/flow-accounts.tsx:225
+#: src/components/flows/flow-accounts.tsx:260
 #: src/components/setup/setup-wizard.tsx:529
 #: src/components/setup/setup-wizard.tsx:716
 #: src/routes/console_.login.tsx:94
@@ -3414,6 +3422,10 @@ msgstr "Pembe"
 msgid "plain text"
 msgstr "düz metin"
 
+#: src/components/flows/flow-settings.tsx:226
+msgid "Plain text"
+msgstr "Düz metin"
+
 #: src/components/editor/extensions/slash-command.tsx:56
 msgid "Plain text block"
 msgstr "Düz metin bloğu"
@@ -3431,7 +3443,7 @@ msgstr "Eklentiler"
 msgid "Point the address at this server first — the site answers on whichever address you give it here."
 msgstr "Önce adresi bu sunucuya yönlendirin — site burada verdiğiniz adres üzerinden yanıt verir."
 
-#: src/components/flows/flow-accounts.tsx:207
+#: src/components/flows/flow-accounts.tsx:242
 #: src/components/setup/setup-wizard.tsx:496
 msgid "Port"
 msgstr "Port"
@@ -3813,7 +3825,7 @@ msgstr "Kum havuzu"
 #: src/components/console-build-token.tsx:59
 #: src/components/editor/mavi-editor.tsx:728
 #: src/components/editor/mavi-editor.tsx:732
-#: src/components/flows/flow-accounts.tsx:267
+#: src/components/flows/flow-accounts.tsx:302
 #: src/components/publish-panel.tsx:264
 #: src/components/site-mail.tsx:137
 #: src/routes/console.account.tsx:119
@@ -3842,7 +3854,7 @@ msgstr "Akışı kaydedin, adres burada belirir. Oraya gönderilen her şey bunu
 
 #: src/components/console-build-token.tsx:26
 #: src/components/editor/status-bar.tsx:116
-#: src/components/flows/flow-accounts.tsx:80
+#: src/components/flows/flow-accounts.tsx:91
 #: src/components/site-mail.tsx:78
 #: src/routes/console.account.tsx:41
 #: src/routes/console.sites.$siteId.tsx:165
@@ -3931,13 +3943,13 @@ msgstr "Gönder"
 msgid "Send a form's answers. No account needed."
 msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
 
-#: src/components/flows/flow-accounts.tsx:148
+#: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
 #: src/routes/dashboard.plugins_.email.tsx:156
 msgid "Send a test"
 msgstr "Deneme gönder"
 
-#: src/components/flows/flow-accounts.tsx:91
+#: src/components/flows/flow-accounts.tsx:102
 msgid "Send a test message to which address?"
 msgstr "Deneme mesajı hangi adrese gönderilsin?"
 
@@ -3946,7 +3958,7 @@ msgstr "Deneme mesajı hangi adrese gönderilsin?"
 msgid "Send an email"
 msgstr "E-posta gönder"
 
-#: src/components/flows/flow-accounts.tsx:235
+#: src/components/flows/flow-accounts.tsx:270
 msgid "Send as"
 msgstr "Gönderen adres"
 
@@ -4048,7 +4060,7 @@ msgstr "Virgülle ayırın"
 msgid "Serif"
 msgstr "Tırnaklı"
 
-#: src/components/flows/flow-accounts.tsx:198
+#: src/components/flows/flow-accounts.tsx:233
 msgid "Server"
 msgstr "Sunucu"
 
@@ -4228,7 +4240,7 @@ msgstr "Durdur"
 msgid "Stop all sending"
 msgstr "Tüm gönderimi durdur"
 
-#: src/components/flows/flow-settings.tsx:382
+#: src/components/flows/flow-settings.tsx:397
 msgid "Stop the whole flow"
 msgstr "Bütün akışı durdur"
 
@@ -4429,7 +4441,7 @@ msgstr "Metin rengi"
 msgid "Text shown in search results"
 msgstr "Arama sonuçlarında görünecek metin"
 
-#: src/components/flows/flow-settings.tsx:361
+#: src/components/flows/flow-settings.tsx:376
 msgid "That"
 msgstr "Şuna"
 
@@ -4462,7 +4474,7 @@ msgstr "Derleme bunlarla çalışır. Aynı isim varsa üzerine yazılır, diğe
 msgid "The ceiling on this account today. Sending stops at it rather than queueing."
 msgstr "Bu hesabın bugünkü tavanı. Gönderim buraya gelince sıraya girmez, durur."
 
-#: src/components/flows/flow-settings.tsx:232
+#: src/components/flows/flow-settings.tsx:247
 msgid "The channel's address"
 msgstr "Kanalın adresi"
 
@@ -4542,11 +4554,11 @@ msgstr "Sunucunun yeniden başlaması beklenenden uzun sürüyor. Bir süre sonr
 msgid "The site gets a schema of its own on this server's database. One that outgrows it can be given an address of its own here."
 msgstr "Site, bu sunucunun veritabanında kendi şemasını alır. Buraya sığmayan bir siteye burada kendi adresi verilebilir."
 
-#: src/components/flows/flow-settings.tsx:221
+#: src/components/flows/flow-settings.tsx:236
 msgid "The site's own mail settings"
 msgstr "Sitenin kendi e-posta ayarları"
 
-#: src/components/flows/flow-accounts.tsx:240
+#: src/components/flows/flow-accounts.tsx:275
 msgid "The username, if left empty"
 msgstr "Boş bırakılırsa kullanıcı adı"
 
@@ -4575,7 +4587,7 @@ msgstr "Bu rakamlar Amazon'un teslimat yöneticisinden gelir; hesap için açıl
 msgid "They can write, publish and manage this site."
 msgstr "Bu siteyi yazabilir, yayınlayabilir ve yönetebilirler."
 
-#: src/components/flows/flow-settings.tsx:335
+#: src/components/flows/flow-settings.tsx:350
 msgid "This"
 msgstr "Şu"
 
@@ -4749,7 +4761,7 @@ msgstr "Yeni yüklemelerde S3 kullan"
 msgid "Use this one by default"
 msgstr "Varsayılan olarak bunu kullan"
 
-#: src/components/flows/flow-accounts.tsx:216
+#: src/components/flows/flow-accounts.tsx:251
 #: src/components/setup/setup-wizard.tsx:519
 #: src/components/setup/setup-wizard.tsx:680
 #: src/routes/dashboard.users.tsx:262
@@ -4805,7 +4817,7 @@ msgstr "DNS bekleniyor"
 msgid "Waiting to be thrown away"
 msgstr "Silinmeyi bekleyenler"
 
-#: src/components/flows/flow-settings.tsx:355
+#: src/components/flows/flow-settings.tsx:370
 msgid "was filled in"
 msgstr "dolduruldu"
 
@@ -4870,7 +4882,7 @@ msgstr "Ne olduğu"
 msgid "What it is for"
 msgstr "Ne için"
 
-#: src/components/flows/flow-accounts.tsx:172
+#: src/components/flows/flow-accounts.tsx:207
 msgid "What kind"
 msgstr "Hangi tür"
 
@@ -4902,7 +4914,7 @@ msgstr "Bu site ne yayınlıyor"
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "Bu sitenin postayı neyle gönderdiği. Bir form haber verilecek bir adres belirtebilir; oraya bu yoldan ulaşır."
 
-#: src/components/flows/flow-settings.tsx:317
+#: src/components/flows/flow-settings.tsx:332
 msgid "What to send"
 msgstr "Ne gönderilsin"
 
@@ -4910,7 +4922,7 @@ msgstr "Ne gönderilsin"
 msgid "What you have asked for"
 msgstr "Başvurularınız"
 
-#: src/components/flows/flow-accounts.tsx:190
+#: src/components/flows/flow-accounts.tsx:225
 msgid "What you will recognise it by"
 msgstr "Tanıyacağınız bir ad"
 
@@ -5026,7 +5038,7 @@ msgstr "Olayları bağla"
 msgid "Wired up. Events go to {0} and arrive here."
 msgstr "Bağlandı. Olaylar {0} üzerinden buraya geliyor."
 
-#: src/components/flows/flow-settings.tsx:224
+#: src/components/flows/flow-settings.tsx:239
 msgid "With no account chosen it goes through whatever the site has set up under Plugins → Email."
 msgstr "Hesap seçilmezse, sitenin Eklentiler → E-posta altında kurduğu neyse onunla gider."
 
@@ -5057,6 +5069,10 @@ msgstr "Yazı yazar."
 #: src/routes/dashboard.api.tsx:336
 msgid "Writing"
 msgstr "Yazma"
+
+#: src/components/flows/flow-settings.tsx:217
+msgid "Written as"
+msgstr "Nasıl yazılsın"
 
 #: src/components/editor/palette.ts:20
 #: src/components/editor/palette.ts:34
