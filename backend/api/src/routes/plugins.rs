@@ -474,14 +474,23 @@ async fn resolve_email(
     })
 }
 
-fn usable(config: &crate::email::EmailConfig) -> AppResult<()> {
-    if config.region.is_empty() {
-        return Err(AppError::Validation("a region is needed".to_string()));
-    }
-    if config.access_key_id.is_empty() || config.secret_access_key.is_empty() {
-        return Err(AppError::Validation(
-            "an access key and its secret are needed".to_string(),
-        ));
+/// Whether these settings could send.
+///
+/// `lent` is the server having lent this site its account: then the keys and
+/// the region are the server's and the site supplies only the name on the
+/// letter. Demanding keys of it would leave the arrangement unfinishable — the
+/// site could add its domain, watch it verify, and never be able to say it
+/// wanted to send from it.
+fn usable(config: &crate::email::EmailConfig, lent: bool) -> AppResult<()> {
+    if !lent {
+        if config.region.is_empty() {
+            return Err(AppError::Validation("a region is needed".to_string()));
+        }
+        if config.access_key_id.is_empty() || config.secret_access_key.is_empty() {
+            return Err(AppError::Validation(
+                "an access key and its secret are needed".to_string(),
+            ));
+        }
     }
     if !crate::email::looks_like_an_address(&config.from_address) {
         return Err(AppError::Validation(
@@ -520,7 +529,10 @@ pub async fn save_email_of(
     // still typing are worth keeping; ones that are supposed to be working
     // are not worth pretending about.
     if payload.enabled {
-        usable(&config)?;
+        // Asked before the settings are saved, so it reflects the account the
+        // site has now rather than the one it is in the middle of describing.
+        let lent = borrowing(state).await.ok().flatten().is_some();
+        usable(&config, lent)?;
     }
 
     crate::plugins::save(
@@ -557,15 +569,19 @@ pub async fn test_email_of(
     state: &AppState,
     payload: crate::email::TestEmailRequest,
 ) -> AppResult<ConnectionTestResponse> {
-    let stored =
-        crate::plugins::load::<crate::email::EmailConfig>(state.db(), &state.secrets, EMAIL_PLUGIN)
-            .await?
-            .ok_or_else(|| AppError::Validation("mail is not set up yet".to_string()))?;
+    // The account the site would really send with, so the test is a test of
+    // the thing rather than of a copy of it — and so it works for a site
+    // borrowing the server's account, which has no keys of its own to load.
+    let post = crate::outbound::how(state).await?;
+    usable(&post.config, false)?;
 
-    usable(&stored.config)?;
+    // A test is a message like any other and comes out of the day's allowance.
+    // A site with nought left should find that out here rather than from a
+    // contact form nobody was watching.
+    crate::outbound::may_send(&post, state.db_or_unavailable()?, 1).await?;
 
     let outcome = crate::email::send(
-        &stored.config,
+        &post.config,
         crate::email::Message {
             to: &payload.to,
             subject: "Mavi CMS test",

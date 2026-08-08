@@ -156,7 +156,7 @@ msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıkla
 
 #. placeholder {0}: allowance.sent_today
 #. placeholder {1}: allowance.a_day ?? 0
-#: src/routes/dashboard.plugins_.email.tsx:212
+#: src/routes/dashboard.plugins_.email.tsx:215
 msgid "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
 msgstr "Bugün {1} mesajın {0} tanesi kullanıldı. Bu sayıyı sunucuyu işleten belirler ve yükseltebilir."
 
@@ -313,7 +313,7 @@ msgstr "Derleme giriş yapmaz. Kendisine aşağıda üretilen CMS_TOKEN verilir;
 msgid "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
 msgstr "Derleme jetonu bu siteyi okur ve hiçbir şeyi değiştiremez; onunla bağlanan bir asistana yalnızca okuyan araçlar açılır — yazı yazamaz, dosya yükleyemez, yayına alamaz. Burada istediğiniz genelde bu değildir; yukarıdan giriş yapın."
 
-#: src/components/plugin-forms.tsx:427
+#: src/components/plugin-forms.tsx:439
 msgid "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
 msgstr "Bir kampanya bunlardan herhangi biriyle gidebilir. Her birinin SES'te ayrıca doğrulanmış olması gerekir — Amazon onaylamadan bir adres gönderici olmaz."
 
@@ -427,7 +427,7 @@ msgid "Access key"
 msgstr "Erişim anahtarı"
 
 #: src/components/plugin-forms.tsx:111
-#: src/components/plugin-forms.tsx:319
+#: src/components/plugin-forms.tsx:328
 msgid "Access key ID"
 msgstr "Erişim anahtarı (Access key ID)"
 
@@ -462,7 +462,7 @@ msgstr "Etkin"
 
 #: src/components/editor/dialogs.tsx:200
 #: src/components/flows/flow-accounts.tsx:137
-#: src/components/plugin-forms.tsx:423
+#: src/components/plugin-forms.tsx:435
 #: src/components/publish-panel.tsx:165
 #: src/routes/dashboard.mail.tsx:601
 #: src/routes/dashboard.tags.tsx:174
@@ -725,7 +725,7 @@ msgstr "Bu form her doldurulduğunda bir e-posta. Eklentiler altında Amazon SES
 #~ msgid "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
 #~ msgstr "Tek yetkisi ses:SendEmail olan bir IAM kullanıcısı. Bu anahtar sizin adınıza posta gönderebilir; buranın ondan başka bir şey yapmasına ihtiyacı yok."
 
-#: src/components/plugin-forms.tsx:344
+#: src/components/plugin-forms.tsx:353
 msgid "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 msgstr "ses:SendEmail yetkisi olan bir IAM kullanıcısı. Göndermek için gereken bu kadar. Aşağıdaki hesap sayfası Amazon'a daha fazlasını sorar ve eksik olan yetkiyi söyler."
 
@@ -1173,7 +1173,7 @@ msgstr "Yorumlar"
 msgid "Compared how"
 msgstr "Nasıl karşılaştırılsın"
 
-#: src/components/plugin-forms.tsx:443
+#: src/components/plugin-forms.tsx:455
 msgid "Configuration set"
 msgstr "Yapılandırma kümesi"
 
@@ -2144,7 +2144,7 @@ msgstr "Biçimlendirme"
 msgid "Forms"
 msgstr "Formlar"
 
-#: src/components/plugin-forms.tsx:350
+#: src/components/plugin-forms.tsx:362
 msgid "From address"
 msgstr "Gönderen adresi"
 
@@ -2156,7 +2156,7 @@ msgstr "BotFather'dan alınır. Adımın ayrıca sohbet kimliğine ihtiyacı var
 msgid "From here it answers about every site this agency looks after: which of them built, which did not, what a failing build said, and adding a new one. Writing a post is a question for that site's own address."
 msgstr "Buradan bu ajansın baktığı her siteyi yanıtlar: hangisi derlendi, hangisi derlenmedi, başarısız derleme ne dedi, ve yeni bir site eklemek. Yazı yazmak o sitenin kendi adresine sorulur."
 
-#: src/components/plugin-forms.tsx:365
+#: src/components/plugin-forms.tsx:377
 msgid "From name"
 msgstr "Gönderen adı"
 
@@ -2741,7 +2741,7 @@ msgid "Mail from this site still leaves as {0}, which belongs to the server rath
 msgstr "Bu sitenin postaları hâlâ {0} adresinden çıkıyor; o adres size değil sunucuya ait. Bir bülten, konusu olduğu alan adından gelmek zorunda — aksi hâlde onun hesabını sunucunun alan adı verir ve o alan adını paylaşan her site, herhangi birinin şikâyetlerinin bedelini öder. Posta ayarlarından kendi alan adınızı ekleyin, verdiği kayıtları yayınlayın ve gönderen olarak seçin. Bu sırada bildirimler ve form yanıtları çalışmaya devam eder."
 
 #. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:217
+#: src/routes/dashboard.plugins_.email.tsx:220
 msgid "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
 msgstr "Postalar kendi adresinizden, {0} olarak çıkıyor. Gönderenler altındaki kayıtlar yayında kalmalı — alıcı sunucuya bu alan adının onay verdiğini söyleyen şey onlar."
 
@@ -2904,7 +2904,7 @@ msgstr "Ad"
 msgid "Name (optional)"
 msgstr "Ad (isteğe bağlı)"
 
-#: src/components/plugin-forms.tsx:411
+#: src/components/plugin-forms.tsx:423
 msgid "Name shown"
 msgstr "Görünen ad"
 
@@ -3133,7 +3133,7 @@ msgstr "Henüz gönderilmedi"
 msgid "Not set"
 msgstr "Tanımlı değil"
 
-#: src/components/plugin-forms.tsx:340
+#: src/components/plugin-forms.tsx:349
 msgid "Not set yet"
 msgstr "Henüz ayarlanmadı"
 
@@ -3345,8 +3345,8 @@ msgstr "OpenAPI belgesi"
 msgid "opened"
 msgstr "açtı"
 
-#: src/components/plugin-forms.tsx:439
-#: src/components/plugin-forms.tsx:450
+#: src/components/plugin-forms.tsx:451
+#: src/components/plugin-forms.tsx:462
 msgid "Optional"
 msgstr "İsteğe bağlı"
 
@@ -3367,7 +3367,7 @@ msgstr "İsteğe bağlı ama değer: olmazsa iadeler amazonses.com adresine gide
 msgid "Orange"
 msgstr "Turuncu"
 
-#: src/components/plugin-forms.tsx:375
+#: src/components/plugin-forms.tsx:387
 msgid "Other addresses you send as"
 msgstr "Gönderdiğiniz diğer adresler"
 
@@ -3664,7 +3664,7 @@ msgstr "Geri al"
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 msgstr "Bunu projenin yanına bir .env dosyasına koyun. Canlı siteyi gösterir; tasarımcının kendi makinesinde gördüğü, burada gerçekten yazılmış olandır."
 
-#: src/routes/dashboard.plugins_.email.tsx:220
+#: src/routes/dashboard.plugins_.email.tsx:223
 msgid "Putting your own Amazon keys in above replaces this arrangement entirely."
 msgstr "Yukarıya kendi Amazon anahtarlarınızı girerseniz bu düzenlemenin tamamı yerini onlara bırakır."
 
@@ -3728,7 +3728,7 @@ msgid "refused before sending"
 msgstr "gönderilmeden reddedildi"
 
 #: src/components/plugin-forms.tsx:98
-#: src/components/plugin-forms.tsx:307
+#: src/components/plugin-forms.tsx:316
 #: src/routes/dashboard.platform-mail.tsx:105
 msgid "Region"
 msgstr "Bölge"
@@ -3741,8 +3741,8 @@ msgstr "Düzenli ifade"
 #: src/components/editor/bubble-menus.tsx:201
 #: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
-#: src/components/plugin-forms.tsx:385
-#: src/components/plugin-forms.tsx:393
+#: src/components/plugin-forms.tsx:397
+#: src/components/plugin-forms.tsx:405
 #: src/components/publish-panel.tsx:136
 #: src/components/ses-account.tsx:548
 #: src/routes/dashboard.content-types.tsx:113
@@ -3813,7 +3813,7 @@ msgstr "İçeriği değiştir"
 msgid "Replace…"
 msgstr "Değiştir…"
 
-#: src/components/plugin-forms.tsx:433
+#: src/components/plugin-forms.tsx:445
 msgid "Reply-to"
 msgstr "Yanıt adresi"
 
@@ -3921,7 +3921,7 @@ msgstr "Kum havuzu"
 #: src/routes/dashboard.mail.tsx:740
 #: src/routes/dashboard.platform-mail.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:160
+#: src/routes/dashboard.plugins_.email.tsx:163
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Kaydet"
@@ -3996,7 +3996,7 @@ msgid "Secret"
 msgstr "Gizli anahtar"
 
 #: src/components/plugin-forms.tsx:117
-#: src/components/plugin-forms.tsx:331
+#: src/components/plugin-forms.tsx:340
 msgid "Secret access key"
 msgstr "Gizli anahtar (Secret access key)"
 
@@ -4022,7 +4022,7 @@ msgstr "Dilinizi seçin"
 
 #: src/components/site-mail.tsx:163
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:393
-#: src/routes/dashboard.plugins_.email.tsx:190
+#: src/routes/dashboard.plugins_.email.tsx:193
 msgid "Send"
 msgstr "Gönder"
 
@@ -4032,7 +4032,7 @@ msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
 
 #: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
-#: src/routes/dashboard.plugins_.email.tsx:166
+#: src/routes/dashboard.plugins_.email.tsx:169
 msgid "Send a test"
 msgstr "Deneme gönder"
 
@@ -4059,7 +4059,7 @@ msgid "Send mail through Amazon SES — a notification when somebody fills in on
 msgstr "Amazon SES üzerinden posta gönderin — bu sitenin formlarından biri doldurulduğunda bildirim."
 
 #: src/components/site-mail.tsx:125
-#: src/routes/dashboard.plugins_.email.tsx:148
+#: src/routes/dashboard.plugins_.email.tsx:150
 msgid "Send mail through SES"
 msgstr "Postaları SES ile gönder"
 
@@ -4173,7 +4173,7 @@ msgstr "SES konsolu"
 msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 msgstr "SES, doğrulamadığı bir adres ya da alan adından göndermeyi reddeder. Adres eklerseniz ona bir bağlantı gider; alan adı eklerseniz yayınlanacak kayıtlar gelir — o alan adındaki her adresin göndermesini sağlayan budur."
 
-#: src/components/plugin-forms.tsx:361
+#: src/components/plugin-forms.tsx:373
 msgid "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
 msgstr "SES, doğrulamadığı bir adres ya da alan adından göndermeyi reddeder. İlk mesajın ulaşmamasının olağan sebebi budur."
 
@@ -4376,7 +4376,7 @@ msgid "Stored — leave empty to keep it unchanged"
 msgstr "Kayıtlı — değiştirmemek için boş bırakın"
 
 #: src/components/console-build-token.tsx:46
-#: src/components/plugin-forms.tsx:340
+#: src/components/plugin-forms.tsx:349
 #: src/components/publish-panel.tsx:248
 #: src/routes/dashboard.platform-mail.tsx:141
 msgid "Stored — type to replace"
@@ -4642,12 +4642,12 @@ msgstr "Antet"
 msgid "The most common shortcuts in the editor."
 msgstr "Editörde en sık kullanılan kısayollar."
 
-#: src/components/plugin-forms.tsx:315
+#: src/components/plugin-forms.tsx:324
 msgid "The one your SES identities are verified in. Verification does not cross regions."
 msgstr "SES kimliklerinizin doğrulandığı bölge. Doğrulama bölgeler arasında geçmez."
 
 #: src/components/site-mail.tsx:145
-#: src/routes/dashboard.plugins_.email.tsx:168
+#: src/routes/dashboard.plugins_.email.tsx:171
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, SES'in doğrulamadığı bir adres ve hâlâ kum havuzundaki bir hesap — gerçekten bir şey gönderilene kadar üçü de aynı görünür."
 
@@ -4764,7 +4764,7 @@ msgstr "Bu giriş sunucunun kendisine. Diğer herkes başka bir yerden giriyor:"
 msgid "This site"
 msgstr "Bu site"
 
-#: src/routes/dashboard.plugins_.email.tsx:210
+#: src/routes/dashboard.plugins_.email.tsx:213
 msgid "This site sends through the server's own account"
 msgstr "Bu site, sunucunun kendi hesabıyla gönderiyor"
 
@@ -4843,7 +4843,7 @@ msgid "Unsaved changes"
 msgstr "Değişiklik bekleniyor"
 
 #. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:216
+#: src/routes/dashboard.plugins_.email.tsx:219
 msgid "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
 msgstr "Kendinize ait bir gönderen belirleyene kadar postalar {0} adresinden çıkıyor — sizin değil, sunucunun adresi. Yanıtlar yine size gelir. Aşağıdaki Gönderenler bölümünden alan adınızı ekleyin, verdiği kayıtları yayınlayın, sonra burada gönderen olarak seçin."
 
@@ -5105,7 +5105,7 @@ msgstr "Nerede saklansın"
 
 #: src/components/site-mail.tsx:154
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:385
-#: src/routes/dashboard.plugins_.email.tsx:177
+#: src/routes/dashboard.plugins_.email.tsx:180
 msgid "Where to send it"
 msgstr "Nereye gönderilsin"
 

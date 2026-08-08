@@ -156,7 +156,7 @@ msgstr "{0} looks after how this site is built. Publishing puts what you have wr
 
 #. placeholder {0}: allowance.sent_today
 #. placeholder {1}: allowance.a_day ?? 0
-#: src/routes/dashboard.plugins_.email.tsx:212
+#: src/routes/dashboard.plugins_.email.tsx:215
 msgid "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
 msgstr "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
 
@@ -313,7 +313,7 @@ msgstr "A build does not sign in. It is handed CMS_TOKEN, made below, which can 
 msgid "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
 msgstr "A build token can read this site and change nothing, so an assistant connected with one is offered only the tools that read: it will not be able to write a post, upload a file or publish. That is usually not what you want here — sign in above instead."
 
-#: src/components/plugin-forms.tsx:427
+#: src/components/plugin-forms.tsx:439
 msgid "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
 msgstr "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
 
@@ -427,7 +427,7 @@ msgid "Access key"
 msgstr "Access key"
 
 #: src/components/plugin-forms.tsx:111
-#: src/components/plugin-forms.tsx:319
+#: src/components/plugin-forms.tsx:328
 msgid "Access key ID"
 msgstr "Access key ID"
 
@@ -462,7 +462,7 @@ msgstr "Active"
 
 #: src/components/editor/dialogs.tsx:200
 #: src/components/flows/flow-accounts.tsx:137
-#: src/components/plugin-forms.tsx:423
+#: src/components/plugin-forms.tsx:435
 #: src/components/publish-panel.tsx:165
 #: src/routes/dashboard.mail.tsx:601
 #: src/routes/dashboard.tags.tsx:174
@@ -725,7 +725,7 @@ msgstr "An email each time somebody fills this in. Needs Amazon SES switched on 
 #~ msgid "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
 #~ msgstr "An IAM user whose only permission is ses:SendEmail. This key can send mail as you; nothing here needs it to do anything else."
 
-#: src/components/plugin-forms.tsx:344
+#: src/components/plugin-forms.tsx:353
 msgid "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 msgstr "An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is."
 
@@ -1173,7 +1173,7 @@ msgstr "Comments"
 msgid "Compared how"
 msgstr "Compared how"
 
-#: src/components/plugin-forms.tsx:443
+#: src/components/plugin-forms.tsx:455
 msgid "Configuration set"
 msgstr "Configuration set"
 
@@ -2148,7 +2148,7 @@ msgstr "Formatting"
 msgid "Forms"
 msgstr "Forms"
 
-#: src/components/plugin-forms.tsx:350
+#: src/components/plugin-forms.tsx:362
 msgid "From address"
 msgstr "From address"
 
@@ -2160,7 +2160,7 @@ msgstr "From BotFather. The step also needs the chat's id, which you give it the
 msgid "From here it answers about every site this agency looks after: which of them built, which did not, what a failing build said, and adding a new one. Writing a post is a question for that site's own address."
 msgstr "From here it answers about every site this agency looks after: which of them built, which did not, what a failing build said, and adding a new one. Writing a post is a question for that site's own address."
 
-#: src/components/plugin-forms.tsx:365
+#: src/components/plugin-forms.tsx:377
 msgid "From name"
 msgstr "From name"
 
@@ -2745,7 +2745,7 @@ msgid "Mail from this site still leaves as {0}, which belongs to the server rath
 msgstr "Mail from this site still leaves as {0}, which belongs to the server rather than to you. A newsletter has to come from the domain it is about — otherwise it is the server's domain that answers for it, and every site sharing it pays for anybody's complaints. Add your domain under Mail settings, publish the records it gives you, and set it as the sender. Notifications and form replies keep working meanwhile."
 
 #. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:217
+#: src/routes/dashboard.plugins_.email.tsx:220
 msgid "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
 msgstr "Mail leaves as {0}, your own address. The records under Senders have to stay published — they are what tells a receiving server that this domain agrees."
 
@@ -2908,7 +2908,7 @@ msgstr "Name"
 msgid "Name (optional)"
 msgstr "Name (optional)"
 
-#: src/components/plugin-forms.tsx:411
+#: src/components/plugin-forms.tsx:423
 msgid "Name shown"
 msgstr "Name shown"
 
@@ -3137,7 +3137,7 @@ msgstr "Not sent yet"
 msgid "Not set"
 msgstr "Not set"
 
-#: src/components/plugin-forms.tsx:340
+#: src/components/plugin-forms.tsx:349
 msgid "Not set yet"
 msgstr "Not set yet"
 
@@ -3349,8 +3349,8 @@ msgstr "OpenAPI document"
 msgid "opened"
 msgstr "opened"
 
-#: src/components/plugin-forms.tsx:439
-#: src/components/plugin-forms.tsx:450
+#: src/components/plugin-forms.tsx:451
+#: src/components/plugin-forms.tsx:462
 msgid "Optional"
 msgstr "Optional"
 
@@ -3371,7 +3371,7 @@ msgstr "Optional, and worth it: without one, bounces go to amazonses.com and a r
 msgid "Orange"
 msgstr "Orange"
 
-#: src/components/plugin-forms.tsx:375
+#: src/components/plugin-forms.tsx:387
 msgid "Other addresses you send as"
 msgstr "Other addresses you send as"
 
@@ -3668,7 +3668,7 @@ msgstr "Put it back"
 msgid "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 msgstr "Put this in a .env beside the project. It points at the live site, so what a designer sees on their machine is what is actually written here."
 
-#: src/routes/dashboard.plugins_.email.tsx:220
+#: src/routes/dashboard.plugins_.email.tsx:223
 msgid "Putting your own Amazon keys in above replaces this arrangement entirely."
 msgstr "Putting your own Amazon keys in above replaces this arrangement entirely."
 
@@ -3732,7 +3732,7 @@ msgid "refused before sending"
 msgstr "refused before sending"
 
 #: src/components/plugin-forms.tsx:98
-#: src/components/plugin-forms.tsx:307
+#: src/components/plugin-forms.tsx:316
 #: src/routes/dashboard.platform-mail.tsx:105
 msgid "Region"
 msgstr "Region"
@@ -3745,8 +3745,8 @@ msgstr "Regular expression"
 #: src/components/editor/bubble-menus.tsx:201
 #: src/components/editor/bubble-menus.tsx:282
 #: src/components/form-fields-editor.tsx:187
-#: src/components/plugin-forms.tsx:385
-#: src/components/plugin-forms.tsx:393
+#: src/components/plugin-forms.tsx:397
+#: src/components/plugin-forms.tsx:405
 #: src/components/publish-panel.tsx:136
 #: src/components/ses-account.tsx:548
 #: src/routes/dashboard.content-types.tsx:113
@@ -3817,7 +3817,7 @@ msgstr "Replace content"
 msgid "Replace…"
 msgstr "Replace…"
 
-#: src/components/plugin-forms.tsx:433
+#: src/components/plugin-forms.tsx:445
 msgid "Reply-to"
 msgstr "Reply-to"
 
@@ -3925,7 +3925,7 @@ msgstr "Sandbox"
 #: src/routes/dashboard.mail.tsx:740
 #: src/routes/dashboard.platform-mail.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:160
+#: src/routes/dashboard.plugins_.email.tsx:163
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Save"
@@ -4000,7 +4000,7 @@ msgid "Secret"
 msgstr "Secret"
 
 #: src/components/plugin-forms.tsx:117
-#: src/components/plugin-forms.tsx:331
+#: src/components/plugin-forms.tsx:340
 msgid "Secret access key"
 msgstr "Secret access key"
 
@@ -4026,7 +4026,7 @@ msgstr "Select your language"
 
 #: src/components/site-mail.tsx:163
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:393
-#: src/routes/dashboard.plugins_.email.tsx:190
+#: src/routes/dashboard.plugins_.email.tsx:193
 msgid "Send"
 msgstr "Send"
 
@@ -4036,7 +4036,7 @@ msgstr "Send a form's answers. No account needed."
 
 #: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
-#: src/routes/dashboard.plugins_.email.tsx:166
+#: src/routes/dashboard.plugins_.email.tsx:169
 msgid "Send a test"
 msgstr "Send a test"
 
@@ -4063,7 +4063,7 @@ msgid "Send mail through Amazon SES — a notification when somebody fills in on
 msgstr "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 
 #: src/components/site-mail.tsx:125
-#: src/routes/dashboard.plugins_.email.tsx:148
+#: src/routes/dashboard.plugins_.email.tsx:150
 msgid "Send mail through SES"
 msgstr "Send mail through SES"
 
@@ -4177,7 +4177,7 @@ msgstr "SES console"
 msgid "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 msgstr "SES refuses to send from an address or domain it has not verified. Add an address and it gets a link; add a domain and it gets records to publish, which is what lets every address on it send."
 
-#: src/components/plugin-forms.tsx:361
+#: src/components/plugin-forms.tsx:373
 msgid "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
 msgstr "SES refuses to send from an address or domain it has not verified. That is the usual reason a first message does not arrive."
 
@@ -4380,7 +4380,7 @@ msgid "Stored — leave empty to keep it unchanged"
 msgstr "Stored — leave empty to keep it unchanged"
 
 #: src/components/console-build-token.tsx:46
-#: src/components/plugin-forms.tsx:340
+#: src/components/plugin-forms.tsx:349
 #: src/components/publish-panel.tsx:248
 #: src/routes/dashboard.platform-mail.tsx:141
 msgid "Stored — type to replace"
@@ -4646,12 +4646,12 @@ msgstr "The letterhead"
 msgid "The most common shortcuts in the editor."
 msgstr "The most common shortcuts in the editor."
 
-#: src/components/plugin-forms.tsx:315
+#: src/components/plugin-forms.tsx:324
 msgid "The one your SES identities are verified in. Verification does not cross regions."
 msgstr "The one your SES identities are verified in. Verification does not cross regions."
 
 #: src/components/site-mail.tsx:145
-#: src/routes/dashboard.plugins_.email.tsx:168
+#: src/routes/dashboard.plugins_.email.tsx:171
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 
@@ -4768,7 +4768,7 @@ msgstr "This signs you in to the server itself. Everyone else signs in somewhere
 msgid "This site"
 msgstr "This site"
 
-#: src/routes/dashboard.plugins_.email.tsx:210
+#: src/routes/dashboard.plugins_.email.tsx:213
 msgid "This site sends through the server's own account"
 msgstr "This site sends through the server's own account"
 
@@ -4847,7 +4847,7 @@ msgid "Unsaved changes"
 msgstr "Unsaved changes"
 
 #. placeholder {0}: allowance.sender
-#: src/routes/dashboard.plugins_.email.tsx:216
+#: src/routes/dashboard.plugins_.email.tsx:219
 msgid "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
 msgstr "Until you name a sender of your own, mail leaves as {0} — the server's address, not yours. Replies still come to you. Add your domain under Senders below, publish the records it gives you, then set it as the sender here."
 
@@ -5109,7 +5109,7 @@ msgstr "Where to keep them"
 
 #: src/components/site-mail.tsx:154
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:385
-#: src/routes/dashboard.plugins_.email.tsx:177
+#: src/routes/dashboard.plugins_.email.tsx:180
 msgid "Where to send it"
 msgstr "Where to send it"
 

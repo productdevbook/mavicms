@@ -292,58 +292,70 @@ export function EmailFields({
   form,
   hasStoredSecret,
   onChange,
+  lent = false,
 }: {
   form: EmailSettingsPayload
   hasStoredSecret: boolean
   onChange: (values: Partial<EmailSettingsPayload>) => void
+  /**
+   * The server has lent this site its account. The region and the keys are
+   * the server's, so asking for them here would be asking for the one thing
+   * the arrangement exists to avoid.
+   */
+  lent?: boolean
 }) {
   const { t } = useLingui()
   const [extra, setExtra] = React.useState({ address: "", name: "" })
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="ses-region">{t`Region`}</Label>
-          <Input
-            id="ses-region"
-            value={form.region}
-            onChange={(event) => onChange({ region: event.target.value })}
-            placeholder="eu-central-1"
-          />
-          <p className="text-sm text-muted-foreground">
-            {t`The one your SES identities are verified in. Verification does not cross regions.`}
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="ses-key">{t`Access key ID`}</Label>
-          <Input
-            id="ses-key"
-            value={form.access_key_id}
-            onChange={(event) =>
-              onChange({ access_key_id: event.target.value })
-            }
-          />
-        </div>
-      </div>
+      {lent ? null : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="ses-region">{t`Region`}</Label>
+              <Input
+                id="ses-region"
+                value={form.region}
+                onChange={(event) => onChange({ region: event.target.value })}
+                placeholder="eu-central-1"
+              />
+              <p className="text-sm text-muted-foreground">
+                {t`The one your SES identities are verified in. Verification does not cross regions.`}
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="ses-key">{t`Access key ID`}</Label>
+              <Input
+                id="ses-key"
+                value={form.access_key_id}
+                onChange={(event) =>
+                  onChange({ access_key_id: event.target.value })
+                }
+              />
+            </div>
+          </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="ses-secret">{t`Secret access key`}</Label>
-        <Input
-          id="ses-secret"
-          type="password"
-          value={form.secret_access_key ?? ""}
-          onChange={(event) =>
-            onChange({ secret_access_key: event.target.value })
-          }
-          placeholder={
-            hasStoredSecret ? t`Stored — type to replace` : t`Not set yet`
-          }
-        />
-        <p className="text-sm text-muted-foreground">
-          {t`An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is.`}
-        </p>
-      </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="ses-secret">{t`Secret access key`}</Label>
+            <Input
+              id="ses-secret"
+              type="password"
+              value={form.secret_access_key ?? ""}
+              onChange={(event) =>
+                onChange({ secret_access_key: event.target.value })
+              }
+              placeholder={
+                hasStoredSecret ? t`Stored — type to replace` : t`Not set yet`
+              }
+            />
+            <p className="text-sm text-muted-foreground">
+              {t`An IAM user with ses:SendEmail. That is all sending needs. The account page below asks Amazon rather more, and says which permission is missing when one is.`}
+            </p>
+          </div>
+
+        </>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">

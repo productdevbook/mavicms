@@ -136,7 +136,9 @@ function EmailSettingsRoute() {
       </div>
 
       <div className="flex max-w-2xl flex-col gap-6">
-        <SesSetupGuide region={form.region} />
+        {ownAccount || allowance?.sends !== "shared" ? (
+          <SesSetupGuide region={form.region} />
+        ) : null}
 
         <Label className="flex items-center gap-3 font-normal">
           <Switch
@@ -151,6 +153,7 @@ function EmailSettingsRoute() {
         <EmailFields
           form={form}
           hasStoredSecret={hasStoredSecret}
+          lent={!ownAccount && allowance?.sends === "shared"}
           onChange={(values) => setForm({ ...form, ...values })}
         />
 
