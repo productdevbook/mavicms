@@ -187,6 +187,29 @@ pub async fn sent_today(db: &DatabaseConnection) -> AppResult<u64> {
         .await?)
 }
 
+/// Refuses a campaign that would leave under the server's own address.
+///
+/// Amazon's tenants divide reputation inside Amazon. Everybody else — Gmail,
+/// Yahoo, every filter that matters — judges the address the message says it
+/// is from and the domain that signed it. Marketing from a borrowed address
+/// therefore piles every site's complaints onto one domain, and the DMARC
+/// record answering for it belongs to whoever runs the server rather than to
+/// the site whose list it was.
+///
+/// A notification is a different thing: few, expected, and going to the site's
+/// own people. That still sends.
+pub fn may_campaign(post: &Post) -> AppResult<()> {
+    if post.as_the_server {
+        return Err(AppError::Validation(
+            "this campaign would go out under the server's own address. Add this site's domain \
+             under Senders, publish the records it gives you, and set it as the sender — a \
+             newsletter has to come from the domain it is about"
+                .to_string(),
+        ));
+    }
+    Ok(())
+}
+
 /// Refuses before anything is sent, and says the number rather than "no".
 ///
 /// Counted as a whole rather than per message: a campaign asking to send four
@@ -226,6 +249,17 @@ mod tests {
             own: false,
             as_the_server: false,
         }
+    }
+
+    #[test]
+    fn a_campaign_will_not_go_out_under_the_servers_address() {
+        let mut borrowed = shared(10_000);
+        borrowed.as_the_server = true;
+        assert!(super::may_campaign(&borrowed).is_err());
+
+        // Named its own sender: this is what the whole arrangement is for.
+        borrowed.as_the_server = false;
+        assert!(super::may_campaign(&borrowed).is_ok());
     }
 
     #[tokio::test]

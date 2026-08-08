@@ -73,7 +73,7 @@ msgid "{0} · {1} · {2} · {3}"
 msgstr "{0} · {1} · {2} · {3}"
 
 #. placeholder {0}: settings.from_address
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:266
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:285
 msgid "{0} (the usual one)"
 msgstr "{0} (the usual one)"
 
@@ -103,7 +103,7 @@ msgstr "{0} clicked"
 
 #. placeholder {0}: list.confirmed
 #. placeholder {0}: row.confirmed
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:245
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:264
 #: src/routes/dashboard.mail.tsx:304
 msgid "{0} confirmed"
 msgstr "{0} confirmed"
@@ -171,7 +171,7 @@ msgstr "{0} of {1} sent"
 #. placeholder {2}: campaign.failed
 #. placeholder {3}: campaign.opened
 #. placeholder {4}: campaign.clicked
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:158
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:164
 msgid "{0} of {1} sent, {2} refused, {3} opened, {4} clicked"
 msgstr "{0} of {1} sent, {2} refused, {3} opened, {4} clicked"
 
@@ -1034,7 +1034,7 @@ msgstr "Cancelled"
 msgid "Canonical URL"
 msgstr "Canonical URL"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:187
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:197
 msgid "Carry on"
 msgstr "Carry on"
 
@@ -1438,7 +1438,7 @@ msgstr "Could not disconnect it"
 #: src/components/ses-account.tsx:292
 #: src/components/site-mail.tsx:95
 #: src/routes/dashboard.forms_.$formId.tsx:89
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:109
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:115
 #: src/routes/dashboard.plugins_.email.tsx:100
 msgid "Could not do it"
 msgstr "Could not do it"
@@ -1460,7 +1460,7 @@ msgstr "Could not load the accounts"
 msgid "Could not load the backup settings"
 msgstr "Could not load the backup settings"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:51
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:56
 msgid "Could not load the campaign"
 msgstr "Could not load the campaign"
 
@@ -1593,7 +1593,7 @@ msgstr "Could not run it"
 
 #: src/components/site-mail.tsx:81
 #: src/routes/dashboard.content-types.tsx:152
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:89
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:95
 #: src/routes/dashboard.mail.tsx:280
 #: src/routes/dashboard.mail.tsx:647
 #: src/routes/dashboard.platform-mail.tsx:68
@@ -1638,7 +1638,7 @@ msgstr "Could not save the settings"
 msgid "Could not save the token"
 msgstr "Could not save the token"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:124
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:130
 msgid "Could not send it"
 msgstr "Could not send it"
 
@@ -2367,7 +2367,7 @@ msgstr "How to send to it"
 msgid "HTML"
 msgstr "HTML"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:341
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:360
 msgid "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 msgstr "HTML. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them. A plain-text part is made from this automatically."
 
@@ -2634,7 +2634,7 @@ msgstr "Leave empty to tell nobody"
 msgid "Leave empty to use this server's database"
 msgstr "Leave empty to use this server's database"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:300
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:319
 msgid "Leave it empty to send when you press the button. With a time, pressing it queues the campaign for then."
 msgstr "Leave it empty to send when you press the button. With a time, pressing it queues the campaign for then."
 
@@ -2658,7 +2658,7 @@ msgstr "Lend the account"
 msgid "letterhead"
 msgstr "letterhead"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:306
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:325
 msgid "Letterhead"
 msgstr "Letterhead"
 
@@ -2733,11 +2733,16 @@ msgstr "Made in the channel's own settings, under incoming webhooks. Anybody hol
 
 #: src/components/dashboard/dashboard-shell.tsx:102
 #: src/routes/console.sites.$siteId.tsx:312
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:156
 #: src/routes/dashboard.mail.tsx:70
 #: src/routes/dashboard.platform-mail.tsx:93
 msgid "Mail"
 msgstr "Mail"
+
+#. placeholder {0}: allowance.sender
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:210
+msgid "Mail from this site still leaves as {0}, which belongs to the server rather than to you. A newsletter has to come from the domain it is about — otherwise it is the server's domain that answers for it, and every site sharing it pays for anybody's complaints. Add your domain under Mail settings, publish the records it gives you, and set it as the sender. Notifications and form replies keep working meanwhile."
+msgstr "Mail from this site still leaves as {0}, which belongs to the server rather than to you. A newsletter has to come from the domain it is about — otherwise it is the server's domain that answers for it, and every site sharing it pays for anybody's complaints. Add your domain under Mail settings, publish the records it gives you, and set it as the sender. Notifications and form replies keep working meanwhile."
 
 #. placeholder {0}: allowance.sender
 #: src/routes/dashboard.plugins_.email.tsx:212
@@ -2891,7 +2896,7 @@ msgstr "My Mavi CMS Site"
 #: src/routes/dashboard.flows.tsx:312
 #: src/routes/dashboard.forms.tsx:160
 #: src/routes/dashboard.forms.tsx:238
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:198
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:217
 #: src/routes/dashboard.mail.tsx:229
 #: src/routes/dashboard.mail.tsx:342
 #: src/routes/dashboard.mail.tsx:563
@@ -3038,7 +3043,7 @@ msgstr "no limit"
 msgid "No lists yet"
 msgstr "No lists yet"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:225
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:244
 msgid "No lists yet — make one first."
 msgstr "No lists yet — make one first."
 
@@ -3107,7 +3112,7 @@ msgstr "Nobody here yet"
 msgid "None"
 msgstr "None"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:319
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:338
 msgid "None — send the body as it is"
 msgstr "None — send the body as it is"
 
@@ -3123,7 +3128,7 @@ msgstr "Not configured"
 msgid "Not connected yet"
 msgstr "Not connected yet"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:159
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:165
 msgid "Not sent yet"
 msgstr "Not sent yet"
 
@@ -3450,7 +3455,7 @@ msgstr "Paste the video link."
 msgid "Path prefix"
 msgstr "Path prefix"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:170
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:176
 msgid "Pause"
 msgstr "Pause"
 
@@ -3792,7 +3797,7 @@ msgstr "Remove this site?"
 msgid "Removed"
 msgstr "Removed"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:358
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:377
 msgid "Rendered exactly as a subscriber would get it, unsubscribe link and all."
 msgstr "Rendered exactly as a subscriber would get it, unsubscribe link and all."
 
@@ -3915,7 +3920,7 @@ msgstr "Sandbox"
 #: src/routes/dashboard.content-types.tsx:209
 #: src/routes/dashboard.flows.tsx:330
 #: src/routes/dashboard.forms.tsx:331
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:349
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:368
 #: src/routes/dashboard.mail.tsx:391
 #: src/routes/dashboard.mail.tsx:740
 #: src/routes/dashboard.platform-mail.tsx:155
@@ -3943,7 +3948,7 @@ msgstr "Save the flow and an address appears here. Anything sent to it sets this
 #: src/routes/console.sites.$siteId.tsx:214
 #: src/routes/dashboard.flows.tsx:153
 #: src/routes/dashboard.forms.tsx:110
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:86
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:92
 #: src/routes/dashboard.platform-mail.tsx:65
 #: src/routes/dashboard.plugins_.email.tsx:83
 #: src/routes/dashboard.publish.tsx:79
@@ -3959,7 +3964,7 @@ msgstr "Saved at {0}"
 msgid "Saving…"
 msgstr "Saving…"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:189
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:199
 msgid "Schedule it"
 msgstr "Schedule it"
 
@@ -4020,7 +4025,7 @@ msgid "Select your language"
 msgstr "Select your language"
 
 #: src/components/site-mail.tsx:163
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:374
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:393
 #: src/routes/dashboard.plugins_.email.tsx:185
 msgid "Send"
 msgstr "Send"
@@ -4049,7 +4054,7 @@ msgstr "Send an email"
 msgid "Send as"
 msgstr "Send as"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:190
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:200
 msgid "Send it"
 msgstr "Send it"
 
@@ -4067,7 +4072,7 @@ msgstr "Send mail through SES"
 msgid "Send on Telegram"
 msgstr "Send on Telegram"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:356
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:375
 msgid "Send yourself one"
 msgstr "Send yourself one"
 
@@ -4118,7 +4123,7 @@ msgstr "sent"
 msgid "Sent"
 msgstr "Sent"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:254
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:273
 msgid "Sent as"
 msgstr "Sent as"
 
@@ -4132,7 +4137,7 @@ msgid "Sent in the last day: {0}"
 msgstr "Sent in the last day: {0}"
 
 #. placeholder {0}: testTo.trim()
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:121
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:127
 msgid "Sent to {0}"
 msgstr "Sent to {0}"
 
@@ -4333,7 +4338,7 @@ msgstr "Start writing, or type “/” for commands…"
 msgid "Status"
 msgstr "Status"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:177
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:183
 msgid "Stop"
 msgstr "Stop"
 
@@ -4401,7 +4406,7 @@ msgid "Subdomain for bounces"
 msgstr "Subdomain for bounces"
 
 #: src/components/flows/flow-settings.tsx:200
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:210
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:229
 msgid "Subject"
 msgstr "Subject"
 
@@ -4625,7 +4630,7 @@ msgstr "The last thirty days, from SES itself. Delivered, bounced and reported a
 msgid "The last two weeks, which is as far back as Amazon keeps it. These two numbers are what an account gets suspended over."
 msgstr "The last two weeks, which is as far back as Amazon keeps it. These two numbers are what an account gets suspended over."
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:329
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:348
 msgid "The letter"
 msgstr "The letter"
 
@@ -4676,7 +4681,7 @@ msgstr "The site's own mail settings"
 msgid "The username, if left empty"
 msgstr "The username, if left empty"
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:267
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:286
 msgid "The usual one"
 msgstr "The usual one"
 
@@ -4716,6 +4721,10 @@ msgstr "This address answers the Model Context Protocol, so an assistant can be 
 #: src/components/mcp-connection.tsx:72
 #~ msgid "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
 #~ msgstr "This address answers the Model Context Protocol, so an assistant can be pointed at it and asked to do the work rather than told how. It offers the tools your token allows and no others."
+
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:208
+msgid "This campaign cannot be sent yet"
+msgstr "This campaign cannot be sent yet"
 
 #: src/routes/oauth.tsx:76
 msgid "This cannot be connected"
@@ -5065,7 +5074,7 @@ msgstr "When off, uploads are stored on the server's disk."
 msgid "When something is, it appears here first."
 msgstr "When something is, it appears here first."
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:280
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:299
 msgid "When to send it"
 msgstr "When to send it"
 
@@ -5095,7 +5104,7 @@ msgid "Where to keep them"
 msgstr "Where to keep them"
 
 #: src/components/site-mail.tsx:154
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:366
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:385
 #: src/routes/dashboard.plugins_.email.tsx:172
 msgid "Where to send it"
 msgstr "Where to send it"
@@ -5124,7 +5133,7 @@ msgstr "Which kind"
 msgid "Who can sign in to this site and write on it."
 msgstr "Who can sign in to this site and write on it."
 
-#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:222
+#: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:241
 msgid "Who gets it"
 msgstr "Who gets it"
 

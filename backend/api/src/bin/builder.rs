@@ -218,6 +218,8 @@ impl Builder {
         // Asked before the first message rather than discovered at message
         // eighty-one: half a newsletter is worse than none, and the people who
         // did not get it are the ones who would have to be told.
+        mavicms_api::outbound::may_campaign(&settings)?;
+
         let waiting = mavicms_api::mailing::how_many_are_waiting(&db, campaign_id).await?;
         mavicms_api::outbound::may_send(&settings, &db, waiting).await?;
 

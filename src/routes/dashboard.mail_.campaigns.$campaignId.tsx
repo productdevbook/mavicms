@@ -12,6 +12,7 @@ import {
   getMailLists,
   getEmailSettings,
   getMailTemplates,
+  getSendingAllowance,
   pauseCampaign,
   saveCampaign,
   startCampaign,
@@ -20,6 +21,7 @@ import {
   type EmailSettings,
   type MailList,
   type MailTemplate,
+  type SendingAllowance,
 } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -42,6 +44,9 @@ function CampaignRoute() {
   const [lists, setLists] = React.useState<MailList[]>([])
   const [templates, setTemplates] = React.useState<MailTemplate[]>([])
   const [settings, setSettings] = React.useState<EmailSettings | null>(null)
+  const [allowance, setAllowance] = React.useState<SendingAllowance | null>(
+    null
+  )
   const [busy, setBusy] = React.useState(false)
   const [testTo, setTestTo] = React.useState("")
 
@@ -56,6 +61,7 @@ function CampaignRoute() {
     getMailLists().then(setLists).catch(() => setLists([]))
     getMailTemplates().then(setTemplates).catch(() => setTemplates([]))
     getEmailSettings().then(setSettings).catch(() => setSettings(null))
+    getSendingAllowance().then(setAllowance).catch(() => setAllowance(null))
   }, [])
 
   // Only while something is happening; a finished campaign is not polled.
@@ -180,7 +186,11 @@ function CampaignRoute() {
           ) : (
             <Button
               onClick={() => void act("send")}
-              disabled={busy || campaign.status === "finished"}
+              disabled={
+                busy ||
+                campaign.status === "finished" ||
+                Boolean(allowance?.as_the_server)
+              }
             >
               {busy ? <Loader2 className="animate-spin" /> : <Send />}
               {campaign.status === "paused"
@@ -192,6 +202,15 @@ function CampaignRoute() {
           )}
         </div>
       </div>
+
+      {allowance?.as_the_server ? (
+        <div className="max-w-3xl rounded-xl border border-amber-500/40 bg-amber-500/10 p-4">
+          <p className="text-sm font-medium">{t`This campaign cannot be sent yet`}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t`Mail from this site still leaves as ${allowance.sender}, which belongs to the server rather than to you. A newsletter has to come from the domain it is about — otherwise it is the server's domain that answers for it, and every site sharing it pays for anybody's complaints. Add your domain under Mail settings, publish the records it gives you, and set it as the sender. Notifications and form replies keep working meanwhile.`}
+          </p>
+        </div>
+      ) : null}
 
       <div className="flex max-w-3xl flex-col gap-6">
         <div className="flex flex-col gap-2">
