@@ -130,16 +130,18 @@ async fn overlay_sender(
     secrets: &crate::crypto::SecretBox,
     config: &mut EmailConfig,
 ) -> AppResult<bool> {
-    let Some(stored) =
-        crate::plugins::load::<EmailConfig>(db, secrets, crate::plugins::EMAIL_PLUGIN).await?
-    else {
-        return Ok(false);
-    };
+    let mine = crate::plugins::load::<EmailConfig>(db, secrets, crate::plugins::EMAIL_PLUGIN)
+        .await?
+        .map(|stored| stored.config)
+        .unwrap_or_default();
 
-    let mine = stored.config;
     if mine.from_address.trim().is_empty() {
-        // Nothing to send as. Keep the server's address but let replies find
-        // the site, if it said where.
+        // Nothing to send as. Keep the server's address, but the name in front
+        // of it is the site's: whoever reads this knows the business, not the
+        // machine it happens to be hosted on.
+        if let Some(name) = whose(db, &mine).await? {
+            config.from_name = name;
+        }
         if !mine.reply_to.trim().is_empty() {
             config.reply_to = mine.reply_to;
         }
@@ -153,6 +155,18 @@ async fn overlay_sender(
     config.reply_to = mine.reply_to;
     config.senders = mine.senders;
     Ok(true)
+}
+
+/// What to call a site that has not said. Its own title, or nothing.
+async fn whose(db: &DatabaseConnection, mine: &EmailConfig) -> AppResult<Option<String>> {
+    if !mine.from_name.trim().is_empty() {
+        return Ok(Some(mine.from_name.clone()));
+    }
+    Ok(crate::entities::site_settings::Entity::find()
+        .one(db)
+        .await?
+        .map(|settings| settings.site_title)
+        .filter(|title| !title.trim().is_empty()))
 }
 
 /// How many messages this site has sent since midnight, whatever asked for
