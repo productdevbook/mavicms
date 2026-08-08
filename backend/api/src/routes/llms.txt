@@ -137,8 +137,9 @@ a build reads the API directly, at the addresses below.
   others, and `GET /content-types` says which and what each is made of. The
   address is unique within a kind, so a post and a page may both answer on
   `contact`.
-- `status` — comma-separated. **A build wants `status=published`.** Left out,
-  every status comes back and drafts go online.
+- `status` — comma-separated. **Left out, only published posts come back**,
+  which is what a build wants. Ask for `draft`, `review` or `scheduled` — or
+  several at once — to see what has not been published yet.
 - `locale` — comma-separated language codes. Left out, every language comes
   back, which is what a site with one language wants and never what a site
   with three does.

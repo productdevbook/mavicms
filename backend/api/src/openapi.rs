@@ -89,8 +89,9 @@ when the post changes and not when it is merely saved again, so a build keyed \
 on it rebuilds only what moved. And `GET /posts` carries an `ETag` — send it \
 back as `If-None-Match` and an unchanged listing answers `304` with no body.
 
-Ask for `status=published` unless you mean not to. Without it every draft on \
-the site is in the answer.",
+`GET /posts` answers with published posts when `status` is left out. Ask for \
+`status=draft` — or several, comma-separated — to see what is not published \
+yet.",
         license(name = "MIT", url = "https://github.com/productdevbook/mavicms/blob/main/LICENSE"),
     ),
     tags(

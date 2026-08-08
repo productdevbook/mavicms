@@ -367,11 +367,24 @@ export function deleteContentType(id: string): Promise<void> {
   return request<void>(`/content-types/${id}`, { method: "DELETE" })
 }
 
+/**
+ * A page of posts.
+ *
+ * `status` is asked for explicitly because the server answers with published
+ * posts when nobody says — the safe answer for a build, and the wrong one for
+ * a screen whose job is to show what has not been published yet.
+ */
 export function getPosts(
   locale?: string,
-  options: { limit?: number; offset?: number; kind?: PostKind } = {}
+  options: {
+    limit?: number
+    offset?: number
+    kind?: PostKind
+    status?: string
+  } = {}
 ): Promise<PostPage> {
   const params = new URLSearchParams()
+  params.set("status", options.status ?? "draft,review,scheduled,published")
   if (locale) params.set("locale", locale)
   if (options.limit !== undefined) params.set("limit", String(options.limit))
   if (options.offset !== undefined) params.set("offset", String(options.offset))

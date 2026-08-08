@@ -169,7 +169,8 @@ async fn siblings_of(
         .collect())
 }
 
-/// List posts. Every language is returned unless `locale` narrows it —
+/// List posts. Published ones unless `status` says otherwise, every language
+/// unless `locale` narrows it —
 /// silently defaulting to one language would be a breaking change for API
 /// consumers building their own front-ends.
 #[utoipa::path(
@@ -183,7 +184,7 @@ async fn siblings_of(
         ("offset" = Option<u64>, Query, description = "How many to skip"),
         ("include" = Option<String>, Query, description = "Comma-separated extras: `content` adds the post body to each item, `seo` adds seo_title, seo_description and canonical"),
         ("q" = Option<String>, Query, description = "Free text to search for in the title, excerpt and body"),
-        ("status" = Option<String>, Query, description = "Comma-separated statuses; a build wants `published`"),
+        ("status" = Option<String>, Query, description = "Comma-separated statuses. Published only when left out"),
         ("If-None-Match" = Option<String>, Header, description = "An ETag from a previous answer. Unchanged listings come back 304 with no body."),
     ),
     responses(
@@ -218,9 +219,6 @@ pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppR
         find = find.filter(post::Column::Locale.is_in(codes));
     }
     find = find.filter(post::Column::Kind.is_in(crate::content::known(db, &query.kinds()).await?));
-    if let Some(statuses) = query.statuses()? {
-        find = find.filter(post::Column::Status.is_in(statuses));
-    }
     if let Some(slug) = query
         .slug
         .as_deref()
@@ -252,10 +250,11 @@ pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppR
                 .add(matches(post::Column::ContentHtml)),
         );
     }
-    let total = find.clone().count(db).await?;
-
-    // Counted in the database rather than from the page: a dashboard tallying
-    // the rows it received would report the size of the page, not the archive.
+    // Counted before the status filter and in the database rather than from the
+    // page: a dashboard tallying the rows it received would report the size of
+    // the page, and one tallying after the filter would report "12 published,
+    // 0 drafts" to a screen whose whole job is to say how many drafts there
+    // are.
     let mut counts = StatusCounts::default();
     for (status, n) in find
         .clone()
@@ -269,6 +268,20 @@ pub async fn page(db: &sea_orm::DatabaseConnection, query: &LocaleQuery) -> AppR
     {
         counts.add(&status, Ord::max(n, 0) as u64);
     }
+
+    // Published unless asked otherwise. The other way round for years, and the
+    // failure it invites is the one a publishing system cannot have: a build
+    // that forgets to say puts every draft on the internet. Saying nothing now
+    // means seeing less than you expected, which somebody notices; the panel,
+    // which is the one caller that wants everything, asks for everything.
+    find = find.filter(
+        post::Column::Status.is_in(
+            query
+                .statuses()?
+                .unwrap_or_else(|| vec![PostStatus::Published.as_str().to_string()]),
+        ),
+    );
+    let total = find.clone().count(db).await?;
     // Ordered here rather than where the filters are built: an ORDER BY that
     // travels into the grouped count above is a column Postgres will not let
     // out of a GROUP BY, and the count does not care what order it counts in.
@@ -832,7 +845,98 @@ pub(crate) fn referenced_media(post: &post::Model) -> Vec<String> {
 
 #[cfg(test)]
 mod tests {
-    use super::{PostStatus, scheduled_needs_a_time};
+    use super::{PostStatus, page, scheduled_needs_a_time};
+    use crate::dto::taxonomy::LocaleQuery;
+    use crate::entities::post;
+    use chrono::Utc;
+    use migration::{Migrator, MigratorTrait};
+    use sea_orm::{ActiveModelTrait, ActiveValue::Set, Database, DatabaseConnection};
+    use uuid::Uuid;
+
+    async fn site_with_posts() -> DatabaseConnection {
+        let db = Database::connect("sqlite::memory:").await.unwrap();
+        Migrator::up(&db, None).await.unwrap();
+        for (title, status) in [
+            ("Yayinda", "published"),
+            ("Yayinda ikinci", "published"),
+            ("Taslak", "draft"),
+            ("Sirada", "scheduled"),
+        ] {
+            post::ActiveModel {
+                id: Set(Uuid::now_v7()),
+                title: Set(title.to_string()),
+                slug: Set(title.to_lowercase().replace(' ', "-")),
+                status: Set(status.to_string()),
+                kind: Set(crate::content::POST.to_string()),
+                locale: Set("tr".to_string()),
+                translation_group_id: Set(Uuid::now_v7()),
+                excerpt: Set(String::new()),
+                author: Set(String::new()),
+                category: Set(String::new()),
+                tags: Set(serde_json::json!([])),
+                cover_url: Set(String::new()),
+                seo_title: Set(String::new()),
+                seo_description: Set(String::new()),
+                canonical: Set(String::new()),
+                featured: Set(false),
+                allow_comments: Set(true),
+                content_html: Set(String::new()),
+                content_markdown: Set(None),
+                fields: Set(String::new()),
+                publish_at: Set(None),
+                created_at: Set(Utc::now().fixed_offset()),
+                updated_at: Set(Utc::now().fixed_offset()),
+            }
+            .insert(&db)
+            .await
+            .unwrap();
+        }
+        db
+    }
+
+    fn asking(status: Option<&str>) -> LocaleQuery {
+        LocaleQuery {
+            status: status.map(str::to_string),
+            ..Default::default()
+        }
+    }
+
+    #[tokio::test]
+    async fn saying_nothing_asks_for_what_is_published() {
+        // The other way round for years. A build that forgets to say put every
+        // draft on the internet, and forgetting is the normal case.
+        let db = site_with_posts().await;
+        let found = page(&db, &asking(None)).await.unwrap();
+
+        assert_eq!(found.total, 2);
+        assert!(
+            found
+                .items
+                .iter()
+                .all(|p| p.status == PostStatus::Published)
+        );
+    }
+
+    #[tokio::test]
+    async fn what_is_not_published_is_there_for_the_asking() {
+        let db = site_with_posts().await;
+        let found = page(&db, &asking(Some("draft,scheduled"))).await.unwrap();
+        assert_eq!(found.total, 2);
+    }
+
+    #[tokio::test]
+    async fn the_tally_counts_the_archive_and_not_the_filter() {
+        // The screen that says how many drafts there are asks for drafts. If
+        // the tally came from the same filter it would answer "one draft, no
+        // published" and the other tabs would read zero.
+        let db = site_with_posts().await;
+        let found = page(&db, &asking(Some("draft"))).await.unwrap();
+
+        assert_eq!(found.total, 1);
+        assert_eq!(found.counts.draft, 1);
+        assert_eq!(found.counts.published, 2);
+        assert_eq!(found.counts.scheduled, 1);
+    }
 
     #[test]
     fn a_schedule_needs_a_time() {

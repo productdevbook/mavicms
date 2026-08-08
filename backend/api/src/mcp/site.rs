@@ -60,7 +60,8 @@ pub const TOOLS: &[Tool] = &[
                     "locale": { "type": "string", "description": "Language code, or several separated by commas" },
                     "status": {
                         "type": "string",
-                        "description": "draft, review, scheduled or published; several separated by commas"
+                        "description": "draft, review, scheduled or published; several separated by commas. \
+                            Published only, when left out — say so to see what is not published yet"
                     },
                     "kind": {
                         "type": "string",
