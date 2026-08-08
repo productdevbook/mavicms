@@ -56,6 +56,12 @@ pub async fn connect_in_schema(
 ) -> Result<DatabaseConnection, DbErr> {
     let db = open_in_schema(database_url, schema).await?;
     Migrator::up(&db, None).await?;
+    // The only moment that happens for every site however it was made. A site
+    // opened from the console never runs the setup wizard, and one with no
+    // language files its content under a language it does not have.
+    crate::languages::ensure_site_languages(&db)
+        .await
+        .map_err(|err| DbErr::Custom(format!("could not prepare the site's languages: {err}")))?;
     Ok(db)
 }
 
