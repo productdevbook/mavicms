@@ -370,6 +370,24 @@ mod tests {
     }
 
     #[test]
+    fn a_metric_window_runs_midnight_to_midnight() {
+        // Amazon aggregates by day and answers a partial one with a complaint
+        // about the timestamps instead of figures, so this is the difference
+        // between a working screen and an error message.
+        let days = 14;
+        let today = chrono::Utc::now().date_naive();
+        let midnight =
+            |day: chrono::NaiveDate| day.and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp();
+        let from = midnight(today - chrono::Duration::days(days - 1));
+        let to = midnight(today + chrono::Duration::days(1));
+
+        assert_eq!(from % 86_400, 0);
+        assert_eq!(to % 86_400, 0);
+        // Exactly the days asked for, today included.
+        assert_eq!((to - from) / 86_400, days);
+    }
+
+    #[test]
     fn an_unsubscribe_link_becomes_the_two_headers_gmail_looks_for() {
         let content = content_of(&Message {
             to: "to@example.com",
@@ -1769,11 +1787,21 @@ pub async fn deliverability_of(
 
     account_settings(config)?;
 
-    let now = chrono::Utc::now();
-    let from = now - chrono::Duration::days(days.clamp(1, 60));
-    let as_smithy = |when: chrono::DateTime<chrono::Utc>| {
-        aws_smithy_types::DateTime::from_secs(when.timestamp())
+    // Amazon aggregates by day and refuses a partial one: an interval that
+    // does not run midnight to midnight UTC comes back as a complaint about
+    // the timestamps rather than as figures. The end is tomorrow's midnight so
+    // that today is included.
+    let days = days.clamp(1, 60);
+    let today = chrono::Utc::now().date_naive();
+    let midnight = |day: chrono::NaiveDate| {
+        day.and_hms_opt(0, 0, 0)
+            .unwrap_or_default()
+            .and_utc()
+            .timestamp()
     };
+    let from = midnight(today - chrono::Duration::days(days - 1));
+    let now = midnight(today + chrono::Duration::days(1));
+    let as_smithy = aws_smithy_types::DateTime::from_secs;
 
     let wanted = [
         ("SEND", Metric::Send),
