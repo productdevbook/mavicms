@@ -18,6 +18,7 @@ mod m20260115_000001_oauth;
 mod m20260116_000001_pages;
 mod m20260117_000001_trash;
 mod m20260118_000001_content_types;
+mod m20260119_000001_flows;
 
 pub struct Migrator;
 
@@ -43,6 +44,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260116_000001_pages::Migration),
             Box::new(m20260117_000001_trash::Migration),
             Box::new(m20260118_000001_content_types::Migration),
+            Box::new(m20260119_000001_flows::Migration),
         ]
     }
 }

@@ -4,6 +4,7 @@ pub mod categories;
 pub mod console;
 pub mod content_types;
 pub mod development;
+pub mod flows;
 pub mod forms;
 pub mod health;
 pub mod languages;
@@ -120,6 +121,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
     let open = OpenApiRouter::new()
         .routes(routes!(llms::llms_txt))
         .routes(routes!(forms::form_schema))
+        .routes(routes!(flows::receive_hook))
         .routes(routes!(forms::submit_form))
         .routes(routes!(mailing::subscribe))
         .routes(routes!(mailing::confirm))
@@ -158,6 +160,12 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         .routes(routes!(tags::delete_tag))
         .routes(routes!(tags::set_tag_translation_group))
         .routes(routes!(slug::make_slug))
+        .routes(routes!(flows::vocabulary))
+        .routes(routes!(flows::list_flows, flows::create_flow))
+        .routes(routes!(flows::update_flow, flows::delete_flow))
+        .routes(routes!(flows::test_flow))
+        .routes(routes!(flows::list_runs))
+        .routes(routes!(flows::get_run))
         .routes(routes!(sites::list_sites, sites::create_site))
         .routes(routes!(sites::update_site))
         .routes(routes!(sites::delete_site))

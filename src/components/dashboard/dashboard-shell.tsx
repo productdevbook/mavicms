@@ -23,6 +23,7 @@ import {
   Tags,
   UsersRound,
   Trash2,
+  Workflow,
 } from "lucide-react"
 
 import { logout } from "@/lib/api"
@@ -99,6 +100,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         { to: "/dashboard/tags", label: t`Tags`, icon: Tags },
         { to: "/dashboard/forms", label: t`Forms`, icon: Inbox },
         { to: "/dashboard/mail", label: t`Mail`, icon: Mails },
+        { to: "/dashboard/flows", label: t`Flows`, icon: Workflow },
         { to: "/dashboard/trash", label: t`Bin`, icon: Trash2 },
       ],
     },

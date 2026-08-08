@@ -85,6 +85,10 @@ async fn run(hosting: &Hosting, elsewhere: &mut HashMap<Uuid, DatabaseConnection
             tracing::warn!(site = %tenant.slug, error = %err, "could not empty the bin");
         }
 
+        if let Err(err) = run_the_flows(registry, &tenant).await {
+            tracing::warn!(site = %tenant.slug, error = %err, "could not run this site's flows");
+        }
+
         let moved = match due_for(registry, elsewhere, &tenant, now).await {
             Ok(moved) => moved,
             Err(err) => {
@@ -118,6 +122,34 @@ async fn run(hosting: &Hosting, elsewhere: &mut HashMap<Uuid, DatabaseConnection
 /// The site is opened for this, which is the one background task worth opening
 /// it for: a deleted image's bytes sit in somebody's bucket costing money until
 /// this runs, and the row that says which bytes they are lives in the site.
+/// Sets off what waits on the clock, then works through whatever is queued.
+///
+/// Both on the same tick and in that order, so a flow that runs every hour is
+/// picked up in the same pass it was queued in rather than the next one.
+async fn run_the_flows(
+    registry: &crate::tenants::Registry,
+    tenant: &crate::tenants::Tenant,
+) -> AppResult<()> {
+    let state = registry.state_for(tenant).await?;
+    let Some(db) = state.db.as_ref() else {
+        return Ok(());
+    };
+
+    crate::flows::fire(
+        db,
+        crate::flows::trigger::SCHEDULE,
+        serde_json::json!({ "at": Utc::now().to_rfc3339() }),
+    )
+    .await?;
+
+    let ran =
+        crate::flows::run_queued(db, &state.secrets, &format!("https://{}", tenant.host)).await?;
+    if ran > 0 {
+        tracing::info!(site = %tenant.slug, runs = ran, "ran flows");
+    }
+    Ok(())
+}
+
 async fn empty_the_bin(
     registry: &crate::tenants::Registry,
     tenant: &crate::tenants::Tenant,

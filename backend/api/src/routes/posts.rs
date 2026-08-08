@@ -557,6 +557,9 @@ pub async fn update(
     // A post's language is fixed once created: changing it could collide with
     // a sibling and would silently move the content between languages.
     let locale = existing.locale.clone();
+    // Read before the change, so that "was it already out" can be asked after.
+    let was_published =
+        crate::content::is_finished(&PostStatus::from_str_lenient(&existing.status));
 
     let txn = db.begin().await?;
     let mut model: post::ActiveModel = existing.into();
@@ -666,6 +669,28 @@ pub async fn update(
         sync_tags(&txn, id, &locale, tags).await?;
     }
     txn.commit().await?;
+
+    // After the commit, and only on the crossing: a post saved again while
+    // already published has not been published again, and a flow that emails
+    // a mailing list does not want to hear about a corrected typo.
+    let now_published = crate::content::is_finished(&PostStatus::from_str_lenient(&saved.status));
+    if now_published
+        && !was_published
+        && let Err(err) = crate::flows::fire(
+            db,
+            crate::flows::trigger::POST_PUBLISHED,
+            serde_json::json!({
+                "id": saved.id.to_string(),
+                "title": saved.title,
+                "slug": saved.slug,
+                "kind": saved.kind,
+                "locale": saved.locale,
+            }),
+        )
+        .await
+    {
+        tracing::warn!(post = %saved.slug, error = %err, "could not start the flows for this post");
+    }
 
     let category_ids = category_ids_for(db, id).await?;
     let translations = siblings_of(db, &saved).await?;

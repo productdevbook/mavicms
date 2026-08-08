@@ -599,6 +599,24 @@ pub async fn submit_form(
 
     notify(&state, &form, &data).await;
 
+    // After the row and never in front of it, for the same reason the message
+    // above is: the visitor is owed their answer being kept, and a flow that
+    // cannot start is not their problem. Queued, not run — the form answers
+    // before anybody's mail server is involved.
+    if let Err(err) = crate::flows::fire(
+        db,
+        crate::flows::trigger::FORM_SUBMITTED,
+        serde_json::json!({
+            "form": form.slug,
+            "form_id": form.id.to_string(),
+            "fields": data,
+        }),
+    )
+    .await
+    {
+        tracing::warn!(form = %form.slug, error = %err, "could not start the flows for this form");
+    }
+
     Ok(StatusCode::CREATED)
 }
 

@@ -200,6 +200,11 @@ msgstr "{0} rows × {1} columns"
 msgid "{0} sites"
 msgstr "{0} sites"
 
+#. placeholder {0}: flow.steps.length
+#: src/routes/dashboard.flows.tsx:240
+msgid "{0} steps"
+msgstr "{0} steps"
+
 #. placeholder {0}: row.unconfirmed
 #: src/routes/dashboard.mail.tsx:304
 msgid "{0} waiting"
@@ -309,6 +314,15 @@ msgstr "A campaign can go out as any of these. Each one has to be verified in SE
 msgid "A folder inside the data directory."
 msgstr "A folder inside the data directory."
 
+#: src/components/flows/flow-canvas.tsx:92
+#: src/routes/dashboard.flows.tsx:118
+msgid "A form is filled in"
+msgstr "A form is filled in"
+
+#: src/components/flows/flow-settings.tsx:75
+msgid "A form's id, from the Forms screen. Left empty, every form on the site sets this off."
+msgstr "A form's id, from the Forms screen. Left empty, every form on the site sets this off."
+
 #. placeholder {0}: kind.slug
 #: src/routes/dashboard.content-types.tsx:194
 msgid "A front end asks for these with ?kind={0}"
@@ -358,6 +372,11 @@ msgstr "A scheduled post needs a publish date"
 #: src/components/ses-account.tsx:260
 msgid "a second, at most"
 msgstr "a second, at most"
+
+#: src/routes/dashboard.flows.tsx:161
+#: src/routes/dashboard.flows.tsx:163
+msgid "A test message"
+msgstr "A test message"
 
 #: src/routes/dashboard.forms.tsx:320
 msgid "Accepting answers"
@@ -507,6 +526,7 @@ msgid "Added here counts as confirmed — say so only if they asked to be on it.
 msgstr "Added here counts as confirmed — say so only if they asked to be on it."
 
 #: src/components/editor/dialogs.tsx:300
+#: src/components/flows/flow-settings.tsx:182
 #: src/routes/console.index.tsx:152
 #: src/routes/dashboard.api.tsx:299
 #: src/routes/dashboard.forms.tsx:264
@@ -614,6 +634,11 @@ msgstr "Amazon SES"
 msgid "Amazon's own pages"
 msgstr "Amazon's own pages"
 
+#: src/components/flows/flow-canvas.tsx:95
+#: src/routes/dashboard.flows.tsx:121
+msgid "An address is called"
+msgstr "An address is called"
+
 #: src/components/ses-analytics.tsx:190
 msgid "An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out."
 msgstr "An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out."
@@ -675,7 +700,7 @@ msgstr "Anybody can be written to, up to the limits above."
 #~ msgid "Anywhere that takes a configuration file:"
 #~ msgstr "Anywhere that takes a configuration file:"
 
-#: src/components/dashboard/dashboard-shell.tsx:112
+#: src/components/dashboard/dashboard-shell.tsx:114
 #: src/routes/dashboard.api.tsx:263
 msgid "API"
 msgstr "API"
@@ -753,6 +778,7 @@ msgstr "At least {MINIMUM_PASSWORD} characters. Changing it signs you out everyw
 #: src/components/setup/setup-wizard.tsx:545
 #: src/components/setup/setup-wizard.tsx:615
 #: src/components/setup/setup-wizard.tsx:800
+#: src/routes/dashboard.flows.tsx:322
 msgid "Back"
 msgstr "Back"
 
@@ -801,7 +827,7 @@ msgstr "Basic"
 msgid "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 msgstr "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 
-#: src/components/dashboard/dashboard-shell.tsx:102
+#: src/components/dashboard/dashboard-shell.tsx:104
 #: src/routes/dashboard.trash.tsx:129
 msgid "Bin"
 msgstr "Bin"
@@ -892,6 +918,11 @@ msgstr "Built-in integrations you can switch on and configure."
 msgid "Bullet list"
 msgstr "Bullet list"
 
+#: src/components/flows/flow-canvas.tsx:97
+#: src/routes/dashboard.flows.tsx:123
+msgid "Call an address"
+msgstr "Call an address"
+
 #: src/routes/dashboard.trash.tsx:78
 msgid "campaign"
 msgstr "campaign"
@@ -944,11 +975,15 @@ msgstr "Canonical URL"
 msgid "Carry on"
 msgstr "Carry on"
 
+#: src/components/flows/flow-settings.tsx:275
+msgid "Carry on anyway"
+msgstr "Carry on anyway"
+
 #: src/components/editor/find-replace.tsx:149
 msgid "Case sensitive"
 msgstr "Case sensitive"
 
-#: src/components/dashboard/dashboard-shell.tsx:98
+#: src/components/dashboard/dashboard-shell.tsx:99
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Categories"
@@ -1059,6 +1094,10 @@ msgstr "Command menu"
 msgid "Comments"
 msgstr "Comments"
 
+#: src/components/flows/flow-settings.tsx:236
+msgid "Compared how"
+msgstr "Compared how"
+
 #: src/components/plugin-forms.tsx:443
 msgid "Configuration set"
 msgstr "Configuration set"
@@ -1119,7 +1158,15 @@ msgstr "Connecting with a token instead, from a terminal"
 msgid "Connection URL"
 msgstr "Connection URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:85
+#: src/routes/dashboard.flows.tsx:303
+msgid "Contact form to the inbox"
+msgstr "Contact form to the inbox"
+
+#: src/components/flows/flow-settings.tsx:246
+msgid "contains"
+msgstr "contains"
+
+#: src/components/dashboard/dashboard-shell.tsx:86
 #: src/routes/dashboard.api.tsx:356
 msgid "Content"
 msgstr "Content"
@@ -1128,7 +1175,7 @@ msgstr "Content"
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
 msgstr "Content already written in this language blocks removal — you'll be told how much there is."
 
-#: src/components/dashboard/dashboard-shell.tsx:108
+#: src/components/dashboard/dashboard-shell.tsx:110
 msgid "Content types"
 msgstr "Content types"
 
@@ -1146,6 +1193,7 @@ msgstr "Continue to the dashboard"
 #~ msgstr "Continue to the editor"
 
 #: src/routes/dashboard.api.tsx:136
+#: src/routes/dashboard.flows.tsx:400
 msgid "Copied"
 msgstr "Copied"
 
@@ -1159,6 +1207,7 @@ msgstr "Copied with a key, it can also do the work rather than describe it: writ
 #: src/components/local-env.tsx:128
 #: src/components/ses-account.tsx:865
 #: src/components/ses-setup.tsx:153
+#: src/routes/dashboard.flows.tsx:397
 #: src/routes/dashboard.forms_.$formId.tsx:53
 msgid "Copy"
 msgstr "Copy"
@@ -1462,6 +1511,10 @@ msgstr "Could not remove language"
 msgid "Could not remove them"
 msgstr "Could not remove them"
 
+#: src/routes/dashboard.flows.tsx:173
+msgid "Could not run it"
+msgstr "Could not run it"
+
 #: src/components/site-mail.tsx:81
 #: src/routes/dashboard.content-types.tsx:152
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:89
@@ -1482,6 +1535,10 @@ msgstr "Could not save settings"
 #: src/components/editor/post-settings.tsx:112
 msgid "Could not save tag"
 msgstr "Could not save tag"
+
+#: src/routes/dashboard.flows.tsx:146
+msgid "Could not save the flow"
+msgstr "Could not save the flow"
 
 #: src/routes/dashboard.forms.tsx:113
 msgid "Could not save the form"
@@ -1556,6 +1613,10 @@ msgstr "Could not upload {0}"
 #: src/components/editor/post-settings.tsx:348
 msgid "Could not upload cover image"
 msgstr "Could not upload cover image"
+
+#: src/components/flows/flow-settings.tsx:110
+msgid "Counted from when it last ran, not from a clock: 60 means about once an hour."
+msgstr "Counted from when it last ran, not from a clock: 60 means about once an hour."
 
 #: src/routes/dashboard.content-types.tsx:178
 msgid "Course"
@@ -1662,6 +1723,8 @@ msgstr "Default"
 #: src/components/editor/bubble-menus.tsx:415
 #: src/routes/dashboard.categories.tsx:317
 #: src/routes/dashboard.categories.tsx:343
+#: src/routes/dashboard.flows.tsx:254
+#: src/routes/dashboard.flows.tsx:435
 #: src/routes/dashboard.languages.tsx:175
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
@@ -1868,6 +1931,10 @@ msgstr "Events arrive once the pipeline is wired up, under the mail plugin's set
 msgid "Every day"
 msgstr "Every day"
 
+#: src/components/flows/flow-settings.tsx:72
+msgid "Every form"
+msgstr "Every form"
+
 #: src/components/plugin-forms.tsx:162
 #: src/routes/dashboard.plugins_.backup.tsx:89
 msgid "Every hour"
@@ -1898,10 +1965,19 @@ msgstr "Every site has its own, on its own address. The same server answers all 
 msgid "Every site has posts and pages. Add a kind of your own when what you publish has facts of its own — a course with a price and a level, a property with rooms — so a page can lay them out instead of hunting for them in a paragraph."
 msgstr "Every site has posts and pages. Add a kind of your own when what you publish has facts of its own — a course with a price and a level, a property with rooms — so a page can lay them out instead of hunting for them in a paragraph."
 
+#: src/components/flows/flow-canvas.tsx:94
+#: src/routes/dashboard.flows.tsx:120
+msgid "Every so often"
+msgstr "Every so often"
+
 #: src/components/plugin-forms.tsx:164
 #: src/routes/dashboard.plugins_.backup.tsx:91
 msgid "Every week"
 msgstr "Every week"
+
+#: src/components/flows/flow-settings.tsx:89
+msgid "Everything"
+msgstr "Everything"
 
 #: src/routes/dashboard.api.tsx:121
 msgid "Everything below, plus a working Astro connection, as one document written for whatever is doing the wiring. It carries this site's own address, languages and forms — paste it into an assistant and it can build the front end without being told any of this twice."
@@ -1947,6 +2023,11 @@ msgstr "Find and replace"
 msgid "Find…"
 msgstr "Find…"
 
+#: src/components/dashboard/dashboard-shell.tsx:103
+#: src/routes/dashboard.flows.tsx:201
+msgid "Flows"
+msgstr "Flows"
+
 #: src/components/editor/dialogs.tsx:543
 #: src/components/editor/mavi-editor.tsx:531
 msgid "Focus mode"
@@ -1979,7 +2060,7 @@ msgstr "Format"
 msgid "Formatting"
 msgstr "Formatting"
 
-#: src/components/dashboard/dashboard-shell.tsx:100
+#: src/components/dashboard/dashboard-shell.tsx:101
 #: src/routes/dashboard.forms_.$formId.tsx:144
 #: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
@@ -2172,6 +2253,10 @@ msgstr "How many to keep"
 msgid "How often"
 msgstr "How often"
 
+#: src/components/flows/flow-settings.tsx:101
+msgid "How often, in minutes"
+msgstr "How often, in minutes"
+
 #: src/components/ses-health.tsx:227
 msgid "How the sending is going"
 msgstr "How the sending is going"
@@ -2199,6 +2284,14 @@ msgstr "I already have an account"
 #: src/components/ses-setup.tsx:139
 msgid "IAM users"
 msgstr "IAM users"
+
+#: src/components/flows/flow-settings.tsx:262
+msgid "If it does not match, the steps after this one are skipped and the run is still counted as a success."
+msgstr "If it does not match, the steps after this one are skipped and the run is still counted as a success."
+
+#: src/components/flows/flow-settings.tsx:268
+msgid "If this step fails"
+msgstr "If this step fails"
 
 #: src/routes/dashboard.trash.tsx:70
 msgid "image"
@@ -2294,6 +2387,10 @@ msgstr "Interactive docs"
 msgid "Invitations"
 msgstr "Invitations"
 
+#: src/components/flows/flow-settings.tsx:245
+msgid "is exactly"
+msgstr "is exactly"
+
 #: src/routes/dashboard.api.tsx:242
 #~ msgid "It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages."
 #~ msgstr "It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages."
@@ -2323,6 +2420,14 @@ msgstr "It is in the text you just copied and is not shown again. Whoever holds 
 #~ msgid "It lives at /api/llms.txt, so anything that can reach this site can read it."
 #~ msgstr "It lives at /api/llms.txt, so anything that can reach this site can read it."
 
+#: src/routes/dashboard.flows.tsx:169
+msgid "It ran and something failed"
+msgstr "It ran and something failed"
+
+#: src/routes/dashboard.flows.tsx:167
+msgid "It ran, and every step worked"
+msgstr "It ran, and every step worked"
+
 #: src/components/publish-panel.tsx:235
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "It runs with CMS_API_URL and SITE_URL set to this site's address."
@@ -2340,6 +2445,10 @@ msgstr "It will send you to this site to sign in and ask whether you want to all
 #: src/components/editor/toolbar.tsx:314
 msgid "Italic"
 msgstr "Italic"
+
+#: src/routes/dashboard.flows.tsx:391
+msgid "Its address"
+msgstr "Its address"
 
 #: src/routes/dashboard.sites.tsx:174
 msgid "Its own database server"
@@ -2383,7 +2492,7 @@ msgstr "Label"
 msgid "Language"
 msgstr "Language"
 
-#: src/components/dashboard/dashboard-shell.tsx:109
+#: src/components/dashboard/dashboard-shell.tsx:111
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Languages"
@@ -2511,7 +2620,7 @@ msgstr "Long text"
 msgid "Made {0}"
 msgstr "Made {0}"
 
-#: src/components/dashboard/dashboard-shell.tsx:101
+#: src/components/dashboard/dashboard-shell.tsx:102
 #: src/routes/console.sites.$siteId.tsx:312
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
 #: src/routes/dashboard.mail.tsx:69
@@ -2582,7 +2691,7 @@ msgstr "Markdown imported"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS needs a database to store your site."
 
-#: src/components/dashboard/dashboard-shell.tsx:97
+#: src/components/dashboard/dashboard-shell.tsx:98
 msgid "Media"
 msgstr "Media"
 
@@ -2607,6 +2716,10 @@ msgstr "Mention someone"
 msgid "Merge cells"
 msgstr "Merge cells"
 
+#: src/components/flows/flow-settings.tsx:165
+msgid "Message"
+msgstr "Message"
+
 #: src/components/ses-account.tsx:251
 msgid "messages a day"
 msgstr "messages a day"
@@ -2619,6 +2732,10 @@ msgstr "Messages a day"
 msgid "Messages a second"
 msgstr "Messages a second"
 
+#: src/components/flows/flow-settings.tsx:191
+msgid "Method"
+msgstr "Method"
+
 #: src/components/editor/palette.ts:53
 msgid "Mono"
 msgstr "Mono"
@@ -2628,10 +2745,12 @@ msgid "More"
 msgstr "More"
 
 #: src/components/form-fields-editor.tsx:178
+#: src/routes/dashboard.flows.tsx:427
 msgid "Move down"
 msgstr "Move down"
 
 #: src/components/form-fields-editor.tsx:169
+#: src/routes/dashboard.flows.tsx:419
 msgid "Move up"
 msgstr "Move up"
 
@@ -2644,6 +2763,7 @@ msgid "My Mavi CMS Site"
 msgstr "My Mavi CMS Site"
 
 #: src/components/ses-account.tsx:838
+#: src/routes/dashboard.flows.tsx:298
 #: src/routes/dashboard.forms.tsx:160
 #: src/routes/dashboard.forms.tsx:238
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:198
@@ -2679,7 +2799,7 @@ msgid "needs translation"
 msgstr "needs translation"
 
 #. placeholder {0}: writing.name
-#: src/components/dashboard/dashboard-shell.tsx:195
+#: src/components/dashboard/dashboard-shell.tsx:197
 msgid "New {0}"
 msgstr "New {0}"
 
@@ -2696,6 +2816,10 @@ msgstr "New campaign"
 #: src/routes/dashboard.categories.tsx:187
 msgid "New category"
 msgstr "New category"
+
+#: src/routes/dashboard.flows.tsx:207
+msgid "New flow"
+msgstr "New flow"
 
 #: src/routes/dashboard.forms.tsx:161
 #: src/routes/dashboard.forms.tsx:228
@@ -2768,6 +2892,10 @@ msgstr "No emoji found"
 #: src/routes/dashboard.content-types.tsx:95
 msgid "no fields of its own"
 msgstr "no fields of its own"
+
+#: src/routes/dashboard.flows.tsx:223
+msgid "No flows yet"
+msgstr "No flows yet"
 
 #: src/routes/dashboard.forms.tsx:171
 msgid "No forms yet"
@@ -2960,6 +3088,7 @@ msgstr "Off"
 msgid "Older archives are removed once a new one is written."
 msgstr "Older archives are removed once a new one is written."
 
+#: src/routes/dashboard.flows.tsx:312
 #: src/routes/dashboard.sites.tsx:180
 #: src/routes/dashboard.sites.tsx:244
 msgid "On"
@@ -3013,10 +3142,23 @@ msgstr "One post by its address."
 msgid "One post, with its other languages."
 msgstr "One post, with its other languages."
 
+#: src/routes/dashboard.flows.tsx:239
+msgid "one step"
+msgstr "one step"
+
+#: src/components/flows/flow-settings.tsx:219
+msgid "Only addresses on the public internet. An address inside this cluster is refused, which is what keeps a flow from being a way to read the server's own services."
+msgstr "Only addresses on the public internet. An address inside this cluster is refused, which is what keeps a flow from being a way to read the server's own services."
+
 #: src/components/plugin-forms.tsx:161
 #: src/routes/dashboard.plugins_.backup.tsx:88
 msgid "Only by hand"
 msgstr "Only by hand"
+
+#: src/components/flows/flow-canvas.tsx:98
+#: src/routes/dashboard.flows.tsx:124
+msgid "Only carry on if"
+msgstr "Only carry on if"
 
 #: src/components/publish-panel.tsx:249
 msgid "Only for a private repository"
@@ -3035,6 +3177,7 @@ msgid "Only you see this"
 msgstr "Only you see this"
 
 #: src/components/editor/bubble-menus.tsx:290
+#: src/routes/dashboard.flows.tsx:249
 msgid "Open"
 msgstr "Open"
 
@@ -3168,7 +3311,7 @@ msgstr "Pause"
 msgid "Paused"
 msgstr "Paused"
 
-#: src/components/dashboard/dashboard-shell.tsx:111
+#: src/components/dashboard/dashboard-shell.tsx:113
 #: src/routes/dashboard.mail.tsx:80
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
@@ -3211,7 +3354,7 @@ msgstr "plain text"
 msgid "Plain text block"
 msgstr "Plain text block"
 
-#: src/components/dashboard/dashboard-shell.tsx:110
+#: src/components/dashboard/dashboard-shell.tsx:112
 #: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.email.tsx:118
 #: src/routes/dashboard.plugins_.s3.tsx:111
@@ -3228,7 +3371,7 @@ msgstr "Point the address at this server first — the site answers on whichever
 msgid "Port"
 msgstr "Port"
 
-#: src/components/dashboard/dashboard-shell.tsx:72
+#: src/components/dashboard/dashboard-shell.tsx:73
 #: src/components/editor/post-settings.tsx:427
 #: src/routes/dashboard.trash.tsx:68
 msgid "post"
@@ -3266,7 +3409,11 @@ msgstr "Post title"
 msgid "post-url"
 msgstr "post-url"
 
-#: src/components/dashboard/dashboard-shell.tsx:87
+#: src/components/flows/flow-settings.tsx:92
+msgid "post, page, or one this site made up. Left empty, anything being published sets this off."
+msgstr "post, page, or one this site made up. Left empty, anything being published sets this off."
+
+#: src/components/dashboard/dashboard-shell.tsx:88
 #: src/lib/use-content-types.ts:45
 msgid "Posts"
 msgstr "Posts"
@@ -3296,7 +3443,7 @@ msgstr "Previous"
 msgid "Public base URL"
 msgstr "Public base URL"
 
-#: src/components/dashboard/dashboard-shell.tsx:117
+#: src/components/dashboard/dashboard-shell.tsx:119
 #: src/components/editor/mavi-editor.tsx:735
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:310
@@ -3598,6 +3745,7 @@ msgstr "Sandbox"
 #: src/routes/console.sites.$siteId.tsx:411
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.content-types.tsx:209
+#: src/routes/dashboard.flows.tsx:316
 #: src/routes/dashboard.forms.tsx:331
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:349
 #: src/routes/dashboard.mail.tsx:390
@@ -3608,6 +3756,14 @@ msgstr "Sandbox"
 msgid "Save"
 msgstr "Save"
 
+#: src/routes/dashboard.flows.tsx:155
+msgid "Save it first"
+msgstr "Save it first"
+
+#: src/components/flows/flow-settings.tsx:118
+msgid "Save the flow and an address appears here. Anything sent to it sets this off; the address is the only thing standing in the way, so treat it as a password."
+msgstr "Save the flow and an address appears here. Anything sent to it sets this off; the address is the only thing standing in the way, so treat it as a password."
+
 #: src/components/console-build-token.tsx:26
 #: src/components/editor/status-bar.tsx:116
 #: src/components/site-mail.tsx:78
@@ -3615,6 +3771,7 @@ msgstr "Save"
 #: src/routes/console.sites.$siteId.tsx:165
 #: src/routes/console.sites.$siteId.tsx:197
 #: src/routes/console.sites.$siteId.tsx:214
+#: src/routes/dashboard.flows.tsx:143
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:86
 #: src/routes/dashboard.plugins_.email.tsx:78
@@ -3702,6 +3859,11 @@ msgstr "Send a form's answers. No account needed."
 msgid "Send a test"
 msgstr "Send a test"
 
+#: src/components/flows/flow-canvas.tsx:96
+#: src/routes/dashboard.flows.tsx:122
+msgid "Send an email"
+msgstr "Send an email"
+
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:190
 msgid "Send it"
 msgstr "Send it"
@@ -3774,6 +3936,10 @@ msgstr "sent in the last day"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:121
 msgid "Sent to {0}"
 msgstr "Sent to {0}"
+
+#: src/components/flows/flow-settings.tsx:174
+msgid "Sent with this site's own mail settings, from Plugins → Email."
+msgstr "Sent with this site's own mail settings, from Plugins → Email."
 
 #: src/components/editor/post-settings.tsx:401
 msgid "SEO description"
@@ -3889,7 +4055,7 @@ msgid "Sign in; sets the session cookie."
 msgstr "Sign in; sets the session cookie."
 
 #: src/components/console/console-shell.tsx:144
-#: src/components/dashboard/dashboard-shell.tsx:202
+#: src/components/dashboard/dashboard-shell.tsx:204
 #: src/components/editor/mavi-editor.tsx:695
 #: src/components/editor/mavi-editor.tsx:983
 msgid "Sign out"
@@ -3920,7 +4086,7 @@ msgid "Site title"
 msgstr "Site title"
 
 #: src/components/console/console-shell.tsx:51
-#: src/components/dashboard/dashboard-shell.tsx:119
+#: src/components/dashboard/dashboard-shell.tsx:121
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
 msgstr "Sites"
@@ -3936,6 +4102,15 @@ msgstr "Small section heading"
 #: src/components/ses-account.tsx:422
 msgid "someone@example.com or example.com"
 msgstr "someone@example.com or example.com"
+
+#: src/routes/dashboard.flows.tsx:203
+msgid "Something happens, so the site does something: a form arrives and somebody is emailed, a post goes out and an address is called."
+msgstr "Something happens, so the site does something: a form arrives and somebody is emailed, a post goes out and an address is called."
+
+#: src/components/flows/flow-canvas.tsx:93
+#: src/routes/dashboard.flows.tsx:119
+msgid "Something is published"
+msgstr "Something is published"
 
 #: src/components/editor/bubble-menus.tsx:521
 msgid "Split cell"
@@ -3957,6 +4132,10 @@ msgstr "Stop"
 #: src/components/ses-account.tsx:300
 msgid "Stop all sending"
 msgstr "Stop all sending"
+
+#: src/components/flows/flow-settings.tsx:274
+msgid "Stop the whole flow"
+msgstr "Stop the whole flow"
 
 #. placeholder {0}: new Date(token.expires_at).toLocaleString()
 #. placeholder {0}: when(key.expires_at)
@@ -4008,6 +4187,7 @@ msgstr "Sub-heading"
 msgid "Subdomain for bounces"
 msgstr "Subdomain for bounces"
 
+#: src/components/flows/flow-settings.tsx:157
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:210
 msgid "Subject"
 msgstr "Subject"
@@ -4033,6 +4213,7 @@ msgstr "Superscript"
 msgid "Support cases, which a quota increase is"
 msgstr "Support cases, which a quota increase is"
 
+#: src/routes/dashboard.flows.tsx:241
 #: src/routes/dashboard.forms.tsx:183
 msgid "switched off"
 msgstr "switched off"
@@ -4074,7 +4255,7 @@ msgstr "tag"
 msgid "Tagline"
 msgstr "Tagline"
 
-#: src/components/dashboard/dashboard-shell.tsx:99
+#: src/components/dashboard/dashboard-shell.tsx:100
 #: src/components/editor/post-settings.tsx:247
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -4153,6 +4334,10 @@ msgstr "Text color"
 msgid "Text shown in search results"
 msgstr "Text shown in search results"
 
+#: src/components/flows/flow-settings.tsx:253
+msgid "That"
+msgstr "That"
+
 #: src/components/assistant-keys.tsx:37
 msgid "That key stopped working"
 msgstr "That key stopped working"
@@ -4185,6 +4370,10 @@ msgstr "The ceiling on this account today. Sending stops at it rather than queue
 #: src/components/ses-setup.tsx:161
 msgid "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
 msgstr "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
+
+#: src/routes/dashboard.flows.tsx:225
+msgid "The first one most sites want: a contact form that emails whoever answers it."
+msgstr "The first one most sites want: a contact form that emails whoever answers it."
 
 #: src/routes/dashboard.api.tsx:229
 msgid "The forms this site accepts answers on."
@@ -4279,6 +4468,10 @@ msgstr "These figures come from Amazon's deliverability manager, which has to be
 msgid "They can write, publish and manage this site."
 msgstr "They can write, publish and manage this site."
 
+#: src/components/flows/flow-settings.tsx:227
+msgid "This"
+msgstr "This"
+
 #: src/components/ses-account.tsx:312
 msgid "This account is out of the sandbox: it can write to anybody."
 msgstr "This account is out of the sandbox: it can write to anybody."
@@ -4325,7 +4518,7 @@ msgstr "This server is by invitation"
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
 msgstr "This signs you in to the server itself. Everyone else signs in somewhere else:"
 
-#: src/components/dashboard/dashboard-shell.tsx:106
+#: src/components/dashboard/dashboard-shell.tsx:108
 msgid "This site"
 msgstr "This site"
 
@@ -4336,6 +4529,10 @@ msgstr "This site's tools could not be listed just now."
 #: src/routes/dashboard.trash.tsx:187
 msgid "Throw it away now"
 msgstr "Throw it away now"
+
+#: src/components/flows/flow-settings.tsx:148
+msgid "To"
+msgstr "To"
 
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
@@ -4359,6 +4556,10 @@ msgstr "Translations"
 #: src/components/setup/setup-wizard.tsx:870
 msgid "Try again"
 msgstr "Try again"
+
+#: src/routes/dashboard.flows.tsx:319
+msgid "Try it"
+msgstr "Try it"
 
 #: src/components/editor/block-handle.tsx:163
 msgid "Turn into"
@@ -4496,6 +4697,10 @@ msgstr "waiting for DNS"
 msgid "Waiting to be thrown away"
 msgstr "Waiting to be thrown away"
 
+#: src/components/flows/flow-settings.tsx:247
+msgid "was filled in"
+msgstr "was filled in"
+
 #: src/components/ses-setup.tsx:214
 msgid "Watching how sending is going"
 msgstr "Watching how sending is going"
@@ -4541,6 +4746,10 @@ msgstr "What comes in is kept as it was sent, so changing the fields later never
 msgid "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 msgstr "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 
+#: src/routes/dashboard.flows.tsx:266
+msgid "What has been happening"
+msgstr "What has been happening"
+
 #: src/routes/dashboard.api.tsx:233
 msgid "What has come in, newest first."
 msgstr "What has come in, newest first."
@@ -4556,6 +4765,10 @@ msgstr "What it is for"
 #: src/routes/dashboard.content-types.tsx:166
 msgid "What one of these is made of, beyond its title and its text."
 msgstr "What one of these is made of, beyond its title and its text."
+
+#: src/routes/dashboard.flows.tsx:359
+msgid "What sets it off"
+msgstr "What sets it off"
 
 #: src/routes/dashboard.trash.tsx:72
 msgid "what somebody sent"
@@ -4576,6 +4789,10 @@ msgstr "What this site publishes"
 #: src/components/site-mail.tsx:113
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
+
+#: src/components/flows/flow-settings.tsx:209
+msgid "What to send"
+msgstr "What to send"
 
 #: src/components/ses-health.tsx:371
 msgid "What you have asked for"
@@ -4635,6 +4852,14 @@ msgstr "Where to send it"
 #: src/routes/dashboard.api.tsx:251
 msgid "Which fields a form takes, and which are required."
 msgstr "Which fields a form takes, and which are required."
+
+#: src/components/flows/flow-settings.tsx:67
+msgid "Which form"
+msgstr "Which form"
+
+#: src/components/flows/flow-settings.tsx:84
+msgid "Which kind"
+msgstr "Which kind"
 
 #: src/routes/dashboard.users.tsx:152
 msgid "Who can sign in to this site and write on it."
@@ -4733,6 +4958,10 @@ msgstr "You can change this later."
 #: src/routes/oauth.tsx:136
 msgid "You can disconnect it later from API in the panel."
 msgstr "You can disconnect it later from API in the panel."
+
+#: src/components/flows/flow-settings.tsx:39
+msgid "You can write these anywhere above"
+msgstr "You can write these anywhere above"
 
 #: src/components/setup/setup-wizard.tsx:674
 msgid "You'll use this to sign in and manage your site."

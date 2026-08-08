@@ -888,6 +888,101 @@ export function saveOrganizationBuildToken(
   })
 }
 
+export interface FlowStep {
+  id?: string
+  position?: number
+  action: string
+  config: Record<string, unknown>
+  on_error?: string
+}
+
+export interface Flow {
+  id: string
+  name: string
+  trigger_kind: string
+  trigger_config: Record<string, unknown>
+  enabled: boolean
+  webhook_url: string | null
+  steps: FlowStep[]
+  updated_at: string
+}
+
+export interface FlowRunStep {
+  position: number
+  action: string
+  status: string
+  output: unknown
+  error: string | null
+  finished_at: string
+}
+
+export interface FlowRun {
+  id: string
+  flow_id: string
+  status: string
+  trigger: unknown
+  error: string | null
+  created_at: string
+  finished_at: string | null
+  steps: FlowRunStep[]
+}
+
+export interface FlowVocabulary {
+  triggers: { kind: string; offers: { path: string; what: string }[] }[]
+  actions: { kind: string; offers: { path: string; what: string }[] }[]
+}
+
+export interface SaveFlow {
+  name: string
+  trigger_kind: string
+  trigger_config?: Record<string, unknown>
+  enabled?: boolean
+  steps: { action: string; config: Record<string, unknown>; on_error?: string }[]
+}
+
+export function getFlowVocabulary(): Promise<FlowVocabulary> {
+  return request<FlowVocabulary>("/flows/vocabulary")
+}
+
+export function getFlows(): Promise<Flow[]> {
+  return request<Flow[]>("/flows")
+}
+
+export function createFlow(payload: SaveFlow): Promise<Flow> {
+  return request<Flow>("/flows", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function updateFlow(id: string, payload: SaveFlow): Promise<Flow> {
+  return request<Flow>(`/flows/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteFlow(id: string): Promise<void> {
+  return request<void>(`/flows/${id}`, { method: "DELETE" })
+}
+
+/** Runs it now with a trigger you made up, and says what happened. */
+export function testFlow(id: string, trigger: unknown): Promise<FlowRun> {
+  return request<FlowRun>(`/flows/${id}/test`, {
+    method: "POST",
+    body: JSON.stringify(trigger),
+  })
+}
+
+export function getFlowRuns(flowId?: string): Promise<FlowRun[]> {
+  const query = flowId ? `?flow_id=${flowId}` : ""
+  return request<FlowRun[]>(`/flows/runs${query}`)
+}
+
+export function getFlowRun(id: string): Promise<FlowRun> {
+  return request<FlowRun>(`/flows/runs/${id}`)
+}
+
 export interface TrashEntry {
   id: string
   kind: string

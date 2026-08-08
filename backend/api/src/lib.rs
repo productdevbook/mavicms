@@ -15,6 +15,7 @@ pub mod entities;
 pub mod error;
 pub mod etag;
 pub mod fetch;
+pub mod flows;
 pub mod languages;
 pub mod mailing;
 pub mod markdown;

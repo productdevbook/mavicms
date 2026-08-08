@@ -200,6 +200,11 @@ msgstr "{0} satır × {1} sütun"
 msgid "{0} sites"
 msgstr "{0} site"
 
+#. placeholder {0}: flow.steps.length
+#: src/routes/dashboard.flows.tsx:240
+msgid "{0} steps"
+msgstr "{0} adım"
+
 #. placeholder {0}: row.unconfirmed
 #: src/routes/dashboard.mail.tsx:304
 msgid "{0} waiting"
@@ -309,6 +314,15 @@ msgstr "Bir kampanya bunlardan herhangi biriyle gidebilir. Her birinin SES'te ay
 msgid "A folder inside the data directory."
 msgstr "Veri dizininin içinde bir klasör."
 
+#: src/components/flows/flow-canvas.tsx:92
+#: src/routes/dashboard.flows.tsx:118
+msgid "A form is filled in"
+msgstr "Bir form dolduruldu"
+
+#: src/components/flows/flow-settings.tsx:75
+msgid "A form's id, from the Forms screen. Left empty, every form on the site sets this off."
+msgstr "Formun kimliği — Formlar ekranında yazıyor. Boş bırakılırsa sitedeki her form bunu tetikler."
+
 #. placeholder {0}: kind.slug
 #: src/routes/dashboard.content-types.tsx:194
 msgid "A front end asks for these with ?kind={0}"
@@ -358,6 +372,11 @@ msgstr "Zamanlanmış bir yazının bir yayın tarihi olmalı"
 #: src/components/ses-account.tsx:260
 msgid "a second, at most"
 msgstr "saniyede en fazla"
+
+#: src/routes/dashboard.flows.tsx:161
+#: src/routes/dashboard.flows.tsx:163
+msgid "A test message"
+msgstr "Deneme mesajı"
 
 #: src/routes/dashboard.forms.tsx:320
 msgid "Accepting answers"
@@ -507,6 +526,7 @@ msgid "Added here counts as confirmed — say so only if they asked to be on it.
 msgstr "Buradan eklemek onaylı sayılır — yalnızca listede olmayı kendileri istediyse ekleyin."
 
 #: src/components/editor/dialogs.tsx:300
+#: src/components/flows/flow-settings.tsx:182
 #: src/routes/console.index.tsx:152
 #: src/routes/dashboard.api.tsx:299
 #: src/routes/dashboard.forms.tsx:264
@@ -614,6 +634,11 @@ msgstr "Amazon SES"
 msgid "Amazon's own pages"
 msgstr "Amazon'un kendi sayfaları"
 
+#: src/components/flows/flow-canvas.tsx:95
+#: src/routes/dashboard.flows.tsx:121
+msgid "An address is called"
+msgstr "Bir adres çağrıldı"
+
 #: src/components/ses-analytics.tsx:190
 msgid "An address that goes for good, or reports the mail as spam, is blocked here the moment Amazon says so — without waiting for the next campaign to find out."
 msgstr "Kalıcı olarak ulaşılamayan ya da postayı spam bildiren bir adres, Amazon söyler söylemez burada da engellenir — bir sonraki kampanyanın bunu keşfetmesi beklenmez."
@@ -675,7 +700,7 @@ msgstr "Yukarıdaki sınırlara kadar herkese yazılabilir."
 #~ msgid "Anywhere that takes a configuration file:"
 #~ msgstr "Ayar dosyası isteyen her yerde:"
 
-#: src/components/dashboard/dashboard-shell.tsx:112
+#: src/components/dashboard/dashboard-shell.tsx:114
 #: src/routes/dashboard.api.tsx:263
 msgid "API"
 msgstr "API"
@@ -753,6 +778,7 @@ msgstr "En az {MINIMUM_PASSWORD} karakter. Değiştirmek sizi bu tarayıcı dahi
 #: src/components/setup/setup-wizard.tsx:545
 #: src/components/setup/setup-wizard.tsx:615
 #: src/components/setup/setup-wizard.tsx:800
+#: src/routes/dashboard.flows.tsx:322
 msgid "Back"
 msgstr "Geri"
 
@@ -801,7 +827,7 @@ msgstr "Temel"
 msgid "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 msgstr "Başlık, metin, görsel ve SEO'nun ötesinde — onlar burada zaten her şeyde var. Gerekli işaretlenmiş bir alan, o şey yayına alınmadan önce doldurulmalı; taslak yarım kalabilir."
 
-#: src/components/dashboard/dashboard-shell.tsx:102
+#: src/components/dashboard/dashboard-shell.tsx:104
 #: src/routes/dashboard.trash.tsx:129
 msgid "Bin"
 msgstr "Çöp kutusu"
@@ -892,6 +918,11 @@ msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
 msgid "Bullet list"
 msgstr "Madde listesi"
 
+#: src/components/flows/flow-canvas.tsx:97
+#: src/routes/dashboard.flows.tsx:123
+msgid "Call an address"
+msgstr "Bir adrese istek at"
+
 #: src/routes/dashboard.trash.tsx:78
 msgid "campaign"
 msgstr "kampanya"
@@ -944,11 +975,15 @@ msgstr "Canonical URL"
 msgid "Carry on"
 msgstr "Devam et"
 
+#: src/components/flows/flow-settings.tsx:275
+msgid "Carry on anyway"
+msgstr "Yine de devam et"
+
 #: src/components/editor/find-replace.tsx:149
 msgid "Case sensitive"
 msgstr "Büyük/küçük harf duyarlı"
 
-#: src/components/dashboard/dashboard-shell.tsx:98
+#: src/components/dashboard/dashboard-shell.tsx:99
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Kategoriler"
@@ -1059,6 +1094,10 @@ msgstr "Komut menüsü"
 msgid "Comments"
 msgstr "Yorumlar"
 
+#: src/components/flows/flow-settings.tsx:236
+msgid "Compared how"
+msgstr "Nasıl karşılaştırılsın"
+
 #: src/components/plugin-forms.tsx:443
 msgid "Configuration set"
 msgstr "Yapılandırma kümesi"
@@ -1119,7 +1158,15 @@ msgstr "Bunun yerine terminalden, jetonla bağlanmak"
 msgid "Connection URL"
 msgstr "Bağlantı URL'si"
 
-#: src/components/dashboard/dashboard-shell.tsx:85
+#: src/routes/dashboard.flows.tsx:303
+msgid "Contact form to the inbox"
+msgstr "İletişim formu gelen kutusuna"
+
+#: src/components/flows/flow-settings.tsx:246
+msgid "contains"
+msgstr "içeriyor"
+
+#: src/components/dashboard/dashboard-shell.tsx:86
 #: src/routes/dashboard.api.tsx:356
 msgid "Content"
 msgstr "İçerik"
@@ -1128,7 +1175,7 @@ msgstr "İçerik"
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
 msgstr "Bu dilde yazılmış içerik varsa silme engellenir — ne kadar olduğu size bildirilir."
 
-#: src/components/dashboard/dashboard-shell.tsx:108
+#: src/components/dashboard/dashboard-shell.tsx:110
 msgid "Content types"
 msgstr "İçerik türleri"
 
@@ -1146,6 +1193,7 @@ msgstr "Panele devam et"
 #~ msgstr "Editöre git"
 
 #: src/routes/dashboard.api.tsx:136
+#: src/routes/dashboard.flows.tsx:400
 msgid "Copied"
 msgstr "Kopyalandı"
 
@@ -1159,6 +1207,7 @@ msgstr "Anahtarla kopyalarsanız işi anlatmakla kalmaz, yapar da: yazı yazar, 
 #: src/components/local-env.tsx:128
 #: src/components/ses-account.tsx:865
 #: src/components/ses-setup.tsx:153
+#: src/routes/dashboard.flows.tsx:397
 #: src/routes/dashboard.forms_.$formId.tsx:53
 msgid "Copy"
 msgstr "Kopyala"
@@ -1462,6 +1511,10 @@ msgstr "Dil silinemedi"
 msgid "Could not remove them"
 msgstr "Kaldırılamadı"
 
+#: src/routes/dashboard.flows.tsx:173
+msgid "Could not run it"
+msgstr "Çalıştırılamadı"
+
 #: src/components/site-mail.tsx:81
 #: src/routes/dashboard.content-types.tsx:152
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:89
@@ -1482,6 +1535,10 @@ msgstr "Ayarlar kaydedilemedi"
 #: src/components/editor/post-settings.tsx:112
 msgid "Could not save tag"
 msgstr "Etiket kaydedilemedi"
+
+#: src/routes/dashboard.flows.tsx:146
+msgid "Could not save the flow"
+msgstr "Akış kaydedilemedi"
 
 #: src/routes/dashboard.forms.tsx:113
 msgid "Could not save the form"
@@ -1556,6 +1613,10 @@ msgstr "{0} yüklenemedi"
 #: src/components/editor/post-settings.tsx:348
 msgid "Could not upload cover image"
 msgstr "Kapak görseli yüklenemedi"
+
+#: src/components/flows/flow-settings.tsx:110
+msgid "Counted from when it last ran, not from a clock: 60 means about once an hour."
+msgstr "Saatten değil, son çalıştığı andan sayılır: 60, kabaca saatte bir demek."
 
 #: src/routes/dashboard.content-types.tsx:178
 msgid "Course"
@@ -1662,6 +1723,8 @@ msgstr "Varsayılan"
 #: src/components/editor/bubble-menus.tsx:415
 #: src/routes/dashboard.categories.tsx:317
 #: src/routes/dashboard.categories.tsx:343
+#: src/routes/dashboard.flows.tsx:254
+#: src/routes/dashboard.flows.tsx:435
 #: src/routes/dashboard.languages.tsx:175
 #: src/routes/dashboard.media.tsx:121
 #: src/routes/dashboard.media.tsx:146
@@ -1864,6 +1927,10 @@ msgstr "Olaylar, mektup eklentisinin ayarlarından bağlantı kurulduktan sonra 
 msgid "Every day"
 msgstr "Günde bir"
 
+#: src/components/flows/flow-settings.tsx:72
+msgid "Every form"
+msgstr "Her form"
+
 #: src/components/plugin-forms.tsx:162
 #: src/routes/dashboard.plugins_.backup.tsx:89
 msgid "Every hour"
@@ -1894,10 +1961,19 @@ msgstr "Her sitenin kendi adresinde kendi API'si var. Hepsine aynı sunucu yanı
 msgid "Every site has posts and pages. Add a kind of your own when what you publish has facts of its own — a course with a price and a level, a property with rooms — so a page can lay them out instead of hunting for them in a paragraph."
 msgstr "Her sitede yazılar ve sayfalar var. Yayınladığınız şeyin kendine ait bilgileri varsa — fiyatı ve seviyesi olan bir eğitim, oda sayısı olan bir daire — kendi türünüzü ekleyin; böylece sayfa onları paragrafın içinde aramak yerine düzenleyerek gösterebilir."
 
+#: src/components/flows/flow-canvas.tsx:94
+#: src/routes/dashboard.flows.tsx:120
+msgid "Every so often"
+msgstr "Belirli aralıklarla"
+
 #: src/components/plugin-forms.tsx:164
 #: src/routes/dashboard.plugins_.backup.tsx:91
 msgid "Every week"
 msgstr "Haftada bir"
+
+#: src/components/flows/flow-settings.tsx:89
+msgid "Everything"
+msgstr "Her şey"
 
 #: src/routes/dashboard.api.tsx:121
 msgid "Everything below, plus a working Astro connection, as one document written for whatever is doing the wiring. It carries this site's own address, languages and forms — paste it into an assistant and it can build the front end without being told any of this twice."
@@ -1943,6 +2019,11 @@ msgstr "Bul ve değiştir"
 msgid "Find…"
 msgstr "Ara…"
 
+#: src/components/dashboard/dashboard-shell.tsx:103
+#: src/routes/dashboard.flows.tsx:201
+msgid "Flows"
+msgstr "Akışlar"
+
 #: src/components/editor/dialogs.tsx:543
 #: src/components/editor/mavi-editor.tsx:531
 msgid "Focus mode"
@@ -1975,7 +2056,7 @@ msgstr "Biçim"
 msgid "Formatting"
 msgstr "Biçimlendirme"
 
-#: src/components/dashboard/dashboard-shell.tsx:100
+#: src/components/dashboard/dashboard-shell.tsx:101
 #: src/routes/dashboard.forms_.$formId.tsx:144
 #: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
@@ -2168,6 +2249,10 @@ msgstr "Kaç tanesi saklansın"
 msgid "How often"
 msgstr "Ne sıklıkla"
 
+#: src/components/flows/flow-settings.tsx:101
+msgid "How often, in minutes"
+msgstr "Kaç dakikada bir"
+
 #: src/components/ses-health.tsx:227
 msgid "How the sending is going"
 msgstr "Gönderim nasıl gidiyor"
@@ -2195,6 +2280,14 @@ msgstr "Zaten hesabım var"
 #: src/components/ses-setup.tsx:139
 msgid "IAM users"
 msgstr "IAM kullanıcıları"
+
+#: src/components/flows/flow-settings.tsx:262
+msgid "If it does not match, the steps after this one are skipped and the run is still counted as a success."
+msgstr "Eşleşmezse bundan sonraki adımlar atlanır ve çalıştırma yine başarılı sayılır."
+
+#: src/components/flows/flow-settings.tsx:268
+msgid "If this step fails"
+msgstr "Bu adım başarısız olursa"
 
 #: src/routes/dashboard.trash.tsx:70
 msgid "image"
@@ -2290,6 +2383,10 @@ msgstr "Etkileşimli belgeler"
 msgid "Invitations"
 msgstr "Davetler"
 
+#: src/components/flows/flow-settings.tsx:245
+msgid "is exactly"
+msgstr "tam olarak eşit"
+
 #: src/routes/dashboard.api.tsx:242
 #~ msgid "It answers about this site: finding and reading posts, writing and correcting them, uploading files, what has come in through the forms, and building the pages."
 #~ msgstr "Bu siteyi yanıtlar: yazı bulmak ve okumak, yazmak ve düzeltmek, dosya yüklemek, formlardan geleni görmek, sayfaları derlemek."
@@ -2319,6 +2416,14 @@ msgstr "Az önce kopyaladığınız metnin içinde; bir daha gösterilmez. Anaht
 #~ msgid "It lives at /api/llms.txt, so anything that can reach this site can read it."
 #~ msgstr "/api/llms.txt adresinde durur; bu siteye erişebilen her şey okuyabilir."
 
+#: src/routes/dashboard.flows.tsx:169
+msgid "It ran and something failed"
+msgstr "Çalıştı ama bir şey başarısız oldu"
+
+#: src/routes/dashboard.flows.tsx:167
+msgid "It ran, and every step worked"
+msgstr "Çalıştı, bütün adımlar başarılı"
+
 #: src/components/publish-panel.tsx:235
 msgid "It runs with CMS_API_URL and SITE_URL set to this site's address."
 msgstr "CMS_API_URL ve SITE_URL bu sitenin adresine ayarlı olarak çalışır."
@@ -2336,6 +2441,10 @@ msgstr "Sizi giriş yapmanız için bu siteye yönlendirir ve izin verip vermeye
 #: src/components/editor/toolbar.tsx:314
 msgid "Italic"
 msgstr "İtalik"
+
+#: src/routes/dashboard.flows.tsx:391
+msgid "Its address"
+msgstr "Adresi"
 
 #: src/routes/dashboard.sites.tsx:174
 msgid "Its own database server"
@@ -2379,7 +2488,7 @@ msgstr "Etiket"
 msgid "Language"
 msgstr "Dil"
 
-#: src/components/dashboard/dashboard-shell.tsx:109
+#: src/components/dashboard/dashboard-shell.tsx:111
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Diller"
@@ -2507,7 +2616,7 @@ msgstr "Uzun metin"
 msgid "Made {0}"
 msgstr "{0} tarihinde üretildi"
 
-#: src/components/dashboard/dashboard-shell.tsx:101
+#: src/components/dashboard/dashboard-shell.tsx:102
 #: src/routes/console.sites.$siteId.tsx:312
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:150
 #: src/routes/dashboard.mail.tsx:69
@@ -2578,7 +2687,7 @@ msgstr "Markdown içeri aktarıldı"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS, sitenizi saklamak için bir veritabanına ihtiyaç duyar."
 
-#: src/components/dashboard/dashboard-shell.tsx:97
+#: src/components/dashboard/dashboard-shell.tsx:98
 msgid "Media"
 msgstr "Medya"
 
@@ -2603,6 +2712,10 @@ msgstr "Kişi etiketle"
 msgid "Merge cells"
 msgstr "Hücreleri birleştir"
 
+#: src/components/flows/flow-settings.tsx:165
+msgid "Message"
+msgstr "Mesaj"
+
 #: src/components/ses-account.tsx:251
 msgid "messages a day"
 msgstr "günde mesaj"
@@ -2615,6 +2728,10 @@ msgstr "Günde mesaj"
 msgid "Messages a second"
 msgstr "Saniyede mesaj"
 
+#: src/components/flows/flow-settings.tsx:191
+msgid "Method"
+msgstr "Yöntem"
+
 #: src/components/editor/palette.ts:53
 msgid "Mono"
 msgstr "Eş aralıklı"
@@ -2624,10 +2741,12 @@ msgid "More"
 msgstr "Daha fazla"
 
 #: src/components/form-fields-editor.tsx:178
+#: src/routes/dashboard.flows.tsx:427
 msgid "Move down"
 msgstr "Aşağı al"
 
 #: src/components/form-fields-editor.tsx:169
+#: src/routes/dashboard.flows.tsx:419
 msgid "Move up"
 msgstr "Yukarı al"
 
@@ -2640,6 +2759,7 @@ msgid "My Mavi CMS Site"
 msgstr "Mavi CMS Sitem"
 
 #: src/components/ses-account.tsx:838
+#: src/routes/dashboard.flows.tsx:298
 #: src/routes/dashboard.forms.tsx:160
 #: src/routes/dashboard.forms.tsx:238
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:198
@@ -2675,7 +2795,7 @@ msgid "needs translation"
 msgstr "çeviri bekliyor"
 
 #. placeholder {0}: writing.name
-#: src/components/dashboard/dashboard-shell.tsx:195
+#: src/components/dashboard/dashboard-shell.tsx:197
 msgid "New {0}"
 msgstr "Yeni {0}"
 
@@ -2692,6 +2812,10 @@ msgstr "Yeni kampanya"
 #: src/routes/dashboard.categories.tsx:187
 msgid "New category"
 msgstr "Yeni kategori"
+
+#: src/routes/dashboard.flows.tsx:207
+msgid "New flow"
+msgstr "Yeni akış"
 
 #: src/routes/dashboard.forms.tsx:161
 #: src/routes/dashboard.forms.tsx:228
@@ -2764,6 +2888,10 @@ msgstr "Emoji bulunamadı"
 #: src/routes/dashboard.content-types.tsx:95
 msgid "no fields of its own"
 msgstr "kendine ait alanı yok"
+
+#: src/routes/dashboard.flows.tsx:223
+msgid "No flows yet"
+msgstr "Henüz akış yok"
 
 #: src/routes/dashboard.forms.tsx:171
 msgid "No forms yet"
@@ -2956,6 +3084,7 @@ msgstr "Kapalı"
 msgid "Older archives are removed once a new one is written."
 msgstr "Yeni bir arşiv yazılınca eskiler silinir."
 
+#: src/routes/dashboard.flows.tsx:312
 #: src/routes/dashboard.sites.tsx:180
 #: src/routes/dashboard.sites.tsx:244
 msgid "On"
@@ -3009,10 +3138,23 @@ msgstr "Adresinden tek yazı."
 msgid "One post, with its other languages."
 msgstr "Tek yazı, diğer dilleriyle birlikte."
 
+#: src/routes/dashboard.flows.tsx:239
+msgid "one step"
+msgstr "tek adım"
+
+#: src/components/flows/flow-settings.tsx:219
+msgid "Only addresses on the public internet. An address inside this cluster is refused, which is what keeps a flow from being a way to read the server's own services."
+msgstr "Yalnızca internete açık adresler. Kümenin içindeki bir adres reddedilir; akışın sunucunun kendi servislerini okumanın bir yolu olmasını engelleyen şey budur."
+
 #: src/components/plugin-forms.tsx:161
 #: src/routes/dashboard.plugins_.backup.tsx:88
 msgid "Only by hand"
 msgstr "Yalnızca elle"
+
+#: src/components/flows/flow-canvas.tsx:98
+#: src/routes/dashboard.flows.tsx:124
+msgid "Only carry on if"
+msgstr "Yalnızca şu koşulda devam et"
 
 #: src/components/publish-panel.tsx:249
 msgid "Only for a private repository"
@@ -3031,6 +3173,7 @@ msgid "Only you see this"
 msgstr "Bunu yalnızca siz görürsünüz"
 
 #: src/components/editor/bubble-menus.tsx:290
+#: src/routes/dashboard.flows.tsx:249
 msgid "Open"
 msgstr "Aç"
 
@@ -3164,7 +3307,7 @@ msgstr "Duraklat"
 msgid "Paused"
 msgstr "Duraklatıldı"
 
-#: src/components/dashboard/dashboard-shell.tsx:111
+#: src/components/dashboard/dashboard-shell.tsx:113
 #: src/routes/dashboard.mail.tsx:80
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
@@ -3207,7 +3350,7 @@ msgstr "düz metin"
 msgid "Plain text block"
 msgstr "Düz metin bloğu"
 
-#: src/components/dashboard/dashboard-shell.tsx:110
+#: src/components/dashboard/dashboard-shell.tsx:112
 #: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.email.tsx:118
 #: src/routes/dashboard.plugins_.s3.tsx:111
@@ -3224,7 +3367,7 @@ msgstr "Önce adresi bu sunucuya yönlendirin — site burada verdiğiniz adres 
 msgid "Port"
 msgstr "Port"
 
-#: src/components/dashboard/dashboard-shell.tsx:72
+#: src/components/dashboard/dashboard-shell.tsx:73
 #: src/components/editor/post-settings.tsx:427
 #: src/routes/dashboard.trash.tsx:68
 msgid "post"
@@ -3262,7 +3405,11 @@ msgstr "Yazı başlığı"
 msgid "post-url"
 msgstr "yazi-adresi"
 
-#: src/components/dashboard/dashboard-shell.tsx:87
+#: src/components/flows/flow-settings.tsx:92
+msgid "post, page, or one this site made up. Left empty, anything being published sets this off."
+msgstr "post, page ya da bu sitenin kendi tanımladığı bir tür. Boş bırakılırsa yayınlanan her şey bunu tetikler."
+
+#: src/components/dashboard/dashboard-shell.tsx:88
 #: src/lib/use-content-types.ts:45
 msgid "Posts"
 msgstr "Yazılar"
@@ -3292,7 +3439,7 @@ msgstr "Önceki"
 msgid "Public base URL"
 msgstr "Genel URL tabanı"
 
-#: src/components/dashboard/dashboard-shell.tsx:117
+#: src/components/dashboard/dashboard-shell.tsx:119
 #: src/components/editor/mavi-editor.tsx:735
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:310
@@ -3594,6 +3741,7 @@ msgstr "Kum havuzu"
 #: src/routes/console.sites.$siteId.tsx:411
 #: src/routes/dashboard.categories.tsx:290
 #: src/routes/dashboard.content-types.tsx:209
+#: src/routes/dashboard.flows.tsx:316
 #: src/routes/dashboard.forms.tsx:331
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:349
 #: src/routes/dashboard.mail.tsx:390
@@ -3604,6 +3752,14 @@ msgstr "Kum havuzu"
 msgid "Save"
 msgstr "Kaydet"
 
+#: src/routes/dashboard.flows.tsx:155
+msgid "Save it first"
+msgstr "Önce kaydedin"
+
+#: src/components/flows/flow-settings.tsx:118
+msgid "Save the flow and an address appears here. Anything sent to it sets this off; the address is the only thing standing in the way, so treat it as a password."
+msgstr "Akışı kaydedin, adres burada belirir. Oraya gönderilen her şey bunu tetikler; önündeki tek engel adresin kendisi olduğu için ona parola gibi davranın."
+
 #: src/components/console-build-token.tsx:26
 #: src/components/editor/status-bar.tsx:116
 #: src/components/site-mail.tsx:78
@@ -3611,6 +3767,7 @@ msgstr "Kaydet"
 #: src/routes/console.sites.$siteId.tsx:165
 #: src/routes/console.sites.$siteId.tsx:197
 #: src/routes/console.sites.$siteId.tsx:214
+#: src/routes/dashboard.flows.tsx:143
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:86
 #: src/routes/dashboard.plugins_.email.tsx:78
@@ -3698,6 +3855,11 @@ msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
 msgid "Send a test"
 msgstr "Deneme gönder"
 
+#: src/components/flows/flow-canvas.tsx:96
+#: src/routes/dashboard.flows.tsx:122
+msgid "Send an email"
+msgstr "E-posta gönder"
+
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:190
 msgid "Send it"
 msgstr "Gönder"
@@ -3770,6 +3932,10 @@ msgstr "son günde gönderilen"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:121
 msgid "Sent to {0}"
 msgstr "{0} adresine gönderildi"
+
+#: src/components/flows/flow-settings.tsx:174
+msgid "Sent with this site's own mail settings, from Plugins → Email."
+msgstr "Bu sitenin kendi e-posta ayarlarıyla gönderilir — Eklentiler → E-posta."
 
 #: src/components/editor/post-settings.tsx:401
 msgid "SEO description"
@@ -3885,7 +4051,7 @@ msgid "Sign in; sets the session cookie."
 msgstr "Giriş yapar; oturum çerezini bırakır."
 
 #: src/components/console/console-shell.tsx:144
-#: src/components/dashboard/dashboard-shell.tsx:202
+#: src/components/dashboard/dashboard-shell.tsx:204
 #: src/components/editor/mavi-editor.tsx:695
 #: src/components/editor/mavi-editor.tsx:983
 msgid "Sign out"
@@ -3916,7 +4082,7 @@ msgid "Site title"
 msgstr "Site başlığı"
 
 #: src/components/console/console-shell.tsx:51
-#: src/components/dashboard/dashboard-shell.tsx:119
+#: src/components/dashboard/dashboard-shell.tsx:121
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
 msgstr "Siteler"
@@ -3932,6 +4098,15 @@ msgstr "Küçük bölüm başlığı"
 #: src/components/ses-account.tsx:422
 msgid "someone@example.com or example.com"
 msgstr "biri@example.com ya da example.com"
+
+#: src/routes/dashboard.flows.tsx:203
+msgid "Something happens, so the site does something: a form arrives and somebody is emailed, a post goes out and an address is called."
+msgstr "Bir şey olur, site de bir şey yapar: form gelir birine e-posta gider, yazı yayınlanır bir adres çağrılır."
+
+#: src/components/flows/flow-canvas.tsx:93
+#: src/routes/dashboard.flows.tsx:119
+msgid "Something is published"
+msgstr "Bir şey yayınlandı"
 
 #: src/components/editor/bubble-menus.tsx:521
 msgid "Split cell"
@@ -3953,6 +4128,10 @@ msgstr "Durdur"
 #: src/components/ses-account.tsx:300
 msgid "Stop all sending"
 msgstr "Tüm gönderimi durdur"
+
+#: src/components/flows/flow-settings.tsx:274
+msgid "Stop the whole flow"
+msgstr "Bütün akışı durdur"
 
 #. placeholder {0}: new Date(token.expires_at).toLocaleString()
 #. placeholder {0}: when(key.expires_at)
@@ -4004,6 +4183,7 @@ msgstr "Alt başlık"
 msgid "Subdomain for bounces"
 msgstr "İadeler için alt alan adı"
 
+#: src/components/flows/flow-settings.tsx:157
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:210
 msgid "Subject"
 msgstr "Konu"
@@ -4029,6 +4209,7 @@ msgstr "Üst simge"
 msgid "Support cases, which a quota increase is"
 msgstr "Destek talepleri — kota artışı da bunlardan biri"
 
+#: src/routes/dashboard.flows.tsx:241
 #: src/routes/dashboard.forms.tsx:183
 msgid "switched off"
 msgstr "kapalı"
@@ -4070,7 +4251,7 @@ msgstr "etiket"
 msgid "Tagline"
 msgstr "Slogan"
 
-#: src/components/dashboard/dashboard-shell.tsx:99
+#: src/components/dashboard/dashboard-shell.tsx:100
 #: src/components/editor/post-settings.tsx:247
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -4149,6 +4330,10 @@ msgstr "Metin rengi"
 msgid "Text shown in search results"
 msgstr "Arama sonuçlarında görünecek metin"
 
+#: src/components/flows/flow-settings.tsx:253
+msgid "That"
+msgstr "Şuna"
+
 #: src/components/assistant-keys.tsx:37
 msgid "That key stopped working"
 msgstr "O anahtar artık çalışmıyor"
@@ -4181,6 +4366,10 @@ msgstr "Bu hesabın bugünkü tavanı. Gönderim buraya gelince sıraya girmez, 
 #: src/components/ses-setup.tsx:161
 msgid "The first block is all that sending needs; the rest is what this page reads and asks for. Any block can be left out — you lose that part of the page and nothing else."
 msgstr "İlk blok göndermek için gereken her şey; gerisi bu sayfanın okuduğu ve istediği şeyler. Herhangi bir blok çıkarılabilir — yalnızca sayfanın o kısmını kaybedersiniz, başka bir şeyi değil."
+
+#: src/routes/dashboard.flows.tsx:225
+msgid "The first one most sites want: a contact form that emails whoever answers it."
+msgstr "Çoğu sitenin ilk istediği: iletişim formunun, cevaplayan kişiye e-posta atması."
 
 #: src/routes/dashboard.api.tsx:229
 msgid "The forms this site accepts answers on."
@@ -4275,6 +4464,10 @@ msgstr "Bu rakamlar Amazon'un teslimat yöneticisinden gelir; hesap için açıl
 msgid "They can write, publish and manage this site."
 msgstr "Bu siteyi yazabilir, yayınlayabilir ve yönetebilirler."
 
+#: src/components/flows/flow-settings.tsx:227
+msgid "This"
+msgstr "Şu"
+
 #: src/components/ses-account.tsx:312
 msgid "This account is out of the sandbox: it can write to anybody."
 msgstr "Bu hesap kum havuzundan çıkmış: herkese yazabilir."
@@ -4321,7 +4514,7 @@ msgstr "Bu sunucuya davetle girilir"
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
 msgstr "Bu giriş sunucunun kendisine. Diğer herkes başka bir yerden giriyor:"
 
-#: src/components/dashboard/dashboard-shell.tsx:106
+#: src/components/dashboard/dashboard-shell.tsx:108
 msgid "This site"
 msgstr "Bu site"
 
@@ -4332,6 +4525,10 @@ msgstr "Bu sitenin araçları şu an listelenemedi."
 #: src/routes/dashboard.trash.tsx:187
 msgid "Throw it away now"
 msgstr "Şimdi kalıcı olarak sil"
+
+#: src/components/flows/flow-settings.tsx:148
+msgid "To"
+msgstr "Kime"
 
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
@@ -4355,6 +4552,10 @@ msgstr "Çeviriler"
 #: src/components/setup/setup-wizard.tsx:870
 msgid "Try again"
 msgstr "Tekrar dene"
+
+#: src/routes/dashboard.flows.tsx:319
+msgid "Try it"
+msgstr "Dene"
 
 #: src/components/editor/block-handle.tsx:163
 msgid "Turn into"
@@ -4492,6 +4693,10 @@ msgstr "DNS bekleniyor"
 msgid "Waiting to be thrown away"
 msgstr "Silinmeyi bekleyenler"
 
+#: src/components/flows/flow-settings.tsx:247
+msgid "was filled in"
+msgstr "dolduruldu"
+
 #: src/components/ses-setup.tsx:214
 msgid "Watching how sending is going"
 msgstr "Gönderimin nasıl gittiğini izlemek"
@@ -4537,6 +4742,10 @@ msgstr "Gelenler gönderildiği gibi saklanır; alanları sonradan değiştirmek
 msgid "What Gmail and Yahoo have asked of bulk senders since 2024. It starts at p=none: a policy that rejects before anybody has read a report is how a domain quietly stops delivering its own mail."
 msgstr "Gmail ve Yahoo'nun 2024'ten beri toplu göndericilerden istediği şey. p=none ile başlar: kimse rapor okumadan reddeden bir politika, bir alan adının kendi postasını sessizce teslim edemez hâle gelmesinin yoludur."
 
+#: src/routes/dashboard.flows.tsx:266
+msgid "What has been happening"
+msgstr "Neler olmuş"
+
 #: src/routes/dashboard.api.tsx:233
 msgid "What has come in, newest first."
 msgstr "Gelenler, en yenisi başta."
@@ -4552,6 +4761,10 @@ msgstr "Ne için"
 #: src/routes/dashboard.content-types.tsx:166
 msgid "What one of these is made of, beyond its title and its text."
 msgstr "Bunlardan birinin, başlığı ve metninin ötesinde nelerden oluştuğu."
+
+#: src/routes/dashboard.flows.tsx:359
+msgid "What sets it off"
+msgstr "Ne tetikler"
 
 #: src/routes/dashboard.trash.tsx:72
 msgid "what somebody sent"
@@ -4572,6 +4785,10 @@ msgstr "Bu site ne yayınlıyor"
 #: src/components/site-mail.tsx:113
 msgid "What this site sends mail with. A form can name an address to tell, and this is how it gets there."
 msgstr "Bu sitenin postayı neyle gönderdiği. Bir form haber verilecek bir adres belirtebilir; oraya bu yoldan ulaşır."
+
+#: src/components/flows/flow-settings.tsx:209
+msgid "What to send"
+msgstr "Ne gönderilsin"
 
 #: src/components/ses-health.tsx:371
 msgid "What you have asked for"
@@ -4631,6 +4848,14 @@ msgstr "Nereye gönderilsin"
 #: src/routes/dashboard.api.tsx:251
 msgid "Which fields a form takes, and which are required."
 msgstr "Bir formun hangi alanları aldığı ve hangileri zorunlu."
+
+#: src/components/flows/flow-settings.tsx:67
+msgid "Which form"
+msgstr "Hangi form"
+
+#: src/components/flows/flow-settings.tsx:84
+msgid "Which kind"
+msgstr "Hangi tür"
 
 #: src/routes/dashboard.users.tsx:152
 msgid "Who can sign in to this site and write on it."
@@ -4729,6 +4954,10 @@ msgstr "Bunu daha sonra değiştirebilirsiniz."
 #: src/routes/oauth.tsx:136
 msgid "You can disconnect it later from API in the panel."
 msgstr "Sonradan panelde API bölümünden bağlantıyı kesebilirsiniz."
+
+#: src/components/flows/flow-settings.tsx:39
+msgid "You can write these anywhere above"
+msgstr "Bunları yukarıda herhangi bir yere yazabilirsiniz"
 
 #: src/components/setup/setup-wizard.tsx:674
 msgid "You'll use this to sign in and manage your site."
