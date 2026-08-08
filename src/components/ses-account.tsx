@@ -20,6 +20,7 @@ import {
   deleteSesIdentity,
   getSesAccount,
   getSesIdentities,
+  getSesReputation,
   getSesSuppressed,
   requestProductionAccess,
   setSesSending,
@@ -28,6 +29,7 @@ import {
   type SesAccount,
   type SesDnsRecord,
   type SesIdentity,
+  type SesReputation,
   type SesSuppressed,
 } from "@/lib/api"
 import { cn } from "@/lib/utils"
@@ -827,12 +829,16 @@ export function SesSendersPanel({
   const [loading, setLoading] = React.useState(true)
   const [busy, setBusy] = React.useState(false)
   const [newIdentity, setNewIdentity] = React.useState("")
+  const [standing, setStanding] = React.useState<SesReputation | null>(null)
 
   const load = React.useCallback(() => {
     getSesIdentities(siteId)
       .then(setIdentities)
       .catch(() => setIdentities([]))
       .finally(() => setLoading(false))
+    getSesReputation(siteId)
+      .then(setStanding)
+      .catch(() => setStanding(null))
   }, [siteId])
 
   React.useEffect(load, [load])
@@ -870,6 +876,10 @@ export function SesSendersPanel({
             {t`You do not need an Amazon account. Add the domain you send from below, publish the records it gives you, and your mail goes out as your own domain — the server only lends the account behind it.`}
           </p>
         </div>
+      ) : null}
+
+      {standing && standing.standing !== "unknown" ? (
+        <Reputation standing={standing} />
       ) : null}
 
       <Card>
@@ -923,6 +933,59 @@ export function SesSendersPanel({
       )}
     </CardContent>
   </Card>
+    </div>
+  )
+}
+
+/**
+ * How Amazon is seeing this site's own sending.
+ *
+ * Complaints are the number that ends accounts — a bounce costs money, a
+ * complaint costs the account — so it is stated as a percentage next to the
+ * threshold rather than as a count somebody has to interpret.
+ */
+function Reputation({ standing }: { standing: SesReputation }) {
+  const { t } = useLingui()
+
+  const tone =
+    standing.standing === "danger"
+      ? "border-destructive/40 bg-destructive/10"
+      : standing.standing === "watch"
+        ? "border-amber-500/40 bg-amber-500/10"
+        : "border-border bg-muted/40"
+
+  return (
+    <div className={cn("rounded-xl border p-4", tone)}>
+      <p className="text-sm font-medium">
+        {standing.standing === "danger"
+          ? t`Your sending is in trouble`
+          : standing.standing === "watch"
+            ? t`Worth looking at`
+            : t`Your sending looks healthy`}
+      </p>
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <Figure
+          value={standing.sent.toLocaleString()}
+          label={t`sent in ${standing.days} days`}
+        />
+        <Figure
+          value={`${standing.complaint_rate.toFixed(2)}%`}
+          label={t`reported as spam`}
+          aside={standing.complaints.toLocaleString()}
+        />
+        <Figure
+          value={`${standing.bounce_rate.toFixed(2)}%`}
+          label={t`bounced for good`}
+          aside={standing.permanent_bounces.toLocaleString()}
+        />
+      </div>
+      {standing.note ? (
+        <p className="mt-3 text-sm text-muted-foreground">{standing.note}</p>
+      ) : (
+        <p className="mt-3 text-sm text-muted-foreground">
+          {t`Amazon starts paying attention above 0.1% complaints and stops accounts around 0.5%.`}
+        </p>
+      )}
     </div>
   )
 }

@@ -1678,6 +1678,23 @@ export interface SendingAllowance {
   as_the_server: boolean
 }
 
+export interface SesReputation {
+  senders: string[]
+  days: number
+  sent: number
+  complaints: number
+  permanent_bounces: number
+  complaint_rate: number
+  bounce_rate: number
+  /** "good", "watch", "danger" or "unknown". */
+  standing: string
+  note: string
+}
+
+export function getSesReputation(siteId?: string): Promise<SesReputation> {
+  return request<SesReputation>(`${mailBase(siteId)}/reputation`)
+}
+
 export function getSendingAllowance(siteId?: string): Promise<SendingAllowance> {
   return request<SendingAllowance>(`${mailBase(siteId)}/allowance`)
 }

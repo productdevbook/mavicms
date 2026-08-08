@@ -686,6 +686,113 @@ pub struct SendingAllowance {
     pub as_the_server: bool,
 }
 
+/// What this site's own sending looks like to Amazon.
+#[derive(Debug, serde::Serialize, utoipa::ToSchema)]
+pub struct Reputation {
+    /// The senders these figures cover. Empty means nothing could be measured.
+    pub senders: Vec<String>,
+    pub days: i64,
+    pub sent: i64,
+    pub complaints: i64,
+    pub permanent_bounces: i64,
+    /// Percentages of what was sent, which is how Amazon states its limits.
+    pub complaint_rate: f64,
+    pub bounce_rate: f64,
+    /// "good", "watch" or "danger", against Amazon's own thresholds.
+    pub standing: String,
+    /// Why it is not "good", when it is not.
+    pub note: String,
+}
+
+/// Amazon reviews an account over 0.1% complaints and may stop one over 0.5%.
+/// Bounces are judged around 5%. The middle band is where somebody should be
+/// told, not where sending should stop.
+const COMPLAINTS_WATCH: f64 = 0.1;
+const COMPLAINTS_DANGER: f64 = 0.5;
+const BOUNCES_WATCH: f64 = 5.0;
+const BOUNCES_DANGER: f64 = 10.0;
+
+/// How this site's own sending is going, and whether it is about to cost
+/// somebody their account.
+///
+/// Measured per sender, because Amazon has no dimension for a tenant: a site
+/// still sending under the server's address cannot be told apart from the
+/// server, and gets an empty answer rather than the whole account's figures.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/reputation",
+    tag = "plugins",
+    params(("days" = Option<i64>, Query, description = "How far back, 1 to 60")),
+    responses((status = 200, description = "How this site is doing", body = Reputation))
+)]
+pub async fn get_email_reputation(
+    Site(state): Site,
+    axum::extract::Query(range): axum::extract::Query<DaysQuery>,
+) -> AppResult<Json<Reputation>> {
+    let days = range.days.unwrap_or(14).clamp(1, 60);
+    let post = crate::outbound::how(&state).await?;
+
+    // Its own senders only. On the server's account the rest are other
+    // people's, and on its own account "*" would be the same list anyway.
+    let senders: Vec<String> = email_identities_of(&state)
+        .await
+        .unwrap_or_default()
+        .into_iter()
+        .filter(|identity| identity.verified)
+        .map(|identity| identity.name)
+        .collect();
+
+    let mut sent = 0;
+    let mut complaints = 0;
+    let mut permanent_bounces = 0;
+    for sender in &senders {
+        if let Ok(figures) = crate::email::deliverability_of(&post.config, days, sender).await {
+            sent += figures.sent;
+            complaints += figures.complaints;
+            permanent_bounces += figures.permanent_bounces;
+        }
+    }
+
+    let rate = |part: i64| {
+        if sent > 0 {
+            part as f64 * 100.0 / sent as f64
+        } else {
+            0.0
+        }
+    };
+    let complaint_rate = rate(complaints);
+    let bounce_rate = rate(permanent_bounces);
+
+    // Below a few hundred messages a single complaint is a whole percent, and
+    // reading that as a crisis teaches people to ignore the number.
+    let (standing, note) = if senders.is_empty() {
+        (
+            "unknown",
+            "Nothing to measure yet. Add the domain you send from, and this counts what Amazon saw of it.".to_string(),
+        )
+    } else if sent < 100 {
+        ("unknown", "Too little sending to judge yet.".to_string())
+    } else if complaint_rate >= COMPLAINTS_DANGER || bounce_rate >= BOUNCES_DANGER {
+        ("danger", "Amazon stops accounts over this. Stop sending to bought or old lists and find out where these addresses came from.".to_string())
+    } else if complaint_rate >= COMPLAINTS_WATCH || bounce_rate >= BOUNCES_WATCH {
+        ("watch", "Above where Amazon starts paying attention. Worth knowing which campaign did it before it goes further.".to_string())
+    } else {
+        ("good", String::new())
+    };
+
+    Ok(Json(Reputation {
+        senders,
+        days,
+        sent,
+        complaints,
+        permanent_bounces,
+        complaint_rate,
+        bounce_rate,
+        standing: standing.to_string(),
+        note,
+    }))
+}
+
 /// How this site sends, and how much of today is left.
 ///
 /// Answered for a site whether or not it has settings of its own, because the

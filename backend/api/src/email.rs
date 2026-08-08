@@ -1748,6 +1748,21 @@ pub struct Deliverability {
 /// `build_event_pipeline` does. Until then this is a refusal with a sentence
 /// saying so rather than a silent zero.
 pub async fn deliverability(config: &EmailConfig, days: i64) -> AppResult<Deliverability> {
+    deliverability_of(config, days, "*").await
+}
+
+/// The same, for one sender rather than the whole account.
+///
+/// This is the only way to tell one site's sending apart on a shared account:
+/// Amazon meters by identity, configuration set and receiving provider, and
+/// has no dimension for a tenant. Which is also why a site that has not named
+/// a sender of its own cannot be measured at all — its mail is the server's,
+/// by every name Amazon knows it by.
+pub async fn deliverability_of(
+    config: &EmailConfig,
+    days: i64,
+    identity: &str,
+) -> AppResult<Deliverability> {
     use aws_sdk_sesv2::types::{
         BatchGetMetricDataQuery, Metric, MetricDimensionName, MetricNamespace,
     };
@@ -1778,8 +1793,7 @@ pub async fn deliverability(config: &EmailConfig, days: i64) -> AppResult<Delive
             .metric(metric.clone())
             .start_date(as_smithy(from))
             .end_date(as_smithy(now))
-            // Everything the account sent, not one identity's worth.
-            .dimensions(MetricDimensionName::EmailIdentity, "*")
+            .dimensions(MetricDimensionName::EmailIdentity, identity)
             .build()
             .map_err(|err| AppError::Internal(format!("could not ask for {id}: {err}")))?;
         call = call.queries(query);
