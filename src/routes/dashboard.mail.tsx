@@ -45,6 +45,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { LetterheadEditor } from "@/components/mail/letterhead-editor"
 import {
   Dialog,
   DialogContent,
@@ -698,7 +699,7 @@ function Templates() {
         open={editing !== null}
         onOpenChange={(open) => !open && setEditing(null)}
       >
-        <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent className="max-h-[92svh] overflow-y-auto sm:max-w-5xl">
           <DialogHeader>
             <DialogTitle>
               {editing?.id ? t`Edit the template` : t`New template`}
@@ -716,21 +717,10 @@ function Templates() {
                   }
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="tpl-body">{t`The letterhead`}</Label>
-                <Textarea
-                  id="tpl-body"
-                  rows={14}
-                  className="font-mono text-xs"
-                  value={editing.body ?? ""}
-                  onChange={(event) =>
-                    setEditing({ ...editing, body: event.target.value })
-                  }
-                />
-                <p className="text-sm text-muted-foreground">
-                  {t`{{ content }} is where the campaign goes. {{ name }}, {{ email }} and {{ unsubscribe_url }} are filled in for each person, along with any field you keep about them.`}
-                </p>
-              </div>
+              <LetterheadEditor
+                value={editing.body ?? ""}
+                onChange={(body: string) => setEditing({ ...editing, body })}
+              />
               <Label className="flex items-center gap-3 font-normal">
                 <Switch
                   checked={editing.is_default ?? false}

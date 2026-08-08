@@ -798,7 +798,7 @@ fn template_row(row: mail_template::Model) -> TemplateResponse {
 
 /// Exactly one template is the default, so making one the default unmakes the
 /// others. Two defaults is a question with no answer.
-async fn only_default(db: &sea_orm::DatabaseConnection, keep: Uuid) -> AppResult<()> {
+pub async fn only_default(db: &sea_orm::DatabaseConnection, keep: Uuid) -> AppResult<()> {
     for other in mail_template::Entity::find()
         .filter(mail_template::Column::IsDefault.eq(true))
         .filter(mail_template::Column::Id.ne(keep))

@@ -415,6 +415,43 @@ pub const TOOLS: &[Tool] = &[
         },
     },
     Tool {
+        name: "mail_templates_list",
+        title: "The letterheads this site sends with",
+        description: "Every letterhead, with the HTML each one is. Read one before writing a \
+            replacement so that what you produce keeps the site's own colours and the \
+            placeholders it already relies on.",
+        writes: false,
+        destroys: false,
+        schema: || json!({ "type": "object", "additionalProperties": false, "properties": {} }),
+    },
+    Tool {
+        name: "mail_template_write",
+        title: "Write a letterhead",
+        description: "Make or replace a letterhead. `body` is the whole HTML of the email, and \
+            `{{ content }}` is where a campaign's own words go — a letterhead without it wraps \
+            nothing. `{{ name }}`, `{{ email }}` and `{{ unsubscribe_url }}` are filled in per \
+            person, and a bulk sender that leaves the last one out gets its mail put in spam by \
+            Gmail and Yahoo. Give `id` to replace one, leave it out to make one.\n\nWrite for \
+            email rather than for the web: tables rather than flexbox, inline styles rather than \
+            a stylesheet, no JavaScript, and a width around 600 pixels.",
+        writes: true,
+        destroys: false,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "body"],
+                "properties": {
+                    "id": { "type": "string", "description": "The one to replace" },
+                    "name": { "type": "string" },
+                    "subject": { "type": "string", "description": "A default subject, when a campaign gives none" },
+                    "body": { "type": "string", "description": "The whole HTML" },
+                    "is_default": { "type": "boolean" }
+                }
+            })
+        },
+    },
+    Tool {
         name: "flows_list",
         title: "What this site does on its own",
         description: "The site's flows: what sets each one off, what it does, and whether it is \
@@ -511,6 +548,8 @@ pub async fn call(
         "forms_create" => make_form(db, arguments).await,
         "form_mark_seen" => mark_seen(db, arguments).await,
         "form_submission_delete" => throw_away(db, who, arguments).await,
+        "mail_templates_list" => the_letterheads(db).await,
+        "mail_template_write" => write_letterhead(db, arguments).await,
         "flows_list" => the_flows(db).await,
         "flow_runs" => the_runs(db, arguments).await,
         "trash_list" => in_the_bin(db).await,
@@ -1159,6 +1198,93 @@ async fn mark_seen(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppRe
 }
 
 /// What has been deleted and can still be got back.
+async fn the_letterheads(db: &sea_orm::DatabaseConnection) -> AppResult<Value> {
+    use crate::entities::mail_template;
+    use sea_orm::{EntityTrait, QueryOrder};
+
+    let rows = mail_template::Entity::find()
+        .order_by_asc(mail_template::Column::Name)
+        .all(db)
+        .await?;
+
+    Ok(json!({
+        "templates": rows
+            .into_iter()
+            .map(|row| json!({
+                "id": row.id,
+                "name": row.name,
+                "subject": row.subject,
+                "is_default": row.is_default,
+                "body": row.body,
+            }))
+            .collect::<Vec<_>>()
+    }))
+}
+
+async fn write_letterhead(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    let name = text(arguments, "name")
+        .ok_or_else(|| AppError::Validation("a letterhead needs a name".to_string()))?;
+    let body = text(arguments, "body")
+        .ok_or_else(|| AppError::Validation("a letterhead needs a body".to_string()))?;
+
+    // Said rather than silently accepted: a letterhead with nowhere for the
+    // campaign to go wraps nothing, and the person finds out by sending.
+    if !body.contains("{{ content }}") && !body.contains("{{content}}") {
+        return Err(AppError::Validation(
+            "this letterhead has no {{ content }} in it, so a campaign would have nowhere to go"
+                .to_string(),
+        ));
+    }
+
+    use crate::entities::mail_template;
+    use sea_orm::{ActiveModelTrait, ActiveValue::Set, EntityTrait};
+
+    let subject = text(arguments, "subject").unwrap_or_default();
+    let is_default = arguments
+        .get("is_default")
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+
+    let saved = match text(arguments, "id").and_then(|g| uuid::Uuid::parse_str(g.trim()).ok()) {
+        Some(id) => {
+            let existing = mail_template::Entity::find_by_id(id)
+                .one(db)
+                .await?
+                .ok_or_else(|| AppError::NotFound("that letterhead".to_string()))?;
+            let mut changed: mail_template::ActiveModel = existing.into();
+            changed.name = Set(name.trim().to_string());
+            changed.subject = Set(subject.trim().to_string());
+            changed.body = Set(body);
+            changed.is_default = Set(is_default);
+            changed.update(db).await?
+        }
+        None => {
+            mail_template::ActiveModel {
+                id: Set(uuid::Uuid::now_v7()),
+                name: Set(name.trim().to_string()),
+                subject: Set(subject.trim().to_string()),
+                body: Set(body),
+                is_default: Set(is_default),
+                created_at: Set(chrono::Utc::now().fixed_offset()),
+            }
+            .insert(db)
+            .await?
+        }
+    };
+
+    // Exactly one is the default, here as in the panel: two is a question
+    // with no answer.
+    if saved.is_default {
+        crate::routes::mailing::only_default(db, saved.id).await?;
+    }
+
+    Ok(json!({
+        "id": saved.id,
+        "name": saved.name,
+        "is_default": saved.is_default,
+    }))
+}
+
 async fn the_flows(db: &sea_orm::DatabaseConnection) -> AppResult<Value> {
     use crate::entities::{flow, flow_step};
     use sea_orm::{ColumnTrait, EntityTrait, QueryFilter, QueryOrder};
