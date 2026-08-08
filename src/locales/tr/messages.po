@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. placeholder {0}: pendingDelete?.title
+#: src/routes/dashboard.videos.tsx:419
+msgid "\"{0}\" goes from the host as well as from here, and does not go to the bin. Any lesson using it will have no video."
+msgstr "\"{0}\" hem buradan hem de sunucudan gider ve çöp kutusuna düşmez. Onu kullanan her ders videosuz kalır."
+
 #. placeholder {0}: pendingDelete?.filename
 #. placeholder {0}: pendingDelete?.name
 #. placeholder {0}: pendingDelete?.title
@@ -241,6 +246,11 @@ msgstr "{0}. Sitelerinizi açan ve yöneten hesap budur."
 msgid "{0}'s own instructions"
 msgstr "{0} kendi belgeleri"
 
+#. placeholder {0}: Math.round(sending.fraction * 100)
+#: src/routes/dashboard.videos.tsx:300
+msgid "{0}% sent. Leaving this page stops the upload."
+msgstr "%{0} gönderildi. Bu sayfadan ayrılmak yüklemeyi durdurur."
+
 #: src/components/ses-health.tsx:104
 msgid "{count} of them · Amazon reviews at {reviewAt}%, pauses at {pauseAt}%"
 msgstr "{count} tanesi · Amazon %{reviewAt} oranında inceler, %{pauseAt} oranında durdurur"
@@ -284,6 +294,10 @@ msgstr "Derleme jetonu bu siteyi okur ve hiçbir şeyi değiştiremez; onunla ba
 #: src/components/plugin-forms.tsx:443
 msgid "A campaign can go out as any of these. Each one has to be verified in SES too — an address is not a sender until Amazon says so."
 msgstr "Bir kampanya bunlardan herhangi biriyle gidebilir. Her birinin SES'te ayrıca doğrulanmış olması gerekir — Amazon onaylamadan bir adres gönderici olmaz."
+
+#: src/routes/dashboard.plugins_.video.tsx:243
+msgid "A different key from the one above, in the library's own settings. Without it every video address works for ever and for anybody who has it."
+msgstr "Yukarıdakinden farklı bir anahtar; kütüphanenin kendi ayarlarında. O olmadan her video adresi sonsuza kadar ve eline geçen herkes için çalışır."
 
 #: src/components/plugin-forms.tsx:226
 #: src/routes/dashboard.plugins_.backup.tsx:265
@@ -407,6 +421,10 @@ msgstr "Hesap"
 #: src/routes/dashboard.users.tsx:87
 msgid "Account added"
 msgstr "Hesap eklendi"
+
+#: src/routes/dashboard.plugins_.video.tsx:252
+msgid "Account id"
+msgstr "Hesap kimliği"
 
 #: src/components/flows/flow-accounts.tsx:121
 msgid "Accounts"
@@ -709,10 +727,18 @@ msgstr "Yukarıdaki alan adlarından herhangi bir adres olur — gerçek bir pos
 msgid "Anybody can be written to, up to the limits above."
 msgstr "Yukarıdaki sınırlara kadar herkese yazılabilir."
 
-#: src/components/dashboard/dashboard-shell.tsx:114
+#: src/components/dashboard/dashboard-shell.tsx:116
 #: src/routes/dashboard.api.tsx:263
 msgid "API"
 msgstr "API"
+
+#: src/routes/dashboard.plugins_.video.tsx:222
+msgid "API key"
+msgstr "API anahtarı"
+
+#: src/routes/dashboard.plugins_.video.tsx:260
+msgid "API token"
+msgstr "API jetonu"
 
 #: src/components/editor/bubble-menus.tsx:267
 #: src/components/editor/dialogs.tsx:326
@@ -824,7 +850,7 @@ msgstr "Yedek yazıldı: {0}"
 
 #: src/routes/console.sites.$siteId.tsx:313
 #: src/routes/dashboard.plugins_.backup.tsx:198
-#: src/routes/dashboard.plugins.tsx:34
+#: src/routes/dashboard.plugins.tsx:38
 msgid "Backups"
 msgstr "Yedekler"
 
@@ -840,11 +866,15 @@ msgstr "Kötü adresler kendiliğinden durur"
 msgid "Basic"
 msgstr "Temel"
 
+#: src/routes/dashboard.videos.tsx:255
+msgid "Being prepared"
+msgstr "Hazırlanıyor"
+
 #: src/routes/dashboard.content-types.tsx:201
 msgid "Beyond the title, the text, the picture and the SEO, which everything here already has. A field marked as needed has to be filled in before the thing can be published — a draft may be half-written."
 msgstr "Başlık, metin, görsel ve SEO'nun ötesinde — onlar burada zaten her şeyde var. Gerekli işaretlenmiş bir alan, o şey yayına alınmadan önce doldurulmalı; taslak yarım kalabilir."
 
-#: src/components/dashboard/dashboard-shell.tsx:104
+#: src/components/dashboard/dashboard-shell.tsx:106
 #: src/routes/dashboard.trash.tsx:129
 msgid "Bin"
 msgstr "Çöp kutusu"
@@ -933,7 +963,7 @@ msgstr "Ön yüz kurmak"
 msgid "Building only what changed"
 msgstr "Yalnızca değişeni derlemek"
 
-#: src/routes/dashboard.plugins.tsx:59
+#: src/routes/dashboard.plugins.tsx:67
 msgid "Built-in integrations you can switch on and configure."
 msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
 
@@ -942,6 +972,14 @@ msgstr "Açıp yapılandırabileceğiniz yerleşik entegrasyonlar."
 #: src/components/editor/toolbar.tsx:519
 msgid "Bullet list"
 msgstr "Madde listesi"
+
+#: src/routes/dashboard.plugins_.video.tsx:184
+msgid "Bunny is the cheaper of the two, and cheaper again to Turkey. Cloudflare costs more and asks less of you. Both transcode for you and both make addresses that expire."
+msgstr "Bunny ikisinin ucuzu, Türkiye'ye ise daha da ucuz. Cloudflare daha pahalı ama sizden daha az şey ister. İkisi de dönüştürmeyi kendi yapar ve ikisi de süresi dolan adresler üretir."
+
+#: src/routes/dashboard.plugins_.video.tsx:138
+msgid "Bunny Stream"
+msgstr "Bunny Stream"
 
 #: src/components/flows/flow-canvas.tsx:100
 #: src/routes/dashboard.flows.tsx:130
@@ -986,6 +1024,7 @@ msgstr "gönderebilir"
 #: src/routes/dashboard.users.tsx:291
 #: src/routes/dashboard.users.tsx:332
 #: src/routes/dashboard.users.tsx:357
+#: src/routes/dashboard.videos.tsx:423
 msgid "Cancel"
 msgstr "Vazgeç"
 
@@ -1009,7 +1048,7 @@ msgstr "Yine de devam et"
 msgid "Case sensitive"
 msgstr "Büyük/küçük harf duyarlı"
 
-#: src/components/dashboard/dashboard-shell.tsx:99
+#: src/components/dashboard/dashboard-shell.tsx:101
 #: src/routes/dashboard.categories.tsx:157
 msgid "Categories"
 msgstr "Kategoriler"
@@ -1074,6 +1113,10 @@ msgstr "Dosya seç"
 msgid "Choose a list first"
 msgstr "Önce bir liste seçin"
 
+#: src/routes/dashboard.plugins_.video.tsx:174
+msgid "Choose one"
+msgstr "Birini seçin"
+
 #: src/components/ses-health.tsx:274
 msgid "Clean the list before sending again"
 msgstr "Yeniden göndermeden önce listeyi temizleyin"
@@ -1089,8 +1132,13 @@ msgid "clicked"
 msgstr "tıkladı"
 
 #: src/components/editor/find-replace.tsx:75
+#: src/routes/dashboard.videos.tsx:405
 msgid "Close"
 msgstr "Kapat"
+
+#: src/routes/dashboard.plugins_.video.tsx:139
+msgid "Cloudflare Stream"
+msgstr "Cloudflare Stream"
 
 #: src/components/local-env.tsx:138
 msgid "CMS_TOKEN is blank until you make one. Without it the site answers nothing, which is the \"why can I not see any posts\" everybody runs into."
@@ -1136,7 +1184,7 @@ msgstr "Nasıl karşılaştırılsın"
 msgid "Configuration set"
 msgstr "Yapılandırma kümesi"
 
-#: src/routes/dashboard.plugins.tsx:106
+#: src/routes/dashboard.plugins.tsx:114
 msgid "Configure"
 msgstr "Yapılandır"
 
@@ -1196,7 +1244,7 @@ msgstr "İletişim formu gelen kutusuna"
 msgid "contains"
 msgstr "içeriyor"
 
-#: src/components/dashboard/dashboard-shell.tsx:86
+#: src/components/dashboard/dashboard-shell.tsx:87
 #: src/routes/dashboard.api.tsx:356
 msgid "Content"
 msgstr "İçerik"
@@ -1205,7 +1253,7 @@ msgstr "İçerik"
 msgid "Content already written in this language blocks removal — you'll be told how much there is."
 msgstr "Bu dilde yazılmış içerik varsa silme engellenir — ne kadar olduğu size bildirilir."
 
-#: src/components/dashboard/dashboard-shell.tsx:110
+#: src/components/dashboard/dashboard-shell.tsx:112
 msgid "Content types"
 msgstr "İçerik türleri"
 
@@ -1356,6 +1404,7 @@ msgid "Could not delete category"
 msgstr "Kategori silinemedi"
 
 #: src/components/dashboard/content-list.tsx:101
+#: src/routes/dashboard.videos.tsx:246
 msgid "Could not delete it"
 msgstr "Silinemedi"
 
@@ -1492,6 +1541,10 @@ msgstr "Oluşturulamadı"
 msgid "Could not open the site"
 msgstr "Site açılamadı"
 
+#: src/routes/dashboard.videos.tsx:233
+msgid "Could not play it"
+msgstr "Oynatılamadı"
+
 #: src/routes/dashboard.trash.tsx:108
 msgid "Could not put it back"
 msgstr "Geri alınamadı"
@@ -1547,6 +1600,7 @@ msgid "Could not save post"
 msgstr "Yazı kaydedilemedi"
 
 #: src/routes/dashboard.plugins_.s3.tsx:88
+#: src/routes/dashboard.plugins_.video.tsx:120
 msgid "Could not save settings"
 msgstr "Ayarlar kaydedilemedi"
 
@@ -1636,6 +1690,10 @@ msgstr "{0} yüklenemedi"
 msgid "Could not upload cover image"
 msgstr "Kapak görseli yüklenemedi"
 
+#: src/routes/dashboard.videos.tsx:219
+msgid "Could not upload it"
+msgstr "Yüklenemedi"
+
 #: src/components/flows/flow-settings.tsx:110
 msgid "Counted from when it last ran, not from a clock: 60 means about once an hour."
 msgstr "Saatten değil, son çalıştığı andan sayılır: 60, kabaca saatte bir demek."
@@ -1678,6 +1736,7 @@ msgid "Create your administrator account"
 msgstr "Yönetici hesabınızı oluşturun"
 
 #: src/routes/dashboard.plugins_.s3.tsx:152
+#: src/routes/dashboard.plugins_.video.tsx:340
 msgid "Credentials are encrypted before they are stored and are never sent back to the browser."
 msgstr "Kimlik bilgileri saklanmadan önce şifrelenir ve hiçbir zaman tarayıcıya geri gönderilmez."
 
@@ -1755,6 +1814,8 @@ msgstr "Varsayılan"
 #: src/routes/dashboard.plugins_.backup.tsx:424
 #: src/routes/dashboard.tags.tsx:234
 #: src/routes/dashboard.tags.tsx:303
+#: src/routes/dashboard.videos.tsx:369
+#: src/routes/dashboard.videos.tsx:425
 msgid "Delete"
 msgstr "Sil"
 
@@ -1794,10 +1855,18 @@ msgstr "Bu medya silinsin mi?"
 msgid "Delete this tag?"
 msgstr "Bu etiket silinsin mi?"
 
+#: src/routes/dashboard.videos.tsx:417
+msgid "Delete this video?"
+msgstr "Bu video silinsin mi?"
+
 #. placeholder {0}: entry.deleted_by
 #: src/routes/dashboard.trash.tsx:168
 msgid "deleted by {0}"
 msgstr "{0} sildi"
+
+#: src/routes/dashboard.plugins_.video.tsx:274
+msgid "Delivery hostname"
+msgstr "Yayın alan adı"
 
 #: src/routes/dashboard.forms.tsx:157
 msgid "Describe what a form accepts here, then have your own pages post to it."
@@ -1816,7 +1885,7 @@ msgstr "ulaşmadı"
 msgid "Did not arrive"
 msgstr "Ulaşmadı"
 
-#: src/routes/dashboard.plugins.tsx:88
+#: src/routes/dashboard.plugins.tsx:96
 msgid "Disabled"
 msgstr "Devre dışı"
 
@@ -1913,7 +1982,7 @@ msgstr "Emoji"
 
 #: src/components/plugin-forms.tsx:171
 #: src/routes/dashboard.plugins_.backup.tsx:207
-#: src/routes/dashboard.plugins.tsx:86
+#: src/routes/dashboard.plugins.tsx:94
 msgid "Enabled"
 msgstr "Etkin"
 
@@ -2002,6 +2071,10 @@ msgstr "Özet"
 msgid "Export"
 msgstr "Dışa aktar"
 
+#: src/routes/dashboard.videos.tsx:257
+msgid "Failed"
+msgstr "Başarısız"
+
 #: src/components/ses-analytics.tsx:180
 msgid "failed for now"
 msgstr "şimdilik ulaşmadı"
@@ -2030,7 +2103,7 @@ msgstr "Bul ve değiştir"
 msgid "Find…"
 msgstr "Ara…"
 
-#: src/components/dashboard/dashboard-shell.tsx:103
+#: src/components/dashboard/dashboard-shell.tsx:105
 #: src/routes/dashboard.flows.tsx:211
 msgid "Flows"
 msgstr "Akışlar"
@@ -2067,7 +2140,7 @@ msgstr "Biçim"
 msgid "Formatting"
 msgstr "Biçimlendirme"
 
-#: src/components/dashboard/dashboard-shell.tsx:101
+#: src/components/dashboard/dashboard-shell.tsx:103
 #: src/routes/dashboard.forms_.$formId.tsx:144
 #: src/routes/dashboard.forms.tsx:155
 msgid "Forms"
@@ -2258,6 +2331,10 @@ msgstr "Ana sayfada vitrine alınır"
 msgid "Host"
 msgstr "Sunucu adresi"
 
+#: src/routes/dashboard.plugins.tsx:35
+msgid "Host lesson videos on Bunny Stream or Cloudflare Stream. Files go straight from the browser to them, and every address expires."
+msgstr "Ders videolarını Bunny Stream ya da Cloudflare Stream üzerinde barındırın. Dosyalar tarayıcıdan doğrudan oraya gider ve her adresin süresi dolar."
+
 #: src/components/plugin-forms.tsx:272
 #: src/routes/dashboard.plugins_.backup.tsx:307
 msgid "How many to keep"
@@ -2353,6 +2430,14 @@ msgstr "Bu arşiv içe aktarılsın mı?"
 #: src/components/editor/types.ts:30
 msgid "In review"
 msgstr "İncelemede"
+
+#: src/routes/dashboard.plugins_.video.tsx:195
+msgid "In that library, open the API tab. The library id and the API key are both there."
+msgstr "O kütüphanede API sekmesini açın. Kütüphane kimliği de API anahtarı da orada."
+
+#: src/routes/dashboard.plugins_.video.tsx:198
+msgid "In the library's settings, open Security and turn on Token Authentication. Copy the key it shows. This is the step that makes video addresses expire — leave it off and everything below still works, and every lesson plays for anybody who is sent a link."
+msgstr "Kütüphanenin ayarlarında Security'yi açıp Token Authentication'ı etkinleştirin ve gösterdiği anahtarı kopyalayın. Video adreslerinin süresinin dolmasını sağlayan adım budur — kapalı bırakırsanız aşağıdaki her şey yine çalışır, ve her ders kendisine bağlantı gönderilen herkese açılır."
 
 #: src/components/plugin-forms.tsx:235
 #: src/routes/dashboard.plugins_.backup.tsx:271
@@ -2504,7 +2589,7 @@ msgstr "Etiket"
 msgid "Language"
 msgstr "Dil"
 
-#: src/components/dashboard/dashboard-shell.tsx:111
+#: src/components/dashboard/dashboard-shell.tsx:113
 #: src/routes/dashboard.languages.tsx:92
 msgid "Languages"
 msgstr "Diller"
@@ -2555,6 +2640,10 @@ msgstr "Kum havuzundan çıkmak ilk artıştır. Bu ondan sonraki — Amazon bun
 msgid "Lend the account"
 msgstr "Hesabı ödünç ver"
 
+#: src/routes/dashboard.videos.tsx:266
+msgid "Lesson videos. They go straight from this browser to the host, so a two-gigabyte file never passes through the server — and every address this page makes stops working after a few hours."
+msgstr "Ders videoları. Bu tarayıcıdan doğrudan sunucuya gider, yani iki gigabaytlık bir dosya hiçbir zaman sunucumuzdan geçmez — ve bu sayfanın ürettiği her adres birkaç saat sonra çalışmaz olur."
+
 #: src/routes/dashboard.trash.tsx:77
 msgid "letterhead"
 msgstr "antet"
@@ -2562,6 +2651,10 @@ msgstr "antet"
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:325
 msgid "Letterhead"
 msgstr "Antet"
+
+#: src/routes/dashboard.plugins_.video.tsx:204
+msgid "Library id"
+msgstr "Kütüphane kimliği"
 
 #: src/components/editor/mavi-editor.tsx:964
 #: src/components/mode-toggle.tsx:37
@@ -2632,7 +2725,7 @@ msgstr "{0} tarihinde üretildi"
 msgid "Made in the channel's own settings, under incoming webhooks. Anybody holding it can post to that channel, so it is treated as a password and kept out of the run record."
 msgstr "Kanalın kendi ayarlarında, gelen webhook'lar altında üretilir. Elinde tutan herkes o kanala mesaj atabilir; bu yüzden parola gibi davranılır ve çalıştırma kaydına yazılmaz."
 
-#: src/components/dashboard/dashboard-shell.tsx:102
+#: src/components/dashboard/dashboard-shell.tsx:104
 #: src/routes/console.sites.$siteId.tsx:312
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:156
 #: src/routes/dashboard.mail.tsx:70
@@ -2705,7 +2798,7 @@ msgstr "Markdown içeri aktarıldı"
 msgid "Mavi CMS needs a database to store your site."
 msgstr "Mavi CMS, sitenizi saklamak için bir veritabanına ihtiyaç duyar."
 
-#: src/components/dashboard/dashboard-shell.tsx:98
+#: src/components/dashboard/dashboard-shell.tsx:99
 msgid "Media"
 msgstr "Medya"
 
@@ -2816,12 +2909,16 @@ msgstr "Yayın için gerekli"
 msgid "Needed to schedule"
 msgstr "Zamanlamak için gerekli"
 
+#: src/routes/dashboard.plugins_.video.tsx:270
+msgid "Needs Stream read and edit, and nothing else."
+msgstr "Stream okuma ve düzenleme yetkisi yeter, başka bir şey gerekmez."
+
 #: src/routes/dashboard.categories.tsx:279
 msgid "needs translation"
 msgstr "çeviri bekliyor"
 
 #. placeholder {0}: writing.name
-#: src/components/dashboard/dashboard-shell.tsx:206
+#: src/components/dashboard/dashboard-shell.tsx:208
 msgid "New {0}"
 msgstr "Yeni {0}"
 
@@ -2980,6 +3077,10 @@ msgstr "Henüz şablon yok — şablonsuz bir kampanya yalnızca kendi gövdesin
 msgid "No tokens yet"
 msgstr "Henüz jeton yok"
 
+#: src/routes/dashboard.videos.tsx:312
+msgid "No videos yet"
+msgstr "Henüz video yok"
+
 #: src/routes/dashboard.plugins_.email.tsx:230
 msgid "Nobody has set this site up to send yet. Either put in your own Amazon keys below, or ask whoever runs this server to lend you theirs — then you need no Amazon account at all."
 msgstr "Bu sitede gönderim henüz kurulmamış. Ya aşağıya kendi Amazon anahtarlarınızı girin ya da sunucuyu işletenden kendi hesabını ödünç vermesini isteyin — o zaman Amazon hesabına hiç ihtiyacınız olmaz."
@@ -3000,7 +3101,7 @@ msgstr "Yok — gövdeyi olduğu gibi gönder"
 msgid "None yet — add one under Accounts, below the flow list."
 msgstr "Henüz yok — akış listesinin altındaki Hesaplar bölümünden ekleyin."
 
-#: src/routes/dashboard.plugins.tsx:89
+#: src/routes/dashboard.plugins.tsx:97
 msgid "Not configured"
 msgstr "Yapılandırılmadı"
 
@@ -3113,6 +3214,10 @@ msgstr "Açık"
 #: src/routes/dashboard.mail.tsx:524
 msgid "on {0} lists"
 msgstr "{0} listede"
+
+#: src/routes/dashboard.plugins_.video.tsx:194
+msgid "On bunny.net, open Stream and make a video library."
+msgstr "bunny.net'te Stream'i açın ve bir video kütüphanesi oluşturun."
 
 #: src/components/plugin-forms.tsx:196
 #: src/components/plugin-forms.tsx:201
@@ -3295,6 +3400,10 @@ msgstr "Bir görsel adresi yapıştırın, sürükleyip bırakın veya medya kü
 msgid "Paste it wherever a program asks for a server address and nothing else. You will be sent here to sign in and asked whether to allow it, and it will then be able to do what you can — writing included. This is the way to connect."
 msgstr "Bir program sunucu adresi istediğinde yalnızca bunu yapıştırın. Giriş yapmak üzere buraya yönlendirilir, izin verip vermeyeceğiniz sorulur; ardından sizin yapabildiklerinizi yapabilir — yazmak dahil. Bağlanmanın yolu budur."
 
+#: src/routes/dashboard.plugins_.video.tsx:200
+msgid "Paste the address shown further down into the library's webhook setting."
+msgstr "Aşağıda gösterilen adresi kütüphanenin webhook ayarına yapıştırın."
+
 #: src/components/mail/letterhead-editor.tsx:85
 msgid "Paste the HTML here"
 msgstr "HTML'i buraya yapıştırın"
@@ -3302,6 +3411,10 @@ msgstr "HTML'i buraya yapıştırın"
 #: src/components/editor/dialogs.tsx:227
 msgid "Paste the video link."
 msgstr "Video bağlantısını yapıştır."
+
+#: src/routes/dashboard.plugins_.video.tsx:301
+msgid "Paste this into the host's webhook setting. Without it a video still uploads and still transcodes — the panel just never notices that it finished."
+msgstr "Bunu sunucunun webhook ayarına yapıştırın. O olmadan da video yüklenir ve dönüştürülür — panel yalnızca bittiğini fark etmez."
 
 #: src/components/plugin-forms.tsx:135
 msgid "Path prefix"
@@ -3315,7 +3428,7 @@ msgstr "Duraklat"
 msgid "Paused"
 msgstr "Duraklatıldı"
 
-#: src/components/dashboard/dashboard-shell.tsx:113
+#: src/components/dashboard/dashboard-shell.tsx:115
 #: src/routes/dashboard.mail.tsx:81
 #: src/routes/dashboard.users.tsx:150
 msgid "People"
@@ -3362,11 +3475,16 @@ msgstr "Düz metin"
 msgid "Plain text block"
 msgstr "Düz metin bloğu"
 
-#: src/components/dashboard/dashboard-shell.tsx:112
+#: src/routes/dashboard.videos.tsx:360
+msgid "Play"
+msgstr "Oynat"
+
+#: src/components/dashboard/dashboard-shell.tsx:114
 #: src/routes/dashboard.plugins_.backup.tsx:194
 #: src/routes/dashboard.plugins_.email.tsx:213
 #: src/routes/dashboard.plugins_.s3.tsx:111
-#: src/routes/dashboard.plugins.tsx:57
+#: src/routes/dashboard.plugins_.video.tsx:150
+#: src/routes/dashboard.plugins.tsx:65
 msgid "Plugins"
 msgstr "Eklentiler"
 
@@ -3380,7 +3498,7 @@ msgstr "Önce adresi bu sunucuya yönlendirin — site burada verdiğiniz adres 
 msgid "Port"
 msgstr "Port"
 
-#: src/components/dashboard/dashboard-shell.tsx:73
+#: src/components/dashboard/dashboard-shell.tsx:74
 #: src/components/editor/post-settings.tsx:427
 #: src/routes/dashboard.trash.tsx:68
 msgid "post"
@@ -3428,7 +3546,7 @@ msgstr "yazi-adresi"
 msgid "post, page, or one this site made up. Left empty, anything being published sets this off."
 msgstr "post, page ya da bu sitenin kendi tanımladığı bir tür. Boş bırakılırsa yayınlanan her şey bunu tetikler."
 
-#: src/components/dashboard/dashboard-shell.tsx:88
+#: src/components/dashboard/dashboard-shell.tsx:89
 #: src/lib/use-content-types.ts:45
 msgid "Posts"
 msgstr "Yazılar"
@@ -3450,7 +3568,7 @@ msgstr "Önceki"
 msgid "Public base URL"
 msgstr "Genel URL tabanı"
 
-#: src/components/dashboard/dashboard-shell.tsx:119
+#: src/components/dashboard/dashboard-shell.tsx:121
 #: src/components/editor/mavi-editor.tsx:735
 #: src/components/publish-panel.tsx:306
 #: src/routes/console.sites.$siteId.tsx:310
@@ -3486,6 +3604,10 @@ msgstr "Bunları yayınlamak hem alan adının sizin olduğunu kanıtlar hem de 
 #: src/components/publish-panel.tsx:306
 msgid "Publishing…"
 msgstr "Yayınlanıyor…"
+
+#: src/routes/dashboard.plugins_.video.tsx:213
+msgid "Pull zone hostname"
+msgstr "Pull zone alan adı"
 
 #: src/components/editor/palette.ts:25
 #: src/components/editor/palette.ts:37
@@ -3539,6 +3661,10 @@ msgstr "Okuma"
 #: src/routes/dashboard.api.tsx:309
 msgid "Reading needs an account on this site. Sign in once and use the cookie that comes back."
 msgstr "Okumak için bu sitede bir hesap gerekiyor. Bir kez giriş yapıp dönen çerezi kullanın."
+
+#: src/routes/dashboard.videos.tsx:256
+msgid "Ready"
+msgstr "Hazır"
 
 #: src/routes/console.sites.$siteId.tsx:358
 #: src/routes/dashboard.publish.tsx:152
@@ -3677,6 +3803,7 @@ msgid "Repository"
 msgstr "Depo"
 
 #: src/routes/dashboard.plugins_.s3.tsx:72
+#: src/routes/dashboard.plugins_.video.tsx:99
 msgid "Request failed"
 msgstr "İstek başarısız oldu"
 
@@ -3761,6 +3888,7 @@ msgstr "Kum havuzu"
 #: src/routes/dashboard.plugins_.email.tsx:261
 #: src/routes/dashboard.plugins_.email.tsx:354
 #: src/routes/dashboard.plugins_.s3.tsx:172
+#: src/routes/dashboard.plugins_.video.tsx:358
 msgid "Save"
 msgstr "Kaydet"
 
@@ -3793,6 +3921,10 @@ msgstr "Kaydedildi"
 #: src/components/editor/status-bar.tsx:108
 msgid "Saved at {0}"
 msgstr "{0} itibarıyla kaydedildi"
+
+#: src/routes/dashboard.plugins_.video.tsx:313
+msgid "Saving this on tries the credentials first."
+msgstr "Açık kaydetmek önce kimlik bilgilerini dener."
 
 #: src/components/editor/status-bar.tsx:101
 msgid "Saving…"
@@ -4034,6 +4166,7 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #: src/routes/dashboard.plugins_.s3.tsx:85
+#: src/routes/dashboard.plugins_.video.tsx:117
 msgid "Settings saved"
 msgstr "Ayarlar kaydedildi"
 
@@ -4057,7 +4190,7 @@ msgstr "Kurulum başarısız oldu"
 msgid "Several are called"
 msgstr "Birkaçının adı"
 
-#: src/components/dashboard/dashboard-shell.tsx:127
+#: src/components/dashboard/dashboard-shell.tsx:129
 msgid "Shared mail"
 msgstr "Ortak e-posta"
 
@@ -4078,6 +4211,10 @@ msgstr "Kısayollar"
 msgid "Show password"
 msgstr "Parolayı göster"
 
+#: src/routes/dashboard.plugins_.video.tsx:284
+msgid "Shown beside any video in the Stream dashboard. It is the same for every video on the account and never changes."
+msgstr "Stream panosunda herhangi bir videonun yanında yazar. Hesaptaki her video için aynıdır ve hiç değişmez."
+
 #: src/routes/console_.login.tsx:108
 #: src/routes/login.tsx:99
 #: src/routes/login.tsx:140
@@ -4097,7 +4234,7 @@ msgid "Sign in; sets the session cookie."
 msgstr "Giriş yapar; oturum çerezini bırakır."
 
 #: src/components/console/console-shell.tsx:144
-#: src/components/dashboard/dashboard-shell.tsx:213
+#: src/components/dashboard/dashboard-shell.tsx:215
 #: src/components/editor/mavi-editor.tsx:695
 #: src/components/editor/mavi-editor.tsx:983
 msgid "Sign out"
@@ -4128,7 +4265,7 @@ msgid "Site title"
 msgstr "Site başlığı"
 
 #: src/components/console/console-shell.tsx:51
-#: src/components/dashboard/dashboard-shell.tsx:122
+#: src/components/dashboard/dashboard-shell.tsx:124
 #: src/routes/dashboard.platform-mail.tsx:173
 #: src/routes/dashboard.sites.tsx:143
 msgid "Sites"
@@ -4201,6 +4338,10 @@ msgstr "Depolama"
 msgid "Store uploaded media in an S3 bucket (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces) instead of the local disk."
 msgstr "Yüklenen medyayı yerel disk yerine bir S3 bucket'ında saklar (AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces)."
 
+#: src/routes/dashboard.plugins_.video.tsx:135
+msgid "Stored — leave blank to keep it"
+msgstr "Saklı — korumak için boş bırakın"
+
 #: src/components/plugin-forms.tsx:120
 msgid "Stored — leave empty to keep it unchanged"
 msgstr "Kayıtlı — değiştirmemek için boş bırakın"
@@ -4265,6 +4406,10 @@ msgstr "kapalı"
 msgid "Switched off"
 msgstr "Kapalı"
 
+#: src/routes/dashboard.plugins_.video.tsx:311
+msgid "Switched on"
+msgstr "Açık"
+
 #: src/routes/dashboard.sites.tsx:257
 msgid "Switching an agency off stops it signing in. Its sites keep serving — the customers are not the ones who fell out with anybody."
 msgstr "Bir işletmeyi kapatmak girişini durdurur. Siteleri yayında kalır — müşteriler kimseyle küs değil."
@@ -4298,7 +4443,7 @@ msgstr "etiket"
 msgid "Tagline"
 msgstr "Slogan"
 
-#: src/components/dashboard/dashboard-shell.tsx:100
+#: src/components/dashboard/dashboard-shell.tsx:102
 #: src/components/editor/post-settings.tsx:247
 #: src/routes/dashboard.tags.tsx:142
 msgid "Tags"
@@ -4324,7 +4469,7 @@ msgstr "Geri al"
 msgid "Take off the addresses that bounced, and stop writing to anybody who has not opened anything in a year."
 msgstr "Geri dönen adresleri çıkarın ve bir yıldır hiçbir şey açmamış kimseye yazmayı bırakın."
 
-#: src/routes/dashboard.plugins.tsx:35
+#: src/routes/dashboard.plugins.tsx:39
 msgid "Take the database, and the uploaded files if you want them, into a single archive — on a schedule, to the disk or to your S3 bucket."
 msgstr "Veritabanını, istersen yüklenen dosyalarla birlikte, tek bir arşive alır — zamanlanmış olarak, diske ya da S3 kovana."
 
@@ -4342,6 +4487,10 @@ msgstr "Deniz mavisi"
 msgid "Tell somebody"
 msgstr "Haber ver"
 
+#: src/routes/dashboard.plugins_.video.tsx:299
+msgid "Tell the host where to report"
+msgstr "Sunucuya nereye bildireceğini söyleyin"
+
 #: src/components/setup/setup-wizard.tsx:581
 msgid "Tell us about your site"
 msgstr "Siteniz hakkında bilgi verin"
@@ -4355,6 +4504,7 @@ msgid "Test & continue"
 msgstr "Test et ve devam et"
 
 #: src/routes/dashboard.plugins_.s3.tsx:168
+#: src/routes/dashboard.plugins_.video.tsx:354
 msgid "Test connection"
 msgstr "Bağlantıyı test et"
 
@@ -4487,6 +4637,10 @@ msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, doğrulaması bitmemi
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, SES'in doğrulamadığı bir adres ve hâlâ kum havuzundaki bir hesap — gerçekten bir şey gönderilene kadar üçü de aynı görünür."
 
+#: src/routes/dashboard.plugins_.video.tsx:196
+msgid "The pull zone hostname is on the same tab — it looks like vz-… .b-cdn.net"
+msgstr "Pull zone alan adı da aynı sekmede — vz-… .b-cdn.net gibi görünür."
+
 #: src/routes/console.sites.$siteId.tsx:250
 #: src/routes/dashboard.plugins_.backup.tsx:154
 #: src/routes/dashboard.plugins_.backup.tsx:170
@@ -4588,7 +4742,7 @@ msgstr "Bu sunucuya davetle girilir"
 msgid "This signs you in to the server itself. Everyone else signs in somewhere else:"
 msgstr "Bu giriş sunucunun kendisine. Diğer herkes başka bir yerden giriyor:"
 
-#: src/components/dashboard/dashboard-shell.tsx:108
+#: src/components/dashboard/dashboard-shell.tsx:110
 msgid "This site"
 msgstr "Bu site"
 
@@ -4611,6 +4765,10 @@ msgstr "Kime"
 #: src/components/editor/extensions/slash-command.tsx:221
 msgid "Today's date"
 msgstr "Bugünün tarihi"
+
+#: src/routes/dashboard.plugins_.video.tsx:233
+msgid "Token authentication key"
+msgstr "Jeton doğrulama anahtarı"
 
 #: src/components/console-tokens.tsx:76
 #: src/components/local-env.tsx:146
@@ -4688,6 +4846,10 @@ msgstr "Yükle"
 msgid "Upload a file (multipart)."
 msgstr "Dosya yükler (multipart)."
 
+#: src/routes/dashboard.videos.tsx:275
+msgid "Upload a video"
+msgstr "Video yükle"
+
 #: src/components/editor/post-settings.tsx:327
 msgid "Upload cover image"
 msgstr "Kapak görseli yükle"
@@ -4699,6 +4861,10 @@ msgstr "Görsel yükle"
 #: src/routes/dashboard.api.tsx:228
 msgid "Uploaded files and their addresses."
 msgstr "Yüklenen dosyalar ve adresleri."
+
+#: src/routes/dashboard.videos.tsx:254
+msgid "Uploading"
+msgstr "Yükleniyor"
 
 #: src/components/editor/dialogs.tsx:141
 msgid "URL"
@@ -4747,6 +4913,24 @@ msgstr "Gönderdiğiniz adresi ya da alan adını doğrulayın. SES, doğrulamad
 #: src/components/ses-setup.tsx:199
 msgid "Verifying an address or a domain"
 msgstr "Adres ya da alan adı doğrulamak"
+
+#: src/routes/dashboard.plugins_.video.tsx:154
+#: src/routes/dashboard.plugins.tsx:34
+msgid "Video"
+msgstr "Video"
+
+#: src/routes/dashboard.videos.tsx:243
+msgid "Video deleted"
+msgstr "Video silindi"
+
+#: src/routes/dashboard.videos.tsx:318
+msgid "Video settings"
+msgstr "Video ayarları"
+
+#: src/components/dashboard/dashboard-shell.tsx:100
+#: src/routes/dashboard.videos.tsx:264
+msgid "Videos"
+msgstr "Videolar"
 
 #: src/components/editor/dialogs.tsx:541
 msgid "View"
@@ -4896,6 +5080,14 @@ msgstr "Tarayıcının zahmetli olduğu yerlerde, bearer başlığındaki bir an
 #: src/components/plugin-forms.tsx:128
 msgid "Where readers load the images from (bucket public URL or CDN)"
 msgstr "Okuyucuların görselleri yüklediği adres (bucket genel URL'si veya CDN)"
+
+#: src/routes/dashboard.plugins_.video.tsx:168
+msgid "Where the videos live"
+msgstr "Videolar nerede duracak"
+
+#: src/routes/dashboard.plugins_.video.tsx:156
+msgid "Where this site's lesson videos live. Files go straight from the browser to the host — never through this server — and every playback address expires a few hours after it is made."
+msgstr "Bu sitenin ders videolarının duracağı yer. Dosyalar tarayıcıdan doğrudan sunucuya gider — hiçbir zaman bu sunucudan geçmez — ve her oynatma adresinin süresi üretilmesinden birkaç saat sonra dolar."
 
 #: src/routes/console.sites.$siteId.tsx:286
 msgid "Where this site's pages come from, and how the last builds went."
