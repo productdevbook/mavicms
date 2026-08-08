@@ -42,6 +42,17 @@ const CACHE_FOR: Duration = Duration::from_secs(60);
 /// the busy handful rather than the whole site.
 const CACHE_LIMIT: usize = 512;
 
+/// How long which site answers on an address is remembered.
+const REMEMBER_A_SITE: Duration = Duration::from_secs(300);
+
+/// And how long the answer "none does" is. Shorter, because that is the answer
+/// given about a site somebody is in the middle of setting up.
+const REMEMBER_A_MISS: Duration = Duration::from_secs(30);
+
+/// A ceiling on the addresses remembered at once. The key comes from the Host
+/// header, so without one this grows with whatever anybody sends.
+const MOST_HOSTS_REMEMBERED: usize = 10_000;
+
 /// The largest file kept in memory. Bigger ones are still served, just fetched
 /// each time — a video in the cache would evict a thousand pages.
 const CACHE_MAX_BYTES: usize = 512 * 1024;
@@ -55,7 +66,7 @@ struct Cached {
 struct Edge {
     control: DatabaseConnection,
     storage: MediaStorage,
-    hosts: RwLock<HashMap<String, Option<String>>>,
+    hosts: RwLock<HashMap<String, (Option<String>, Instant)>>,
     files: RwLock<HashMap<String, Cached>>,
 }
 
@@ -181,10 +192,21 @@ impl Edge {
     ///
     /// Answers are remembered including the absence of one, so a flood of
     /// requests for a hostname that is not here does not become a flood of
-    /// queries.
+    /// queries. Both kinds expire, and the absence of a site expires sooner:
+    /// remembered for ever, it meant a site added after somebody had already
+    /// asked for its address — which is every site, since the certificate is
+    /// issued by answering a request on it — stayed missing until this process
+    /// restarted.
     async fn slug_for(&self, host: &str) -> Option<String> {
-        if let Some(known) = self.hosts.read().await.get(host) {
-            return known.clone();
+        if let Some((known, since)) = self.hosts.read().await.get(host) {
+            let good_for = if known.is_some() {
+                REMEMBER_A_SITE
+            } else {
+                REMEMBER_A_MISS
+            };
+            if since.elapsed() < good_for {
+                return known.clone();
+            }
         }
 
         let found = self.lookup(host).await.unwrap_or_else(|err| {
@@ -192,10 +214,23 @@ impl Edge {
             None
         });
 
-        self.hosts
-            .write()
-            .await
-            .insert(host.to_string(), found.clone());
+        let mut hosts = self.hosts.write().await;
+        // The key is a header somebody else writes, so this cannot be allowed
+        // to grow with the number of addresses anybody cares to invent.
+        if hosts.len() >= MOST_HOSTS_REMEMBERED {
+            hosts.retain(|_, (slug, since)| {
+                since.elapsed()
+                    < if slug.is_some() {
+                        REMEMBER_A_SITE
+                    } else {
+                        REMEMBER_A_MISS
+                    }
+            });
+            if hosts.len() >= MOST_HOSTS_REMEMBERED {
+                hosts.clear();
+            }
+        }
+        hosts.insert(host.to_string(), (found.clone(), Instant::now()));
         found
     }
 
