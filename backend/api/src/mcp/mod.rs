@@ -385,14 +385,20 @@ fn server_info() -> Value {
 const INSTRUCTIONS: &str = "This is a Mavi CMS site. Which site depends on the address you \
     reached it on. \
     \
-    If none of the tools you were offered can write, this connection is read-only. Do not ask \
-    for a token — sending one is what made it read-only. Say this instead: connect again using \
-    the address on its own, with no Authorization header, and the site will ask whoever is \
-    connecting to sign in; the connection can then do everything their own account can. \
+    If none of the tools you were offered can write, this connection was made with a build \
+    token, which is the read-only kind. Two things fix it: connect again using the address on \
+    its own, with no Authorization header, and the site will ask whoever is connecting to sign \
+    in; or ask whoever the site belongs to for an assistant key, made in the panel under API, \
+    and send that in the header instead. \
     \
     What this site holds is posts and pages, the categories and tags on them, uploaded files, \
     forms and what has come in through them, and the languages it writes in. A page is one that \
     is not in the feed — an About, a Contact — and posts_create takes kind: \"page\" for it. \
+    \
+    A site may also publish kinds of its own, each with fields of its own — a course with a \
+    price and a level, a property with rooms. content_types_list says which; \
+    content_types_create adds one. Reach for that when what somebody wants to publish has \
+    facts a page should lay out, rather than writing a post with a heading called \"Price\". \
     \
     It does not hold a footer, a menu, or anything about how the site looks. Those are in the \
     project the site's pages are built from, which is somewhere else and not reachable from \

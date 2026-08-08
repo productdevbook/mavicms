@@ -57,8 +57,9 @@ contact form or a newsletter box has no account here:
 There is a shorter way in than this document. The same address answers the
 Model Context Protocol at `{{base}}/mcp`, where the site is a set of tools
 rather than an API to read about: finding and reading posts, writing and
-correcting them, uploading a file, reading and triaging what has come in
-through the forms, and building the pages.
+correcting them, uploading a file, adding a kind of content with fields of its
+own, making a form and triaging what has come in through it, and building the
+pages.
 
 What you are offered depends on which credential you connected with, and there
 are three ways.

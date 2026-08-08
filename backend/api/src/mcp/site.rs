@@ -281,6 +281,129 @@ pub const TOOLS: &[Tool] = &[
         schema: || json!({ "type": "object", "additionalProperties": false }),
     },
     Tool {
+        name: "content_types_create",
+        title: "Add a kind of content",
+        description: "Add a kind of thing this site publishes, with fields of its own — a \
+            course with a price and a level, a property with rooms. Do this when what somebody \
+            wants to publish has facts a page should lay out rather than bury in a paragraph; \
+            a post with a heading called \"Price\" is the thing this exists to replace. Read \
+            content_types_list first: a site that already has one for this does not want a \
+            second. The address it answers on is made from the name and never changes \
+            afterwards, so say what it is called as it should stay.",
+        writes: true,
+        destroys: false,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name"],
+                "properties": {
+                    "name": { "type": "string", "description": "What one of them is called: Course" },
+                    "plural": {
+                        "type": "string",
+                        "description": "What a list of them is called: Courses. The name, if left out."
+                    },
+                    "slug": {
+                        "type": "string",
+                        "description": "The address it answers on. Made from the name if left out, and never changed after."
+                    },
+                    "fields": {
+                        "type": "array",
+                        "description": "What one of these carries beyond a title and a body. May be none.",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": ["name", "label", "type"],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The key it is stored under: letters, numbers, _ or -"
+                                },
+                                "label": { "type": "string", "description": "What somebody writing one reads" },
+                                "type": {
+                                    "type": "string",
+                                    "enum": [
+                                        "text", "textarea", "email", "phone",
+                                        "number", "checkbox", "select", "date", "url"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean",
+                                    "description": "Asked for before it can be published, not before it can be saved as a draft"
+                                },
+                                "options": {
+                                    "type": "array",
+                                    "items": { "type": "string" },
+                                    "description": "The choices, for a select. Ignored by every other type."
+                                }
+                            }
+                        }
+                    },
+                }
+            })
+        },
+    },
+    Tool {
+        name: "content_types_update",
+        title: "Rename a kind, or change its fields",
+        description: "Change a kind this site already has, named by its slug — including post \
+            and page, whose fields may change even though they themselves cannot go. Leave \
+            fields out to rename it and keep what it is made of. Give fields and the list is \
+            replaced by exactly what you send, so read content_types_list first and send back \
+            the whole list with your addition in it: a field dropped here stops being kept on \
+            the next save of anything that had it. The address never changes, whatever the \
+            name becomes.",
+        writes: true,
+        destroys: false,
+        schema: || {
+            json!({
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind", "name"],
+                "properties": {
+                    "kind": {
+                        "type": "string",
+                        "description": "The slug of the one to change, as content_types_list gives it"
+                    },
+                    "name": { "type": "string" },
+                    "plural": { "type": "string" },
+                    "fields": {
+                        "type": "array",
+                        "description": "What one of these carries beyond a title and a body. May be none.",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": ["name", "label", "type"],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The key it is stored under: letters, numbers, _ or -"
+                                },
+                                "label": { "type": "string", "description": "What somebody writing one reads" },
+                                "type": {
+                                    "type": "string",
+                                    "enum": [
+                                        "text", "textarea", "email", "phone",
+                                        "number", "checkbox", "select", "date", "url"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean",
+                                    "description": "Asked for before it can be published, not before it can be saved as a draft"
+                                },
+                                "options": {
+                                    "type": "array",
+                                    "items": { "type": "string" },
+                                    "description": "The choices, for a select. Ignored by every other type."
+                                }
+                            }
+                        }
+                    },
+                }
+            })
+        },
+    },
+    Tool {
         name: "taxonomy_create",
         title: "Add a category or a tag",
         description: "Add one, in one language. Read taxonomy_list first: a site with \
@@ -476,6 +599,8 @@ pub async fn call(
         "form_submissions" => submissions(db, arguments).await,
         "media_upload" => upload(state, arguments).await,
         "content_types_list" => kinds(db).await,
+        "content_types_create" => make_kind(db, arguments).await,
+        "content_types_update" => change_kind(db, arguments).await,
         "taxonomy_create" => make_taxonomy(db, arguments).await,
         "forms_create" => make_form(db, arguments).await,
         "form_mark_seen" => mark_seen(db, arguments).await,
@@ -1063,6 +1188,43 @@ async fn make_taxonomy(db: &sea_orm::DatabaseConnection, arguments: &Value) -> A
             "say which: category or tag".to_string(),
         )),
     }
+}
+
+/// A kind, as both of the tools below hand one back.
+fn described_kind(kind: crate::content::ContentTypeResponse) -> AppResult<Value> {
+    Ok(json!({
+        "kind": kind.slug,
+        "name": kind.name,
+        "plural": kind.plural,
+        "how_many": kind.count,
+        "fields": kind.fields,
+    }))
+}
+
+async fn make_kind(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    let payload: crate::content::SaveContentTypeRequest = serde_json::from_value(arguments.clone())
+        .map_err(|err| AppError::Validation(format!("that is not a kind: {err}")))?;
+
+    described_kind(crate::content::create(db, payload).await?)
+}
+
+async fn change_kind(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
+    let slug = text(arguments, "kind")
+        .ok_or_else(|| AppError::Validation("say which kind, by its slug".to_string()))?;
+    let existing = crate::content::by_slug(db, &slug).await?;
+
+    let mut payload: crate::content::SaveContentTypeRequest =
+        serde_json::from_value(arguments.clone())
+            .map_err(|err| AppError::Validation(format!("that is not a kind: {err}")))?;
+
+    // An absent `fields` means "leave them alone", not "it has none". The
+    // endpoint cannot tell those apart — both arrive as an empty list — and
+    // the difference between them is a site's course fields.
+    if arguments.get("fields").is_none() {
+        payload.fields = crate::content::fields_of(&existing.fields)?;
+    }
+
+    described_kind(crate::content::update(db, existing.id, payload).await?)
 }
 
 async fn make_form(db: &sea_orm::DatabaseConnection, arguments: &Value) -> AppResult<Value> {
