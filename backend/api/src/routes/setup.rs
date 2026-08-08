@@ -7,7 +7,9 @@ use argon2::{
 use axum::{Json, http::StatusCode};
 use chrono::Utc;
 use percent_encoding::{NON_ALPHANUMERIC, utf8_percent_encode};
-use sea_orm::{ActiveModelTrait, ActiveValue::Set, EntityTrait, TransactionTrait};
+use sea_orm::{
+    ActiveModelTrait, ActiveValue::Set, ColumnTrait, EntityTrait, QueryFilter, TransactionTrait,
+};
 use tower_cookies::Cookies;
 use uuid::Uuid;
 
@@ -50,10 +52,29 @@ pub async fn setup_status(
     let settings = site_settings::Entity::find().one(db).await?;
     Ok(Json(SetupStatusResponse {
         database_configured: true,
-        installed: settings.is_some(),
+        installed: settings.is_some() || somebody_is_here(db).await?,
         site_title: settings.map(|s| s.site_title),
         server,
     }))
+}
+
+/// Whether this site already belongs to somebody.
+///
+/// The settings row is the usual sign, and it is not the only one: a site
+/// opened from the console and walked into by its agency has an administrator
+/// and no settings, because the hand-off from the console creates the account
+/// directly and the wizard never runs. Reading only the settings row leaves
+/// such a site offering first-run setup on its own address, to anyone.
+///
+/// Builders do not count. They are accounts a build mints for itself, they
+/// appear before anybody has set the site up, and treating one as an owner
+/// would leave the real one unable to.
+async fn somebody_is_here(db: &sea_orm::DatabaseConnection) -> AppResult<bool> {
+    Ok(user::Entity::find()
+        .filter(user::Column::Role.ne(crate::auth::BUILDER))
+        .one(db)
+        .await?
+        .is_some())
 }
 
 /// Configure the database connection. Tests the connection (and runs
@@ -170,7 +191,12 @@ pub async fn run_setup(
 ) -> AppResult<(StatusCode, Json<SetupResponse>)> {
     let db = state.db_or_unavailable()?;
 
-    if site_settings::Entity::find().one(db).await?.is_some() {
+    // Nothing above this asks who is calling: first-run setup cannot, because
+    // there is nobody to be yet. That makes this check the whole of the lock on
+    // a site's first administrator, and the settings row alone was not enough
+    // of one — a site whose agency had already walked in from the console had
+    // none, and would have handed an administrator account to whoever asked.
+    if site_settings::Entity::find().one(db).await?.is_some() || somebody_is_here(db).await? {
         return Err(AppError::Conflict("site is already installed".to_string()));
     }
 
@@ -295,7 +321,57 @@ async fn write_private(path: &Path, contents: &str) -> std::io::Result<()> {
 mod tests {
     use std::os::unix::fs::PermissionsExt;
 
-    use super::write_private;
+    use super::{somebody_is_here, write_private};
+    use crate::entities::user;
+    use chrono::Utc;
+    use migration::{Migrator, MigratorTrait};
+    use sea_orm::{ActiveModelTrait, ActiveValue::Set, Database, DatabaseConnection};
+    use uuid::Uuid;
+
+    async fn empty_site() -> DatabaseConnection {
+        let db = Database::connect("sqlite::memory:").await.unwrap();
+        Migrator::up(&db, None).await.unwrap();
+        db
+    }
+
+    async fn add(db: &DatabaseConnection, username: &str, role: &str) {
+        user::ActiveModel {
+            id: Set(Uuid::now_v7()),
+            username: Set(username.to_string()),
+            email: Set(format!("{username}@example.invalid")),
+            password_hash: Set("x".to_string()),
+            role: Set(role.to_string()),
+            created_at: Set(Utc::now().fixed_offset()),
+        }
+        .insert(db)
+        .await
+        .unwrap();
+    }
+
+    #[tokio::test]
+    async fn a_site_nobody_has_opened_is_free_to_set_up() {
+        let db = empty_site().await;
+        assert!(!somebody_is_here(&db).await.unwrap());
+    }
+
+    #[tokio::test]
+    async fn a_build_having_run_does_not_claim_the_site() {
+        // The builder mints itself an account before anybody has set the site
+        // up. Counting it would leave the real owner unable to.
+        let db = empty_site().await;
+        add(&db, "build", crate::auth::BUILDER).await;
+        assert!(!somebody_is_here(&db).await.unwrap());
+    }
+
+    #[tokio::test]
+    async fn an_agency_that_walked_in_from_the_console_claims_the_site() {
+        // No settings row is written by that hand-off, so this is the only
+        // thing standing between a live site and a stranger completing its
+        // first-run setup.
+        let db = empty_site().await;
+        add(&db, "agency-something", crate::auth::ADMINISTRATOR).await;
+        assert!(somebody_is_here(&db).await.unwrap());
+    }
 
     #[tokio::test]
     async fn database_url_is_only_readable_by_its_owner() {
