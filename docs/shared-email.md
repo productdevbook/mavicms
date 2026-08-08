@@ -206,6 +206,45 @@ Two things worth telling a customer plainly:
   the panel re-asks Amazon and shows verified when the records have propagated,
   usually within the hour and occasionally the next day.
 
+## What a borrowing site may do
+
+Under **Plugins → Amazon SES**, a site the server lends its account to gets the
+senders and nothing else. It adds a domain, reads the records to publish,
+watches it verify, and sets it as the address its mail comes from. It is not
+asked for a region or a key, because it has neither.
+
+Everything else on that screen belongs to whoever runs the server, and answers
+only for a site whose keys they are:
+
+| | Why |
+|---|---|
+| Quota and sandbox status | The account's, not a site's. A site sees its own daily allowance instead. |
+| Asking Amazon for production access or a bigger quota | Opens a support case on the server's AWS account. |
+| The suppression list | Account-wide: it is every other site's correspondents, by name. |
+| The event pipeline | One configuration set and one SNS topic serve the whole account. |
+
+Two limits on the senders themselves. A domain belongs to the site that added
+it first, and a site may only touch the senders it added — checked in both
+directions, because taking the parent of somebody's domain would take the
+domain with it. And a **campaign will not send under the server's address**: a
+notification is few, expected, and going to the site's own people, but
+marketing from a borrowed address puts every site's complaints on one domain,
+and the DMARC record answering for it is the server's.
+
+## Watching one site rather than the account
+
+Amazon meters by identity, configuration set and receiving provider. It has
+**no dimension for a tenant** — so a site's own figures can only be read
+through the senders it verified, and a site still sending under the server's
+address cannot be told apart from the server at all. It is told so, rather
+than shown the whole account's numbers as if they were its own.
+
+The figures are the ones that decide whether an account survives: complaints
+above 0.1% are where Amazon starts paying attention and around 0.5% is where
+accounts stop. Below a hundred messages nothing is judged, because one
+complaint in eighty is a whole percent and a number that cries wolf gets
+ignored.
+
 ## What the server decides
 
 In the console, under **Mail**, each site shows:
