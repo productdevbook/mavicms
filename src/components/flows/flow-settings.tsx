@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro"
 
-import type { FlowVocabulary } from "@/lib/api"
+import type { FlowCredential, FlowVocabulary } from "@/lib/api"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -120,12 +120,54 @@ export function TriggerSettings({
   )
 }
 
+function AccountPicker({
+  kind,
+  accounts,
+  value,
+  onChange,
+  hint,
+}: {
+  kind: string
+  accounts: FlowCredential[]
+  value: string
+  onChange: (value: string) => void
+  hint: string
+}) {
+  const { t } = useLingui()
+  const mine = accounts.filter((one) => one.kind === kind)
+
+  return (
+    <div className="flex flex-col gap-2">
+      <Label htmlFor="step-account">{t`Which account`}</Label>
+      <Select value={value || "none"} onValueChange={(v) => onChange(v === "none" ? "" : (v ?? ""))}>
+        <SelectTrigger id="step-account">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="none">{hint}</SelectItem>
+          {mine.map((one) => (
+            <SelectItem key={one.id} value={one.id}>
+              {one.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {mine.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          {t`None yet — add one under Accounts, below the flow list.`}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
 export function StepSettings({
   action,
   config,
   onError,
   vocabulary,
   triggerKind,
+  accounts,
   onChange,
   onErrorChange,
 }: {
@@ -134,6 +176,7 @@ export function StepSettings({
   onError: string
   vocabulary: FlowVocabulary | null
   triggerKind: string
+  accounts: FlowCredential[]
   onChange: (config: Bag) => void
   onErrorChange: (value: string) => void
 }) {
@@ -170,9 +213,74 @@ export function StepSettings({
               onChange={(event) => set("body", event.target.value)}
             />
           </div>
+          <AccountPicker
+            kind="smtp"
+            accounts={accounts}
+            value={text(config, "credential_id")}
+            onChange={(value) => set("credential_id", value)}
+            hint={t`The site's own mail settings`}
+          />
           <p className="text-sm text-muted-foreground">
-            {t`Sent with this site's own mail settings, from Plugins → Email.`}
+            {t`With no account chosen it goes through whatever the site has set up under Plugins → Email.`}
           </p>
+        </>
+      ) : null}
+
+      {action === "slack.message" || action === "discord.message" ? (
+        <>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="step-hook">{t`The channel's address`}</Label>
+            <Input
+              id="step-hook"
+              type="password"
+              autoComplete="off"
+              value={text(config, "webhook_url")}
+              onChange={(event) => set("webhook_url", event.target.value)}
+              placeholder="https://hooks.slack.com/services/..."
+            />
+            <p className="text-sm text-muted-foreground">
+              {t`Made in the channel's own settings, under incoming webhooks. Anybody holding it can post to that channel, so it is treated as a password and kept out of the run record.`}
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="step-text">{t`Message`}</Label>
+            <Textarea
+              id="step-text"
+              rows={5}
+              value={text(config, "text")}
+              onChange={(event) => set("text", event.target.value)}
+            />
+          </div>
+        </>
+      ) : null}
+
+      {action === "telegram.message" ? (
+        <>
+          <AccountPicker
+            kind="telegram"
+            accounts={accounts}
+            value={text(config, "credential_id")}
+            onChange={(value) => set("credential_id", value)}
+            hint={t`Choose a bot`}
+          />
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="step-chat">{t`Chat id`}</Label>
+            <Input
+              id="step-chat"
+              value={text(config, "chat_id")}
+              onChange={(event) => set("chat_id", event.target.value)}
+              placeholder="-1001234567890"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="step-tg-text">{t`Message`}</Label>
+            <Textarea
+              id="step-tg-text"
+              rows={5}
+              value={text(config, "text")}
+              onChange={(event) => set("text", event.target.value)}
+            />
+          </div>
         </>
       ) : null}
 

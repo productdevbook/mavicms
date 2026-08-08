@@ -28,6 +28,7 @@ pub mod publish;
 pub mod routes;
 pub mod schedule;
 pub mod slug;
+pub mod smtp;
 pub mod state;
 pub mod storage;
 pub mod tenants;

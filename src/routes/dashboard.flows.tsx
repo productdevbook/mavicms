@@ -23,7 +23,9 @@ import {
   getFlows,
   testFlow,
   updateFlow,
+  getFlowCredentials,
   type Flow,
+  type FlowCredential,
   type FlowRun,
   type FlowVocabulary,
 } from "@/lib/api"
@@ -45,6 +47,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { FlowAccounts } from "@/components/flows/flow-accounts"
 import { FlowCanvas, type Piece } from "@/components/flows/flow-canvas"
 import { StepSettings, TriggerSettings } from "@/components/flows/flow-settings"
 
@@ -96,6 +99,7 @@ function FlowsRoute() {
   const [draft, setDraft] = React.useState<Draft | null>(null)
   const [chosen, setChosen] = React.useState<Piece | null>(null)
   const [runs, setRuns] = React.useState<FlowRun[]>([])
+  const [accounts, setAccounts] = React.useState<FlowCredential[]>([])
   const [busy, setBusy] = React.useState(false)
 
   const load = React.useCallback(() => {
@@ -105,6 +109,9 @@ function FlowsRoute() {
     getFlowRuns()
       .then(setRuns)
       .catch(() => setRuns([]))
+    getFlowCredentials()
+      .then(setAccounts)
+      .catch(() => setAccounts([]))
   }, [])
 
   React.useEffect(() => {
@@ -122,6 +129,9 @@ function FlowsRoute() {
     "mail.send": t`Send an email`,
     "http.request": t`Call an address`,
     branch: t`Only carry on if`,
+    "slack.message": t`Post to Slack`,
+    "discord.message": t`Post to Discord`,
+    "telegram.message": t`Send on Telegram`,
   }
 
   const save = async () => {
@@ -260,6 +270,10 @@ function FlowsRoute() {
               ))}
             </div>
           )}
+
+          <div className="mt-8 border-t border-border pt-6">
+            <FlowAccounts onChanged={load} />
+          </div>
 
           {runs.length > 0 ? (
             <div className="mt-8">
@@ -450,6 +464,7 @@ function FlowsRoute() {
                     onError={chosenStep.on_error}
                     vocabulary={vocabulary}
                     triggerKind={draft.trigger_kind}
+                    accounts={accounts}
                     onChange={(config) => {
                       const steps = [...draft.steps]
                       steps[chosen.index!] = { ...steps[chosen.index!], config }

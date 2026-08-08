@@ -486,6 +486,166 @@ fn fresh_key() -> String {
         .collect()
 }
 
+#[derive(Debug, Serialize, ToSchema)]
+pub struct CredentialResponse {
+    pub id: String,
+    pub name: String,
+    pub kind: String,
+    pub created_at: String,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct SaveCredential {
+    pub name: String,
+    /// "smtp" or "telegram".
+    pub kind: String,
+    /// The account itself. Encrypted on arrival and never sent back.
+    pub secret: serde_json::Value,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct TryCredential {
+    /// Where to send the test message. Only used for an SMTP account.
+    pub to: String,
+}
+
+/// The accounts a flow can use, without their contents.
+#[utoipa::path(
+    get,
+    path = "/flows/credentials",
+    tag = "flows",
+    responses((status = 200, description = "The accounts", body = Vec<CredentialResponse>))
+)]
+pub async fn list_credentials(Site(state): Site) -> AppResult<Json<Vec<CredentialResponse>>> {
+    let held = flows::credentials(state.db_or_unavailable()?).await?;
+    Ok(Json(
+        held.into_iter()
+            .map(|one| CredentialResponse {
+                id: one.id.to_string(),
+                name: one.name,
+                kind: one.kind,
+                created_at: one.created_at.to_rfc3339(),
+            })
+            .collect(),
+    ))
+}
+
+/// Keeps one. What is stored is encrypted with the site's key and does not
+/// come back out of this API — the panel is told an account exists, not what
+/// its password is.
+#[utoipa::path(
+    post,
+    path = "/flows/credentials",
+    tag = "flows",
+    request_body = SaveCredential,
+    responses(
+        (status = 201, description = "Kept", body = CredentialResponse),
+        (status = 400, description = "Not an account this understands", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn create_credential(
+    Site(state): Site,
+    Json(payload): Json<SaveCredential>,
+) -> AppResult<(StatusCode, Json<CredentialResponse>)> {
+    let db = state.db_or_unavailable()?;
+    let kind = flows::credential::ALL
+        .iter()
+        .find(|known| **known == payload.kind.trim())
+        .copied()
+        .ok_or_else(|| {
+            AppError::Validation(format!("{} is not an account this knows", payload.kind))
+        })?;
+
+    // Checked before it is kept, so a password saved today does not fail for
+    // the first time on the night a form arrives.
+    if kind == flows::credential::SMTP {
+        let account: crate::smtp::SmtpAccount = serde_json::from_value(payload.secret.clone())
+            .map_err(|err| AppError::Validation(format!("that is not an SMTP account: {err}")))?;
+        crate::smtp::looks_usable(&account)?;
+    }
+
+    let now = Utc::now().fixed_offset();
+    let made = crate::entities::flow_credential::ActiveModel {
+        id: Set(Uuid::now_v7()),
+        name: Set(cleaned_name(&payload.name)?),
+        kind: Set(kind.to_string()),
+        secret: Set(state.secrets.encrypt(&payload.secret.to_string())?),
+        created_at: Set(now),
+    }
+    .insert(db)
+    .await?;
+
+    Ok((
+        StatusCode::CREATED,
+        Json(CredentialResponse {
+            id: made.id.to_string(),
+            name: made.name,
+            kind: made.kind,
+            created_at: made.created_at.to_rfc3339(),
+        }),
+    ))
+}
+
+/// Takes one away. A step still naming it says so when it next runs, rather
+/// than the account quietly becoming a different one.
+#[utoipa::path(
+    delete,
+    path = "/flows/credentials/{id}",
+    tag = "flows",
+    params(("id" = String, Path, description = "Credential id")),
+    responses((status = 204, description = "Gone"))
+)]
+pub async fn delete_credential(Site(state): Site, Path(id): Path<Uuid>) -> AppResult<StatusCode> {
+    crate::entities::flow_credential::Entity::delete_by_id(id)
+        .exec(state.db_or_unavailable()?)
+        .await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Sends a message with it, now, and says what the server said.
+#[utoipa::path(
+    post,
+    path = "/flows/credentials/{id}/test",
+    tag = "flows",
+    params(("id" = String, Path, description = "Credential id")),
+    request_body = TryCredential,
+    responses(
+        (status = 200, description = "What the server said", body = String),
+        (status = 400, description = "It refused", body = crate::error::ErrorBody),
+    )
+)]
+pub async fn test_credential(
+    Site(state): Site,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<TryCredential>,
+) -> AppResult<Json<String>> {
+    let db = state.db_or_unavailable()?;
+    let found = crate::entities::flow_credential::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| AppError::NotFound("that account".to_string()))?;
+
+    if found.kind != flows::credential::SMTP {
+        return Err(AppError::Validation(
+            "only a mail account can be tested by sending something".to_string(),
+        ));
+    }
+
+    let account: crate::smtp::SmtpAccount =
+        serde_json::from_str(&state.secrets.decrypt(&found.secret)?)
+            .map_err(|err| AppError::Internal(format!("that account is unreadable: {err}")))?;
+
+    let said = crate::smtp::send(
+        &account,
+        &payload.to,
+        "Mavi CMS",
+        "Bu bir deneme mesaji. / This is a test message.",
+        false,
+    )
+    .await?;
+    Ok(Json(said))
+}
+
 fn host_of(resolved: &crate::tenants::Resolved) -> String {
     match resolved {
         crate::tenants::Resolved::Tenant(tenant) => tenant.host.clone(),

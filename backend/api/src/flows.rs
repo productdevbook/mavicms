@@ -43,8 +43,22 @@ pub mod action {
     pub const MAIL_SEND: &str = "mail.send";
     pub const HTTP_REQUEST: &str = "http.request";
     pub const BRANCH: &str = "branch";
+    // The three below are the same request with the shape filled in. A site
+    // owner should not have to know what JSON Slack wants; that is exactly the
+    // difference between a step and a raw call.
+    pub const SLACK: &str = "slack.message";
+    pub const DISCORD: &str = "discord.message";
+    pub const TELEGRAM: &str = "telegram.message";
 
-    pub const ALL: [&str; 3] = [MAIL_SEND, HTTP_REQUEST, BRANCH];
+    pub const ALL: [&str; 6] = [MAIL_SEND, HTTP_REQUEST, BRANCH, SLACK, DISCORD, TELEGRAM];
+}
+
+/// What a stored credential is for.
+pub mod credential {
+    pub const SMTP: &str = "smtp";
+    pub const TELEGRAM: &str = "telegram";
+
+    pub const ALL: [&str; 2] = [SMTP, TELEGRAM];
 }
 
 pub const QUEUED: &str = "queued";
@@ -340,8 +354,21 @@ async fn perform(
 
     match step.action.as_str() {
         action::MAIL_SEND => send_mail(db, secrets, &config, seen).await,
-        action::HTTP_REQUEST => make_request(&config, seen).await,
+        action::HTTP_REQUEST => make_request(&config, seen, None).await,
         action::BRANCH => Ok(json!({ "passed": branch_passes(&config, seen) })),
+        action::SLACK => {
+            post_json(&config, seen, "webhook_url", |text| json!({ "text": text })).await
+        }
+        action::DISCORD => {
+            post_json(
+                &config,
+                seen,
+                "webhook_url",
+                |text| json!({ "content": text }),
+            )
+            .await
+        }
+        action::TELEGRAM => send_telegram(db, secrets, &config, seen).await,
         other => Err(AppError::Validation(format!(
             "{other} is not something a flow can do"
         ))),
@@ -370,6 +397,25 @@ async fn send_mail(
         ));
     }
 
+    // An account of the site's own comes first. Without one the site's own
+    // mail settings are used, which is what a site that has SES set up wants
+    // and the only thing a site that has nothing else can do.
+    if let Some(id) = config.get("credential_id").and_then(Value::as_str)
+        && !id.trim().is_empty()
+    {
+        let account: crate::smtp::SmtpAccount =
+            open_credential(db, secrets, id, credential::SMTP).await?;
+        let said = crate::smtp::send(
+            &account,
+            &to,
+            &subject,
+            &body,
+            config.get("html").and_then(Value::as_bool).unwrap_or(false),
+        )
+        .await?;
+        return Ok(json!({ "to": to, "subject": subject, "server_said": said }));
+    }
+
     let settings = crate::plugins::load::<crate::email::EmailConfig>(
         db,
         secrets,
@@ -377,7 +423,11 @@ async fn send_mail(
     )
     .await?
     .map(|stored| stored.config)
-    .ok_or_else(|| AppError::Validation("this site has no mail settings yet".to_string()))?;
+    .ok_or_else(|| {
+        AppError::Validation(
+            "this site has no mail settings and this step names no account".to_string(),
+        )
+    })?;
 
     crate::email::send(
         &settings,
@@ -396,11 +446,120 @@ async fn send_mail(
     Ok(json!({ "to": to, "subject": subject }))
 }
 
-async fn make_request(config: &Value, seen: &Value) -> AppResult<Value> {
+/// Reads one of the site's stored credentials, checking it is the kind the
+/// step expects — a Telegram token where an SMTP account belongs would
+/// otherwise be a confusing failure much further along.
+async fn open_credential<T: serde::de::DeserializeOwned>(
+    db: &DatabaseConnection,
+    secrets: &SecretBox,
+    id: &str,
+    wanted: &str,
+) -> AppResult<T> {
+    let id = Uuid::parse_str(id.trim())
+        .map_err(|_| AppError::Validation("that is not a credential".to_string()))?;
+    let found = flow_credential::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or_else(|| {
+            AppError::Validation("this step names a credential that is gone".to_string())
+        })?;
+
+    if found.kind != wanted {
+        return Err(AppError::Validation(format!(
+            "\"{}\" is a {} account, and this step needs a {wanted} one",
+            found.name, found.kind
+        )));
+    }
+
+    let clear = secrets.decrypt(&found.secret)?;
+    serde_json::from_str(&clear)
+        .map_err(|err| AppError::Internal(format!("that credential is unreadable: {err}")))
+}
+
+/// The shape shared by every "post a message to a chat" integration: an
+/// address the site was given, and a body somebody else's product decided on.
+async fn post_json(
+    config: &Value,
+    seen: &Value,
+    address_key: &str,
+    shape: impl Fn(&str) -> Value,
+) -> AppResult<Value> {
+    let url = fill(
+        config
+            .get(address_key)
+            .and_then(Value::as_str)
+            .unwrap_or(""),
+        seen,
+    );
+    if url.trim().is_empty() {
+        return Err(AppError::Validation(
+            "this step has no address to post to".to_string(),
+        ));
+    }
+    let text = fill(
+        config.get("text").and_then(Value::as_str).unwrap_or(""),
+        seen,
+    );
+
+    let sent = json!({
+        "url": url,
+        "method": "POST",
+        "headers": { "content-type": "application/json" },
+        "body": shape(&text).to_string(),
+    });
+    // Through the same door as any other request, so the address check is not
+    // something each integration remembers separately. The address is a
+    // credential, so it is not what a failure gets to write down.
+    make_request(&sent, &Value::Null, Some("the chat's address")).await
+}
+
+async fn send_telegram(
+    db: &DatabaseConnection,
+    secrets: &SecretBox,
+    config: &Value,
+    seen: &Value,
+) -> AppResult<Value> {
+    #[derive(serde::Deserialize)]
+    struct Bot {
+        token: String,
+    }
+
+    let id = config
+        .get("credential_id")
+        .and_then(Value::as_str)
+        .unwrap_or("");
+    let bot: Bot = open_credential(db, secrets, id, credential::TELEGRAM).await?;
+    let chat = fill(
+        config.get("chat_id").and_then(Value::as_str).unwrap_or(""),
+        seen,
+    );
+    let text = fill(
+        config.get("text").and_then(Value::as_str).unwrap_or(""),
+        seen,
+    );
+
+    let sent = json!({
+        "url": format!("https://api.telegram.org/bot{}/sendMessage", bot.token.trim()),
+        "method": "POST",
+        "headers": { "content-type": "application/json" },
+        "body": json!({ "chat_id": chat, "text": text }).to_string(),
+    });
+    make_request(&sent, &Value::Null, Some("Telegram")).await
+}
+
+/// `shown` is what appears in an error instead of the address.
+///
+/// A Telegram bot's token is in its address and a Slack webhook address is
+/// itself the credential, so an error that names the address writes a secret
+/// into the run record — which the panel shows and anybody with the panel can
+/// read. The address is still checked and still used; it is only what gets
+/// written down that is blunted.
+async fn make_request(config: &Value, seen: &Value, shown: Option<&str>) -> AppResult<Value> {
     let url = fill(
         config.get("url").and_then(Value::as_str).unwrap_or(""),
         seen,
     );
+    let named = shown.unwrap_or(&url).to_string();
     let method = config
         .get("method")
         .and_then(Value::as_str)
@@ -412,7 +571,7 @@ async fn make_request(config: &Value, seen: &Value) -> AppResult<Value> {
     // metadata address from outside.
     crate::fetch::ensure_public_host(&url)
         .await
-        .map_err(|err| AppError::Validation(err.to_string()))?;
+        .map_err(|err| AppError::Validation(hide(&err.to_string(), &url, &named)))?;
 
     let body = fill(
         config.get("body").and_then(Value::as_str).unwrap_or(""),
@@ -442,10 +601,13 @@ async fn make_request(config: &Value, seen: &Value) -> AppResult<Value> {
         request = request.body(body);
     }
 
-    let response = request
-        .send()
-        .await
-        .map_err(|err| AppError::Validation(format!("could not reach {url}: {err}")))?;
+    let response = request.send().await.map_err(|err| {
+        AppError::Validation(hide(
+            &format!("could not reach {named}: {err}"),
+            &url,
+            &named,
+        ))
+    })?;
     let status = response.status().as_u16();
     // Bounded: a step that fetches a hundred megabytes into a run record is a
     // step that fills somebody's database.
@@ -458,11 +620,24 @@ async fn make_request(config: &Value, seen: &Value) -> AppResult<Value> {
         .collect();
 
     if !(200..300).contains(&status) {
-        return Err(AppError::Validation(format!(
-            "{url} answered {status}: {text}"
+        return Err(AppError::Validation(hide(
+            &format!("{named} answered {status}: {text}"),
+            &url,
+            &named,
         )));
     }
     Ok(json!({ "status": status, "body": text }))
+}
+
+/// Takes the address back out of whatever a library decided to say.
+///
+/// The message is built from the safe name, but the error inside it came from
+/// reqwest and carries the URL it was given.
+fn hide(message: &str, url: &str, named: &str) -> String {
+    if url.trim().is_empty() || url == named {
+        return message.to_string();
+    }
+    message.replace(url, named)
 }
 
 /// Whether the flow carries on. Deliberately three comparisons and no
@@ -638,6 +813,29 @@ mod tests {
 
         let filled = json!({ "test": "not_empty", "left": "{{ trigger.fields.telefon }}" });
         assert!(!branch_passes(&filled, &seen()));
+    }
+
+    #[test]
+    fn an_address_that_is_a_credential_is_not_written_into_the_record() {
+        // A Slack webhook address is the credential, and a Telegram bot's
+        // token is in its address. Whatever a library says about a failure has
+        // the address in it, and the run record is read in the panel.
+        let secret = "https://hooks.slack.com/services/T000/B000/xoxbSECRET";
+        let said = format!("could not reach {secret}: connection refused");
+        let hidden = super::hide(&said, secret, "the chat's address");
+
+        assert!(!hidden.contains("xoxbSECRET"));
+        assert!(hidden.contains("the chat's address"));
+        assert!(hidden.contains("connection refused"));
+    }
+
+    #[test]
+    fn a_plain_request_still_says_which_address_it_was() {
+        let said = "https://example.invalid/ answered 500: oops";
+        assert_eq!(
+            super::hide(said, "https://example.invalid/", "https://example.invalid/"),
+            said
+        );
     }
 
     #[test]

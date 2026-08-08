@@ -11,7 +11,7 @@ import {
 } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
 import { useLingui } from "@lingui/react/macro"
-import { Globe, GitBranch, Mails, Play } from "lucide-react"
+import { Globe, GitBranch, Mails, MessageCircle, Play, Send } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -29,6 +29,9 @@ const LOOK: Record<string, { icon: typeof Play; tone: string }> = {
   "mail.send": { icon: Mails, tone: "bg-blue-500" },
   "http.request": { icon: Globe, tone: "bg-violet-500" },
   branch: { icon: GitBranch, tone: "bg-amber-500" },
+  "slack.message": { icon: MessageCircle, tone: "bg-rose-500" },
+  "discord.message": { icon: MessageCircle, tone: "bg-indigo-500" },
+  "telegram.message": { icon: Send, tone: "bg-sky-500" },
 }
 
 /**
@@ -96,6 +99,9 @@ export function FlowCanvas({
     "mail.send": t`Send an email`,
     "http.request": t`Call an address`,
     branch: t`Only carry on if`,
+    "slack.message": t`Post to Slack`,
+    "discord.message": t`Post to Discord`,
+    "telegram.message": t`Send on Telegram`,
   }
 
   const nodes: Node[] = React.useMemo(() => {

@@ -74,6 +74,10 @@ hmac = "0.12"
 sha2 = "0.10"
 hex = "0.4"
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "charset", "http2"] }
+# SMTP, for a site that sends through its own mail account rather than SES.
+# rustls for the same reason everything else here uses it: native-tls would
+# put OpenSSL in the image.
+lettre = { version = "0.11", default-features = false, features = ["smtp-transport", "tokio1", "tokio1-rustls-tls", "builder", "hostname", "ring"] }
 axum = { version = "0.8", features = ["multipart"] }
 tower = "0.5"
 tower-http = { version = "0.7", features = ["cors", "trace", "timeout", "fs", "set-header"] }

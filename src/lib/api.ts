@@ -974,6 +974,40 @@ export function testFlow(id: string, trigger: unknown): Promise<FlowRun> {
   })
 }
 
+export interface FlowCredential {
+  id: string
+  name: string
+  kind: string
+  created_at: string
+}
+
+export function getFlowCredentials(): Promise<FlowCredential[]> {
+  return request<FlowCredential[]>("/flows/credentials")
+}
+
+export function createFlowCredential(payload: {
+  name: string
+  kind: string
+  secret: Record<string, unknown>
+}): Promise<FlowCredential> {
+  return request<FlowCredential>("/flows/credentials", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteFlowCredential(id: string): Promise<void> {
+  return request<void>(`/flows/credentials/${id}`, { method: "DELETE" })
+}
+
+/** Sends a real message with it and answers with what the server said. */
+export function testFlowCredential(id: string, to: string): Promise<string> {
+  return request<string>(`/flows/credentials/${id}/test`, {
+    method: "POST",
+    body: JSON.stringify({ to }),
+  })
+}
+
 export function getFlowRuns(flowId?: string): Promise<FlowRun[]> {
   const query = flowId ? `?flow_id=${flowId}` : ""
   return request<FlowRun[]>(`/flows/runs${query}`)
