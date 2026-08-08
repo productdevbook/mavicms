@@ -218,6 +218,7 @@ pub fn router(hosting: Hosting) -> OpenApiRouter<Hosting> {
         ))
         .routes(routes!(plugins::test_email_settings))
         .routes(routes!(plugins::get_email_account))
+        .routes(routes!(plugins::get_email_allowance))
         .routes(routes!(plugins::request_email_production_access))
         .routes(routes!(
             plugins::list_email_identities,

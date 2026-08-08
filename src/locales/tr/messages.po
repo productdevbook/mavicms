@@ -154,6 +154,12 @@ msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıkla
 #~ msgid "{0} looks after how this site is built. Publishing puts what you have written online."
 #~ msgstr "Bu sitenin nasıl derlendiğiyle {0} ilgileniyor. Yayınlamak, yazdıklarınızı siteye çıkarır."
 
+#. placeholder {0}: allowance.sent_today
+#. placeholder {1}: allowance.a_day ?? 0
+#: src/routes/dashboard.plugins_.email.tsx:207
+msgid "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
+msgstr "Bugün {1} mesajın {0} tanesi kullanıldı. Bu sayıyı sunucuyu işleten belirler ve yükseltebilir."
+
 #. placeholder {0}: row.sent
 #. placeholder {1}: row.to_send
 #: src/routes/dashboard.mail.tsx:201
@@ -669,7 +675,7 @@ msgstr "Amazon henüz bir şey söylemedi"
 msgid "Amazon is refusing nobody on this account."
 msgstr "Amazon bu hesapta kimseyi reddetmiyor."
 
-#: src/routes/dashboard.plugins_.email.tsx:122
+#: src/routes/dashboard.plugins_.email.tsx:127
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Amazon SES"
 msgstr "Amazon SES"
@@ -1433,7 +1439,7 @@ msgstr "Bağlantı kesilemedi"
 #: src/components/site-mail.tsx:95
 #: src/routes/dashboard.forms_.$formId.tsx:89
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:109
-#: src/routes/dashboard.plugins_.email.tsx:95
+#: src/routes/dashboard.plugins_.email.tsx:100
 msgid "Could not do it"
 msgstr "Yapılamadı"
 
@@ -1487,7 +1493,7 @@ msgid "Could not load the local settings"
 msgstr "Yerel ayarlar yüklenemedi"
 
 #: src/components/site-mail.tsx:61
-#: src/routes/dashboard.plugins_.email.tsx:58
+#: src/routes/dashboard.plugins_.email.tsx:60
 msgid "Could not load the mail settings"
 msgstr "Posta ayarları yüklenemedi"
 
@@ -1591,7 +1597,7 @@ msgstr "Çalıştırılamadı"
 #: src/routes/dashboard.mail.tsx:280
 #: src/routes/dashboard.mail.tsx:647
 #: src/routes/dashboard.platform-mail.tsx:68
-#: src/routes/dashboard.plugins_.email.tsx:81
+#: src/routes/dashboard.plugins_.email.tsx:86
 msgid "Could not save it"
 msgstr "Kaydedilemedi"
 
@@ -2729,7 +2735,7 @@ msgstr "Kanalın kendi ayarlarında, gelen webhook'lar altında üretilir. Elind
 msgid "Mail"
 msgstr "Posta"
 
-#: src/routes/dashboard.plugins_.email.tsx:124
+#: src/routes/dashboard.plugins_.email.tsx:129
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Bu sitenin gönderdiği postalar — formlarınızdan biri doldurulduğunda bildirim."
 
@@ -3492,7 +3498,7 @@ msgstr "Düz metin bloğu"
 
 #: src/components/dashboard/dashboard-shell.tsx:112
 #: src/routes/dashboard.plugins_.backup.tsx:194
-#: src/routes/dashboard.plugins_.email.tsx:118
+#: src/routes/dashboard.plugins_.email.tsx:123
 #: src/routes/dashboard.plugins_.s3.tsx:111
 #: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
@@ -3901,7 +3907,7 @@ msgstr "Kum havuzu"
 #: src/routes/dashboard.mail.tsx:740
 #: src/routes/dashboard.platform-mail.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:150
+#: src/routes/dashboard.plugins_.email.tsx:155
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Kaydet"
@@ -3926,7 +3932,7 @@ msgstr "Akışı kaydedin, adres burada belirir. Oraya gönderilen her şey bunu
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:86
 #: src/routes/dashboard.platform-mail.tsx:65
-#: src/routes/dashboard.plugins_.email.tsx:78
+#: src/routes/dashboard.plugins_.email.tsx:83
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Kaydedildi"
@@ -4002,7 +4008,7 @@ msgstr "Dilinizi seçin"
 
 #: src/components/site-mail.tsx:163
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:374
-#: src/routes/dashboard.plugins_.email.tsx:180
+#: src/routes/dashboard.plugins_.email.tsx:185
 msgid "Send"
 msgstr "Gönder"
 
@@ -4012,7 +4018,7 @@ msgstr "Bir formun yanıtlarını gönderir. Hesap gerekmez."
 
 #: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
-#: src/routes/dashboard.plugins_.email.tsx:156
+#: src/routes/dashboard.plugins_.email.tsx:161
 msgid "Send a test"
 msgstr "Deneme gönder"
 
@@ -4039,7 +4045,7 @@ msgid "Send mail through Amazon SES — a notification when somebody fills in on
 msgstr "Amazon SES üzerinden posta gönderin — bu sitenin formlarından biri doldurulduğunda bildirim."
 
 #: src/components/site-mail.tsx:125
-#: src/routes/dashboard.plugins_.email.tsx:138
+#: src/routes/dashboard.plugins_.email.tsx:143
 msgid "Send mail through SES"
 msgstr "Postaları SES ile gönder"
 
@@ -4623,7 +4629,7 @@ msgid "The one your SES identities are verified in. Verification does not cross 
 msgstr "SES kimliklerinizin doğrulandığı bölge. Doğrulama bölgeler arasında geçmez."
 
 #: src/components/site-mail.tsx:145
-#: src/routes/dashboard.plugins_.email.tsx:158
+#: src/routes/dashboard.plugins_.email.tsx:163
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "Tek dürüst kontrol. Yetkisi olmayan bir anahtar, SES'in doğrulamadığı bir adres ve hâlâ kum havuzundaki bir hesap — gerçekten bir şey gönderilene kadar üçü de aynı görünür."
 
@@ -4735,6 +4741,10 @@ msgstr "Bu giriş sunucunun kendisine. Diğer herkes başka bir yerden giriyor:"
 #: src/components/dashboard/dashboard-shell.tsx:108
 msgid "This site"
 msgstr "Bu site"
+
+#: src/routes/dashboard.plugins_.email.tsx:205
+msgid "This site sends through the server's own account"
+msgstr "Bu site, sunucunun kendi hesabıyla gönderiyor"
 
 #: src/components/assistant-connection.tsx:155
 msgid "This site's tools could not be listed just now."
@@ -5068,7 +5078,7 @@ msgstr "Nerede saklansın"
 
 #: src/components/site-mail.tsx:154
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:366
-#: src/routes/dashboard.plugins_.email.tsx:167
+#: src/routes/dashboard.plugins_.email.tsx:172
 msgid "Where to send it"
 msgstr "Nereye gönderilsin"
 
@@ -5213,6 +5223,10 @@ msgstr "Hesabınız"
 #: src/components/console/console-shell.tsx:55
 msgid "Your agency"
 msgstr "İşletmeniz"
+
+#: src/routes/dashboard.plugins_.email.tsx:210
+msgid "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
+msgstr "Postanız yine kendi alan adınızdan çıkıyor, dolayısıyla aşağıdaki Gönderenler bölümündeki kayıtların yayınlanması gerekiyor — alıcı sunucuya bu alan adının onayladığını söyleyen şey onlar. Yukarıya kendi Amazon anahtarlarınızı girerseniz bu düzen tamamen yerini onlara bırakır."
 
 #: src/routes/console_.register.tsx:162
 #: src/routes/console.account.tsx:64

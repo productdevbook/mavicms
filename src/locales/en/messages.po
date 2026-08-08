@@ -154,6 +154,12 @@ msgstr "{0} looks after how this site is built. Publishing puts what you have wr
 #~ msgid "{0} looks after how this site is built. Publishing puts what you have written online."
 #~ msgstr "{0} looks after how this site is built. Publishing puts what you have written online."
 
+#. placeholder {0}: allowance.sent_today
+#. placeholder {1}: allowance.a_day ?? 0
+#: src/routes/dashboard.plugins_.email.tsx:207
+msgid "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
+msgstr "{0} of {1} messages used today. Whoever runs the server sets that number and can raise it."
+
 #. placeholder {0}: row.sent
 #. placeholder {1}: row.to_send
 #: src/routes/dashboard.mail.tsx:201
@@ -669,7 +675,7 @@ msgstr "Amazon has not said anything yet"
 msgid "Amazon is refusing nobody on this account."
 msgstr "Amazon is refusing nobody on this account."
 
-#: src/routes/dashboard.plugins_.email.tsx:122
+#: src/routes/dashboard.plugins_.email.tsx:127
 #: src/routes/dashboard.plugins.tsx:30
 msgid "Amazon SES"
 msgstr "Amazon SES"
@@ -1433,7 +1439,7 @@ msgstr "Could not disconnect it"
 #: src/components/site-mail.tsx:95
 #: src/routes/dashboard.forms_.$formId.tsx:89
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:109
-#: src/routes/dashboard.plugins_.email.tsx:95
+#: src/routes/dashboard.plugins_.email.tsx:100
 msgid "Could not do it"
 msgstr "Could not do it"
 
@@ -1487,7 +1493,7 @@ msgid "Could not load the local settings"
 msgstr "Could not load the local settings"
 
 #: src/components/site-mail.tsx:61
-#: src/routes/dashboard.plugins_.email.tsx:58
+#: src/routes/dashboard.plugins_.email.tsx:60
 msgid "Could not load the mail settings"
 msgstr "Could not load the mail settings"
 
@@ -1591,7 +1597,7 @@ msgstr "Could not run it"
 #: src/routes/dashboard.mail.tsx:280
 #: src/routes/dashboard.mail.tsx:647
 #: src/routes/dashboard.platform-mail.tsx:68
-#: src/routes/dashboard.plugins_.email.tsx:81
+#: src/routes/dashboard.plugins_.email.tsx:86
 msgid "Could not save it"
 msgstr "Could not save it"
 
@@ -2733,7 +2739,7 @@ msgstr "Made in the channel's own settings, under incoming webhooks. Anybody hol
 msgid "Mail"
 msgstr "Mail"
 
-#: src/routes/dashboard.plugins_.email.tsx:124
+#: src/routes/dashboard.plugins_.email.tsx:129
 msgid "Mail this site sends — a notification when somebody fills in one of your forms."
 msgstr "Mail this site sends — a notification when somebody fills in one of your forms."
 
@@ -3496,7 +3502,7 @@ msgstr "Plain text block"
 
 #: src/components/dashboard/dashboard-shell.tsx:112
 #: src/routes/dashboard.plugins_.backup.tsx:194
-#: src/routes/dashboard.plugins_.email.tsx:118
+#: src/routes/dashboard.plugins_.email.tsx:123
 #: src/routes/dashboard.plugins_.s3.tsx:111
 #: src/routes/dashboard.plugins.tsx:57
 msgid "Plugins"
@@ -3905,7 +3911,7 @@ msgstr "Sandbox"
 #: src/routes/dashboard.mail.tsx:740
 #: src/routes/dashboard.platform-mail.tsx:155
 #: src/routes/dashboard.plugins_.backup.tsx:333
-#: src/routes/dashboard.plugins_.email.tsx:150
+#: src/routes/dashboard.plugins_.email.tsx:155
 #: src/routes/dashboard.plugins_.s3.tsx:172
 msgid "Save"
 msgstr "Save"
@@ -3930,7 +3936,7 @@ msgstr "Save the flow and an address appears here. Anything sent to it sets this
 #: src/routes/dashboard.forms.tsx:110
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:86
 #: src/routes/dashboard.platform-mail.tsx:65
-#: src/routes/dashboard.plugins_.email.tsx:78
+#: src/routes/dashboard.plugins_.email.tsx:83
 #: src/routes/dashboard.publish.tsx:79
 msgid "Saved"
 msgstr "Saved"
@@ -4006,7 +4012,7 @@ msgstr "Select your language"
 
 #: src/components/site-mail.tsx:163
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:374
-#: src/routes/dashboard.plugins_.email.tsx:180
+#: src/routes/dashboard.plugins_.email.tsx:185
 msgid "Send"
 msgstr "Send"
 
@@ -4016,7 +4022,7 @@ msgstr "Send a form's answers. No account needed."
 
 #: src/components/flows/flow-accounts.tsx:183
 #: src/components/site-mail.tsx:143
-#: src/routes/dashboard.plugins_.email.tsx:156
+#: src/routes/dashboard.plugins_.email.tsx:161
 msgid "Send a test"
 msgstr "Send a test"
 
@@ -4043,7 +4049,7 @@ msgid "Send mail through Amazon SES — a notification when somebody fills in on
 msgstr "Send mail through Amazon SES — a notification when somebody fills in one of this site's forms."
 
 #: src/components/site-mail.tsx:125
-#: src/routes/dashboard.plugins_.email.tsx:138
+#: src/routes/dashboard.plugins_.email.tsx:143
 msgid "Send mail through SES"
 msgstr "Send mail through SES"
 
@@ -4627,7 +4633,7 @@ msgid "The one your SES identities are verified in. Verification does not cross 
 msgstr "The one your SES identities are verified in. Verification does not cross regions."
 
 #: src/components/site-mail.tsx:145
-#: src/routes/dashboard.plugins_.email.tsx:158
+#: src/routes/dashboard.plugins_.email.tsx:163
 msgid "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 msgstr "The only honest check. A key without permission, an address SES has not verified and an account still in the sandbox all look the same until something is actually sent."
 
@@ -4739,6 +4745,10 @@ msgstr "This signs you in to the server itself. Everyone else signs in somewhere
 #: src/components/dashboard/dashboard-shell.tsx:108
 msgid "This site"
 msgstr "This site"
+
+#: src/routes/dashboard.plugins_.email.tsx:205
+msgid "This site sends through the server's own account"
+msgstr "This site sends through the server's own account"
 
 #: src/components/assistant-connection.tsx:155
 msgid "This site's tools could not be listed just now."
@@ -5072,7 +5082,7 @@ msgstr "Where to keep them"
 
 #: src/components/site-mail.tsx:154
 #: src/routes/dashboard.mail_.campaigns.$campaignId.tsx:366
-#: src/routes/dashboard.plugins_.email.tsx:167
+#: src/routes/dashboard.plugins_.email.tsx:172
 msgid "Where to send it"
 msgstr "Where to send it"
 
@@ -5217,6 +5227,10 @@ msgstr "Your account"
 #: src/components/console/console-shell.tsx:55
 msgid "Your agency"
 msgstr "Your agency"
+
+#: src/routes/dashboard.plugins_.email.tsx:210
+msgid "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
+msgstr "Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely."
 
 #: src/routes/console_.register.tsx:162
 #: src/routes/console.account.tsx:64

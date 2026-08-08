@@ -603,6 +603,55 @@ async fn email_config_of(state: &AppState) -> AppResult<crate::email::EmailConfi
     .ok_or_else(|| AppError::Validation("mail is not set up yet".to_string()))
 }
 
+#[derive(Debug, serde::Serialize, utoipa::ToSchema)]
+pub struct SendingAllowance {
+    /// "own" when this site has its own Amazon account, "shared" when the
+    /// server lends its.
+    pub sends: String,
+    /// Messages a day. Absent when the site sends with its own account, which
+    /// the server does not meter.
+    pub a_day: Option<i64>,
+    pub sent_today: u64,
+}
+
+/// How this site sends, and how much of today is left.
+///
+/// Answered for a site whether or not it has settings of its own, because the
+/// most useful case is the one where it has none: it needs to be told that it
+/// can send anyway, and how much.
+#[utoipa::path(
+    get,
+    path = "/plugins/email/allowance",
+    tag = "plugins",
+    responses((status = 200, description = "How this site sends", body = SendingAllowance))
+)]
+pub async fn get_email_allowance(Site(state): Site) -> AppResult<Json<SendingAllowance>> {
+    let db = state.db_or_unavailable()?;
+    let sent_today = crate::outbound::sent_today(db).await.unwrap_or(0);
+
+    // The same question the sending path asks, so the screen cannot disagree
+    // with what actually happens.
+    Ok(Json(match crate::outbound::how(&state).await {
+        Ok(post) if post.own => SendingAllowance {
+            sends: "own".to_string(),
+            a_day: None,
+            sent_today,
+        },
+        Ok(post) => SendingAllowance {
+            sends: "shared".to_string(),
+            a_day: post.a_day,
+            sent_today,
+        },
+        // Nothing set up either way. Not an error: the screen it appears on is
+        // where somebody goes to fix exactly that.
+        Err(_) => SendingAllowance {
+            sends: "none".to_string(),
+            a_day: None,
+            sent_today,
+        },
+    }))
+}
+
 /// What Amazon says about the account these keys belong to.
 #[utoipa::path(
     get,

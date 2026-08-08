@@ -1669,6 +1669,18 @@ export function getSesAccount(siteId?: string): Promise<SesAccount> {
   return request<SesAccount>(`${mailBase(siteId)}/account`)
 }
 
+export interface SendingAllowance {
+  /** "own", "shared" or "none". */
+  sends: string
+  a_day: number | null
+  sent_today: number
+}
+
+export function getSendingAllowance(siteId?: string): Promise<SendingAllowance> {
+  return request<SendingAllowance>(`${mailBase(siteId)}/allowance`)
+}
+
+
 export function requestProductionAccess(
   payload: ProductionAccessPayload,
   siteId?: string

@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { EmailFields } from "@/components/plugin-forms"
 import { SesAccountPanel } from "@/components/ses-account"
+import { getSendingAllowance, type SendingAllowance } from "@/lib/api"
 import { SesHealthPanel } from "@/components/ses-health"
 import { SesSetupGuide } from "@/components/ses-setup"
 
@@ -48,6 +49,7 @@ function EmailSettingsRoute() {
   const [busy, setBusy] = React.useState<"save" | "test" | null>(null)
   const [testTo, setTestTo] = React.useState("")
   const [result, setResult] = React.useState<ConnectionTest | null>(null)
+  const [allowance, setAllowance] = React.useState<SendingAllowance | null>(null)
 
   React.useEffect(() => {
     getEmailSettings()
@@ -57,6 +59,9 @@ function EmailSettingsRoute() {
       })
       .catch(() => toast.error(t`Could not load the mail settings`))
       .finally(() => setLoading(false))
+    getSendingAllowance()
+      .then(setAllowance)
+      .catch(() => setAllowance(null))
   }, [t])
 
   // An empty box means "keep the stored one", so it is left out rather than
@@ -194,6 +199,18 @@ function EmailSettingsRoute() {
             </div>
           )}
         </div>
+
+        {allowance?.sends === "shared" ? (
+          <div className="rounded-xl border border-border bg-muted/40 p-4">
+            <p className="text-sm font-medium">{t`This site sends through the server's own account`}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {t`${allowance.sent_today} of ${allowance.a_day ?? 0} messages used today. Whoever runs the server sets that number and can raise it.`}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t`Your mail still goes out as your own domain, so the records under Senders below still have to be published — they are what tells the receiving server that this domain agrees. Putting your own Amazon keys in above replaces this arrangement entirely.`}
+            </p>
+          </div>
+        ) : null}
 
         <div className="flex flex-col gap-8 border-t border-border pt-6">
           <SesAccountPanel
